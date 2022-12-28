@@ -100,14 +100,15 @@
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Serilog">
-      <HintPath>packages\Serilog.2.12.0\lib\net47\Serilog.dll</HintPath>
+      <HintPath>..\ABTTestLibraryTests\packages\Serilog.2.12.0\lib\net47\Serilog.dll</HintPath>
     </Reference>
-    <Reference Include="Serilog.Sinks.File, Version=5.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>packages\Serilog.Sinks.File.5.0.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
+    <Reference Include="Serilog.Sinks.File">
+      <HintPath>..\ABTTestLibraryTests\packages\Serilog.Sinks.File.5.0.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="TIDP.SAA, Version=3.0.8.15626, Culture=neutral, PublicKeyToken=4ce2ce38201aeb82, processorArchitecture=MSIL">
