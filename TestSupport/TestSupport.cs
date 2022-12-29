@@ -128,8 +128,8 @@ namespace ABTTestLibrary.TestSupport {
             // EventCodes was modified without updating EvaluateUUTResult; take exception to that.
         }
 
-        private static Int32 GetResultCount(Dictionary<String, Test> Tests, String EventCode) {
-            return (from t in Tests where t.Value.Result == EventCode select t).Count();
+        private static Int32 GetResultCount(Dictionary<String, Test> tests, String eventCode) {
+            return (from t in tests where t.Value.Result == eventCode select t).Count();
         }
     }
 }
