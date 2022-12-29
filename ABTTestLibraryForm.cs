@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 using ABTTestLibrary.AppConfig;
 using ABTTestLibrary.Instruments;
@@ -17,17 +18,19 @@ using Serilog;
 // - Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
 // NOTE: With deep gratitude to https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 namespace ABTTestLibrary {
-    public partial class ABTTestLibraryForm : Form {
-        /// <summary>
-        /// ABTTestLibrary, reusable API for ABTTestProgram(s).
-        /// </summary>
+    public abstract partial class ABTTestLibraryForm : Form {
         public Config Config;
         public Dictionary<String, Instrument> Instruments;
         public String CurrentTestKey;
 
         public ABTTestLibraryForm() { InitializeComponent(); }
 
-        public virtual String RunTest(Test test, Dictionary<String, Instrument> Instruments) { return null; }
+        public String RunTest(Test test) {
+            // https://stackoverflow.com/questions/540066/calling-a-function-from-a-string-in-c-sharp
+            Type type = this.GetType();
+            MethodInfo methodInfo = type.GetMethod(test.ID, BindingFlags.Instance | BindingFlags.NonPublic);
+            return (String)methodInfo.Invoke(this, new object[] { test });
+        }
 
         private void Form_Shown(Object sender, EventArgs e) {
             Instruments = Instrument.Get();
@@ -113,18 +116,17 @@ namespace ABTTestLibrary {
             foreach (KeyValuePair<String, Test> t in Config.Tests) {
                 try {
                     this.CurrentTestKey = t.Key;
-                    t.Value.Measurement = RunTest(t.Value, Instruments);
+                    t.Value.Measurement = RunTest(t.Value);
                 } catch (Exception e) {
                     InstrumentTasks.Reset(Instruments);
                     if (e.GetType() == typeof(ABTTestLibraryException)) {
                         t.Value.Result = EventCodes.ABORT;
                         Log.Warning(e.ToString());
-                        break;
                     } else {
                         t.Value.Result = EventCodes.ERROR;
-                        Log.Fatal(e.ToString());
-                        throw;
+                        Log.Error(e.ToString());
                     }
+                    break;
                 }
                 TestTasks.EvaluateTestResult(t.Value, out String eventCode);
                 t.Value.Result = eventCode;
