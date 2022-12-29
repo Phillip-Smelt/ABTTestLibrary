@@ -95,12 +95,12 @@ namespace ABTTestLibrary.AppConfig {
             // Operator selects the Group they want to test, from the Dictionary of all Groups.
             // GroupSelected is Dictionary Groups' Key.
 
-            Dictionary<String, Test> Tests = Test.Get();
+            Dictionary<String, Test> tests = Test.Get();
             this.Tests = new Dictionary<String, Test>();
             String[] g = this.Group.TestIDs.Split('|');
             foreach (String s in g) {
                 if (!Tests.ContainsKey(s)) throw new Exception($"Group '{Group.ID}' includes IDTest '{s}', which isn't present in TestElements in App.config.");
-                this.Tests.Add(s, Tests[s]);
+                this.Tests.Add(s, tests[s]);
                 // Add only Tests correlated to the Group previously selected by operator.
             }
         }
