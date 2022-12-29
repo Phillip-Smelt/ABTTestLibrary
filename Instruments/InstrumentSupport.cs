@@ -15,13 +15,13 @@ namespace ABTTestLibrary.Instruments {
             return Message;
         }
 
-        public static void Reset(Dictionary<String, Instrument> Instruments) {
-            foreach (KeyValuePair<String, Instrument> i in Instruments) SCPI99.Reset(i.Value.Address);
+        public static void Reset(Dictionary<String, Instrument> instruments) {
+            foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Reset(i.Value.Address);
         }
 
-        public static void Test(Dictionary<String, Instrument> Instruments) {
+        public static void Test(Dictionary<String, Instrument> instruments) {
             Int32 SelfTestResult;
-            foreach (KeyValuePair<String, Instrument> i in Instruments) {
+            foreach (KeyValuePair<String, Instrument> i in instruments) {
                 SelfTestResult = SCPI99.SelfTest(i.Value.Address);
                 if (SelfTestResult != 0) throw new Exception(GetMessage(i.Value));
             }

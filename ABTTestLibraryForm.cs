@@ -19,9 +19,9 @@ using Serilog;
 // NOTE: With deep gratitude to https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 namespace ABTTestLibrary {
     public abstract partial class ABTTestLibraryForm : Form {
-        public Config Config;
-        public Dictionary<String, Instrument> Instruments;
-        public String CurrentTestKey;
+        public Config config;
+        public Dictionary<String, Instrument> instruments;
+        public String currentTestKey;
 
         public ABTTestLibraryForm() { InitializeComponent(); }
 
@@ -33,8 +33,8 @@ namespace ABTTestLibrary {
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
-            Instruments = Instrument.Get();
-            InstrumentTasks.Test(Instruments);
+            instruments = Instrument.Get();
+            InstrumentTasks.Test(instruments);
             this.buttonSelectGroup.Enabled = true;
             this.buttonStart.Enabled = false;
             this.buttonStop.Enabled = false;
@@ -46,7 +46,7 @@ namespace ABTTestLibrary {
         }
 
         private void buttonSelectGroup_Click(Object sender, EventArgs e) {
-            Config = Config.Get();
+            config = Config.Get();
             this.buttonOpenTestDataFolder.Enabled=true;
             PreRun();
         }
@@ -56,7 +56,7 @@ namespace ABTTestLibrary {
         }
 
         private void buttonStop_Clicked(Object sender, EventArgs e) {
-            Config.Tests[this.CurrentTestKey].Result = EventCodes.ABORT;
+            config.Tests[this.currentTestKey].Result = EventCodes.ABORT;
             PostRun();
         }
 
@@ -70,7 +70,7 @@ namespace ABTTestLibrary {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{Config.UUT.Number}_{Config.UUT.SerialNumber}",
+                FileName = $"{config.UUT.Number}_{config.UUT.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -80,7 +80,7 @@ namespace ABTTestLibrary {
         }
 
         private void buttonOpenTestDataFolder_Click(Object sender, EventArgs e) {
-            System.Diagnostics.Process.Start("explorer.exe", this.Config.Logger.FilePath);
+            System.Diagnostics.Process.Start("explorer.exe", this.config.Logger.FilePath);
         }
 
         public void PreRun() {
@@ -91,14 +91,14 @@ namespace ABTTestLibrary {
             this.rtfResults.Text = String.Empty;
             this.textUUTResult.Text = String.Empty;
             this.textUUTResult.BackColor = Color.White;
-            this.CurrentTestKey = String.Empty;
-            this.Text = $"{Config.UUT.Number}, {Config.UUT.Description}, {Config.Group.ID}";
+            this.currentTestKey = String.Empty;
+            this.Text = $"{config.UUT.Number}, {config.UUT.Description}, {config.Group.ID}";
         }
 
         public void Run() {
-            Config.UUT.SerialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: Config.UUT.SerialNumber);
-            if (Config.UUT.SerialNumber == String.Empty) return;
-            InstrumentTasks.Reset(Instruments);
+            config.UUT.SerialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: config.UUT.SerialNumber);
+            if (config.UUT.SerialNumber == String.Empty) return;
+            InstrumentTasks.Reset(instruments);
             this.buttonSelectGroup.Enabled = false;
             this.buttonStart.Enabled = false;
             this.buttonStop.Enabled = true;
@@ -106,19 +106,19 @@ namespace ABTTestLibrary {
             this.rtfResults.Text = String.Empty;
             this.textUUTResult.Text = String.Empty;
             this.textUUTResult.BackColor = Color.White;
-            foreach (KeyValuePair<String, Test> t in Config.Tests) {
+            foreach (KeyValuePair<String, Test> t in config.Tests) {
                 t.Value.Measurement = String.Empty;
                 t.Value.Result = EventCodes.UNSET;
             }
-            Config.UUT.EventCode = EventCodes.UNSET;
-            LogTasks.Start(Config, ref this.rtfResults);
+            config.UUT.EventCode = EventCodes.UNSET;
+            LogTasks.Start(config, ref this.rtfResults);
 
-            foreach (KeyValuePair<String, Test> t in Config.Tests) {
+            foreach (KeyValuePair<String, Test> t in config.Tests) {
                 try {
-                    this.CurrentTestKey = t.Key;
+                    this.currentTestKey = t.Key;
                     t.Value.Measurement = RunTest(t.Value);
                 } catch (Exception e) {
-                    InstrumentTasks.Reset(Instruments);
+                    InstrumentTasks.Reset(instruments);
                     if (e.GetType() == typeof(ABTTestLibraryException)) {
                         t.Value.Result = EventCodes.ABORT;
                         Log.Warning(e.ToString());
@@ -136,17 +136,17 @@ namespace ABTTestLibrary {
         }
 
         public void PostRun() {
-            InstrumentTasks.Reset(Instruments);
-            Config.UUT.EventCode = TestTasks.EvaluateUUTResult(Config);
-            this.textUUTResult.Text = Config.UUT.EventCode;
-            this.textUUTResult.BackColor = EventCodes.GetColor(Config.UUT.EventCode);
-            this.CurrentTestKey = String.Empty;
-            LogTasks.Stop(Config);
-            if (Config.App.TestEventsEnabled) LogTasks.TestEvents(Config);
+            InstrumentTasks.Reset(instruments);
+            config.UUT.EventCode = TestTasks.EvaluateUUTResult(config);
+            this.textUUTResult.Text = config.UUT.EventCode;
+            this.textUUTResult.BackColor = EventCodes.GetColor(config.UUT.EventCode);
+            this.currentTestKey = String.Empty;
+            LogTasks.Stop(config);
+            if (config.App.TestEventsEnabled) LogTasks.TestEvents(config);
             this.buttonSelectGroup.Enabled = true;
             this.buttonStart.Enabled = true;
             this.buttonStop.Enabled = false;
-            if (Config.Group.Required && Config.UUT.EventCode == EventCodes.PASS) this.buttonSaveOutput.Enabled = false;
+            if (config.Group.Required && config.UUT.EventCode == EventCodes.PASS) this.buttonSaveOutput.Enabled = false;
             // Disallow saving output if this was a Required Group & UUT passed, because, why bother?  UUT passed & saved test data attesting such; take the win & $hip it.  
             else this.buttonSaveOutput.Enabled = true;
         }

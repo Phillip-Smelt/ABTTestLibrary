@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Runtime.CompilerServices;
 using ABTTestLibrary.TestSupport;
 
 namespace ABTTestLibrary.AppConfig {
