@@ -10,7 +10,8 @@ namespace ABTTestLibrary.AppConfig {
         [ConfigurationProperty("Detail", IsKey = false, IsRequired = false)] public String Detail { get { return (String)base["Detail"]; } }
         [ConfigurationProperty("LimitLow", IsKey = false, IsRequired = false)] public String LimitLow { get { return (String)base["LimitLow"]; } }
         [ConfigurationProperty("LimitHigh", IsKey = false, IsRequired = false)] public String LimitHigh { get { return (String)base["LimitHigh"]; } }
-        [ConfigurationProperty("Units", IsKey = false, IsRequired = true)] public String Units { get { return (String)base["Units"]; } }
+        [ConfigurationProperty("Units", IsKey = false, IsRequired = false)] public String Units { get { return (String)base["Units"]; } }
+        [ConfigurationProperty("UnitType", IsKey = false, IsRequired = false)] public String UnitType { get { return (String)base["UnitType"]; } }
     }
 
     [ConfigurationCollection(typeof(TestElement))]
@@ -42,16 +43,18 @@ namespace ABTTestLibrary.AppConfig {
         public String LimitLow { get; private set; }
         public String LimitHigh { get; private set; }
         public String Units { get; private set; }
+        public String UnitType { get; private set; }
         public String Measurement { get; set; }
         public String Result { get; set; }
 
-        private Test(String ID, String Summary, String Detail, String LimitLow, String LimitHigh, String Units, String Measurement, String Result) {
+        private Test(String ID, String Summary, String Detail, String LimitLow, String LimitHigh, String Units, String UnitType, String Measurement, String Result) {
             this.ID = ID;
             this.Summary = Summary;
             this.Detail = Detail;
             this.LimitLow = LimitLow;
             this.LimitHigh = LimitHigh;
             this.Units = Units;
+            this.UnitType = UnitType;
             this.Measurement = Measurement;
             this.Result = Result;
         }
@@ -60,7 +63,7 @@ namespace ABTTestLibrary.AppConfig {
             TestElementsSection s = (TestElementsSection)ConfigurationManager.GetSection("TestElementsSection");
             TestElements e = s.TestElements;
             Dictionary<String, Test> d = new Dictionary<String, Test>();
-            foreach (TestElement te in e) d.Add(te.ID, new Test(te.ID, te.Summary, te.Detail, te.LimitLow, te.LimitHigh, te.Units, String.Empty, Result: EventCodes.UNSET));
+            foreach (TestElement te in e) d.Add(te.ID, new Test(te.ID, te.Summary, te.Detail, te.LimitLow, te.LimitHigh, te.Units, te.UnitType, String.Empty, Result: EventCodes.UNSET));
             // Pre-load Tests with EventCodes.UNSET results, which will be replaced as the tests are executed with EventCodes.ABORT, EventCodes.ERROR, EventCodes.FAIL or (hopefully!) EventCodes.PASS.
             return d;
         }

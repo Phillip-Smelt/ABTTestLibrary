@@ -80,6 +80,7 @@ namespace ABTTestLibrary.Logging {
             message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
             message += $"  Limit High  : {test.LimitHigh}{Environment.NewLine}";
             message += $"  Units       : {test.Units}{Environment.NewLine}";
+            message += $"  UnitType    : {test.UnitType}{Environment.NewLine}";
             message += $"  Result      : {test.Result}{Environment.NewLine}";
             Log.Information(message);
         }
