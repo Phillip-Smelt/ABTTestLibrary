@@ -9,7 +9,6 @@ using ABTTestLibrary.Logging;
 using ABTTestLibrary.TestSupport;
 using Microsoft.VisualBasic;
 using Serilog;
-
 // NOTE: ABTTestLibrary - Update to .Net 7.0 & C# 11.0 when possible.
 // - Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas Instruments
 //   TIDP.SAA Fusion Library compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
@@ -17,6 +16,7 @@ using Serilog;
 // NOTE: ABTTestLibrary - Update to UWP instead of WinForms when possible.
 // - Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
 // NOTE: With deep gratitude to https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
+
 namespace ABTTestLibrary {
     public abstract partial class ABTTestLibraryForm : Form {
         public Config config;

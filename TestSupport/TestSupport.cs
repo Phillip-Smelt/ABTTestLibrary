@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
+using System.Globalization;
 using System.Linq;
 using ABTTestLibrary.AppConfig;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ABTTestLibrary.TestSupport {
     public class ABTTestLibraryException : Exception {
@@ -41,13 +44,13 @@ namespace ABTTestLibrary.TestSupport {
             }
 
             //   - LimitLow = String.Empty,	LimitHigh ≠ String.Empty, but won't parse to Double.
-            if (String.Equals(sLow, String.Empty) && !String.Equals(sHigh, String.Empty) && !Double.TryParse(sHigh, out _)) {
+            if (String.Equals(sLow, String.Empty) && !String.Equals(sHigh, String.Empty) && !Double_TryParse(sHigh, out _)) {
                 eventCode = EventCodes.ERROR;
                 throw new Exception($"Invalid limits; App.config TestElement ID '{test.ID}' has LimitLow = String.Empty && LimitHigh ≠ String.Empty && LimitHigh ≠ System.Double");
             }
 
             //   - LimitHigh = String.Empty, LimitLow  ≠ String.Empty, but won't parse to Double.
-            if (String.Equals(sHigh, String.Empty) && !String.Equals(sLow, String.Empty) && !Double.TryParse(sLow, out _)) {
+            if (String.Equals(sHigh, String.Empty) && !String.Equals(sLow, String.Empty) && !Double_TryParse(sLow, out _)) {
                 eventCode = EventCodes.ERROR;
                 throw new Exception($"Invalid limits; App.config TestElement ID '{test.ID}' has LimitHigh = String.Empty && LimitLow ≠ String.Empty && LimitLow ≠ System.Double");
             }
@@ -55,10 +58,10 @@ namespace ABTTestLibrary.TestSupport {
             //   - LimitLow ≠ String.Empty,	LimitHigh ≠ String.Empty, neither parse to Double, & LimitLow ≠ LimitHigh.
             if (sLow != sHigh)
                 if (!String.Equals(sLow, String.Empty) && sHigh != String.Empty)
-                    if (!Double.TryParse(sLow, out _) && !Double.TryParse(sHigh, out _)) {
+                    if (!Double_TryParse(sLow, out _) && !Double_TryParse(sHigh, out _)) {
                         eventCode = EventCodes.ERROR;
                         throw new Exception($"Invalid limits; App.config TestElement ID '{test.ID}' has LimitLow ≠ LimitHigh && LimitLow ≠ String.Empty && LimitHigh ≠ String.Empty && LimitLow ≠ System.Double && LimitHigh ≠ System.Double");
-            }
+                    }
 
             Double dLow, dHigh, dMeasurement;
             //   - LimitLow & LimitHigh both parse to Doubles; both low & high limits.
@@ -66,19 +69,19 @@ namespace ABTTestLibrary.TestSupport {
             //     This simply excludes a range of measurements from passing, rather than including a range from passing.
             //   - LimitLow is allowed to be = LimitHigh if both parse to Double.
             //     This simply means only one measurement passes.
-            if (Double.TryParse(sLow, out dLow) && Double.TryParse(sHigh, out dHigh)) {
-                if (!Double.TryParse(test.Measurement, out dMeasurement)) {
+            if (Double_TryParse(sLow, out dLow) && Double_TryParse(sHigh, out dHigh)) {
+                if (!Double_TryParse(test.Measurement, out dMeasurement)) {
                     eventCode = EventCodes.ERROR;
                     throw new Exception($"Invalid measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double");
                 }
                 eventCode = EventCodes.FAIL;
                 if (dLow <= dHigh) if (dLow <= dMeasurement && dMeasurement <= dHigh) eventCode = EventCodes.PASS;
-                if (dLow > dHigh)  if (dMeasurement >= dLow || dMeasurement <= dHigh) eventCode = EventCodes.PASS;
+                if (dLow > dHigh) if (dMeasurement >= dLow || dMeasurement <= dHigh) eventCode = EventCodes.PASS;
             }
 
             //   - LimitLow parses to Double, LimitHigh = String.Empty; only low limit, no high.
-            if (Double.TryParse(sLow, out dLow) && String.Equals(sHigh, String.Empty)) {
-                if (!Double.TryParse(test.Measurement, out dMeasurement)) {
+            if (Double_TryParse(sLow, out dLow) && String.Equals(sHigh, String.Empty)) {
+                if (!Double_TryParse(test.Measurement, out dMeasurement)) {
                     eventCode = EventCodes.ERROR;
                     throw new Exception($"Invalid measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double");
                 }
@@ -88,8 +91,8 @@ namespace ABTTestLibrary.TestSupport {
             }
 
             //   - LimitLow = String.Empty, LimitHigh parses to Double; no low limit, only high.
-            if (String.Equals(sLow, String.Empty) && Double.TryParse(sHigh, out dHigh)) {
-                if (!Double.TryParse(test.Measurement, out dMeasurement)) {
+            if (String.Equals(sLow, String.Empty) && Double_TryParse(sHigh, out dHigh)) {
+                if (!Double_TryParse(test.Measurement, out dMeasurement)) {
                     eventCode = EventCodes.ERROR;
                     throw new Exception($"Invalid measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double");
                 }
@@ -99,9 +102,15 @@ namespace ABTTestLibrary.TestSupport {
             //   - LimitLow = LimitHigh, both ≠ String.Empty, and Units are "N/A".
             //     This is to verify checksums or CRCs, or to read String contents from memory, or from a file, etc.
             if (sLow == sHigh && sLow != String.Empty && test.Units == "N/A") {
-                    if (test.Measurement == sLow) eventCode = EventCodes.PASS;
-                    else eventCode = EventCodes.FAIL;
+                if (test.Measurement == sLow) eventCode = EventCodes.PASS;
+                else eventCode = EventCodes.FAIL;
             }
+        }
+
+        private static Boolean Double_TryParse(String testMeasurement, out Double dMeasurement) {
+            return Double.TryParse(testMeasurement, NumberStyles.Float, CultureInfo.CurrentCulture, out dMeasurement);
+            // Convenience wrapper method to add NumberStyles.Float & CultureInfo.CurrentCulture to Double.TryParse().
+            // NumberStyles.Float best for parsing floating point decimal values, including scientific/exponential notation.
         }
 
         public static String EvaluateUUTResult(Config config) {
