@@ -6,7 +6,6 @@ using ABTTestLibrary.AppConfig;
 
 namespace ABTTestLibrary.TestSupport {
     public class ABTTestLibraryException : Exception {
-        // NOTE: ABTTestLibrary - Currently don't throw any ABTTestLibraryExceptions, but option exists if needed.
         public ABTTestLibraryException() { }
         public ABTTestLibraryException(string message) : base(message) { }
         public ABTTestLibraryException(string message, Exception inner) : base(message, inner) { }
@@ -120,7 +119,7 @@ namespace ABTTestLibrary.TestSupport {
             if (GetResultCount(config.Tests, EventCodes.UNSET) > 0) return EventCodes.ERROR;
             // 4th priority evaluation:
             // - If any test result is UNSET, and there are no explicit ERROR or ABORT results, it implies the test didn't complete
-            //   without erroring or aborting, which shouldn't occur.
+            //   without erroring or aborting, which shouldn't occur, but...
             if (GetResultCount(config.Tests, EventCodes.FAIL) > 0) return EventCodes.FAIL;
             // 5th priority evaluation:
             // - If there are no ERROR, ABORT or UNSET results, but there is a FAIL result, UUT result is FAIL.

@@ -25,7 +25,7 @@ namespace ABTTestLibrary {
 
         public ABTTestLibraryForm() { InitializeComponent(); }
 
-        public String RunTest(Test test) {
+        public virtual String RunTest(Test test) {
             // https://stackoverflow.com/questions/540066/calling-a-function-from-a-string-in-c-sharp
             Type type = this.GetType();
             MethodInfo methodInfo = type.GetMethod(test.ID, BindingFlags.Instance | BindingFlags.NonPublic);
@@ -64,7 +64,7 @@ namespace ABTTestLibrary {
             // NOTE: ABTTestLibrary - Using RichTextBox instead of TextBox control in ABTTestLibraryForm for below reasons:
             // - RichTextBox doesn't have a character limit, whereas TextBox control limited to 64KByte of characters.
             //   Doubt > 64KBytes is needed, but why risk it?
-            // - RichTextBox can display rich text, particularly the color coded text of EventCode.ABORT, EventCode.ERROR, 
+            // - RichTextBox can display rich text, specifically the color coded text of EventCode.ABORT, EventCode.ERROR, 
             //   EventCode.FAIL, EventCode.PASS & EventCode.UNSET.
             SaveFileDialog sfd = new SaveFileDialog {
                 Title = "Save Test Results",
@@ -125,7 +125,10 @@ namespace ABTTestLibrary {
                     } else {
                         t.Value.Result = EventCodes.ERROR;
                         Log.Error(e.ToString());
+                        DialogResult dr = MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
+                            $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                    LogTasks.LogTest(t.Value);
                     break;
                 }
                 TestTasks.EvaluateTestResult(t.Value, out String eventCode);
