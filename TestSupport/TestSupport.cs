@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using ABTTestLibrary.AppConfig;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ABTTestLibrary.TestSupport {
     public class ABTTestLibraryException : Exception {
