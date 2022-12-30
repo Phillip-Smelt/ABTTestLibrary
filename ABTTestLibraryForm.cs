@@ -152,7 +152,8 @@ namespace ABTTestLibrary {
             this.buttonStart.Enabled = true;
             this.buttonStop.Enabled = false;
             if (config.Group.Required && config.UUT.EventCode == EventCodes.PASS) this.buttonSaveOutput.Enabled = false;
-            // Disallow saving output if this was a Required Group & UUT passed, because, why bother?  UUT passed & saved test data attesting such; take the win & $hip it.  
+            // Disallow saving output if this was a Required Group & UUT passed, because, why bother?
+            // UUT passed & saved test data attesting such; take the win & $hip it.  
             else this.buttonSaveOutput.Enabled = true;
         }
     }
