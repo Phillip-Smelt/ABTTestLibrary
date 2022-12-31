@@ -6,10 +6,10 @@ using System.Linq;
 using ABTTestLibrary.AppConfig;
 
 namespace ABTTestLibrary.TestSupport {
-    public class ABTTestAbortException : Exception {
-        public ABTTestAbortException() { }
-        public ABTTestAbortException(string message) : base(message) { }
-        public ABTTestAbortException(string message, Exception inner) : base(message, inner) { }
+    public class ABTAbortException : Exception {
+        public ABTAbortException() { }
+        public ABTAbortException(string message) : base(message) { }
+        public ABTAbortException(string message, Exception inner) : base(message, inner) { }
     }
 
     public static class EventCodes {
@@ -81,7 +81,7 @@ namespace ABTTestLibrary.TestSupport {
                 }
             }
 
-            // NOTE: below code depends upon above code preceding it; it assumes none of above conditions occurred.
+            // NOTE: ATBTestLibary - Below code depends upon above code preceding it; it assumes none of above conditions occurred.
             // Remaining cases have numerical limits, so test.Measurement must also be numerical.
             if (!Double_TryParse(test.Measurement, out Double dMeasurement)) {
                 throw new InvalidOperationException($"Invalid measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double");
@@ -143,7 +143,7 @@ namespace ABTTestLibrary.TestSupport {
         }
 
         private static Int32 GetResultCount(Dictionary<String, Test> tests, String eventCode) {
-            return (from t in tests where t.Value.Result == eventCode select t).Count();
+            return (from t in tests where String.Equals(t.Value.Result, eventCode) select t).Count();
         }
     }
 }
