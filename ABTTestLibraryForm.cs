@@ -116,8 +116,8 @@ namespace ABTTestLibrary {
             LogTasks.Start(config, ref this.rtfResults);
 
             foreach (KeyValuePair<String, Test> t in config.Tests) {
+                this.currentTestKey = t.Key;
                 try {
-                    this.currentTestKey = t.Key;
                     t.Value.Measurement = RunTest(t.Value);
                 } catch (Exception e) {
                     InstrumentTasks.Reset(instruments);
@@ -133,9 +133,18 @@ namespace ABTTestLibrary {
                     LogTasks.LogTest(t.Value);
                     break;
                 }
-                TestTasks.EvaluateTestResult(t.Value, out String eventCode);
-                t.Value.Result = eventCode;
-                LogTasks.LogTest(t.Value);
+
+                try {
+                    t.Value.Result= TestTasks.EvaluateTestResult(t.Value);
+                } catch (Exception e) {
+                    t.Value.Result = EventCodes.ERROR;
+                    Log.Error(e.ToString());
+                    DialogResult dr = MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
+                        $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                } finally {
+                    LogTasks.LogTest(t.Value);
+                }
             }
             PostRun();
         }

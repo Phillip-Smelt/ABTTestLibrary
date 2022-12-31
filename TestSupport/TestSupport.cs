@@ -32,104 +32,87 @@ namespace ABTTestLibrary.TestSupport {
     }
 
     public static class TestTasks {
-        public static void EvaluateTestResult(Test test, out String eventCode) {
-            eventCode = EventCodes.UNSET;
+        public static String EvaluateTestResult(Test test) {
             (String sLow, String sHigh) = (test.LimitLow, test.LimitHigh);
             //   - LimitLow = LimitHigh = String.Empty.
             if (String.Equals(sLow, String.Empty) && String.Equals(sHigh, String.Empty)) {
-                eventCode = EventCodes.ERROR;
                 throw new Exception($"Invalid limits; App.config TestElement ID '{test.ID}' has LimitLow = LimitHigh = String.Empty");
             }
 
             //   - LimitLow = String.Empty,	LimitHigh ≠ String.Empty, but won't parse to Double.
             if (String.Equals(sLow, String.Empty) && !String.Equals(sHigh, String.Empty) && !Double_TryParse(sHigh, out _)) {
-                eventCode = EventCodes.ERROR;
                 throw new Exception($"Invalid limits; App.config TestElement ID '{test.ID}' has LimitLow = String.Empty && LimitHigh ≠ String.Empty && LimitHigh ≠ System.Double");
             }
 
-            //   - LimitHigh = String.Empty, LimitLow  ≠ String.Empty, but won't parse to Double.
+            //   - LimitHigh = String.Empty, LimitLow ≠ String.Empty, but won't parse to Double.
             if (String.Equals(sHigh, String.Empty) && !String.Equals(sLow, String.Empty) && !Double_TryParse(sLow, out _)) {
-                eventCode = EventCodes.ERROR;
                 throw new Exception($"Invalid limits; App.config TestElement ID '{test.ID}' has LimitHigh = String.Empty && LimitLow ≠ String.Empty && LimitLow ≠ System.Double");
             }
 
-            //   - LimitLow ≠ String.Empty,	LimitHigh ≠ String.Empty, neither parse to Double, & LimitLow ≠ LimitHigh.
-            if (sLow != sHigh)
-                if (!String.Equals(sLow, String.Empty) && sHigh != String.Empty)
+            //   - LimitLow ≠ LimitHigh, LimitLow ≠ String.Empty, LimitHigh ≠ String.Empty, neither parse to Double.
+            if (!String.Equals(sLow, sHigh)) {
+                if (!String.Equals(sLow, String.Empty) && !String.Equals(sHigh,String.Empty)) {
                     if (!Double_TryParse(sLow, out _) && !Double_TryParse(sHigh, out _)) {
-                        eventCode = EventCodes.ERROR;
                         throw new Exception($"Invalid limits; App.config TestElement ID '{test.ID}' has LimitLow ≠ LimitHigh && LimitLow ≠ String.Empty && LimitHigh ≠ String.Empty && LimitLow ≠ System.Double && LimitHigh ≠ System.Double");
                     }
-
-            Double dLow, dHigh, dMeasurement;
-            //   - LimitLow & LimitHigh both parse to Doubles; both low & high limits.
-            //   - LimitLow is allowed to be > LimitHigh if both parse to Double.
-            //     This simply excludes a range of measurements from passing, rather than including a range from passing.
-            //   - LimitLow is allowed to be = LimitHigh if both parse to Double.
-            //     This simply means only one measurement passes.
-            if (Double_TryParse(sLow, out dLow) && Double_TryParse(sHigh, out dHigh)) {
-                if (!Double_TryParse(test.Measurement, out dMeasurement)) {
-                    eventCode = EventCodes.ERROR;
-                    throw new Exception($"Invalid measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double");
                 }
-                eventCode = EventCodes.FAIL;
-                if (dLow <= dHigh) 
-                    if (dLow <= dMeasurement && dMeasurement <= dHigh) eventCode = EventCodes.PASS;
-                if (dLow > dHigh) 
-                    if (dMeasurement >= dLow || dMeasurement <= dHigh) eventCode = EventCodes.PASS;
-                return;
             }
 
-            //   - LimitLow parses to Double, LimitHigh = String.Empty; only low limit, no high.
-            if (Double_TryParse(sLow, out dLow) && String.Equals(sHigh, String.Empty)) {
-                if (!Double_TryParse(test.Measurement, out dMeasurement)) {
-                    eventCode = EventCodes.ERROR;
-                    throw new Exception($"Invalid measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double");
-                }
-                if (dLow <= dMeasurement) eventCode = EventCodes.PASS;
-                else eventCode = EventCodes.FAIL;
-                return;
-            }
-
-            //   - LimitLow = String.Empty, LimitHigh parses to Double; no low limit, only high.
-            if (String.Equals(sLow, String.Empty) && Double_TryParse(sHigh, out dHigh)) {
-                if (!Double_TryParse(test.Measurement, out dMeasurement)) {
-                    eventCode = EventCodes.ERROR;
-                    throw new Exception($"Invalid measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double");
-                }
-                if (dMeasurement <= dHigh) eventCode = EventCodes.PASS;
-                else eventCode = EventCodes.FAIL;
-                return;
-            }
-
-            //   - LimitLow = LimitHigh ≠ String.Empty ≠ CUSTOM.
+            //   - LimitLow = LimitHigh ≠ String.Empty ≠ CUSTOM, neither parse to Double.
             //     This is to verify checksums or CRCs, or to read String contents from memory, or from a file, etc.
             const String _CUSTOM = "CUSTOM";
-            if (sLow == sHigh && sLow != String.Empty && sLow != _CUSTOM) {
-                if (test.Measurement == sLow) eventCode = EventCodes.PASS;
-                else eventCode = EventCodes.FAIL;
-                return;
+            if (String.Equals(sLow, sHigh) && !String.Equals(sLow, String.Empty) && !String.Equals(sLow, _CUSTOM) && !Double_TryParse(sLow, out _)) {
+                if (String.Equals(sLow, test.Measurement)) return EventCodes.PASS;
+                else return EventCodes.FAIL;
             }
 
             //   - LimitLow = LimitHigh = CUSTOM.
             //     For custom Tests.
-            if (sLow == sHigh && sLow == _CUSTOM) {
+            if (String.Equals(sLow, sHigh) && String.Equals(sLow, _CUSTOM)) {
                 switch (test.Measurement) {
                     case EventCodes.ABORT:
                     case EventCodes.ERROR:
                     case EventCodes.FAIL:
                     case EventCodes.PASS:
                     case EventCodes.UNSET:
-                        eventCode = test.Measurement;
-                        return;
+                        return test.Measurement;
                     default:
-                        eventCode = EventCodes.ERROR;
                         throw new Exception($"Invalid CUSTOM measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' didn't return valid EventCode.");
                 }
             }
 
+            // Remaining cases have numerical limits, so test.Measurement must also be numerical.
+            // NOTE: below code depends upon above code preceding it; it assumes none of above conditions occurred.
+            if (!Double_TryParse(test.Measurement, out Double dMeasurement)) {
+                throw new Exception($"Invalid measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double");
+            }
+
+            //   - LimitLow & LimitHigh both parse to Doubles; both low & high limits.
+            //   - LimitLow is allowed to be > LimitHigh if both parse to Double.
+            //     This simply excludes a range of measurements from passing, rather than including a range from passing.
+            //   - LimitLow is allowed to be = LimitHigh if both parse to Double.
+            //     This simply means only one measurement passes.
+            if (Double_TryParse(sLow, out Double dLow) & Double_TryParse(sHigh, out Double dHigh)) {
+                // Evaluate both Double_TryParse statements using (& versus &&) above to declare both dLow and dHigh.
+                if ((dLow <= dHigh) && (dLow <= dMeasurement) && (dMeasurement <= dHigh)) return EventCodes.PASS;
+                else if ((dLow > dHigh) && (dMeasurement >= dLow || dMeasurement <= dHigh)) return EventCodes.PASS;
+                else return EventCodes.FAIL;
+            }
+
+            //   - LimitLow parses to Double, LimitHigh = String.Empty; only low limit, no high.
+            if (Double_TryParse(sLow, out dLow) && String.Equals(sHigh, String.Empty)) {
+                if (dLow <= dMeasurement) return EventCodes.PASS;
+                else return EventCodes.FAIL;
+
+            }
+
+            //   - LimitLow = String.Empty, LimitHigh parses to Double; no low limit, only high.
+            if (String.Equals(sLow, String.Empty) && Double_TryParse(sHigh, out dHigh)) {
+                if (dMeasurement <= dHigh) return EventCodes.PASS;
+                else return EventCodes.FAIL;
+            }
+
             // If none of the above conditions, something went wrong.  Hopefully below code won't ever execute.
-            eventCode= EventCodes.ERROR;
             throw new Exception($"App.config TestElement ID '{test.ID}', Measurement '{test.Measurement}', LimitLow '{test.LimitLow}', LimitHigh '{test.LimitHigh}.");
         }
 
