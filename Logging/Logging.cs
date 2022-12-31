@@ -153,7 +153,7 @@ namespace ABTTestLibrary.Logging {
                     return;
                     // Don't record TestEvents for ERROR or UNSET.
                 default:
-                    throw new Exception($"Unrecognized EventCode '{config.UUT.EventCode}'.");
+                    throw new NotImplementedException($"Unrecognized EventCode '{config.UUT.EventCode}'.");
                 // TODO: Logger - Invoke TestEvents with $"{config.UUT.Number} {config.UUT.SerialNumber} {eventCode}";
             }
         }

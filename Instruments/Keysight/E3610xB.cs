@@ -35,7 +35,7 @@ namespace ABTTestLibrary.Instruments.Keysight {
                     s = $"< MINimum Voltage/Current.{Environment.NewLine}";
                     s += $" - Programmed:  Voltage={Volts}/Current={Amps}.{Environment.NewLine}";
                     s += $" - Minimal   :  Voltage={V}/Current={A}.";
-                    throw new Exception(s);
+                    throw new InvalidOperationException(InstrumentTasks.GetMessage(Instrument, s));
                 }
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MAXimum", out V);
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", out A);
@@ -43,7 +43,7 @@ namespace ABTTestLibrary.Instruments.Keysight {
                     s = $"> MAXimum Voltage/Current.{Environment.NewLine}";
                     s += $" - Programmed:  Voltage={Volts}/Current={Amps}.{2}";
                     s += $" - Maximal   :  Voltage={V}/Current={A}.";
-                    throw new Exception(s);
+                    throw new InvalidOperationException(InstrumentTasks.GetMessage(Instrument, s));
                 }
                 // TODO: Instruments - E3610xB.SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("INTernal");
@@ -52,8 +52,10 @@ namespace ABTTestLibrary.Instruments.Keysight {
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true);
                 ((AgE3610XB)Instrument.Instance).SCPI.OUTPut.STATe.Command(true);
                 Thread.Sleep(SettlingDelayMS);
+            } catch (InvalidOperationException) {
+                throw;
             } catch (Exception e) {
-                throw new Exception(InstrumentTasks.GetMessage(Instrument), e);
+                throw new InvalidOperationException(InstrumentTasks.GetMessage(Instrument), e);
             }
         }
 

@@ -23,7 +23,7 @@ namespace ABTTestLibrary.Instruments {
             Int32 SelfTestResult;
             foreach (KeyValuePair<String, Instrument> i in instruments) {
                 SelfTestResult = SCPI99.SelfTest(i.Value.Address);
-                if (SelfTestResult != 0) throw new Exception(GetMessage(i.Value));
+                if (SelfTestResult != 0) throw new InvalidOperationException(GetMessage(i.Value));
             }
         }
     }
@@ -85,14 +85,16 @@ namespace ABTTestLibrary.Instruments {
                         this.Instance = new Kt34400(this.Address, false, false);
                         break;
                     default:
-                        throw new Exception($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
+                        throw new NotImplementedException($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
                             $"Update Class ABTTestLibrary.InstrumentTasks.Instrument, adding '{ID}'.");
                 }
                 this.Manufacturer = SCPI99.GetManufacturer(this.Address);
                 this.Model = SCPI99.GetModel(this.Address);
+            } catch (NotImplementedException) {
+                throw;
             } catch (Exception e) {
                 String[] a = this.Address.Split(':');
-                throw new Exception($"Check to see if {this.Category} with VISA Address '{this.Address}' is powered and it's {a[0]} bus is communicating.", e);
+                throw new InvalidOperationException($"Check to see if {this.Category} with VISA Address '{this.Address}' is powered and it's {a[0]} bus is communicating.", e);
             }
         }
 

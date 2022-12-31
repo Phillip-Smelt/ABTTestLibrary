@@ -119,28 +119,16 @@ namespace ABTTestLibrary {
                 this.currentTestKey = t.Key;
                 try {
                     t.Value.Measurement = RunTest(t.Value);
+                    t.Value.Result = TestTasks.EvaluateTestResult(t.Value);
                 } catch (Exception e) {
                     InstrumentTasks.Reset(instruments);
-                    if (e.GetType() == typeof(ABTTestLibraryException)) {
-                        t.Value.Result = EventCodes.ABORT;
-                        Log.Warning(e.ToString());
-                    } else {
+                    if (e.GetType() == typeof(ABTTestAbortException)) t.Value.Result = EventCodes.ABORT;
+                    else {
                         t.Value.Result = EventCodes.ERROR;
                         Log.Error(e.ToString());
-                        DialogResult dr = MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
+                        MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
                             $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    LogTasks.LogTest(t.Value);
-                    break;
-                }
-
-                try {
-                    t.Value.Result= TestTasks.EvaluateTestResult(t.Value);
-                } catch (Exception e) {
-                    t.Value.Result = EventCodes.ERROR;
-                    Log.Error(e.ToString());
-                    DialogResult dr = MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
-                        $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 } finally {
                     LogTasks.LogTest(t.Value);
