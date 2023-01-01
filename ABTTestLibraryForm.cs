@@ -21,18 +21,11 @@ namespace ABTTestLibrary {
     public abstract partial class ABTTestLibraryForm : Form {
         // TODO: ABTTestLibrary - Refactor public (global) instance objects config & instruments into
         // private instance objects which are passed by value or reference as needed.
-        public Config config;
-        public Dictionary<String, Instrument> instruments;
+        private Config config;
+        protected Dictionary<String, Instrument> instruments;
         private String _currentTestKey;
 
-        public ABTTestLibraryForm() { InitializeComponent(); }
-
-        public virtual String RunTest(Test test) {
-            // https://stackoverflow.com/questions/540066/calling-a-function-from-a-string-in-c-sharp
-            Type type = this.GetType();
-            MethodInfo methodInfo = type.GetMethod(test.ID, BindingFlags.Instance | BindingFlags.NonPublic);
-            return (String)methodInfo.Invoke(this, new object[] { test });
-        }
+        protected ABTTestLibraryForm() { InitializeComponent(); }
 
         private void Form_Shown(Object sender, EventArgs e) {
             this.instruments = Instrument.Get();
@@ -84,7 +77,7 @@ namespace ABTTestLibrary {
             System.Diagnostics.Process.Start("explorer.exe", this.config.Logger.FilePath);
         }
 
-        public void PreRun() {
+        private void PreRun() {
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStart.Enabled = true;
             this.ButtonStop.Enabled = false;
@@ -96,7 +89,7 @@ namespace ABTTestLibrary {
             this.Text = $"{this.config.UUT.Number}, {this.config.UUT.Description}, {this.config.Group.ID}";
         }
 
-        public void Run() {
+        private void Run() {
             this.config.UUT.SerialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.config.UUT.SerialNumber);
             if (String.Equals(this.config.UUT.SerialNumber, String.Empty)) return;
             InstrumentTasks.Reset(this.instruments);
@@ -136,7 +129,14 @@ namespace ABTTestLibrary {
             PostRun();
         }
 
-        public void PostRun() {
+        private String RunTest(Test test) {
+            // https://stackoverflow.com/questions/540066/calling-a-function-from-a-string-in-c-sharp
+            Type type = this.GetType();
+            MethodInfo methodInfo = type.GetMethod(test.ID, BindingFlags.Instance | BindingFlags.NonPublic);
+            return (String)methodInfo.Invoke(this, new object[] { test });
+        }
+
+        private void PostRun() {
             InstrumentTasks.Reset(this.instruments);
             this.config.UUT.EventCode = TestTasks.EvaluateUUTResult(this.config);
             this.TextUUTResult.Text = this.config.UUT.EventCode;
