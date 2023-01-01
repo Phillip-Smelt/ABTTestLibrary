@@ -18,14 +18,14 @@ using Serilog;
 // - Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
 // NOTE: With deep gratitude to https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 namespace ABTTestLibrary {
-    public abstract partial class ABTTestLibraryForm : Form {
+    public abstract partial class TestForm : Form {
         // TODO: ABTTestLibrary - Refactor public (global) instance objects config & instruments into
         // private instance objects which are passed by value or reference as needed.
         private Config config;
         protected Dictionary<String, Instrument> instruments;
         private String _currentTestKey;
 
-        protected ABTTestLibraryForm() { InitializeComponent(); }
+        protected TestForm() { InitializeComponent(); }
 
         private void Form_Shown(Object sender, EventArgs e) {
             this.instruments = Instrument.Get();
