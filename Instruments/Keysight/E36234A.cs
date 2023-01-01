@@ -13,9 +13,9 @@ using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00; // https://www.ke
 //   - 6.25V ÷ 0.050S = 0.125V/mS.
 // - 0.252V/mS and 0.125V/mS both lie within required voltage ramp up rate between 1V/µSecond through 0.5V/mSecond.
 namespace ABTTestLibrary.Instruments.Keysight {
-    // NOTE: Instruments - Channel lists aren't allowed in any methods though many, perhaps most, E36234A SCPI commands do permit them.
+    // NOTE: Channel lists aren't allowed in any methods though many, perhaps most, E36234A SCPI commands do permit them.
     public static class E36234A {
-        // NOTE: Instruments - Consider using IVI driver instead of wrapping SCPI driver's calls.
+        // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
         private static void ConvertChannel(Instrument Instrument, String sChannel, out Int32 iChannel) {
             iChannel = -1;
             if (Int32.TryParse(sChannel, out Int32 ic)) iChannel = --ic;

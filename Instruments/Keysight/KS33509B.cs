@@ -2,9 +2,9 @@
 using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09; // https://www.keysight.com/us/en/search.html/command+expert
 
 namespace ABTTestLibrary.Instruments.Keysight {
-    // TODO: Instruments - KS33509B Class.
+    // TODO: KS33509B Class.
     public static class KS33509B {
-        // NOTE: Instruments - Consider using IVI driver instead of wrapping SCPI driver's calls.
+        // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
 
         public static void ApplyDC(Instrument Instrument, Double Volts) {
             ((Ag33500B_33600A)Instrument.Instance).SCPI.SOURce.APPLy.DC.Command(1u, "DEFAult", "DEFAult", Volts);
