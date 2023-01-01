@@ -21,11 +21,19 @@ namespace ABTTestLibrary {
     public abstract partial class TestForm : Form {
         // TODO: Refactor public (global) instance objects config & instruments into
         // private instance objects which are passed by value or reference as needed.
-        private Config config;
+        protected Config config;
         protected Dictionary<String, Instrument> instruments;
         private String _currentTestKey;
 
         protected TestForm() { InitializeComponent(); }
+
+        protected abstract String RunTest(Test test);
+            // https://stackoverflow.com/questions/540066/calling-a-function-from-a-string-in-c-sharp
+            // https://www.codeproject.com/Articles/19911/Dynamically-Invoke-A-Method-Given-Strings-with-Met
+            // Override with somthing like below:
+            // Type type = this.GetType();
+            // MethodInfo methodInfo = type.GetMethod(test.ID, BindingFlags.Static | BindingFlags.NonPublic);
+            // return (String)methodInfo.Invoke(this, new object[] { test, base.instruments });
 
         private void Form_Shown(Object sender, EventArgs e) {
             this.instruments = Instrument.Get();
@@ -127,13 +135,6 @@ namespace ABTTestLibrary {
                 }
             }
             PostRun();
-        }
-
-        private String RunTest(Test test) {
-            // https://stackoverflow.com/questions/540066/calling-a-function-from-a-string-in-c-sharp
-            Type type = this.GetType();
-            MethodInfo methodInfo = type.GetMethod(test.ID, BindingFlags.Instance | BindingFlags.NonPublic);
-            return (String)methodInfo.Invoke(this, new object[] { test });
         }
 
         private void PostRun() {
