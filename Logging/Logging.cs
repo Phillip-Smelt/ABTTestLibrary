@@ -31,7 +31,7 @@ namespace ABTTestLibrary.Logging {
             if (config.Logger.FileEnabled && !config.Logger.SQLEnabled) {
                 // When Required Groups are executed, test data is always & automatically saved to config.Logger.FilePath as UTF-8 text.  Always.
                 // RichTextBox + File.
-                FileStart(config);
+                FileStart();
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
@@ -42,7 +42,7 @@ namespace ABTTestLibrary.Logging {
                 SQLStart(config);
             } else if (config.Logger.FileEnabled && config.Logger.SQLEnabled) {
                 // TODO: Logger - RichTextBox + File + SQL.
-                FileStart(config);
+                FileStart();
                 SQLStart(config);
             } else {
                 // RichTextBox only; customer doesn't require saved test data, unusual for Functional testing, but common for other testing methodologies.
@@ -98,7 +98,7 @@ namespace ABTTestLibrary.Logging {
             }
         }
 
-        private static void FileStart(Config config) {
+        private static void FileStart() {
             if (File.Exists(LOGGER_FILE)) File.Delete(LOGGER_FILE);
             // A previous run likely failed to complete; delete it and begin anew.
         }
@@ -136,9 +136,9 @@ namespace ABTTestLibrary.Logging {
             // TODO: Logger - SQLStop.
         }
 
-        public static void TestEvents(Config config) {
+        public static void TestEvents(UUT uut) {
             String eventCode = String.Empty;
-            switch (config.UUT.EventCode) {
+            switch (uut.EventCode) {
                 case EventCodes.ABORT:
                     eventCode = "A";
                     break;
@@ -153,9 +153,9 @@ namespace ABTTestLibrary.Logging {
                     return;
                     // Don't record TestEvents for ERROR or UNSET.
                 default:
-                    throw new NotImplementedException($"Unrecognized EventCode '{config.UUT.EventCode}'.");
-                // TODO: Logger - Invoke TestEvents with $"{config.UUT.Number} {config.UUT.SerialNumber} {eventCode}";
+                    throw new NotImplementedException($"Unrecognized EventCode '{uut.EventCode}'.");
             }
+            // TODO: Logger - Invoke TestEvents with $"{uut.Number} {uut.SerialNumber} {eventCode}";
         }
     }
 }

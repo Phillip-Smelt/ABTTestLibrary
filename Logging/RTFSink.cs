@@ -13,7 +13,7 @@ namespace ABTTestLibrary.Logging {
         private readonly RichTextBox richTextBox;
         private readonly ITextFormatter formatter;
 
-        public RichTextBoxSink(ref RichTextBox richTextBox, string outputTemplate = LogTasks.LOGGER_TEMPLATE) {
+        public RichTextBoxSink(ref RichTextBox richTextBox, String outputTemplate = LogTasks.LOGGER_TEMPLATE) {
             this.richTextBox = richTextBox;
             this.formatter = new MessageTemplateTextFormatter(outputTemplate);
         }

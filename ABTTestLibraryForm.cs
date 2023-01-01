@@ -143,7 +143,7 @@ namespace ABTTestLibrary {
             this.TextUUTResult.BackColor = EventCodes.GetColor(this.config.UUT.EventCode);
             this._currentTestKey = String.Empty;
             LogTasks.Stop(this.config);
-            if (this.config.App.TestEventsEnabled) LogTasks.TestEvents(this.config);
+            if (this.config.App.TestEventsEnabled) LogTasks.TestEvents(this.config.UUT);
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStart.Enabled = true;
             this.ButtonStop.Enabled = false;

@@ -12,7 +12,7 @@ namespace ABTTestLibrary.AppConfig {
             this.ListGroups.Columns.Add("ID");
             this.ListGroups.Columns.Add("Required?");
             this.ListGroups.Columns.Add("Summary");
-            String[] item = new string[3];
+            String[] item = new String[3];
             foreach (KeyValuePair<String, Group> kvp in Groups) {
                 item[0] = kvp.Value.ID;
                 item[1] = kvp.Value.Required.ToString();

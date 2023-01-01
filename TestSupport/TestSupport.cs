@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using ABTTestLibrary.AppConfig;
 
 namespace ABTTestLibrary.TestSupport {
     public class ABTAbortException : Exception {
         public ABTAbortException() { }
-        public ABTAbortException(string message) : base(message) { }
-        public ABTAbortException(string message, Exception inner) : base(message, inner) { }
+        public ABTAbortException(String message) : base(message) { }
+        public ABTAbortException(String message, Exception inner) : base(message, inner) { }
     }
 
     public static class EventCodes {
@@ -20,7 +21,7 @@ namespace ABTTestLibrary.TestSupport {
         public const String UNSET = "UNSET";
 
         public static Color GetColor(String EventCode) {
-            Dictionary<String, Color> CodesToColors = new Dictionary<string, Color>() {
+            Dictionary<String, Color> CodesToColors = new Dictionary<String, Color>() {
                 {EventCodes.ABORT, Color.Yellow },
                 {EventCodes.ERROR, Color.Aqua },
                 {EventCodes.FAIL, Color.Red},
@@ -121,7 +122,7 @@ namespace ABTTestLibrary.TestSupport {
 
         public static String EvaluateUUTResult(Config config) {
             if (!config.Group.Required) return EventCodes.UNSET;
-            // 0th priority evaluation that trumps all others.
+            // 0th priority evaluation that precedes all others.
             if (GetResultCount(config.Tests, EventCodes.PASS) == config.Tests.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All test results are PASS, so overall UUT result is PASS.
@@ -138,8 +139,16 @@ namespace ABTTestLibrary.TestSupport {
             if (GetResultCount(config.Tests, EventCodes.FAIL) > 0) return EventCodes.FAIL;
             // 5th priority evaluation:
             // - If there are no ERROR, ABORT or UNSET results, but there is a FAIL result, UUT result is FAIL.
-            throw new NotImplementedException($"Invalid test result in Test List '{config.Tests}'");
-            // EventCodes was modified without updating EvaluateUUTResult; take exception to that.
+
+            // Else, handles oopsies!
+            String validEvents = String.Empty, invalidTests = String.Empty;
+            foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
+            foreach (KeyValuePair<String, Test> t in config.Tests) {
+                if (!validEvents.Contains(t.Value.Result)) invalidTests += $"ID: '{t.Key}' Result: '{t.Value.Result}'.{Environment.NewLine}";
+            }
+            if (!String.Equals(invalidTests, String.Empty)) throw new NotImplementedException($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
+            else throw new NotImplementedException("Sigh...unexpected Error.  Am clueless why.");
+            // EventCodes was modified without updating EvaluateUUTResult; take Exception to that.
         }
 
         private static Int32 GetResultCount(Dictionary<String, Test> tests, String eventCode) {
