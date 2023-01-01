@@ -41,16 +41,16 @@
     <Compile Include="TestForm.Designer.cs">
       <DependentUpon>TestForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="AppConfig\ConfigGroups.cs" />
-    <Compile Include="AppConfig\ConfigSettings.cs" />
-    <Compile Include="AppConfig\GroupSelection.cs">
+    <Compile Include="Config\ConfigGroups.cs" />
+    <Compile Include="Config\ConfigLib.cs" />
+    <Compile Include="Config\GroupSelection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AppConfig\GroupSelection.Designer.cs">
+    <Compile Include="Config\GroupSelection.Designer.cs">
       <DependentUpon>GroupSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="Instruments\InstrumentSupport.cs" />
-    <Compile Include="AppConfig\ConfigTests.cs" />
+    <Compile Include="Config\ConfigTests.cs" />
     <Compile Include="Instruments\Keysight\E36234A.cs" />
     <Compile Include="Instruments\Keysight\E3610xB.cs" />
     <Compile Include="Instruments\Keysight\EL34143A.cs" />
@@ -71,7 +71,7 @@
       <DependentUpon>TestForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="AppConfig\GroupSelection.resx">
+    <EmbeddedResource Include="Config\GroupSelection.resx">
       <DependentUpon>GroupSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

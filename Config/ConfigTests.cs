@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using ABTTestLibrary.TestSupport;
 
-namespace ABTTestLibrary.AppConfig {
+namespace ABTTestLibrary.Config {
     public class TestElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return (String)base["ID"]; } }
         [ConfigurationProperty("Summary", IsKey = false, IsRequired = true)] public String Summary { get { return (String)base["Summary"]; } }
@@ -66,6 +66,32 @@ namespace ABTTestLibrary.AppConfig {
             foreach (TestElement te in e) d.Add(te.ID, new Test(te.ID, te.Summary, te.Detail, te.LimitLow, te.LimitHigh, te.Units, te.UnitType, String.Empty, Result: EventCodes.UNSET));
             // Pre-load Tests with EventCodes.UNSET results, which will be replaced as the tests are executed with EventCodes.ABORT, EventCodes.ERROR, EventCodes.FAIL or (hopefully!) EventCodes.PASS.
             return d;
+        }
+    }
+
+    public class ConfigTest {
+        public Group Group { get; private set; }
+        public Dictionary<String, Test> Tests { get; private set; }
+
+        private ConfigTest () {
+            Dictionary<String, Group> Groups = Group.Get();
+            String GroupSelected = GroupSelect.Get(Groups);
+            this.Group = Groups[GroupSelected];
+            // Operator selects the Group they want to test, from the Dictionary of all Groups.
+            // GroupSelected is Dictionary Groups' Key.
+
+            Dictionary<String, Test> tests = Test.Get();
+            this.Tests = new Dictionary<String, Test>();
+            String[] g = this.Group.TestIDs.Split('|');
+            foreach (String s in g) {
+                if (!Tests.ContainsKey(s)) throw new InvalidOperationException($"Group '{Group.ID}' includes IDTest '{s}', which isn't present in TestElements in App.config.");
+                this.Tests.Add(s, tests[s]);
+                // Add only Tests correlated to the Group previously selected by operator.
+            }
+        }
+
+        public static ConfigTest Get() {
+            return new ConfigTest();
         }
     }
 }
