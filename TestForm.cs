@@ -10,22 +10,22 @@ using ABTTestLibrary.TestSupport;
 using Microsoft.VisualBasic;
 using Serilog;
 
-// NOTE: ABTTestLibrary - Update to .Net 7.0 & C# 11.0 when possible.
+// NOTE: Update to .Net 7.0 & C# 11.0 when possible.
 // - Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas Instruments
 //   TIDP.SAA Fusion Library compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
 // https://www.ti.com/tool/FUSION_USB_ADAPTER_API
-// NOTE: ABTTestLibrary - Update to UWP instead of WinForms when possible.
+// NOTE: Update to UWP instead of WinForms when possible.
 // - Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
 // NOTE: With deep gratitude to https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 namespace ABTTestLibrary {
-    public abstract partial class ABTTestLibraryForm : Form {
-        // TODO: ABTTestLibrary - Refactor public (global) instance objects config & instruments into
+    public abstract partial class TestForm : Form {
+        // TODO: Refactor public (global) instance objects config & instruments into
         // private instance objects which are passed by value or reference as needed.
         private Config config;
         protected Dictionary<String, Instrument> instruments;
         private String _currentTestKey;
 
-        protected ABTTestLibraryForm() { InitializeComponent(); }
+        protected TestForm() { InitializeComponent(); }
 
         private void Form_Shown(Object sender, EventArgs e) {
             this.instruments = Instrument.Get();
@@ -55,7 +55,7 @@ namespace ABTTestLibrary {
         }
 
         private void ButtonSaveOutput_Click(Object sender, EventArgs e) {
-            // NOTE: ABTTestLibrary - Using RichTextBox instead of TextBox control in ABTTestLibraryForm for below reasons:
+            // NOTE: Using RichTextBox instead of TextBox control in ABTTestLibraryForm for below reasons:
             // - RichTextBox doesn't have a character limit, whereas TextBox control limited to 64KByte of characters.
             //   Doubt > 64KBytes necessary, but why risk it?
             // - RichTextBox can display rich text, specifically the color coded text of EventCode.ABORT, EventCode.ERROR, 

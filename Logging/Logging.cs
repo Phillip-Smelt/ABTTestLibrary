@@ -38,10 +38,10 @@ namespace ABTTestLibrary.Logging {
                     .WriteTo.File(LOGGER_FILE, outputTemplate: LOGGER_TEMPLATE, fileSizeLimitBytes: null, retainedFileCountLimit: null)
                     .CreateLogger();
             } else if (!config.Logger.FileEnabled && config.Logger.SQLEnabled) {
-                // TODO: Logger - RichTextBox + SQL.
+                // TODO: RichTextBox + SQL.
                 SQLStart(config);
             } else if (config.Logger.FileEnabled && config.Logger.SQLEnabled) {
-                // TODO: Logger - RichTextBox + File + SQL.
+                // TODO: RichTextBox + File + SQL.
                 FileStart();
                 SQLStart(config);
             } else {
@@ -129,11 +129,11 @@ namespace ABTTestLibrary.Logging {
         }
 
         private static void SQLStart(Config config) {
-            // TODO: Logger - SQLStart.
+            // TODO: SQLStart.
         }
 
         private static void SQLStop(Config config) {
-            // TODO: Logger - SQLStop.
+            // TODO: SQLStop.
         }
 
         public static void TestEvents(UUT uut) {
@@ -155,7 +155,7 @@ namespace ABTTestLibrary.Logging {
                 default:
                     throw new NotImplementedException($"Unrecognized EventCode '{uut.EventCode}'.");
             }
-            // TODO: Logger - Invoke TestEvents with $"{uut.Number} {uut.SerialNumber} {eventCode}";
+            // TODO: Invoke TestEvents with $"{uut.Number} {uut.SerialNumber} {eventCode}";
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿namespace ABTTestLibrary {
-    public partial class ABTTestLibraryForm {
+    public partial class TestForm {
         /// <summary>
         /// Required designer variable.
         /// </summary>

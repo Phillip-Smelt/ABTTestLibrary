@@ -4,7 +4,7 @@ using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00; // https://www.keysigh
 
 namespace ABTTestLibrary.Instruments.Keysight {
     public static class E3610xB {
-        // NOTE: Instruments - Consider using IVI driver instead of wrapping SCPI driver's calls.
+        // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
         public static void RemoteOn(Instrument Instrument) {
             ((AgE3610XB)Instrument.Instance).SCPI.SYSTem.REMote.Command();
         }
@@ -45,7 +45,7 @@ namespace ABTTestLibrary.Instruments.Keysight {
                     s += $" - Maximal   :  Voltage={V}/Current={A}.";
                     throw new InvalidOperationException(InstrumentTasks.GetMessage(Instrument, s));
                 }
-                // TODO: Instruments - E3610xB.SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
+                // TODO: E3610xB.SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("INTernal");
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(Volts);
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(Amps);
