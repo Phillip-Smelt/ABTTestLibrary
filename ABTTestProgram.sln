@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABTTestLibrary", "ABTTestLibrary.csproj", "{314614CB-6E17-4B74-A9F9-CE4699F78C9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABTTestProgram", "P:\Test\Engineers\repos\ABTTestProgram\ABTTestProgram.csproj", "{5AB1CDE9-19FE-49B3-AAD6-A3C55DBC98A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "isoMicro", "P:\Test\Engineers\repos\ABTTestProgram\isoMicro.csproj", "{5AB1CDE9-19FE-49B3-AAD6-A3C55DBC98A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
