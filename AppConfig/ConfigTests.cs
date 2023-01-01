@@ -68,4 +68,30 @@ namespace ABTTestLibrary.AppConfig {
             return d;
         }
     }
+
+    public class ConfigTest {
+        public Group Group { get; private set; }
+        public Dictionary<String, Test> Tests { get; private set; }
+
+        private ConfigTest () {
+            Dictionary<String, Group> Groups = Group.Get();
+            String GroupSelected = GroupSelect.Get(Groups);
+            this.Group = Groups[GroupSelected];
+            // Operator selects the Group they want to test, from the Dictionary of all Groups.
+            // GroupSelected is Dictionary Groups' Key.
+
+            Dictionary<String, Test> tests = Test.Get();
+            this.Tests = new Dictionary<String, Test>();
+            String[] g = this.Group.TestIDs.Split('|');
+            foreach (String s in g) {
+                if (!Tests.ContainsKey(s)) throw new InvalidOperationException($"Group '{Group.ID}' includes IDTest '{s}', which isn't present in TestElements in App.config.");
+                this.Tests.Add(s, tests[s]);
+                // Add only Tests correlated to the Group previously selected by operator.
+            }
+        }
+
+        public static ConfigTest Get() {
+            return new ConfigTest();
+        }
+    }
 }

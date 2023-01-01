@@ -9,7 +9,6 @@ namespace ABTTestLibrary.AppConfig {
         [ConfigurationProperty("Summary", IsKey = false, IsRequired = true)] public String Summary { get { return (String)base["Summary"]; } }
         [ConfigurationProperty("Detail", IsKey = false, IsRequired = false)] public String Detail { get { return (String)base["Detail"]; } }
         [ConfigurationProperty("TestIDs", IsKey = false, IsRequired = true)] public String TestIDs { get { return (String)base["TestIDs"]; } }
-
     }
 
     [ConfigurationCollection(typeof(GroupElement))]
@@ -35,7 +34,7 @@ namespace ABTTestLibrary.AppConfig {
     }
 
     public class Group {
-        public String ID { get; set; }
+        public String ID { get; private set; }
         public Boolean Required { get; private set; }
         public String Summary { get; private set; }
         public String Detail { get; private set; }

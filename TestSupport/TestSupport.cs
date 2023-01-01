@@ -123,30 +123,30 @@ namespace ABTTestLibrary.TestSupport {
             // NumberStyles.Float best for parsing floating point decimal values, including scientific/exponential notation.
         }
 
-        public static String EvaluateUUTResult(Config config) {
-            if (!config.Group.Required) return EventCodes.UNSET;
+        public static String EvaluateUUTResult(ConfigTest configTest) {
+            if (!configTest.Group.Required) return EventCodes.UNSET;
             // 0th priority evaluation that precedes all others.
-            if (GetResultCount(config.Tests, EventCodes.PASS) == config.Tests.Count) return EventCodes.PASS;
+            if (GetResultCount(configTest.Tests, EventCodes.PASS) == configTest.Tests.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All test results are PASS, so overall UUT result is PASS.
-            if (GetResultCount(config.Tests, EventCodes.ERROR) > 0) return EventCodes.ERROR;
+            if (GetResultCount(configTest.Tests, EventCodes.ERROR) > 0) return EventCodes.ERROR;
             // 2nd priority evaluation:
             // - If any test result is ERROR, overall UUT result is ERROR.
-            if (GetResultCount(config.Tests, EventCodes.ABORT) > 0) return EventCodes.ABORT;
+            if (GetResultCount(configTest.Tests, EventCodes.ABORT) > 0) return EventCodes.ABORT;
             // 3rd priority evaluation:
             // - If any test result is ABORT, and none were ERROR, overall UUT result is ABORT.
-            if (GetResultCount(config.Tests, EventCodes.UNSET) > 0) throw new InvalidOperationException("One or more Tests didn't execute!");
+            if (GetResultCount(configTest.Tests, EventCodes.UNSET) > 0) throw new InvalidOperationException("One or more Tests didn't execute!");
             // 4th priority evaluation:
             // - If any test result is UNSET, and there are no explicit ERROR or ABORT results, it implies the test didn't complete
             //   without erroring or aborting, which shouldn't occur, but...
-            if (GetResultCount(config.Tests, EventCodes.FAIL) > 0) return EventCodes.FAIL;
+            if (GetResultCount(configTest.Tests, EventCodes.FAIL) > 0) return EventCodes.FAIL;
             // 5th priority evaluation:
             // - If there are no ERROR, ABORT or UNSET results, but there is a FAIL result, UUT result is FAIL.
 
             // Else, handle oopsies!
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
-            foreach (KeyValuePair<String, Test> t in config.Tests) {
+            foreach (KeyValuePair<String, Test> t in configTest.Tests) {
                 if (!validEvents.Contains(t.Value.Result)) invalidTests += $"ID: '{t.Key}' Result: '{t.Value.Result}'.{Environment.NewLine}";
             }
             if (!String.Equals(invalidTests, String.Empty)) throw new NotImplementedException($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
