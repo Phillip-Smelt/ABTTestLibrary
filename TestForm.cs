@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using ABTTestLibrary.AppConfig;
+using ABTTestLibrary.Config;
 using ABTTestLibrary.Instruments;
 using ABTTestLibrary.Logging;
 using ABTTestLibrary.TestSupport;

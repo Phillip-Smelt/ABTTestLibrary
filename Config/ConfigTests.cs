@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using ABTTestLibrary.TestSupport;
 
-namespace ABTTestLibrary.AppConfig {
+namespace ABTTestLibrary.Config {
     public class TestElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return (String)base["ID"]; } }
         [ConfigurationProperty("Summary", IsKey = false, IsRequired = true)] public String Summary { get { return (String)base["Summary"]; } }

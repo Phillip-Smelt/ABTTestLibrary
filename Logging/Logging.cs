@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using ABTTestLibrary.AppConfig;
+using ABTTestLibrary.Config;
 using ABTTestLibrary.TestSupport;
 using Serilog;
 

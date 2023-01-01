@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using ABTTestLibrary.TestSupport;
 
-namespace ABTTestLibrary.AppConfig {
+namespace ABTTestLibrary.Config {
     public class App {
         public String Revision { get; private set; }
         public Boolean TestEventsEnabled { get; private set; }

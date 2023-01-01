@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using ABTTestLibrary.AppConfig;
+using ABTTestLibrary.Config;
 
 namespace ABTTestLibrary.TestSupport {
     public class ABTAbortException : Exception {
