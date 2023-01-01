@@ -1,5 +1,7 @@
-﻿namespace ABTTestLibrary {
-    public partial class TestForm {
+﻿using System.Windows.Forms;
+
+namespace ABTTestLibrary {
+    public abstract partial class TestForm : Form {
         /// <summary>
         /// Required designer variable.
         /// </summary>
