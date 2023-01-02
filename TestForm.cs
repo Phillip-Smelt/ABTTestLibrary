@@ -24,38 +24,34 @@ namespace ABTTestLibrary {
         protected ConfigTest configTest;
         protected Dictionary<String, Instrument> instruments;
         private String _currentTestKey;
-        private Boolean _stopDisabled = false;
 
         protected TestForm() { InitializeComponent(); }
 
         protected void StopDisable() {
-            this._stopDisabled = true;
             this.ButtonStop.Enabled = false;
             // Method StopDisable() permits client Test methods to disable ButtonStop during method Run().
             // Prevents test operators from Stopping Test methods mid-execution when doing so could have
             // negative consequences.
-            // StopDisable() only intended to be invoked by client Test methods during Run(), so
-            // ButtonStop's state is controlled directly by all other methods, ignoring _stopDisabled's
-            // state.
+            // StopDisable() is only intended to be invoked by client Test methods during Run();
+            // ButtonStop's state is controlled directly by all other methods.
         }
         protected void StopEnable() {
-            this._stopDisabled = false;
             this.ButtonStop.Enabled = true;
             // Method StopEnable() permits client Test methods to enable ButtonStop during method Run().
             // Permits test operators to Stop Test methods mid-execution when doing so won't have
             // negative consequences.
-            // StopEnable() only intended to be invoked by client Test methods during Run(), so
-            // ButtonStop's state is controlled directly by all other methods, ignoring _stopDisabled's
-            // state.
+            // StopEnable() is only intended to be invoked by client Test methods during Run();
+            // ButtonStop's state is controlled directly by all other methods.
         }
 
-        protected abstract String RunTest(Test test);
-            // https://stackoverflow.com/questions/540066/calling-a-function-from-a-string-in-c-sharp
-            // https://www.codeproject.com/Articles/19911/Dynamically-Invoke-A-Method-Given-Strings-with-Met
-            // Override with somthing like below:
-            // Type type = this.GetType();
-            // MethodInfo methodInfo = type.GetMethod(test.ID, BindingFlags.Static | BindingFlags.NonPublic);
-            // return (String)methodInfo.Invoke(this, new object[] { test, base.instruments });
+        protected abstract String RunTest(Test test, ref Dictionary<String, Instrument> instruments);
+        // https://stackoverflow.com/questions/540066/calling-a-function-from-a-string-in-c-sharp
+        // https://www.codeproject.com/Articles/19911/Dynamically-Invoke-A-Method-Given-Strings-with-Met
+        // Pass instruments by ref so it doesn't have to be copied, not because it will be modified.
+        // Override with somthing like below:
+        // Type type = this.GetType();
+        // MethodInfo methodInfo = type.GetMethod(test.ID, BindingFlags.Static | BindingFlags.NonPublic);
+        // return (String)methodInfo.Invoke(this, new object[] { test, instruments });
 
         private void Form_Shown(Object sender, EventArgs e) {
             this.configLib = ConfigLib.Get();
@@ -127,7 +123,6 @@ namespace ABTTestLibrary {
             this.ButtonSelectGroup.Enabled = false;
             this.ButtonStart.Enabled = false;
             this.ButtonStop.Enabled = true;
-            this._stopDisabled= false;
             this.ButtonSaveOutput.Enabled = false;
             this.rtfResults.Text = String.Empty;
             this.TextUUTResult.Text = String.Empty;
@@ -142,7 +137,7 @@ namespace ABTTestLibrary {
             foreach (KeyValuePair<String, Test> t in this.configTest.Tests) {
                 this._currentTestKey = t.Key;
                 try {
-                    t.Value.Measurement = RunTest(t.Value);
+                    t.Value.Measurement = RunTest(t.Value, ref instruments);
                     t.Value.Result = TestTasks.EvaluateTestResult(t.Value);
                 } catch (Exception e) {
                     InstrumentTasks.Reset(this.instruments);
@@ -156,7 +151,6 @@ namespace ABTTestLibrary {
                     break;
                 } finally {
                     LogTasks.LogTest(t.Value);
-                    this.ButtonStop.Enabled = !this._stopDisabled;
                 }
             }
             PostRun();
