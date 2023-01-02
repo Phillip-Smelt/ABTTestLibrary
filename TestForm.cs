@@ -44,11 +44,13 @@ namespace ABTTestLibrary {
             // ButtonStop's state is controlled directly by all other methods.
         }
 
-        protected abstract String RunTest(Test test, ref Dictionary<String, Instrument> instruments);
+        protected abstract String RunTest(Test test, Dictionary<String, Instrument> instruments);
         // https://stackoverflow.com/questions/540066/calling-a-function-from-a-string-in-c-sharp
         // https://www.codeproject.com/Articles/19911/Dynamically-Invoke-A-Method-Given-Strings-with-Met
-        // Pass instruments by ref so it doesn't have to be copied, not because it will be modified.
-        // Override with somthing like below:
+        // Override with the below.  Necessary because implementing RunTest() here in this method
+        // then requires having a reference to the client Test project, and we don't want that.
+        // We want the client Test project to reference this ABTTEstLibray, but ABTTestLibary to be
+        // blissfully ignorant of the client Test project.
         // Type type = this.GetType();
         // MethodInfo methodInfo = type.GetMethod(test.ID, BindingFlags.Static | BindingFlags.NonPublic);
         // return (String)methodInfo.Invoke(this, new object[] { test, instruments });
@@ -137,7 +139,7 @@ namespace ABTTestLibrary {
             foreach (KeyValuePair<String, Test> t in this.configTest.Tests) {
                 this._currentTestKey = t.Key;
                 try {
-                    t.Value.Measurement = RunTest(t.Value, ref instruments);
+                    t.Value.Measurement = RunTest(t.Value, this.instruments);
                     t.Value.Result = TestTasks.EvaluateTestResult(t.Value);
                 } catch (Exception e) {
                     InstrumentTasks.Reset(this.instruments);
