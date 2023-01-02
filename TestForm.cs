@@ -24,8 +24,30 @@ namespace ABTTestLibrary {
         protected ConfigTest configTest;
         protected Dictionary<String, Instrument> instruments;
         private String _currentTestKey;
+        private Boolean _stopDisabled = false;
 
         protected TestForm() { InitializeComponent(); }
+
+        protected void StopDisable() {
+            this._stopDisabled = true;
+            this.ButtonStop.Enabled = false;
+            // Method StopDisable() permits client Test methods to disable ButtonStop during method Run().
+            // Prevents test operators from Stopping Test methods mid-execution when doing so could have
+            // negative consequences.
+            // StopDisable() only intended to be invoked by client Test methods during Run(), so
+            // ButtonStop's state is controlled directly by all other methods, ignoring _stopDisabled's
+            // state.
+        }
+        protected void StopEnable() {
+            this._stopDisabled = false;
+            this.ButtonStop.Enabled = true;
+            // Method StopEnable() permits client Test methods to enable ButtonStop during method Run().
+            // Permits test operators to Stop Test methods mid-execution when doing so won't have
+            // negative consequences.
+            // StopEnable() only intended to be invoked by client Test methods during Run(), so
+            // ButtonStop's state is controlled directly by all other methods, ignoring _stopDisabled's
+            // state.
+        }
 
         protected abstract String RunTest(Test test);
             // https://stackoverflow.com/questions/540066/calling-a-function-from-a-string-in-c-sharp
@@ -105,6 +127,7 @@ namespace ABTTestLibrary {
             this.ButtonSelectGroup.Enabled = false;
             this.ButtonStart.Enabled = false;
             this.ButtonStop.Enabled = true;
+            this._stopDisabled= false;
             this.ButtonSaveOutput.Enabled = false;
             this.rtfResults.Text = String.Empty;
             this.TextUUTResult.Text = String.Empty;
@@ -133,6 +156,7 @@ namespace ABTTestLibrary {
                     break;
                 } finally {
                     LogTasks.LogTest(t.Value);
+                    this.ButtonStop.Enabled = !this._stopDisabled;
                 }
             }
             PostRun();
