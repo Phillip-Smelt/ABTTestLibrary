@@ -87,7 +87,7 @@ namespace ABTTestLibrary.Config {
             this.Tests = new Dictionary<String, Test>();
             String[] g = this.Group.TestIDs.Split('|');
             foreach (String s in g) {
-                if (!Tests.ContainsKey(s)) throw new InvalidOperationException($"Group '{Group.ID}' includes IDTest '{s}', which isn't present in TestElements in App.config.");
+                if (!tests.ContainsKey(s)) throw new InvalidOperationException($"Group '{Group.ID}' includes IDTest '{s}', which isn't present in TestElements in App.config.");
                 this.Tests.Add(s, tests[s]);
                 // Add only Tests correlated to the Group previously selected by operator.
             }
