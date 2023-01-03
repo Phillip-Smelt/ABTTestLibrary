@@ -1,35 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using ABTTestLibrary.TestSupport;
 
 namespace ABTTestLibrary.Config {
-    public class App {
-        public String Revision { get; private set; }
-        public Boolean TestEventsEnabled { get; private set; }
-
-        private App(String Revision, Boolean TestEventsEnabled) {
-            this.Revision = Revision;
-            this.TestEventsEnabled = TestEventsEnabled;
-        }
-
-        public static App Get() {
-            return new App(ConfigurationManager.AppSettings["APP_Revision"], 
-                Boolean.Parse(ConfigurationManager.AppSettings["APP_TestEventsEnabled"]));
-        }
-    }
-
     public class Logger {
         public Boolean FileEnabled { get; private set; }
         public String FilePath { get; private set; }
         public Boolean SQLEnabled { get; private set; }
         public String SQLConnectionString { get; private set; }
+        public Boolean TestEventsEnabled { get; private set; }
 
-        private Logger(Boolean FileEnabled, String FilePath, Boolean SQLEnabled, String SQLConnectionString) {
+        private Logger(Boolean FileEnabled, String FilePath, Boolean SQLEnabled, String SQLConnectionString, Boolean TestEventsEnabled) {
             this.FileEnabled = FileEnabled;
             this.FilePath = FilePath;
             this.SQLEnabled = SQLEnabled;
             this.SQLConnectionString = SQLConnectionString;
+            this.TestEventsEnabled = TestEventsEnabled;
         }
 
         public static Logger Get() {
@@ -37,7 +23,8 @@ namespace ABTTestLibrary.Config {
                 Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_FileEnabled"]),
                 ConfigurationManager.AppSettings["LOGGER_FilePath"],
                 Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_SQLEnabled"]),
-                ConfigurationManager.AppSettings["LOGGER_SQLConnectionString"]
+                ConfigurationManager.AppSettings["LOGGER_SQLConnectionString"],
+                Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_TestEventsEnabled"])
             );
         }
     }
@@ -78,12 +65,10 @@ namespace ABTTestLibrary.Config {
     }
 
     public class ConfigLib {
-        public App App { get; private set; }
         public Logger Logger { get; private set; }
         public UUT UUT { get; private set; }
 
         private ConfigLib() {
-            this.App = App.Get();
             this.Logger = Logger.Get();
             this.UUT = UUT.Get();
         }

@@ -7,10 +7,10 @@ using System.Reflection;
 using ABTTestLibrary.Config;
 
 namespace ABTTestLibrary.TestSupport {
-    public class ABTAbortException : Exception {
-        public ABTAbortException() { }
-        public ABTAbortException(String message) : base(message) { }
-        public ABTAbortException(String message, Exception inner) : base(message, inner) { }
+    public class TestAbortException : Exception {
+        public TestAbortException() { }
+        public TestAbortException(String message) : base(message) { }
+        public TestAbortException(String message, Exception inner) : base(message, inner) { }
     }
 
     public static class EventCodes {

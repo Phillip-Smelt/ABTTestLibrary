@@ -18,14 +18,18 @@ using Serilog;
 // NOTE: With deep gratitude to https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 namespace ABTTestLibrary {
     public abstract partial class TestForm : Form {
-        // TODO: Refactor public (global) instance objects config & instruments into
-        // private instance objects which are passed by value or reference as needed.
         protected ConfigLib configLib;
         protected ConfigTest configTest;
         protected Dictionary<String, Instrument> instruments;
         private String _currentTestKey;
+        private String _clientAssemblyName;
+        private String _clientAssemblyVersion;
 
-        protected TestForm() { InitializeComponent(); }
+        protected TestForm(String clientAssemblyName, String clientAssemblyVerison) {
+            InitializeComponent();
+            this._clientAssemblyName = clientAssemblyName;
+            this._clientAssemblyVersion= clientAssemblyVerison;
+        }
 
         protected void StopDisable() {
             this.ButtonStop.Enabled = false;
@@ -56,17 +60,17 @@ namespace ABTTestLibrary {
         // return (String)methodInfo.Invoke(this, new object[] { test, instruments });
 
         private void Form_Shown(Object sender, EventArgs e) {
-            this.configLib = ConfigLib.Get();
-            this.instruments = Instrument.Get();
-            InstrumentTasks.Test(this.instruments);
+            this.ButtonStop.Enabled = false;
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStart.Enabled = false;
-            this.ButtonStop.Enabled = false;
             this.ButtonSaveOutput.Enabled = false;
             this.ButtonOpenTestDataFolder.Enabled = false;
             this.rtfResults.Text = String.Empty;
             this.TextUUTResult.Text = String.Empty;
             this.TextUUTResult.BackColor = Color.White;
+            this.configLib = ConfigLib.Get();
+            this.instruments = Instrument.Get();
+            InstrumentTasks.Test(this.instruments);
         }
 
         private void ButtonSelectGroup_Click(Object sender, EventArgs e) {
@@ -80,7 +84,7 @@ namespace ABTTestLibrary {
         }
 
         private void ButtonStop_Clicked(Object sender, EventArgs e) {
-            throw new ABTAbortException($"Operator cancelled via Stop button in Test '{this.configTest.Tests[this._currentTestKey].ID}', '{this.configTest.Tests[this._currentTestKey].Summary}'.");
+            throw new TestAbortException($"Operator cancelled via Stop button in Test '{this.configTest.Tests[this._currentTestKey].ID}', '{this.configTest.Tests[this._currentTestKey].Summary}'.");
         }
 
         private void ButtonSaveOutput_Click(Object sender, EventArgs e) {
@@ -108,8 +112,8 @@ namespace ABTTestLibrary {
 
         private void PreRun() {
             this.ButtonSelectGroup.Enabled = true;
-            this.ButtonStart.Enabled = true;
             this.ButtonStop.Enabled = false;
+            this.ButtonStart.Enabled = true;
             this.ButtonSaveOutput.Enabled = false;
             this.rtfResults.Text = String.Empty;
             this.TextUUTResult.Text = String.Empty;
@@ -121,7 +125,6 @@ namespace ABTTestLibrary {
         private void Run() {
             this.configLib.UUT.SerialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.configLib.UUT.SerialNumber);
             if (String.Equals(this.configLib.UUT.SerialNumber, String.Empty)) return;
-            InstrumentTasks.Reset(this.instruments);
             this.ButtonSelectGroup.Enabled = false;
             this.ButtonStart.Enabled = false;
             this.ButtonStop.Enabled = true;
@@ -134,8 +137,8 @@ namespace ABTTestLibrary {
                 t.Value.Result = EventCodes.UNSET;
             }
             this.configLib.UUT.EventCode = EventCodes.UNSET;
-            LogTasks.Start(this.configLib, this.configTest.Group, ref this.rtfResults);
-
+            InstrumentTasks.Reset(this.instruments);
+            LogTasks.Start(this.configLib, this._clientAssemblyName, this._clientAssemblyVersion, this.configTest.Group, ref this.rtfResults);
             foreach (KeyValuePair<String, Test> t in this.configTest.Tests) {
                 this._currentTestKey = t.Key;
                 try {
@@ -143,7 +146,7 @@ namespace ABTTestLibrary {
                     t.Value.Result = TestTasks.EvaluateTestResult(t.Value);
                 } catch (Exception e) {
                     InstrumentTasks.Reset(this.instruments);
-                    if (e.GetType() == typeof(ABTAbortException)) t.Value.Result = EventCodes.ABORT;
+                    if (e.GetType() == typeof(TestAbortException)) t.Value.Result = EventCodes.ABORT;
                     else {
                         t.Value.Result = EventCodes.ERROR;
                         Log.Error(e.ToString());
@@ -165,10 +168,10 @@ namespace ABTTestLibrary {
             this.TextUUTResult.BackColor = EventCodes.GetColor(this.configLib.UUT.EventCode);
             this._currentTestKey = String.Empty;
             LogTasks.Stop(this.configLib, this.configTest.Group);
-            if (this.configLib.App.TestEventsEnabled) LogTasks.TestEvents(this.configLib.UUT);
+            if (this.configLib.Logger.TestEventsEnabled) LogTasks.TestEvents(this.configLib.UUT);
             this.ButtonSelectGroup.Enabled = true;
-            this.ButtonStart.Enabled = true;
             this.ButtonStop.Enabled = false;
+            this.ButtonStart.Enabled = true;
             if (this.configTest.Group.Required && String.Equals(this.configLib.UUT.EventCode, EventCodes.PASS)) this.ButtonSaveOutput.Enabled = false;
             // Disallow saving output if this was a Required Group & UUT passed, because, why bother?
             // UUT passed & saved test data attesting such; take the win & $hip it.
