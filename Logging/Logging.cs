@@ -57,9 +57,6 @@ namespace ABTTestLibrary.Logging {
             Log.Information($"Library Version        : {an.Version}");
             Log.Information($"UUT Customer           : {configLib.UUT.Customer}");
             Log.Information($"UUT Test Specification : {configLib.UUT.TestSpecification}");
-            Log.Information($"UUT Customer           : {configLib.UUT.Customer}");
-            Log.Information($"UUT Test Specification : {configLib.UUT.TestSpecification}");
-            Log.Information($"UUT Customer           : {configLib.UUT.Customer}");
             Log.Information($"UUT Description        : {configLib.UUT.Description}");
             Log.Information($"UUT Type               : {configLib.UUT.Type}");
             Log.Information($"UUT Number             : {configLib.UUT.Number}");
@@ -67,7 +64,8 @@ namespace ABTTestLibrary.Logging {
             Log.Information($"UUT Group ID           : {group.ID}");
             Log.Information($"UUT Group Revision     : {group.Revision}");
             Log.Information($"UUT Group Summary      : {group.Summary}");
-            Log.Information($"UUT Group Detail       \n{group.Detail}");
+            Log.Information($"UUT Group Detail{Environment.NewLine}{Environment.NewLine}" +
+                $"{group.Detail}{Environment.NewLine}");
             Log.Information($"Environment.UserName   : {Environment.UserName}");
             Log.Information($"UUT Serial Number      : {configLib.UUT.SerialNumber}\n");
             Log.Debug($"Environment.UserDomainName         : {Environment.UserDomainName}");
