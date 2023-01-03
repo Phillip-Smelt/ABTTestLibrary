@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.DirectoryServices.AccountManagement;
 using System.Reflection;
 using System.Windows.Forms;
 using ABTTestLibrary.Config;
@@ -52,9 +53,9 @@ namespace ABTTestLibrary.Logging {
                     .CreateLogger();
             }
             Log.Information($"START                  : {DateTime.Now}");
-            Log.Information($"Assembly Version       : {clientAssemblyVersion}");
+            Log.Information($"ABT Program Version    : {clientAssemblyVersion}");
             AssemblyName an = Assembly.GetExecutingAssembly().GetName();
-            Log.Information($"Library Version        : {an.Version}");
+            Log.Information($"ABT Library Version    : {an.Version}");
             Log.Information($"UUT Customer           : {configLib.UUT.Customer}");
             Log.Information($"UUT Test Specification : {configLib.UUT.TestSpecification}");
             Log.Information($"UUT Description        : {configLib.UUT.Description}");
@@ -67,6 +68,7 @@ namespace ABTTestLibrary.Logging {
             Log.Information($"UUT Group Detail{Environment.NewLine}{Environment.NewLine}" +
                 $"{group.Detail}{Environment.NewLine}");
             Log.Information($"Environment.UserName   : {Environment.UserName}");
+            Log.Information($"UserPrincipal          : {UserPrincipal.Current.DisplayName}");
             Log.Information($"UUT Serial Number      : {configLib.UUT.SerialNumber}\n");
             Log.Debug($"Environment.UserDomainName         : {Environment.UserDomainName}");
             Log.Debug($"Environment.MachineName            : {Environment.MachineName}");
@@ -82,9 +84,9 @@ namespace ABTTestLibrary.Logging {
             message += $"  Revision    : {test.Revision}{Environment.NewLine}";
             message += $"  Summary     : {test.Summary}{Environment.NewLine}";
             message += $"  Detail      : {test.Detail}{Environment.NewLine}";
-            message += $"  Limit Low   : {test.LimitLow}{Environment.NewLine}";
-            message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
             message += $"  Limit High  : {test.LimitHigh}{Environment.NewLine}";
+            message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
+            message += $"  Limit Low   : {test.LimitLow}{Environment.NewLine}";
             message += $"  Units       : {test.Units}{Environment.NewLine}";
             message += $"  UnitType    : {test.UnitType}{Environment.NewLine}";
             message += $"  Result      : {test.Result}{Environment.NewLine}";
