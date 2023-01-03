@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 using ABTTestLibrary.Config;
 using ABTTestLibrary.Instruments;
@@ -22,13 +23,12 @@ namespace ABTTestLibrary {
         protected ConfigTest configTest;
         protected Dictionary<String, Instrument> instruments;
         private String _currentTestKey;
-        private String _clientAssemblyName;
         private String _clientAssemblyVersion;
 
-        protected TestForm(String clientAssemblyName, String clientAssemblyVerison) {
+        protected TestForm() {
             InitializeComponent();
-            this._clientAssemblyName = clientAssemblyName;
-            this._clientAssemblyVersion= clientAssemblyVerison;
+            AssemblyName an = Assembly.GetEntryAssembly().GetName();
+            this._clientAssemblyVersion = an.Version.ToString();
         }
 
         protected void StopDisable() {
@@ -138,7 +138,7 @@ namespace ABTTestLibrary {
             }
             this.configLib.UUT.EventCode = EventCodes.UNSET;
             InstrumentTasks.Reset(this.instruments);
-            LogTasks.Start(this.configLib, this._clientAssemblyName, this._clientAssemblyVersion, this.configTest.Group, ref this.rtfResults);
+            LogTasks.Start(this.configLib, this._clientAssemblyVersion, this.configTest.Group, ref this.rtfResults);
             foreach (KeyValuePair<String, Test> t in this.configTest.Tests) {
                 this._currentTestKey = t.Key;
                 try {

@@ -6,6 +6,7 @@ using ABTTestLibrary.TestSupport;
 namespace ABTTestLibrary.Config {
     public class TestElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return (String)base["ID"]; } }
+        [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return (String)base["Revision"]; } }
         [ConfigurationProperty("Summary", IsKey = false, IsRequired = true)] public String Summary { get { return (String)base["Summary"]; } }
         [ConfigurationProperty("Detail", IsKey = false, IsRequired = false)] public String Detail { get { return (String)base["Detail"]; } }
         [ConfigurationProperty("LimitLow", IsKey = false, IsRequired = false)] public String LimitLow { get { return (String)base["LimitLow"]; } }
@@ -38,6 +39,7 @@ namespace ABTTestLibrary.Config {
 
     public class Test {
         public String ID { get; private set; }
+        public String Revision { get; private set; }
         public String Summary { get; private set; }
         public String Detail { get; private set; }
         public String LimitLow { get; private set; }
@@ -47,8 +49,9 @@ namespace ABTTestLibrary.Config {
         public String Measurement { get; set; }
         public String Result { get; set; }
 
-        private Test(String ID, String Summary, String Detail, String LimitLow, String LimitHigh, String Units, String UnitType, String Measurement, String Result) {
+        private Test(String ID, String Revision, String Summary, String Detail, String LimitLow, String LimitHigh, String Units, String UnitType, String Measurement, String Result) {
             this.ID = ID;
+            this.Revision = Revision;
             this.Summary = Summary;
             this.Detail = Detail;
             this.LimitLow = LimitLow;
@@ -63,7 +66,7 @@ namespace ABTTestLibrary.Config {
             TestElementsSection s = (TestElementsSection)ConfigurationManager.GetSection("TestElementsSection");
             TestElements e = s.TestElements;
             Dictionary<String, Test> d = new Dictionary<String, Test>();
-            foreach (TestElement te in e) d.Add(te.ID, new Test(te.ID, te.Summary, te.Detail, te.LimitLow, te.LimitHigh, te.Units, te.UnitType, String.Empty, Result: EventCodes.UNSET));
+            foreach (TestElement te in e) d.Add(te.ID, new Test(te.ID, te.Revision, te.Summary, te.Detail, te.LimitLow, te.LimitHigh, te.Units, te.UnitType, String.Empty, Result: EventCodes.UNSET));
             // Pre-load Tests with EventCodes.UNSET results, which will be replaced as the tests are executed with EventCodes.ABORT, EventCodes.ERROR, EventCodes.FAIL or (hopefully!) EventCodes.PASS.
             return d;
         }

@@ -11,7 +11,7 @@ namespace ABTTestLibrary.Logging {
         public static readonly String LOGGER_FILE = $"{Path.GetTempPath()}ABTTestLibraryLog.txt";
         public const String LOGGER_TEMPLATE = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}";
 
-        public static void Start(ConfigLib configLib, String clientAssemblyName, String clientAssemblyVersion, Group group, ref RichTextBox rtfResults) {
+        public static void Start(ConfigLib configLib, String clientAssemblyVersion, Group group, ref RichTextBox rtfResults) {
             if (!group.Required) {
                 // When non-Required Groups are executed, test data is never saved to config.Logger.FilePath as UTF-8 text.  Never.
                 // RichTextBox only. 
@@ -52,10 +52,8 @@ namespace ABTTestLibrary.Logging {
                     .CreateLogger();
             }
             Log.Information($"START                  : {DateTime.Now}");
-            Log.Information($"Assembly Name          : {clientAssemblyName}");
             Log.Information($"Assembly Version       : {clientAssemblyVersion}");
             AssemblyName an = Assembly.GetExecutingAssembly().GetName();
-            Log.Information($"Library Name           : {an.Name}");
             Log.Information($"Library Version        : {an.Version}");
             Log.Information($"UUT Customer           : {configLib.UUT.Customer}");
             Log.Information($"UUT Test Specification : {configLib.UUT.TestSpecification}");
@@ -67,6 +65,7 @@ namespace ABTTestLibrary.Logging {
             Log.Information($"UUT Number             : {configLib.UUT.Number}");
             Log.Information($"UUT Revision           : {configLib.UUT.Revision}");
             Log.Information($"UUT Group ID           : {group.ID}");
+            Log.Information($"UUT Group Revision     : {group.Revision}");
             Log.Information($"UUT Group Summary      : {group.Summary}");
             Log.Information($"UUT Group Detail       \n{group.Detail}");
             Log.Information($"Environment.UserName   : {Environment.UserName}");
@@ -82,6 +81,7 @@ namespace ABTTestLibrary.Logging {
         public static void LogTest(Test test) {
             String message;
             message =  $"Test ID '{test.ID}'{Environment.NewLine}";
+            message += $"  Revision    : {test.Revision}{Environment.NewLine}";
             message += $"  Summary     : {test.Summary}{Environment.NewLine}";
             message += $"  Detail      : {test.Detail}{Environment.NewLine}";
             message += $"  Limit Low   : {test.LimitLow}{Environment.NewLine}";

@@ -6,6 +6,7 @@ namespace ABTTestLibrary.Config {
     public class GroupElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return (String)base["ID"]; } }
         [ConfigurationProperty("Required", IsKey = false, IsRequired = true)] public Boolean Required { get { return (Boolean)base["Required"]; } }
+        [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return (String)base["Revision"]; } }
         [ConfigurationProperty("Summary", IsKey = false, IsRequired = true)] public String Summary { get { return (String)base["Summary"]; } }
         [ConfigurationProperty("Detail", IsKey = false, IsRequired = false)] public String Detail { get { return (String)base["Detail"]; } }
         [ConfigurationProperty("TestIDs", IsKey = false, IsRequired = true)] public String TestIDs { get { return (String)base["TestIDs"]; } }
@@ -36,13 +37,15 @@ namespace ABTTestLibrary.Config {
     public class Group {
         public String ID { get; private set; }
         public Boolean Required { get; private set; }
+        public String Revision { get; private set; }
         public String Summary { get; private set; }
         public String Detail { get; private set; }
         public String TestIDs { get; private set; }
 
-        private Group(String ID, Boolean Required, String Summary, String Detail, String TestIDs) {
+        private Group(String ID, Boolean Required, String Revision, String Summary, String Detail, String TestIDs) {
             this.ID = ID;
             this.Required = Required;
+            this.Revision = Revision;
             this.Summary = Summary;
             this.Detail = Detail;
             this.TestIDs = TestIDs;
@@ -52,7 +55,7 @@ namespace ABTTestLibrary.Config {
             GroupElementsSection s = (GroupElementsSection)ConfigurationManager.GetSection("GroupElementsSection");
             GroupElements e = s.GroupElements;
             Dictionary<String, Group> d = new Dictionary<String, Group>();
-            foreach (GroupElement ge in e) d.Add(ge.ID, new Group(ge.ID, ge.Required, ge.Summary, ge.Detail, ge.TestIDs));
+            foreach (GroupElement ge in e) d.Add(ge.ID, new Group(ge.ID, ge.Required, ge.Revision, ge.Summary, ge.Detail, ge.TestIDs));
             return d;
         }
     }
