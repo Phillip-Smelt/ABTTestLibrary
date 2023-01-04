@@ -29,6 +29,7 @@ namespace ABTTestLibrary {
             InitializeComponent();
             AssemblyName an = Assembly.GetEntryAssembly().GetName();
             this._clientAssemblyVersion = an.Version.ToString();
+            this.Icon = Properties.Resources.AmphenolA;
         }
 
         protected void StopDisable() {
