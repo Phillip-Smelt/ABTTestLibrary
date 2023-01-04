@@ -41,7 +41,7 @@ namespace ABTTestLibrary.Instruments.Keysight {
             return (V[iChannel], A[iChannel]);
         }
 
-        public static void ON(Instrument Instrument, Double Volts, Double Amps, String sChannel, Int32 SettlingDelayMS = 150) {
+        public static void ON(Instrument Instrument, Double Volts, Double Amps, String sChannel, Int32 SettlingDelayMS = 0) {
             ConvertChannel(Instrument, sChannel, out Int32 iChannel);
             try {
                 String s;
@@ -64,7 +64,7 @@ namespace ABTTestLibrary.Instruments.Keysight {
                 ((AgE36200)Instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(Volts, sChannel);
                 ((AgE36200)Instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(Amps, sChannel);
                 ((AgE36200)Instrument.Instance).SCPI.OUTPut.STATe.Command(true, sChannel);
-                Thread.Sleep(SettlingDelayMS);
+                if (SettlingDelayMS != 0) Thread.Sleep(SettlingDelayMS);
             } catch (InvalidOperationException) {
                 throw;
             } catch (Exception e) {

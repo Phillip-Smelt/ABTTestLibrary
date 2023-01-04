@@ -26,7 +26,7 @@ namespace ABTTestLibrary.Instruments.Keysight {
             ((AgE3610XB)Instrument.Instance).SCPI.OUTPut.STATe.Command(false);
         }
 
-        public static void ON(Instrument Instrument, Double Volts, Double Amps, Int32 SettlingDelayMS = 150) {
+        public static void ON(Instrument Instrument, Double Volts, Double Amps, Int32 SettlingDelayMS = 0) {
             try {
                 String s;
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", out Double V);
@@ -51,7 +51,7 @@ namespace ABTTestLibrary.Instruments.Keysight {
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(Amps);
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true);
                 ((AgE3610XB)Instrument.Instance).SCPI.OUTPut.STATe.Command(true);
-                Thread.Sleep(SettlingDelayMS);
+                if (SettlingDelayMS != 0) Thread.Sleep(SettlingDelayMS);
             } catch (InvalidOperationException) {
                 throw;
             } catch (Exception e) {
