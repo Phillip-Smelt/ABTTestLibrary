@@ -67,8 +67,7 @@ namespace ABTTestLibrary.Logging {
             Log.Information($"UUT Group Summary      : {group.Summary}");
             Log.Information($"UUT Group Detail{Environment.NewLine}{Environment.NewLine}" +
                 $"{group.Detail}{Environment.NewLine}");
-            Log.Information($"Environment.UserName   : {Environment.UserName}");
-            Log.Information($"UserPrincipal          : {UserPrincipal.Current.DisplayName}");
+            Log.Information($"Test Operator          : {UserPrincipal.Current.DisplayName}");
             Log.Information($"UUT Serial Number      : {configLib.UUT.SerialNumber}\n");
             Log.Debug($"Environment.UserDomainName         : {Environment.UserDomainName}");
             Log.Debug($"Environment.MachineName            : {Environment.MachineName}");

@@ -2,16 +2,6 @@
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00; // https://www.keysight.com/us/en/search.html/command+expert
 
-//  Test Procedure requires a voltage ramp up between 1V/µSecond through 0.5V/mSecond
-//   for its VIN, Primary & Secondary Bias power supplies, powered respectively to 12.5, 6.25 & 6.25 V.
-// - The VIN power supply is a Keysight E36234A, which specifies 50 milliSecond up/down programming settling to
-//   within 1% of total excursion.
-// - The Primary & Secondary Bias power supplies are both Keysight E36103Bs, which specify 50 milliSecond
-//   up/down programming settling to within 1% of total excursion.
-// - Doing the arithmetic:
-//   - 12.5V ÷ 0.050S = 0.252V/mS.
-//   - 6.25V ÷ 0.050S = 0.125V/mS.
-// - 0.252V/mS and 0.125V/mS both lie within required voltage ramp up rate between 1V/µSecond through 0.5V/mSecond.
 namespace ABTTestLibrary.Instruments.Keysight {
     // NOTE: Channel lists aren't allowed in any methods though many, perhaps most, E36234A SCPI commands do permit them.
     public static class E36234A {
