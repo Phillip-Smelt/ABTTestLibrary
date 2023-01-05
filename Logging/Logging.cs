@@ -12,7 +12,7 @@ namespace ABTTestLibrary.Logging {
         public static readonly String LOGGER_FILE = $"{Path.GetTempPath()}ABTTestLibraryLog.txt";
         public const String LOGGER_TEMPLATE = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}";
 
-        public static void Start(ConfigLib configLib, String clientAssemblyVersion, Group group, ref RichTextBox rtfResults) {
+        public static void Start(ConfigLib configLib, String appAssemblyVersion, String libraryAssemblyVersion, Group group, ref RichTextBox rtfResults) {
             if (!group.Required) {
                 // When non-Required Groups are executed, test data is never saved to config.Logger.FilePath as UTF-8 text.  Never.
                 // RichTextBox only. 
@@ -53,9 +53,8 @@ namespace ABTTestLibrary.Logging {
                     .CreateLogger();
             }
             Log.Information($"START                  : {DateTime.Now}");
-            Log.Information($"ABT Program Version    : {clientAssemblyVersion}");
-            AssemblyName an = Assembly.GetExecutingAssembly().GetName();
-            Log.Information($"ABT Library Version    : {an.Version}");
+            Log.Information($"ABT Program Version    : {appAssemblyVersion}");
+            Log.Information($"ABT Library Version    : {libraryAssemblyVersion}");
             Log.Information($"UUT Customer           : {configLib.UUT.Customer}");
             Log.Information($"UUT Test Specification : {configLib.UUT.TestSpecification}");
             Log.Information($"UUT Description        : {configLib.UUT.Description}");

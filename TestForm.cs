@@ -23,13 +23,15 @@ namespace ABTTestLibrary {
         protected ConfigTest configTest;
         protected Dictionary<String, Instrument> instruments;
         private String _currentTestKey;
-        private String _clientAssemblyVersion;
+        private String _appAssemblyVersion;
+        private String _libraryAssemblyVersion;
 
-        protected TestForm() {
+        protected TestForm(Icon icon) {
             InitializeComponent();
-            AssemblyName an = Assembly.GetEntryAssembly().GetName();
-            this._clientAssemblyVersion = an.Version.ToString();
-            this.Icon = Properties.Resources.AmphenolA;
+            this._appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
+            this._libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            this.Icon = icon;
+            // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
         }
 
         protected void StopDisable() {
@@ -139,7 +141,7 @@ namespace ABTTestLibrary {
             }
             this.configLib.UUT.EventCode = EventCodes.UNSET;
             InstrumentTasks.Reset(this.instruments);
-            LogTasks.Start(this.configLib, this._clientAssemblyVersion, this.configTest.Group, ref this.rtfResults);
+            LogTasks.Start(this.configLib, this._appAssemblyVersion, this._libraryAssemblyVersion, this.configTest.Group, ref this.rtfResults);
             foreach (KeyValuePair<String, Test> t in this.configTest.Tests) {
                 this._currentTestKey = t.Key;
                 try {

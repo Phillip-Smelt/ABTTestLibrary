@@ -35,7 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>AmphenolA.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -130,10 +131,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\AmphenolA.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="AmphenolA.ico" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

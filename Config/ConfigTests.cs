@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using ABTTestLibrary.TestSupport;
 
 namespace ABTTestLibrary.Config {
