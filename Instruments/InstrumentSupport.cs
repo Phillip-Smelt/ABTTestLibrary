@@ -37,6 +37,7 @@ namespace ABTTestLibrary.Instruments {
         public const String POWER_SECONDARY = "POWER_SECONDARY";
         public const String POWER_PRELIMINARY = "POWER_PRELIMINARY";
         private static Dictionary<String, String> InstrumentsToVISA_Addresses = new Dictionary<String, String> {
+            // TODO: Add MULTI_METER's address, enable other Instruments.
             // VISA (Virtual Instrument Software Architecture) Resource Names.
             // - https://www.ivifoundation.org/specifications/default.aspx
             // - Technically, these are actually VISA 'Resource Names' instead of VISA 'Addresses',
