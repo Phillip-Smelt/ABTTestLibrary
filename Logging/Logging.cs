@@ -2,6 +2,7 @@
 using System.IO;
 using System.DirectoryServices.AccountManagement;
 using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 using ABTTestLibrary.Config;
 using ABTTestLibrary.TestSupport;
@@ -36,7 +37,7 @@ namespace ABTTestLibrary.Logging {
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
-                    .WriteTo.File(LOGGER_FILE, outputTemplate: LOGGER_TEMPLATE, fileSizeLimitBytes: null, retainedFileCountLimit: null)
+                    .WriteTo.File(LOGGER_FILE, outputTemplate: LOGGER_TEMPLATE, fileSizeLimitBytes: null, retainedFileCountLimit: null, encoding: Encoding.UTF8)
                     .CreateLogger();
             } else if (!configLib.Logger.FileEnabled && configLib.Logger.SQLEnabled) {
                 // TODO: RichTextBox + SQL.

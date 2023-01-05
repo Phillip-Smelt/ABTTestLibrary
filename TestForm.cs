@@ -25,6 +25,7 @@ namespace ABTTestLibrary {
         private String _currentTestKey;
         private String _appAssemblyVersion;
         private String _libraryAssemblyVersion;
+        private Boolean _stopped;
 
         protected TestForm(Icon icon) {
             InitializeComponent();
@@ -36,6 +37,7 @@ namespace ABTTestLibrary {
 
         public void StopDisable() {
             this.ButtonStop.Enabled = false;
+            this._stopped = false;
             // Method StopDisable() permits client Test methods to disable ButtonStop during method Run().
             // Prevents test operators from Stopping Test methods mid-execution when doing so could have
             // negative consequences.
@@ -45,6 +47,7 @@ namespace ABTTestLibrary {
 
         public void StopEnable() {
             this.ButtonStop.Enabled = true;
+            this._stopped = false;
             // Method StopEnable() permits client Test methods to enable ButtonStop during method Run().
             // Permits test operators to Stop Test methods mid-execution when doing so won't have
             // negative consequences.
@@ -65,6 +68,7 @@ namespace ABTTestLibrary {
 
         private void Form_Shown(Object sender, EventArgs e) {
             this.ButtonStop.Enabled = false;
+            this._stopped = false;
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStart.Enabled = false;
             this.ButtonSaveOutput.Enabled = false;
@@ -88,8 +92,11 @@ namespace ABTTestLibrary {
         }
 
         private void ButtonStop_Clicked(Object sender, EventArgs e) {
-            this.configTest.Tests[this._currentTestKey].Result = EventCodes.ABORT;
-            PostRun();
+            this._stopped = true;
+        // TODO: Improve Stop function.
+        // https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
+        // https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
+        // https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
         }
 
         private void ButtonSaveOutput_Click(Object sender, EventArgs e) {
@@ -118,6 +125,7 @@ namespace ABTTestLibrary {
         private void PreRun() {
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStop.Enabled = false;
+            this._stopped= false;
             this.ButtonStart.Enabled = true;
             this.ButtonSaveOutput.Enabled = false;
             this.rtfResults.Text = String.Empty;
@@ -133,6 +141,7 @@ namespace ABTTestLibrary {
             this.ButtonSelectGroup.Enabled = false;
             this.ButtonStart.Enabled = false;
             this.ButtonStop.Enabled = true;
+            this._stopped = false;
             this.ButtonSaveOutput.Enabled = false;
             this.rtfResults.Text = String.Empty;
             this.TextUUTResult.Text = String.Empty;
@@ -162,6 +171,11 @@ namespace ABTTestLibrary {
                 } finally {
                     LogTasks.LogTest(t.Value);
                 }
+                if (this._stopped) {
+                    InstrumentTasks.Reset(this.instruments);
+                    t.Value.Result = EventCodes.ABORT;
+                    break;
+                }
             }
             PostRun();
         }
@@ -176,6 +190,7 @@ namespace ABTTestLibrary {
             if (this.configLib.Logger.TestEventsEnabled) LogTasks.TestEvents(this.configLib.UUT);
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStop.Enabled = false;
+            this._stopped = false;
             this.ButtonStart.Enabled = true;
             if (this.configTest.Group.Required && String.Equals(this.configLib.UUT.EventCode, EventCodes.PASS)) this.ButtonSaveOutput.Enabled = false;
             // Disallow saving output if this was a Required Group & UUT passed, because, why bother?
