@@ -34,7 +34,7 @@ namespace ABTTestLibrary {
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
         }
 
-        protected void StopDisable() {
+        public void StopDisable() {
             this.ButtonStop.Enabled = false;
             // Method StopDisable() permits client Test methods to disable ButtonStop during method Run().
             // Prevents test operators from Stopping Test methods mid-execution when doing so could have
@@ -42,7 +42,8 @@ namespace ABTTestLibrary {
             // StopDisable() is only intended to be invoked by client Test methods during Run();
             // ButtonStop's state is controlled directly by all other methods.
         }
-        protected void StopEnable() {
+
+        public void StopEnable() {
             this.ButtonStop.Enabled = true;
             // Method StopEnable() permits client Test methods to enable ButtonStop during method Run().
             // Permits test operators to Stop Test methods mid-execution when doing so won't have
@@ -87,7 +88,8 @@ namespace ABTTestLibrary {
         }
 
         private void ButtonStop_Clicked(Object sender, EventArgs e) {
-            throw new TestAbortException($"Operator cancelled via Stop button in Test '{this.configTest.Tests[this._currentTestKey].ID}', '{this.configTest.Tests[this._currentTestKey].Summary}'.");
+            this.configTest.Tests[this._currentTestKey].Result = EventCodes.ABORT;
+            PostRun();
         }
 
         private void ButtonSaveOutput_Click(Object sender, EventArgs e) {
