@@ -17,9 +17,6 @@ using Serilog;
 // NOTE: Update to UWP instead of WinForms when possible.
 // - Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
 // NOTE: With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
-// TODO: Emergency Stop button with image:
-// https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-load-a-picture-using-the-designer-windows-forms?view=netframeworkdesktop-4.8
-// https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-add-a-picture-to-a-control?view=netdesktop-6.0
 namespace ABTTestLibrary {
     public abstract partial class LibraryForm : Form {
         protected ConfigLib configLib;
@@ -29,6 +26,8 @@ namespace ABTTestLibrary {
         private String _appAssemblyVersion;
         private String _libraryAssemblyVersion;
         private Boolean _stopped;
+
+        protected abstract String RunTest(Test test, Dictionary<String, Instrument> instruments);
 
         protected LibraryForm(Icon icon) {
             InitializeComponent();
@@ -58,8 +57,6 @@ namespace ABTTestLibrary {
             // ButtonStop's state is controlled directly by all other methods.
         }
 
-        protected abstract String RunTest(Test test, Dictionary<String, Instrument> instruments);
-
         private void Form_Shown(Object sender, EventArgs e) {
             this.ButtonStop.Enabled = false;
             this._stopped = false;
@@ -87,10 +84,16 @@ namespace ABTTestLibrary {
 
         private void ButtonStop_Clicked(Object sender, EventArgs e) {
             this._stopped = true;
-        // TODO: Improve Stop function.
-        // https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
-        // https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
-        // https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
+            // TODO: Rename to Cancel with yellow background.
+            // TODO: Improve Cancel function.
+            // https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
+            // https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
+            // https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
+            // TODO: Add Emergency Stop button with image & event handler.  It will immediately invoke InstrumentTasks.Reset()
+            // and after invoke the Cancel function.  Only difference is that it invokes InstrumentTasks.Reset(), whereas
+            // the Cancel button doesn't.
+            // https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-load-a-picture-using-the-designer-windows-forms?view=netframeworkdesktop-4.8
+            // https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-add-a-picture-to-a-control?view=netdesktop-6.0
         }
 
         private void ButtonSaveOutput_Click(Object sender, EventArgs e) {
