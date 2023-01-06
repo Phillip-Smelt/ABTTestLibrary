@@ -25,7 +25,7 @@ namespace ABTTestLibrary {
         private String _currentTestKey;
         private String _appAssemblyVersion;
         private String _libraryAssemblyVersion;
-        private Boolean _stopped;
+        private Boolean _cancelled;
 
         protected abstract String RunTest(Test test, Dictionary<String, Instrument> instruments);
 
@@ -37,29 +37,33 @@ namespace ABTTestLibrary {
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
         }
 
-        public void StopDisable() {
-            this.ButtonStop.Enabled = false;
-            this._stopped = false;
-            // Method StopDisable() permits client Test methods to disable ButtonStop during method Run().
+        public void CancelDisable() {
+            this.ButtonCancel.Enabled = false;
+            this._cancelled = false;
+            // Method CancelDisable() permits client Test methods to disable ButtonCancel during method Run().
             // Prevents test operators from Stopping Test methods mid-execution when doing so could have
             // negative consequences.
-            // StopDisable() is only intended to be invoked by client Test methods during Run();
-            // ButtonStop's state is controlled directly by all other methods.
+            // CancelDisable() is only intended to be invoked by client Test methods during Run();
+            // ButtonCancel's state is controlled directly by all other methods.
         }
 
-        public void StopEnable() {
-            this.ButtonStop.Enabled = true;
-            this._stopped = false;
-            // Method StopEnable() permits client Test methods to enable ButtonStop during method Run().
+        public void CancelEnable() {
+            this.ButtonCancel.Enabled = true;
+            this._cancelled = false;
+            // Method CancelEnable() permits client Test methods to enable ButtonCancel during method Run().
             // Permits test operators to Stop Test methods mid-execution when doing so won't have
             // negative consequences.
-            // StopEnable() is only intended to be invoked by client Test methods during Run();
-            // ButtonStop's state is controlled directly by all other methods.
+            // CancelEnable() is only intended to be invoked by client Test methods during Run();
+            // ButtonCancel's state is controlled directly by all other methods.
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
-            this.ButtonStop.Enabled = false;
-            this._stopped = false;
+            this.ButtonEmergencyStop.Enabled = false; // Disable Emergency Stop until Instruments are gotten.
+            this.instruments = Instrument.Get();
+            this.ButtonEmergencyStop.Enabled = true;  // Enable thereafter.
+            this.configLib = ConfigLib.Get();
+            this.ButtonCancel.Enabled = false;
+            this._cancelled = false;
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStart.Enabled = false;
             this.ButtonSaveOutput.Enabled = false;
@@ -67,8 +71,6 @@ namespace ABTTestLibrary {
             this.rtfResults.Text = String.Empty;
             this.TextUUTResult.Text = String.Empty;
             this.TextUUTResult.BackColor = Color.White;
-            this.configLib = ConfigLib.Get();
-            this.instruments = Instrument.Get();
             InstrumentTasks.Test(this.instruments);
         }
 
@@ -82,19 +84,18 @@ namespace ABTTestLibrary {
             Run();
         }
 
-        private void ButtonStop_Clicked(Object sender, EventArgs e) {
-            this._stopped = true;
-            // TODO: Rename to Cancel with yellow background.
+        private void ButtonCancel_Clicked(Object sender, EventArgs e) {
+            this._cancelled = true;
             // TODO: Improve Cancel function.
             // https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
             // https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
             // https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
-            // TODO: Add Emergency Stop button with image & event handler.  It will immediately invoke InstrumentTasks.Reset()
-            // and after invoke the Cancel function.  Only difference is that it invokes InstrumentTasks.Reset(), whereas
-            // the Cancel button doesn't.
-            // https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-load-a-picture-using-the-designer-windows-forms?view=netframeworkdesktop-4.8
-            // https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-add-a-picture-to-a-control?view=netdesktop-6.0
         }
+
+        private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
+            InstrumentTasks.Reset(this.instruments);
+            this._cancelled = true;
+       }
 
         private void ButtonSaveOutput_Click(Object sender, EventArgs e) {
             // NOTE: Using RichTextBox instead of TextBox control in ABTTestLibraryForm for below reasons:
@@ -121,8 +122,8 @@ namespace ABTTestLibrary {
 
         private void PreRun() {
             this.ButtonSelectGroup.Enabled = true;
-            this.ButtonStop.Enabled = false;
-            this._stopped= false;
+            this.ButtonCancel.Enabled = false;
+            this._cancelled= false;
             this.ButtonStart.Enabled = true;
             this.ButtonSaveOutput.Enabled = false;
             this.rtfResults.Text = String.Empty;
@@ -137,8 +138,8 @@ namespace ABTTestLibrary {
             if (String.Equals(this.configLib.UUT.SerialNumber, String.Empty)) return;
             this.ButtonSelectGroup.Enabled = false;
             this.ButtonStart.Enabled = false;
-            this.ButtonStop.Enabled = true;
-            this._stopped = false;
+            this.ButtonCancel.Enabled = true;
+            this._cancelled = false;
             this.ButtonSaveOutput.Enabled = false;
             this.rtfResults.Text = String.Empty;
             this.TextUUTResult.Text = String.Empty;
@@ -156,9 +157,9 @@ namespace ABTTestLibrary {
                     t.Value.Measurement = RunTest(t.Value, this.instruments);
                     t.Value.Result = TestTasks.EvaluateTestResult(t.Value);
                 } catch (Exception e) {
-                    InstrumentTasks.Reset(this.instruments);
                     if (e.GetType() == typeof(TestAbortException)) t.Value.Result = EventCodes.ABORT;
                     else {
+                        InstrumentTasks.Reset(this.instruments);
                         t.Value.Result = EventCodes.ERROR;
                         Log.Error(e.ToString());
                         MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
@@ -168,8 +169,7 @@ namespace ABTTestLibrary {
                 } finally {
                     LogTasks.LogTest(t.Value);
                 }
-                if (this._stopped) {
-                    InstrumentTasks.Reset(this.instruments);
+                if (this._cancelled) {
                     t.Value.Result = EventCodes.ABORT;
                     break;
                 }
@@ -186,8 +186,8 @@ namespace ABTTestLibrary {
             LogTasks.Stop(this.configLib, this.configTest.Group);
             if (this.configLib.Logger.TestEventsEnabled) LogTasks.TestEvents(this.configLib.UUT);
             this.ButtonSelectGroup.Enabled = true;
-            this.ButtonStop.Enabled = false;
-            this._stopped = false;
+            this.ButtonCancel.Enabled = false;
+            this._cancelled = false;
             this.ButtonStart.Enabled = true;
             if (this.configTest.Group.Required && String.Equals(this.configLib.UUT.EventCode, EventCodes.PASS)) this.ButtonSaveOutput.Enabled = false;
             // Disallow saving output if this was a Required Group & UUT passed, because, why bother?
