@@ -16,13 +16,10 @@ using Serilog;
 // https://www.ti.com/tool/FUSION_USB_ADAPTER_API
 // NOTE: Update to UWP instead of WinForms when possible.
 // - Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
-// NOTE: With deep gratitude to https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
+// NOTE: With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 // TODO: Emergency Stop button with image:
 // https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-load-a-picture-using-the-designer-windows-forms?view=netframeworkdesktop-4.8
 // https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-add-a-picture-to-a-control?view=netdesktop-6.0
-// TODO: Tooltips for most/all controls.
-// https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-set-tooltips-for-controls-on-a-windows-form-at-design-time?view=netframeworkdesktop-4.8
-// https://stackoverflow.com/questions/1339524/how-do-i-add-a-tooltip-to-a-control
 namespace ABTTestLibrary {
     public abstract partial class LibraryForm : Form {
         protected ConfigLib configLib;
@@ -62,15 +59,6 @@ namespace ABTTestLibrary {
         }
 
         protected abstract String RunTest(Test test, Dictionary<String, Instrument> instruments);
-        // https://stackoverflow.com/questions/540066/calling-a-function-from-a-string-in-c-sharp
-        // https://www.codeproject.com/Articles/19911/Dynamically-Invoke-A-Method-Given-Strings-with-Met
-        // Override with the below.  Necessary because implementing RunTest() here in this method
-        // then requires having a reference to the client Test project, and we don't want that.
-        // We want the client Test project to reference this ABTTEstLibray, but ABTTestLibary to be
-        // blissfully ignorant of the client Test project.
-        // Type type = this.GetType();
-        // MethodInfo methodInfo = type.GetMethod(test.ID, BindingFlags.Static | BindingFlags.NonPublic);
-        // return (String)methodInfo.Invoke(this, new object[] { test, instruments });
 
         private void Form_Shown(Object sender, EventArgs e) {
             this.ButtonStop.Enabled = false;
