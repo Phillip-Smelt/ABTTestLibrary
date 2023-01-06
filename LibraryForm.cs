@@ -17,8 +17,14 @@ using Serilog;
 // NOTE: Update to UWP instead of WinForms when possible.
 // - Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
 // NOTE: With deep gratitude to https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
+// TODO: Emergency Stop button with image:
+// https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-load-a-picture-using-the-designer-windows-forms?view=netframeworkdesktop-4.8
+// https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-add-a-picture-to-a-control?view=netdesktop-6.0
+// TODO: Tooltips for most/all controls.
+// https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-set-tooltips-for-controls-on-a-windows-form-at-design-time?view=netframeworkdesktop-4.8
+// https://stackoverflow.com/questions/1339524/how-do-i-add-a-tooltip-to-a-control
 namespace ABTTestLibrary {
-    public abstract partial class TestForm : Form {
+    public abstract partial class LibraryForm : Form {
         protected ConfigLib configLib;
         protected ConfigTest configTest;
         protected Dictionary<String, Instrument> instruments;
@@ -27,7 +33,7 @@ namespace ABTTestLibrary {
         private String _libraryAssemblyVersion;
         private Boolean _stopped;
 
-        protected TestForm(Icon icon) {
+        protected LibraryForm(Icon icon) {
             InitializeComponent();
             this._appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
             this._libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();

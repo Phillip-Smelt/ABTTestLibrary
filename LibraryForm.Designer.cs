@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 
 namespace ABTTestLibrary {
-    public abstract partial class TestForm : Form {
+    public abstract partial class LibraryForm : Form {
         /// <summary>
         /// Required designer variable.
         /// </summary>
