@@ -87,7 +87,7 @@ namespace TestLibrary.Instruments {
                         break;
                     default:
                         throw new NotImplementedException($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
-                            $"Update Class ABTTestLibrary.InstrumentTasks.Instrument, adding '{ID}'.");
+                            $"Update Class TestLibrary.InstrumentTasks.Instrument, adding '{ID}'.");
                 }
                 this.Manufacturer = SCPI99.GetManufacturer(this.Address);
                 this.Model = SCPI99.GetModel(this.Address);

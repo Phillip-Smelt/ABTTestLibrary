@@ -10,7 +10,7 @@ using Serilog;
 
 namespace TestLibrary.Logging {
     public static class LogTasks {
-        public static readonly String LOGGER_FILE = $"{Path.GetTempPath()}ABTTestLibraryLog.txt";
+        public static readonly String LOGGER_FILE = $"{Path.GetTempPath()}TestLibraryLog.txt";
         public const String LOGGER_TEMPLATE = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}";
 
         public static void Start(ConfigLib configLib, String appAssemblyVersion, String libraryAssemblyVersion, Group group, ref RichTextBox rtfResults) {
@@ -54,8 +54,8 @@ namespace TestLibrary.Logging {
                     .CreateLogger();
             }
             Log.Information($"START                  : {DateTime.Now}");
-            Log.Information($"ABT Program Version    : {appAssemblyVersion}");
-            Log.Information($"ABT Library Version    : {libraryAssemblyVersion}");
+            Log.Information($"TestProgram Version    : {appAssemblyVersion}");
+            Log.Information($"TestLibrary Version    : {libraryAssemblyVersion}");
             Log.Information($"UUT Customer           : {configLib.UUT.Customer}");
             Log.Information($"UUT Test Specification : {configLib.UUT.TestSpecification}");
             Log.Information($"UUT Description        : {configLib.UUT.Description}");

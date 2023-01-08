@@ -88,7 +88,7 @@ namespace TestLibrary {
        }
 
         private void ButtonSaveOutput_Click(Object sender, EventArgs e) {
-            // NOTE: Using RichTextBox instead of TextBox control in ABTTestLibraryForm for below reasons:
+            // NOTE: Using RichTextBox instead of TextBox control in TestLibraryForm for below reasons:
             // - RichTextBox doesn't have a character limit, whereas TextBox control limited to 64KByte of characters.
             //   Doubt > 64KBytes necessary, but why risk it?
             // - RichTextBox can display rich text, specifically the color coded text of EventCode.ABORT, EventCode.ERROR, 
