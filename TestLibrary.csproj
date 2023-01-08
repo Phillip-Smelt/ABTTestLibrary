@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\ABTTestLibraryTests\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.props" Condition="Exists('..\ABTTestLibraryTests\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.props')" />
+  <Import Project="..\TestLibraryTests\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.props" Condition="Exists('..\TestLibraryTests\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -113,10 +113,10 @@
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Serilog">
-      <HintPath>..\ABTTestLibraryTests\packages\Serilog.2.12.0\lib\net47\Serilog.dll</HintPath>
+      <HintPath>packages\Serilog.2.12.0\lib\net47\Serilog.dll</HintPath>
     </Reference>
     <Reference Include="Serilog.Sinks.File">
-      <HintPath>..\ABTTestLibraryTests\packages\Serilog.Sinks.File.5.0.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
+      <HintPath>packages\Serilog.Sinks.File.5.0.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
