@@ -44,8 +44,8 @@ namespace TestLibrary {
 
         private void Form_Shown(Object sender, EventArgs e) {
             FormReset();
-            this.ButtonSelectGroup.Enabled = true;
             this.Text = $"{this.configLib.UUT.Number}, {this.configLib.UUT.Description}";
+            this.ButtonSelectGroup.Enabled = true;
         }
 
         private void ButtonSelectGroup_Click(Object sender, EventArgs e) {
@@ -53,7 +53,7 @@ namespace TestLibrary {
             this.Text = $"{this.configLib.UUT.Number}, {this.configLib.UUT.Description}, {this.configTest.Group.ID}";
             FormReset();
             this.ButtonSelectGroup.Enabled = true;
-            this.ButtonStart.Enabled = true;
+            this.ButtonStartReset(Enabled: true);
         }
 
         private void ButtonStart_Clicked(Object sender, EventArgs e) {
@@ -67,7 +67,7 @@ namespace TestLibrary {
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             FormReset();
             this.ButtonCancel.Text = "Canceling...";
-            this.ButtonCancel.BackColor = Color.Pink;
+            this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = Color.DarkRed;
             this._cancelled = true;
             // TODO: Improve Cancel function.
             // https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
@@ -75,9 +75,20 @@ namespace TestLibrary {
             // https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
         }
 
+        private void ButtonStartReset(Boolean Enabled) {
+            this.ButtonStart.Enabled = Enabled;
+            if (Enabled) {
+                this.ButtonStart.UseVisualStyleBackColor = false;
+                this.ButtonStart.BackColor = Color.Green;
+            } else this.ButtonStart.UseVisualStyleBackColor = true;
+        }
+
         private void ButtonCancelReset(Boolean Enabled) {
             this.ButtonCancel.Enabled = Enabled;
-            this.ButtonCancel.BackColor = Color.Yellow;
+            if (Enabled) {
+                this.ButtonCancel.UseVisualStyleBackColor = false;
+                this.ButtonCancel.BackColor = Color.Yellow;
+            } else this.ButtonCancel.UseVisualStyleBackColor = true;
             this.ButtonCancel.Text = "Cancel";
             this._cancelled = false;
         }
@@ -112,7 +123,7 @@ namespace TestLibrary {
 
         private void FormReset() {
             this.ButtonSelectGroup.Enabled = false;
-            this.ButtonStart.Enabled = false;
+            this.ButtonStartReset(Enabled: false);
             this.ButtonCancelReset(Enabled: false);
             this.TextUUTResult.Text = String.Empty;
             this.TextUUTResult.BackColor = Color.White;
@@ -156,7 +167,7 @@ namespace TestLibrary {
         private void PostRun() {
             InstrumentTasks.Reset(this.instruments);
             this.ButtonSelectGroup.Enabled = true;
-            this.ButtonStart.Enabled = true;
+            this.ButtonStartReset(Enabled: true);
             this.ButtonCancelReset(Enabled: false);
             this.configLib.UUT.EventCode = TestTasks.EvaluateUUTResult(this.configTest);
             this.TextUUTResult.Text = this.configLib.UUT.EventCode;

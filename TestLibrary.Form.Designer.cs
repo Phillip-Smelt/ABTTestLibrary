@@ -101,6 +101,7 @@ namespace TestLibrary {
             // 
             // ButtonSelectGroup
             // 
+            this.ButtonSelectGroup.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonSelectGroup.Location = new System.Drawing.Point(23, 561);
             this.ButtonSelectGroup.Name = "ButtonSelectGroup";
             this.ButtonSelectGroup.Size = new System.Drawing.Size(88, 47);
