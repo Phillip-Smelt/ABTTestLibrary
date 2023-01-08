@@ -4,11 +4,11 @@ using System.DirectoryServices.AccountManagement;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using ABTTestLibrary.Config;
-using ABTTestLibrary.TestSupport;
+using TestLibrary.Config;
+using TestLibrary.TestSupport;
 using Serilog;
 
-namespace ABTTestLibrary.Logging {
+namespace TestLibrary.Logging {
     public static class LogTasks {
         public static readonly String LOGGER_FILE = $"{Path.GetTempPath()}ABTTestLibraryLog.txt";
         public const String LOGGER_TEMPLATE = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}";
@@ -102,6 +102,7 @@ namespace ABTTestLibrary.Logging {
                 Log.CloseAndFlush();
                 if (configLib.Logger.FileEnabled) FileStop(configLib, group);
                 if (configLib.Logger.SQLEnabled) SQLStop(configLib, group);
+                if (configLib.Logger.TestEventsEnabled) TestEvents(configLib.UUT);
             }
         }
 

@@ -2,7 +2,7 @@
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00; // https://www.keysight.com/us/en/search.html/command+expert
 
-namespace ABTTestLibrary.Instruments.Keysight {
+namespace TestLibrary.Instruments.Keysight {
     public static class E3610xB {
         // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
         public static void RemoteOn(Instrument Instrument) {

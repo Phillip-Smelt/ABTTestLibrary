@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ABTTestLibrary.Config {
+namespace TestLibrary.Config {
     public partial class GroupSelect : Form {
         public String GroupSelected;
         public GroupSelect(Dictionary<String, Group> Groups) {

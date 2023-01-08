@@ -2,7 +2,7 @@
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00; // https://www.keysight.com/us/en/search.html/command+expert
 
-namespace ABTTestLibrary.Instruments.Keysight {
+namespace TestLibrary.Instruments.Keysight {
     // NOTE: Channel lists aren't allowed in any methods though many, perhaps most, E36234A SCPI commands do permit them.
     public static class E36234A {
         // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.

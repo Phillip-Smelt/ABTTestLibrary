@@ -2,13 +2,13 @@
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using ABTTestLibrary.TestSupport;
+using TestLibrary.TestSupport;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
 
-namespace ABTTestLibrary.Logging {
+namespace TestLibrary.Logging {
     public class RichTextBoxSink : ILogEventSink {
         private readonly RichTextBox richTextBox;
         private readonly ITextFormatter formatter;

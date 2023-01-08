@@ -7,7 +7,7 @@ using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00; // https://www.ke
 using Keysight.Kt34400; // https://www.keysight.com/us/en/lib/software-detail/driver/34400-digital-multimeters-ivi-instrument-drivers.html
 using Keysight.KtEL30000; // https://www.keysight.com/us/en/lib/software-detail/driver/el30000a-dc-electronic-loads-ivi-instrument-drivers.html
 
-namespace ABTTestLibrary.Instruments {
+namespace TestLibrary.Instruments {
     public static class InstrumentTasks {
         public static String GetMessage(Instrument Instrument, String OptionalHeader = "") {
             String Message = (OptionalHeader == "") ? "" : OptionalHeader += Environment.NewLine;

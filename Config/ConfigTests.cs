@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
-using ABTTestLibrary.TestSupport;
+using TestLibrary.TestSupport;
 
-namespace ABTTestLibrary.Config {
+namespace TestLibrary.Config {
     public class TestElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return (String)base["ID"]; } }
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return (String)base["Revision"]; } }

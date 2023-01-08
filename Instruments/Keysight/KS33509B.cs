@@ -1,7 +1,7 @@
 ﻿using System;
 using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09; // https://www.keysight.com/us/en/search.html/command+expert
 
-namespace ABTTestLibrary.Instruments.Keysight {
+namespace TestLibrary.Instruments.Keysight {
     // TODO: KS33509B Class.
     public static class KS33509B {
         // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.

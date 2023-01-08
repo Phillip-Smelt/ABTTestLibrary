@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 
-namespace ABTTestLibrary {
-    public abstract partial class LibraryForm : Form {
+namespace TestLibrary {
+    public abstract partial class TestLibraryForm : Form {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -24,7 +24,7 @@ namespace ABTTestLibrary {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LibraryForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestLibraryForm));
             this.ButtonStart = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.TextUUTResult = new System.Windows.Forms.TextBox();
@@ -60,7 +60,7 @@ namespace ABTTestLibrary {
             // 
             // TextUUTResult
             // 
-            this.TextUUTResult.Location = new System.Drawing.Point(490, 588);
+            this.TextUUTResult.Location = new System.Drawing.Point(493, 580);
             this.TextUUTResult.Name = "TextUUTResult";
             this.TextUUTResult.ReadOnly = true;
             this.TextUUTResult.Size = new System.Drawing.Size(60, 20);
@@ -71,7 +71,7 @@ namespace ABTTestLibrary {
             // LabelUUTResult
             // 
             this.LabelUUTResult.AutoSize = true;
-            this.LabelUUTResult.Location = new System.Drawing.Point(487, 572);
+            this.LabelUUTResult.Location = new System.Drawing.Point(490, 564);
             this.LabelUUTResult.Name = "LabelUUTResult";
             this.LabelUUTResult.Size = new System.Drawing.Size(63, 13);
             this.LabelUUTResult.TabIndex = 7;
@@ -91,10 +91,10 @@ namespace ABTTestLibrary {
             // 
             // ButtonSaveOutput
             // 
-            this.ButtonSaveOutput.Location = new System.Drawing.Point(807, 564);
+            this.ButtonSaveOutput.Location = new System.Drawing.Point(683, 564);
             this.ButtonSaveOutput.Name = "ButtonSaveOutput";
             this.ButtonSaveOutput.Size = new System.Drawing.Size(88, 47);
-            this.ButtonSaveOutput.TabIndex = 5;
+            this.ButtonSaveOutput.TabIndex = 4;
             this.ButtonSaveOutput.Text = "Save Output";
             this.ButtonSaveOutput.UseVisualStyleBackColor = true;
             this.ButtonSaveOutput.Click += new System.EventHandler(this.ButtonSaveOutput_Click);
@@ -111,10 +111,10 @@ namespace ABTTestLibrary {
             // 
             // ButtonOpenTestDataFolder
             // 
-            this.ButtonOpenTestDataFolder.Location = new System.Drawing.Point(671, 564);
+            this.ButtonOpenTestDataFolder.Location = new System.Drawing.Point(813, 563);
             this.ButtonOpenTestDataFolder.Name = "ButtonOpenTestDataFolder";
             this.ButtonOpenTestDataFolder.Size = new System.Drawing.Size(88, 47);
-            this.ButtonOpenTestDataFolder.TabIndex = 4;
+            this.ButtonOpenTestDataFolder.TabIndex = 5;
             this.ButtonOpenTestDataFolder.Text = "Open Test Data Folder";
             this.ButtonOpenTestDataFolder.UseVisualStyleBackColor = true;
             this.ButtonOpenTestDataFolder.Click += new System.EventHandler(this.ButtonOpenTestDataFolder_Click);
@@ -129,7 +129,7 @@ namespace ABTTestLibrary {
             this.ButtonEmergencyStop.UseVisualStyleBackColor = true;
             this.ButtonEmergencyStop.Click += new System.EventHandler(this.ButtonEmergencyStop_Clicked);
             // 
-            // LibraryForm
+            // TestLibraryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -144,9 +144,10 @@ namespace ABTTestLibrary {
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonStart);
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "LibraryForm";
+            this.Name = "TestLibraryForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ABT Test Program";
+            this.Text = "Test Program";
+            this.Load += new System.EventHandler(this.Form_Load);
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();

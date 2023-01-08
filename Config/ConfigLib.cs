@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Configuration;
-using ABTTestLibrary.TestSupport;
+using TestLibrary.TestSupport;
 
-namespace ABTTestLibrary.Config {
+namespace TestLibrary.Config {
     public class Logger {
         public Boolean FileEnabled { get; private set; }
         public String FilePath { get; private set; }

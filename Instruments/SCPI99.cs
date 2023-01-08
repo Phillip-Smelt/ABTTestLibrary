@@ -1,7 +1,7 @@
 ﻿using System;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0; // https://www.keysight.com/us/en/search.html/command+expert
 
-namespace ABTTestLibrary.Instruments {
+namespace TestLibrary.Instruments {
     public static class SCPI99 {
         // SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 Instruments, which allows shared functionality.
         // Can Reset, Self-Test & Question Condition all SCPI-99 conforming Instruments with below methods; handy.

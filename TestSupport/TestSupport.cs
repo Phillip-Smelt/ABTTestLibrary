@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using ABTTestLibrary.Config;
+using TestLibrary.Config;
 
-namespace ABTTestLibrary.TestSupport {
+namespace TestLibrary.TestSupport {
     public class TestAbortException : Exception {
         public TestAbortException() { }
         public TestAbortException(String message) : base(message) { }
