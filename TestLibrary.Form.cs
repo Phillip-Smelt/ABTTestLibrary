@@ -32,7 +32,7 @@ namespace TestLibrary {
         protected abstract String RunTest(Test test, Dictionary<String, Instrument> instruments, CancellationToken cancellationToken);
 
         protected TestLibraryForm(Icon icon) {
-            InitializeComponent();
+            this.InitializeComponent();
             this._appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
             this._libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             this.Icon = icon;
@@ -47,7 +47,7 @@ namespace TestLibrary {
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
-            FormReset();
+            this.FormReset();
             this.Text = $"{this.configLib.UUT.Number}, {this.configLib.UUT.Description}";
             this.ButtonSelectGroup.Enabled = true;
         }
@@ -55,7 +55,7 @@ namespace TestLibrary {
         private void ButtonSelectGroup_Click(Object sender, EventArgs e) {
             this.configTest = ConfigTest.Get();
             this.Text = $"{this.configLib.UUT.Number}, {this.configLib.UUT.Description}, {this.configTest.Group.ID}";
-            FormReset();
+            this.FormReset();
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(Enabled: true);
         }
@@ -63,31 +63,37 @@ namespace TestLibrary {
         private void ButtonStart_Clicked(Object sender, EventArgs e) {
             this.configLib.UUT.SerialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.configLib.UUT.SerialNumber);
             if (String.Equals(this.configLib.UUT.SerialNumber, String.Empty)) return;
-            FormReset();
-            this.ButtonCancelReset(Enabled: true);
-            Run();
+            this.PreRun();
+            this.Run();
+            this.PostRun();
         }
 
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
-            this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = Color.Red;
             this._cancellationTokenSource.Cancel();
             this._cancelled = true;
-            // NOTE: Two types of cancellation possible:
-            //  1)  Microsoft's recommended CancellationTokenSource technique, which can cancel the
-            //      currently executing Test, *if* implemented.
+            this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
+            this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = Color.Red;
+            // NOTE: Two types of cancellation possible, proactive & reactive:
+            //  1)  Proactive:
+            //      - Microsoft's recommended CancellationTokenSource technique, which can proactively
+            //        cancel currently executing Test, *if* implemented.
             //      - Implementation is the Test Developer's responsibility.
-            //      - Implementation necessary if the *currently* executing Test must be cancellable.
-            //  2)  TestLibrary's basic "Cancel before next Test" technique, which simply sets the Boolean
-            //      this._cancelled flag to true, checked at the end of RunTest()'s foreach loop.
-            //      - If this._cancelled is true, RunTest()'s foreach loop is broken, causing cancellation
+            //      - Implementation necessary if the *currently* executing Test must be cancellable during
+            //        execution.
+            //  2)  Reactive:
+            //      - TestLibrary's already implemented/always available & default reactive "Cancel before next Test" technique,
+            //        which simply sets this._cancelled Boolean to true, checked at the end of RunTest()'s foreach loop.
+            //      - If this._cancelled is true, RunTest()'s foreach loop is broken, causing reactive cancellation
             //        prior to the next Test's execution.
-            //      - Note this doesn't cancel the *currently* executing Test, which runs to completion.
+            //      - Note this doesn't proactively cancel the *currently* executing Test, which runs to completion.
             //  Summary:
-            //      - If it's necessary to deterministically cancel a specific Test's execution, Microsoft's CancellationTokenSource
-            //        technique must be implemented by the Test Developer.
-            //      - If it's only necessary to deterministically cancel the Program's execution, TestLibrary's basic
-            //        "Cancel before next Test" technique is always operational without any Test Development implemenation needed.
+            //      - If it's necessary to deterministically cancel a specific Test's execution, Microsoft's
+            //        CancellationTokenSource technique *must* be implemented by the Test Developer.
+            //      - If it's only necessary to deterministically cancel Program execution, TestLibrary's basic
+            //        "Cancel before next Test" technique is already available without any Test Developer
+            //        implemenation needed.
+            //      - Some Test's may not be safely cancellable mid-execution.  For these, simply don't implement
+            //        Microsoft's CancellationTokenSource technique.
             // https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
             // https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
             // https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
@@ -152,14 +158,15 @@ namespace TestLibrary {
                 OverwritePrompt = true
             };
             DialogResult dr = sfd.ShowDialog();
-            if (dr == DialogResult.OK && !String.Equals(sfd.FileName, String.Empty)) this.rtfResults.SaveFile(sfd.FileName);
+            if ((dr == DialogResult.OK) && !String.Equals(sfd.FileName, String.Empty)) this.rtfResults.SaveFile(sfd.FileName);
         }
 
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
             System.Diagnostics.Process.Start("explorer.exe", this.configLib.Logger.FilePath);
         }
 
-        private void Run() {
+        private void PreRun() {
+            this.FormReset();
             foreach (KeyValuePair<String, Test> t in this.configTest.Tests) {
                 t.Value.Measurement = String.Empty;
                 t.Value.Result = EventCodes.UNSET;
@@ -167,6 +174,10 @@ namespace TestLibrary {
             this.configLib.UUT.EventCode = EventCodes.UNSET;
             InstrumentTasks.Reset(this.instruments);
             LogTasks.Start(this.configLib, this._appAssemblyVersion, this._libraryAssemblyVersion, this.configTest.Group, ref this.rtfResults);
+            this.ButtonCancelReset(Enabled: true);
+        }
+
+        private void Run() {
             foreach (KeyValuePair<String, Test> t in this.configTest.Tests) {
                 try {
                     t.Value.Measurement = RunTest(t.Value, this.instruments, this._cancellationTokenSource.Token);
@@ -190,7 +201,6 @@ namespace TestLibrary {
                     break;
                 }
             }
-            PostRun();
         }
 
         private void PostRun() {
