@@ -172,7 +172,7 @@ namespace TestLibrary {
                     t.Value.Measurement = RunTest(t.Value, this.instruments, this._cancellationTokenSource.Token);
                     t.Value.Result = TestTasks.EvaluateTestResult(t.Value);
                 } catch (Exception e) {
-                    if ((e.GetType() == typeof(TestCancelException)) || (e.InnerException.GetType() == typeof(TestCancelException))) {
+                    if ((e.GetType() == typeof(TestCancellationException)) || (e.InnerException.GetType() == typeof(TestCancellationException))) {
                         t.Value.Result = EventCodes.CANCEL;
                     } else {
                         InstrumentTasks.Reset(this.instruments);

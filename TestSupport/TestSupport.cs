@@ -7,10 +7,10 @@ using System.Reflection;
 using TestLibrary.Config;
 
 namespace TestLibrary.TestSupport {
-    public class TestCancelException : Exception {
-        public TestCancelException() { }
-        public TestCancelException(String message) : base(message) { }
-        public TestCancelException(String message, Exception inner) : base(message, inner) { }
+    public class TestCancellationException : Exception {
+        public TestCancellationException() { }
+        public TestCancellationException(String message) : base(message) { }
+        public TestCancellationException(String message, Exception inner) : base(message, inner) { }
     }
 
     public static class EventCodes {
