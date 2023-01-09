@@ -24,7 +24,7 @@ namespace TestLibrary.TestSupport {
             Dictionary<String, Color> CodesToColors = new Dictionary<String, Color>() {
                 {EventCodes.ABORT, Color.Yellow },
                 {EventCodes.ERROR, Color.Aqua },
-                {EventCodes.FAIL, Color.Red},
+                {EventCodes.FAIL, Color.FromArgb(255, 158, 35, 35) }, // Emergency Stop Button's red RBG color.
                 {EventCodes.PASS, Color.Green },
                 {EventCodes.UNSET, Color.Gray }
             };

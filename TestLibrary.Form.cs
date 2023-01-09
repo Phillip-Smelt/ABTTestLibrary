@@ -19,9 +19,10 @@ using Serilog;
 // NOTE: With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 namespace TestLibrary {
     public abstract partial class TestLibraryForm : Form {
-        private ConfigLib configLib;
-        private ConfigTest configTest;
-        private Dictionary<String, Instrument> instruments;
+        protected ConfigLib configLib;
+        protected ConfigTest configTest;
+        protected Dictionary<String, Instrument> instruments;
+        // NOTE: Above object declarations protected so they can be inhereited & extended if needed.
         private String _appAssemblyVersion;
         private String _libraryAssemblyVersion;
         private Boolean _cancelled;
@@ -65,7 +66,6 @@ namespace TestLibrary {
         }
 
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            FormReset();
             this.ButtonCancel.Text = "Canceling...";
             this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = Color.DarkRed;
             this._cancelled = true;
@@ -76,21 +76,27 @@ namespace TestLibrary {
         }
 
         private void ButtonStartReset(Boolean Enabled) {
-            this.ButtonStart.Enabled = Enabled;
             if (Enabled) {
                 this.ButtonStart.UseVisualStyleBackColor = false;
                 this.ButtonStart.BackColor = Color.Green;
-            } else this.ButtonStart.UseVisualStyleBackColor = true;
+            } else {
+                this.ButtonStart.BackColor = SystemColors.Control;
+                this.ButtonStart.UseVisualStyleBackColor = true;
+            }
+            this.ButtonStart.Enabled = Enabled;
         }
 
         private void ButtonCancelReset(Boolean Enabled) {
-            this.ButtonCancel.Enabled = Enabled;
             if (Enabled) {
                 this.ButtonCancel.UseVisualStyleBackColor = false;
                 this.ButtonCancel.BackColor = Color.Yellow;
-            } else this.ButtonCancel.UseVisualStyleBackColor = true;
+            } else {
+                this.ButtonCancel.BackColor = SystemColors.Control;
+                this.ButtonCancel.UseVisualStyleBackColor = true;
+            }
             this.ButtonCancel.Text = "Cancel";
             this._cancelled = false;
+            this.ButtonCancel.Enabled = Enabled;
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
