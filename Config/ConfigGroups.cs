@@ -34,6 +34,17 @@ namespace TestLibrary.Config {
         public IEnumerable<GroupElement> GroupElement { get { foreach (GroupElement ge in this.GroupElements) if (ge != null) yield return ge; } }
     }
 
+    // NOTE: Possibly desirable to implement a 3rd tier of ConfigurationCollections:
+    //  - Currently is Groups to Tests.
+    //  - 3rd tier would be Groups to SubGroups to Tests.
+    //  - Would permit Groups to relate to SubGroups like 'Shorts', 'Opens', 'Analog to Digital", "In System-Programming", "Boundary Scan", etc.
+    //  - Implementation would simply be another nested foreach loop like below:
+    //      Dictionary<String, Group> d = new Dictionary<String, Group>();
+    //      foreach (GroupElement ge in e) {
+    //          foreach (SubGroupElement sge in ge) d.Add(sge.ID, new Group(sge.ID, sge.Required, sge.Revision, sge.Summary, sge.Detail, sge.TestIDs));
+    //      }
+    //      return d;
+    //  - Possibly desirable if there are numerous Tests, too many to easily keep track of, and organizing into SubGroups would help.
     public class Group {
         public String ID { get; private set; }
         public Boolean Required { get; private set; }
