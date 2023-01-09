@@ -67,7 +67,7 @@ namespace TestLibrary {
 
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             this.ButtonCancel.Text = "Canceling...";
-            this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = Color.DarkRed;
+            this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = EventCodes.GetColor(EventCodes.FAIL);
             this._cancelled = true;
             // TODO: Improve Cancel function.
             // https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
@@ -78,7 +78,7 @@ namespace TestLibrary {
         private void ButtonStartReset(Boolean Enabled) {
             if (Enabled) {
                 this.ButtonStart.UseVisualStyleBackColor = false;
-                this.ButtonStart.BackColor = Color.Green;
+                this.ButtonStart.BackColor = EventCodes.GetColor(EventCodes.PASS);
             } else {
                 this.ButtonStart.BackColor = SystemColors.Control;
                 this.ButtonStart.UseVisualStyleBackColor = true;
@@ -89,7 +89,7 @@ namespace TestLibrary {
         private void ButtonCancelReset(Boolean Enabled) {
             if (Enabled) {
                 this.ButtonCancel.UseVisualStyleBackColor = false;
-                this.ButtonCancel.BackColor = Color.Yellow;
+                this.ButtonCancel.BackColor = EventCodes.GetColor(EventCodes.ABORT);
             } else {
                 this.ButtonCancel.BackColor = SystemColors.Control;
                 this.ButtonCancel.UseVisualStyleBackColor = true;
@@ -97,6 +97,16 @@ namespace TestLibrary {
             this.ButtonCancel.Text = "Cancel";
             this._cancelled = false;
             this.ButtonCancel.Enabled = Enabled;
+        }
+
+        private void FormReset() {
+            this.ButtonSelectGroup.Enabled = false;
+            this.ButtonStartReset(Enabled: false);
+            this.ButtonCancelReset(Enabled: false);
+            this.TextUUTResult.Text = String.Empty;
+            this.TextUUTResult.BackColor = Color.White;
+            this.ButtonSaveOutput.Enabled = false;
+            this.rtfResults.Text = String.Empty;
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
@@ -125,16 +135,6 @@ namespace TestLibrary {
 
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
             System.Diagnostics.Process.Start("explorer.exe", this.configLib.Logger.FilePath);
-        }
-
-        private void FormReset() {
-            this.ButtonSelectGroup.Enabled = false;
-            this.ButtonStartReset(Enabled: false);
-            this.ButtonCancelReset(Enabled: false);
-            this.TextUUTResult.Text = String.Empty;
-            this.TextUUTResult.BackColor = Color.White;
-            this.ButtonSaveOutput.Enabled = false;
-            this.rtfResults.Text = String.Empty;
         }
 
         private void Run() {
