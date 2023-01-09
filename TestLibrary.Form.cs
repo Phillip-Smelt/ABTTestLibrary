@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 using TestLibrary.Config;
 using TestLibrary.Instruments;
@@ -26,8 +27,9 @@ namespace TestLibrary {
         private String _appAssemblyVersion;
         private String _libraryAssemblyVersion;
         private Boolean _cancelled;
+        private CancellationTokenSource _cancellationTokenSource;
 
-        protected abstract String RunTest(Test test, Dictionary<String, Instrument> instruments);
+        protected abstract String RunTest(Test test, Dictionary<String, Instrument> instruments, CancellationToken cancellationToken);
 
         protected TestLibraryForm(Icon icon) {
             InitializeComponent();
@@ -41,6 +43,7 @@ namespace TestLibrary {
             this.configLib = ConfigLib.Get();
             this.instruments = Instrument.Get();
             InstrumentTasks.Test(this.instruments);
+            this._cancellationTokenSource = new CancellationTokenSource();
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
@@ -66,10 +69,25 @@ namespace TestLibrary {
         }
 
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            this.ButtonCancel.Text = "Canceling...";
-            this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = EventCodes.GetColor(EventCodes.FAIL);
+            this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
+            this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = Color.Red;
+            this._cancellationTokenSource.Cancel();
             this._cancelled = true;
-            // TODO: Improve Cancel function.
+            // NOTE: Two types of cancellation possible:
+            //  1)  Microsoft's recommended CancellationTokenSource technique, which can cancel the
+            //      currently executing Test, *if* implemented.
+            //      - Implementation is the Test Developer's responsibility.
+            //      - Implementation necessary if the *currently* executing Test must be cancellable.
+            //  2)  TestLibrary's basic "Cancel before next Test" technique, which simply sets the Boolean
+            //      this._cancelled flag to true, checked at the end of RunTest()'s foreach loop.
+            //      - If this._cancelled is true, RunTest()'s foreach loop is broken, causing cancellation
+            //        prior to the next Test's execution.
+            //      - Note this doesn't cancel the *currently* executing Test, which runs to completion.
+            //  Summary:
+            //      - If it's necessary to deterministically cancel a specific Test's execution, Microsoft's CancellationTokenSource
+            //        technique must be implemented by the Test Developer.
+            //      - If it's only necessary to deterministically cancel the Program's execution, TestLibrary's basic
+            //        "Cancel before next Test" technique is always operational without any Test Development implemenation needed.
             // https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
             // https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
             // https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
@@ -78,7 +96,7 @@ namespace TestLibrary {
         private void ButtonStartReset(Boolean Enabled) {
             if (Enabled) {
                 this.ButtonStart.UseVisualStyleBackColor = false;
-                this.ButtonStart.BackColor = EventCodes.GetColor(EventCodes.PASS);
+                this.ButtonStart.BackColor = Color.Green;
             } else {
                 this.ButtonStart.BackColor = SystemColors.Control;
                 this.ButtonStart.UseVisualStyleBackColor = true;
@@ -89,12 +107,16 @@ namespace TestLibrary {
         private void ButtonCancelReset(Boolean Enabled) {
             if (Enabled) {
                 this.ButtonCancel.UseVisualStyleBackColor = false;
-                this.ButtonCancel.BackColor = EventCodes.GetColor(EventCodes.ABORT);
+                this.ButtonCancel.BackColor = Color.Yellow;
             } else {
                 this.ButtonCancel.BackColor = SystemColors.Control;
                 this.ButtonCancel.UseVisualStyleBackColor = true;
             }
             this.ButtonCancel.Text = "Cancel";
+            if (this._cancellationTokenSource.IsCancellationRequested) {
+                this._cancellationTokenSource.Dispose();
+                this._cancellationTokenSource = new CancellationTokenSource();
+            }
             this._cancelled = false;
             this.ButtonCancel.Enabled = Enabled;
         }
@@ -118,7 +140,7 @@ namespace TestLibrary {
             // NOTE: Using RichTextBox instead of TextBox control in TestLibraryForm for below reasons:
             // - RichTextBox doesn't have a character limit, whereas TextBox control limited to 64KByte of characters.
             //   Doubt > 64KBytes necessary, but why risk it?
-            // - RichTextBox can display rich text, specifically the color coded text of EventCode.ABORT, EventCode.ERROR, 
+            // - RichTextBox can display rich text, specifically the color coded text of EventCode.CANCEL, EventCode.ERROR, 
             //   EventCode.FAIL, EventCode.PASS & EventCode.UNSET.
             SaveFileDialog sfd = new SaveFileDialog {
                 Title = "Save Test Results",
@@ -147,11 +169,12 @@ namespace TestLibrary {
             LogTasks.Start(this.configLib, this._appAssemblyVersion, this._libraryAssemblyVersion, this.configTest.Group, ref this.rtfResults);
             foreach (KeyValuePair<String, Test> t in this.configTest.Tests) {
                 try {
-                    t.Value.Measurement = RunTest(t.Value, this.instruments);
+                    t.Value.Measurement = RunTest(t.Value, this.instruments, this._cancellationTokenSource.Token);
                     t.Value.Result = TestTasks.EvaluateTestResult(t.Value);
                 } catch (Exception e) {
-                    if (e.GetType() == typeof(TestAbortException)) t.Value.Result = EventCodes.ABORT;
-                    else {
+                    if ((e.GetType() == typeof(TestCancelException)) || (e.InnerException.GetType() == typeof(TestCancelException))) {
+                        t.Value.Result = EventCodes.CANCEL;
+                    } else {
                         InstrumentTasks.Reset(this.instruments);
                         t.Value.Result = EventCodes.ERROR;
                         Log.Error(e.ToString());
@@ -163,7 +186,7 @@ namespace TestLibrary {
                     LogTasks.LogTest(t.Value);
                 }
                 if (this._cancelled) {
-                    t.Value.Result = EventCodes.ABORT;
+                    t.Value.Result = EventCodes.CANCEL;
                     break;
                 }
             }

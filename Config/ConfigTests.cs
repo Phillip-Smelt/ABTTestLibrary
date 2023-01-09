@@ -68,7 +68,7 @@ namespace TestLibrary.Config {
             TestElements e = s.TestElements;
             Dictionary<String, Test> d = new Dictionary<String, Test>();
             foreach (TestElement te in e) d.Add(te.ID, new Test(te.ID, te.Revision, te.Summary, te.Detail, te.LimitLow, te.LimitHigh, te.Units, te.UnitType, String.Empty, Result: EventCodes.UNSET));
-            // Pre-load Tests with EventCodes.UNSET results, which will be replaced as the tests are executed with EventCodes.ABORT, EventCodes.ERROR, EventCodes.FAIL or (hopefully!) EventCodes.PASS.
+            // Pre-load Tests with EventCodes.UNSET results, which will be replaced as the tests are executed with EventCodes.CANCEL, EventCodes.ERROR, EventCodes.FAIL or (hopefully!) EventCodes.PASS.
             return d;
         }
     }

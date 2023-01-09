@@ -147,7 +147,7 @@ namespace TestLibrary.Logging {
         public static void TestEvents(UUT uut) {
             String eventCode = String.Empty;
             switch (uut.EventCode) {
-                case EventCodes.ABORT:
+                case EventCodes.CANCEL:
                     eventCode = "A";
                     break;
                 case EventCodes.FAIL:

@@ -7,14 +7,14 @@ using System.Reflection;
 using TestLibrary.Config;
 
 namespace TestLibrary.TestSupport {
-    public class TestAbortException : Exception {
-        public TestAbortException() { }
-        public TestAbortException(String message) : base(message) { }
-        public TestAbortException(String message, Exception inner) : base(message, inner) { }
+    public class TestCancelException : Exception {
+        public TestCancelException() { }
+        public TestCancelException(String message) : base(message) { }
+        public TestCancelException(String message, Exception inner) : base(message, inner) { }
     }
 
     public static class EventCodes {
-        public const String ABORT = "ABORT";
+        public const String CANCEL = "CANCEL";
         public const String ERROR = "ERROR";
         public const String FAIL = "FAIL";
         public const String PASS = "PASS";
@@ -22,9 +22,9 @@ namespace TestLibrary.TestSupport {
 
         public static Color GetColor(String EventCode) {
             Dictionary<String, Color> CodesToColors = new Dictionary<String, Color>() {
-                {EventCodes.ABORT, Color.Yellow },
+                {EventCodes.CANCEL, Color.Yellow },
                 {EventCodes.ERROR, Color.Aqua },
-                {EventCodes.FAIL, Color.FromArgb(255, 158, 35, 35) }, // Emergency Stop Button's red RBG color.
+                {EventCodes.FAIL, Color.Red },
                 {EventCodes.PASS, Color.Green },
                 {EventCodes.UNSET, Color.Gray }
             };
@@ -94,7 +94,7 @@ namespace TestLibrary.TestSupport {
                 if (String.Equals(sLow, "CUSTOM")) {
                     //   - LimitLow = LimitHigh = CUSTOM, for custom Tests.
                     switch (test.Measurement) {
-                        case EventCodes.ABORT:
+                        case EventCodes.CANCEL:
                         case EventCodes.ERROR:
                         case EventCodes.FAIL:
                         case EventCodes.PASS:
@@ -132,16 +132,16 @@ namespace TestLibrary.TestSupport {
             if (GetResultCount(configTest.Tests, EventCodes.ERROR) > 0) return EventCodes.ERROR;
             // 2nd priority evaluation:
             // - If any test result is ERROR, overall UUT result is ERROR.
-            if (GetResultCount(configTest.Tests, EventCodes.ABORT) > 0) return EventCodes.ABORT;
+            if (GetResultCount(configTest.Tests, EventCodes.CANCEL) > 0) return EventCodes.CANCEL;
             // 3rd priority evaluation:
-            // - If any test result is ABORT, and none were ERROR, overall UUT result is ABORT.
+            // - If any test result is CANCEL, and none were ERROR, overall UUT result is CANCEL.
             if (GetResultCount(configTest.Tests, EventCodes.UNSET) > 0) throw new InvalidOperationException("One or more Tests didn't execute!");
             // 4th priority evaluation:
-            // - If any test result is UNSET, and there are no explicit ERROR or ABORT results, it implies the test didn't complete
-            //   without erroring or aborting, which shouldn't occur, but...
+            // - If any test result is UNSET, and there are no explicit ERROR or CANCEL results, it implies the test didn't complete
+            //   without erroring or cancelling, which shouldn't occur, but...
             if (GetResultCount(configTest.Tests, EventCodes.FAIL) > 0) return EventCodes.FAIL;
             // 5th priority evaluation:
-            // - If there are no ERROR, ABORT or UNSET results, but there is a FAIL result, UUT result is FAIL.
+            // - If there are no ERROR, CANCEL or UNSET results, but there is a FAIL result, UUT result is FAIL.
 
             // Else, handle oopsies!
             String validEvents = String.Empty, invalidTests = String.Empty;
