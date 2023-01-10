@@ -10,6 +10,7 @@ using Serilog;
 
 namespace TestLibrary.Logging {
     public static class LogTasks {
+        public static readonly String LOGGER_FILE = $"{Path.GetTempPath()}TestLibraryLog.txt";
         public const String LOGGER_TEMPLATE = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}";
 
         public static void Start(ConfigLib configLib, String appAssemblyVersion, String libraryAssemblyVersion, Group group, ref RichTextBox rtfResults) {
@@ -32,15 +33,18 @@ namespace TestLibrary.Logging {
             if (configLib.Logger.FileEnabled && !configLib.Logger.SQLEnabled) {
                 // When Required Groups are executed, test data is always & automatically saved to config.Logger.FilePath as UTF-8 text.  Always.
                 // RichTextBox + File.
+                FileStart();
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
+                    .WriteTo.File(LOGGER_FILE, outputTemplate: LOGGER_TEMPLATE, fileSizeLimitBytes: null, retainedFileCountLimit: null, encoding: Encoding.UTF8)
                     .CreateLogger();
             } else if (!configLib.Logger.FileEnabled && configLib.Logger.SQLEnabled) {
                 // TODO: RichTextBox + SQL.
                 SQLStart(configLib, group);
             } else if (configLib.Logger.FileEnabled && configLib.Logger.SQLEnabled) {
                 // TODO: RichTextBox + File + SQL.
+                FileStart();
                 SQLStart(configLib, group);
             } else {
                 // RichTextBox only; customer doesn't require saved test data, unusual for Functional testing, but common for other testing methodologies.
@@ -88,7 +92,7 @@ namespace TestLibrary.Logging {
             Log.Information(message);
         }
 
-        public static void Stop(ConfigLib configLib, Group group, ref RichTextBox rtfResults) {
+        public static void Stop(ConfigLib configLib, Group group) {
             if (!group.Required) Log.CloseAndFlush();
             // Log Trailer isn't written when Group isn't Required, futher emphasizing test results
             // aren't valid for pass verdict/$hip disposition, only troubleshooting failures.
@@ -96,35 +100,40 @@ namespace TestLibrary.Logging {
                 Log.Information($"Final Result: {configLib.UUT.EventCode}");
                 Log.Information($"STOP:  {DateTime.Now}");
                 Log.CloseAndFlush();
-                if (configLib.Logger.FileEnabled) FileStop(configLib, group, ref rtfResults);
+                if (configLib.Logger.FileEnabled) FileStop(configLib, group);
                 if (configLib.Logger.SQLEnabled) SQLStop(configLib, group);
                 if (configLib.Logger.TestEventsEnabled) TestEvents(configLib.UUT);
             }
         }
 
-        private static void FileStop(ConfigLib configLib, Group group, ref RichTextBox rtfResults) {
+        private static void FileStart() {
+            if (File.Exists(LOGGER_FILE)) File.Delete(LOGGER_FILE);
+            // A previous run likely failed to complete; delete it and begin anew.
+        }
+
+        private static void FileStop(ConfigLib configLib, Group group) {
             String fileName = $"{configLib.UUT.Number}_{configLib.UUT.SerialNumber}_{group.ID}";
-            String[] files = Directory.GetFiles(configLib.Logger.FilePath, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
-            // files is the set of all files in config.Logger.FilePath like config.UUT.Number_Config.UUT.SerialNumber_Config.Group.ID_*.rtf.
+            String[] files = Directory.GetFiles(configLib.Logger.FilePath, $"{fileName}_*.txt", SearchOption.TopDirectoryOnly);
+            // files is the set of all files in config.Logger.FilePath like config.UUT.Number_Config.UUT.SerialNumber_Config.Group.ID_*.txt.
             Int32 maxNumber = 0; String s;
             foreach (String f in files) {
                 s = f;
                 s = s.Replace($"{configLib.Logger.FilePath}{fileName}", String.Empty);
-                s = s.Replace(".rtf", String.Empty);
+                s = s.Replace(".txt", String.Empty);
                 s = s.Replace("_", String.Empty);
                 foreach (FieldInfo fi in typeof(EventCodes).GetFields()) s = s.Replace((String)fi.GetValue(null), String.Empty);
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
                 // Example for final (3rd) iteration of foreach (String f in files):
                 //   FileName            : 'UUTNumber_GroupID_SerialNumber'
-                //   Initially           : 'P:\Test\TDR\D4522137\Functional\UUTNumber_GroupID_SerialNumber_3_PASS.rtf'
-                //   FilePath + fileName : '_3_PASS.rtf'
+                //   Initially           : 'P:\Test\TDR\D4522137\Functional\UUTNumber_GroupID_SerialNumber_3_PASS.txt'
+                //   FilePath + fileName : '_3_PASS.txt'
                 //   .txt                : '_3_PASS'
                 //   _                   : '3PASS'
                 //   foreach (FieldInfo  : '3'
                 //   maxNumber           : '3'
             }
-            fileName += $"_{++maxNumber}_{configLib.UUT.EventCode}.rtf";
-            rtfResults.SaveFile($"{configLib.Logger.FilePath}{fileName}");
+            fileName += $"_{++maxNumber}_{configLib.UUT.EventCode}.txt";
+            File.Move(LOGGER_FILE, $"{configLib.Logger.FilePath}{fileName}");
         }
 
         private static void SQLStart(ConfigLib configLib, Group group) {

@@ -224,7 +224,7 @@ namespace TestLibrary {
             this.configLib.UUT.EventCode = TestTasks.EvaluateUUTResult(this.configTest);
             this.TextUUTResult.Text = this.configLib.UUT.EventCode;
             this.TextUUTResult.BackColor = EventCodes.GetColor(this.configLib.UUT.EventCode);
-            LogTasks.Stop(this.configLib, this.configTest.Group);
+            LogTasks.Stop(this.configLib, this.configTest.Group, ref this.rtfResults);
         }
     }
 }
