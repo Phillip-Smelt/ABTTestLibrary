@@ -18,6 +18,11 @@ using Serilog;
 // NOTE: Update to UWP instead of WinForms when possible.
 // - Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
 // NOTE: With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
+//
+//  References:
+//  - https://github.com/Amphenol-Borisch-Technologies/TestLibrary
+//  - https://github.com/Amphenol-Borisch-Technologies/TestProgram
+//  - https://github.com/Amphenol-Borisch-Technologies/TestLibraryTests
 namespace TestLibrary {
     public abstract partial class TestLibraryForm : Form {
         protected ConfigLib configLib;
@@ -133,7 +138,15 @@ namespace TestLibrary {
             this.ButtonCancelReset(Enabled: false);
             this.TextUUTResult.Text = String.Empty;
             this.TextUUTResult.BackColor = Color.White;
-            this.ButtonSaveOutput.Enabled = false;
+            if (this.configTest != null) {
+                this.ButtonSaveOutput.Enabled = !this.configTest.Group.Required;
+                this.ButtonOpenTestDataFolder.Enabled = this.configTest.Group.Required;
+            } else {
+                this.ButtonSaveOutput.Enabled = false;
+                this.ButtonOpenTestDataFolder.Enabled = false;
+            }
+
+            this.ButtonEmergencyStop.Enabled = true;
             this.rtfResults.Text = String.Empty;
         }
 
@@ -211,9 +224,6 @@ namespace TestLibrary {
             this.configLib.UUT.EventCode = TestTasks.EvaluateUUTResult(this.configTest);
             this.TextUUTResult.Text = this.configLib.UUT.EventCode;
             this.TextUUTResult.BackColor = EventCodes.GetColor(this.configLib.UUT.EventCode);
-            if (this.configTest.Group.Required && String.Equals(this.configLib.UUT.EventCode, EventCodes.PASS)) this.ButtonSaveOutput.Enabled = false;
-            // Disallow saving output if this was a Required Group & UUT passed, because, why bother?  UUT passed & saved test data attesting such; take the win & $hip it.
-            else this.ButtonSaveOutput.Enabled = true;
             LogTasks.Stop(this.configLib, this.configTest.Group);
         }
     }
