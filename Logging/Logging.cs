@@ -14,7 +14,7 @@ namespace TestLibrary.Logging {
 
         public static void Start(ConfigLib configLib, String appAssemblyVersion, String libraryAssemblyVersion, Group group, ref RichTextBox rtfResults) {
             if (!group.Required) {
-                // When non-Required Groups are executed, test data is never saved to config.Logger.FilePath as UTF-8 text.  Never.
+                // When non-Required Groups are executed, test data is never saved to config.Logger.FilePath as Rich Text.  Never.
                 // RichTextBox only. 
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
@@ -30,7 +30,7 @@ namespace TestLibrary.Logging {
             }
 
             if (configLib.Logger.FileEnabled && !configLib.Logger.SQLEnabled) {
-                // When Required Groups are executed, test data is always & automatically saved to config.Logger.FilePath as UTF-8 text.  Always.
+                // When Required Groups are executed, test data is always & automatically saved to config.Logger.FilePath as Rich Text.  Always.
                 // RichTextBox + File.
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()

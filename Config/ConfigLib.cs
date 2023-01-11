@@ -12,6 +12,7 @@ namespace TestLibrary.Config {
 
         private Logger(Boolean FileEnabled, String FilePath, Boolean SQLEnabled, String SQLConnectionString, Boolean TestEventsEnabled) {
             this.FileEnabled = FileEnabled;
+            if (!FilePath.EndsWith(@"\")) FilePath += @"\"; // Logging.FileStop() requires terminating "\" character.
             this.FilePath = FilePath;
             this.SQLEnabled = SQLEnabled;
             this.SQLConnectionString = SQLConnectionString;
@@ -36,16 +37,18 @@ namespace TestLibrary.Config {
         public String Revision { get; private set; }
         public String Description { get; private set; }
         public String TestSpecification { get; private set; }
+        public String DocumentationFolder { get; private set; }
         public String SerialNumber { get; set; }
         public String EventCode { get; set; }
 
-        private UUT(String Customer, String Type, String Number, String Revision, String Description, String TestSpecification, String SerialNumber, String EventCode) {
+        private UUT(String Customer, String Type, String Number, String Revision, String Description, String TestSpecification, String DocumentationFolder, String SerialNumber, String EventCode) {
             this.Customer = Customer;
             this.Type = Type;
             this.Number = Number;
             this.Revision = Revision;
             this.Description = Description;
             this.TestSpecification = TestSpecification;
+            this.DocumentationFolder = DocumentationFolder;
             this.SerialNumber = SerialNumber;
             this.EventCode = EventCode;
         }
@@ -58,6 +61,7 @@ namespace TestLibrary.Config {
                 ConfigurationManager.AppSettings["UUT_Revision"],
                 ConfigurationManager.AppSettings["UUT_Description"],
                 ConfigurationManager.AppSettings["UUT_TestSpecification"],
+                ConfigurationManager.AppSettings["UUT_DocumentationFolder"],
                 String.Empty, // Input during testing.
                 EventCodes.UNSET // Determined post-test.
             );

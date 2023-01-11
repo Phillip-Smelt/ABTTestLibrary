@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
@@ -54,6 +56,7 @@ namespace TestLibrary {
         private void Form_Shown(Object sender, EventArgs e) {
             this.FormReset();
             this.Text = $"{this.configLib.UUT.Number}, {this.configLib.UUT.Description}";
+            if (Directory.Exists(this.configLib.UUT.DocumentationFolder)) Process.Start("explorer.exe", this.configLib.UUT.DocumentationFolder);
             this.ButtonSelectGroup.Enabled = true;
         }
 
@@ -140,12 +143,11 @@ namespace TestLibrary {
             this.TextUUTResult.BackColor = Color.White;
             if (this.configTest != null) {
                 this.ButtonSaveOutput.Enabled = !this.configTest.Group.Required;
-                this.ButtonOpenTestDataFolder.Enabled = this.configTest.Group.Required;
+                this.ButtonOpenTestDataFolder.Enabled = (this.configTest.Group.Required && this.configLib.Logger.FileEnabled);
             } else {
                 this.ButtonSaveOutput.Enabled = false;
                 this.ButtonOpenTestDataFolder.Enabled = false;
             }
-
             this.ButtonEmergencyStop.Enabled = true;
             this.rtfResults.Text = String.Empty;
         }
@@ -175,7 +177,7 @@ namespace TestLibrary {
         }
 
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
-            System.Diagnostics.Process.Start("explorer.exe", this.configLib.Logger.FilePath);
+            Process.Start("explorer.exe", this.configLib.Logger.FilePath);
         }
 
         private void PreRun() {
