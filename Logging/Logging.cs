@@ -105,7 +105,9 @@ namespace TestLibrary.Logging {
         private static void FileStop(ConfigLib configLib, Group group, ref RichTextBox rtfResults) {
             String fileName = $"{configLib.UUT.Number}_{configLib.UUT.SerialNumber}_{group.ID}";
             String[] files = Directory.GetFiles(configLib.Logger.FilePath, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
-            // files is the set of all files in config.Logger.FilePath like config.UUT.Number_Config.UUT.SerialNumber_Config.Group.ID_*.rtf.
+            // Will fail if invalid this.configLib.Logger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
+            // Otherwise, files is the set of all files in config.Logger.FilePath like
+            // config.UUT.Number_Config.UUT.SerialNumber_Config.Group.ID_*.rtf.
             Int32 maxNumber = 0; String s;
             foreach (String f in files) {
                 s = f;

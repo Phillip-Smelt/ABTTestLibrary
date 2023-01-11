@@ -35,6 +35,7 @@ namespace TestLibrary {
         private String _libraryAssemblyVersion;
         private Boolean _cancelled;
         private CancellationTokenSource _cancellationTokenSource;
+        private ProcessStartInfo _psi;
 
         protected abstract String RunTest(Test test, Dictionary<String, Instrument> instruments, CancellationToken cancellationToken);
 
@@ -56,7 +57,10 @@ namespace TestLibrary {
         private void Form_Shown(Object sender, EventArgs e) {
             this.FormReset();
             this.Text = $"{this.configLib.UUT.Number}, {this.configLib.UUT.Description}";
-            if (Directory.Exists(this.configLib.UUT.DocumentationFolder)) Process.Start("explorer.exe", this.configLib.UUT.DocumentationFolder);
+            if (Directory.Exists(this.configLib.UUT.DocumentationFolder)) {
+                ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.configLib.UUT.DocumentationFolder}\"" };
+                Process.Start(psi);
+            } else MessageBox.Show($"Path {this.configLib.UUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             this.ButtonSelectGroup.Enabled = true;
         }
 
@@ -177,7 +181,9 @@ namespace TestLibrary {
         }
 
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
-            Process.Start("explorer.exe", this.configLib.Logger.FilePath);
+            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.configLib.Logger.FilePath}\"" };
+            Process.Start(psi);
+            // Will fail if invalid this.configLib.Logger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
         }
 
         private void PreRun() {
