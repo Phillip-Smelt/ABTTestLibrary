@@ -14,12 +14,13 @@ using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 //
 using Keysight.Kt34400; // https://www.keysight.com/us/en/lib/software-detail/driver/34400-digital-multimeters-ivi-instrument-drivers.html
 using Keysight.KtEL30000; // https://www.keysight.com/us/en/lib/software-detail/driver/el30000a-dc-electronic-loads-ivi-instrument-drivers.html
+using TestLibrary.Instruments.Keysight;
 
 namespace TestLibrary.Instruments {
     public static class InstrumentTasks {
-        public static String GetMessage(Instrument Instrument, String OptionalHeader = "") {
+        public static String GetMessage(Instrument instrument, String OptionalHeader = "") {
             String Message = (OptionalHeader == "") ? "" : OptionalHeader += Environment.NewLine;
-            foreach (PropertyInfo pi in Instrument.GetType().GetProperties()) Message += $"{pi.Name,-14}: {pi.GetValue(Instrument)}{Environment.NewLine}";
+            foreach (PropertyInfo pi in instrument.GetType().GetProperties()) Message += $"{pi.Name,-14}: {pi.GetValue(instrument)}{Environment.NewLine}";
             return Message;
         }
 
@@ -28,22 +29,15 @@ namespace TestLibrary.Instruments {
         }
 
         public static void ResetMaximal(Dictionary<String, Instrument> instruments) {
-            ResetMinimal(instruments);
             foreach (KeyValuePair<String, Instrument> i in instruments) {
                 switch (i.Value.ID) {
                     case Instrument.POWER_PRELIMINARY:
                     case Instrument.POWER_PRIMARY:
                     case Instrument.POWER_SECONDARY:
-                        ((AgE3610XB)i.Value.Instance).SCPI.SOURce.CURRent.PROTection.CLEar.Command();
-                        ((AgE3610XB)i.Value.Instance).SCPI.SOURce.VOLTage.PROTection.CLEar.Command();
-                        ((AgE3610XB)i.Value.Instance).SCPI.OUTPut.PROTection.CLEar.Command();
-                        ((AgE3610XB)i.Value.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
+                        E3610xB.Reset(i.Value);
                         break;
                     case Instrument.POWER_MAIN:
-                        ((AgE36200)i.Value.Instance).SCPI.SOURce.CURRent.PROTection.CLEar.Command("(@1:2)");
-                        ((AgE36200)i.Value.Instance).SCPI.SOURce.VOLTage.PROTection.CLEar.Command("(@1:2)");
-                        ((AgE36200)i.Value.Instance).SCPI.OUTPut.PROTection.CLEar.Command("(@1:2)");
-                        ((AgE36200)i.Value.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
+                        E36234A.Reset(i.Value);
                         break;
                     case Instrument.LOAD:
 
@@ -110,10 +104,12 @@ namespace TestLibrary.Instruments {
                     case POWER_SECONDARY:
                         this.Category = "Power Supply";
                         this.Instance = new AgE3610XB(this.Address);
+                        ((AgE3610XB)this.Instance).SCPI.SYSTem.RWLock.Command();
                         break;
                     case POWER_MAIN:
                         this.Category = "Power Supply";
                         this.Instance = new AgE36200(this.Address);
+                        ((AgE36200)this.Instance).SCPI.SYSTem.RWLock.Command();
                         break;
                     case LOAD:
                         this.Category = "Electronic Load";
