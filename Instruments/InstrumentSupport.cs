@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09; // https://www.keysight.com/us/en/search.html/command+expert
-using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00; // https://www.keysight.com/us/en/search.html/command+expert
-using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00; // https://www.keysight.com/us/en/search.html/command+expert
+using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
+using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
+using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
+// All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
+//  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
+//  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
+// https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
 using Keysight.Kt34400; // https://www.keysight.com/us/en/lib/software-detail/driver/34400-digital-multimeters-ivi-instrument-drivers.html
 using Keysight.KtEL30000; // https://www.keysight.com/us/en/lib/software-detail/driver/el30000a-dc-electronic-loads-ivi-instrument-drivers.html
 
