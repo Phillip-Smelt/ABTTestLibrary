@@ -74,7 +74,7 @@ namespace TestLibrary.Config {
             // radioButtonRequired
             // 
             this.radioButtonRequired.AutoSize = true;
-            this.radioButtonRequired.Location = new System.Drawing.Point(0, 18);
+            this.radioButtonRequired.Location = new System.Drawing.Point(6, 18);
             this.radioButtonRequired.Name = "radioButtonRequired";
             this.radioButtonRequired.Size = new System.Drawing.Size(84, 20);
             this.radioButtonRequired.TabIndex = 2;
@@ -86,7 +86,7 @@ namespace TestLibrary.Config {
             // radioButtonNotRequired
             // 
             this.radioButtonNotRequired.AutoSize = true;
-            this.radioButtonNotRequired.Location = new System.Drawing.Point(1, 44);
+            this.radioButtonNotRequired.Location = new System.Drawing.Point(6, 44);
             this.radioButtonNotRequired.Name = "radioButtonNotRequired";
             this.radioButtonNotRequired.Size = new System.Drawing.Size(108, 20);
             this.radioButtonNotRequired.TabIndex = 3;
@@ -101,7 +101,7 @@ namespace TestLibrary.Config {
             this.groupBoxRequired.Controls.Add(this.radioButtonRequired);
             this.groupBoxRequired.Location = new System.Drawing.Point(12, 346);
             this.groupBoxRequired.Name = "groupBoxRequired";
-            this.groupBoxRequired.Size = new System.Drawing.Size(121, 84);
+            this.groupBoxRequired.Size = new System.Drawing.Size(138, 70);
             this.groupBoxRequired.TabIndex = 1;
             this.groupBoxRequired.TabStop = false;
             // 

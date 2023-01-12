@@ -40,24 +40,16 @@ namespace TestLibrary.TestSupport {
 
             if (String.Equals(sLow, String.Empty) || String.Equals(sHigh, String.Empty)) {
                 // If either Limit is String.Empty, non-empty Limit & Measurement must parse to numeric.
-                if (String.Equals(sLow, String.Empty) && String.Equals(sHigh, String.Empty)) {
-                    //   - LimitLow = LimitHigh = String.Empty.
-                    // One or both Limits must be numeric, or TestElement is erroneous.
-                    throw new InvalidOperationException($"Invalid limits; App.config TestElement ID '{test.ID}' has LimitLow = LimitHigh = String.Empty.");
-                }
+                if (String.Equals(sLow, String.Empty) && String.Equals(sHigh, String.Empty)) throw new InvalidOperationException($"Invalid limits; App.config TestElement ID '{test.ID}' has LimitLow = LimitHigh = String.Empty.");
+                //   - LimitLow = LimitHigh = String.Empty.
 
                 if (!Double_TryParse(sLow, out _) && !Double_TryParse(sHigh, out _)) {
                     // One or both Limits must be numeric, or TestElement is erroneous.
-                    if (String.Equals(sLow, String.Empty)) {
-                        throw new InvalidOperationException($"Invalid Limit; App.config TestElement ID '{test.ID}' LimitHigh '{sHigh}' ≠ System.Double.");
-                    } else throw new InvalidOperationException($"Invalid Limit; App.config TestElement ID '{test.ID}' LimitLow '{sLow}' ≠ System.Double.");
+                    if (String.Equals(sLow, String.Empty)) throw new InvalidOperationException($"Invalid Limit; App.config TestElement ID '{test.ID}' LimitHigh '{sHigh}' ≠ System.Double.");
+                    else throw new InvalidOperationException($"Invalid Limit; App.config TestElement ID '{test.ID}' LimitLow '{sLow}' ≠ System.Double.");
                 }
 
-                if (!Double_TryParse(test.Measurement, out dMeasurement)) {
-                    // Measurement must be numeric, or Test is erroneous.
-                    throw new InvalidOperationException($"Invalid measurement; App.config TestElement ID " +
-                        $"'{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
-                }
+                if (!Double_TryParse(test.Measurement, out dMeasurement)) throw new InvalidOperationException($"Invalid measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
 
                 if (Double_TryParse(sLow, out dLow) && String.Equals(sHigh, String.Empty)) {
                     //   - LimitLow parses to Double, LimitHigh = String.Empty; only low limit, no high.
@@ -74,14 +66,9 @@ namespace TestLibrary.TestSupport {
 
             if (Double_TryParse(sLow, out dLow) && Double_TryParse(sHigh, out dHigh)) {
                 //   - LimitLow & LimitHigh both parse to Doubles; both low & high limits.
-                if (dLow > dHigh) {
-                    throw new InvalidOperationException($"Invalid Limit; App.config TestElement ID '{test.ID}' LimitLow '{sLow}' > LimitHigh '{sHigh}'.");
-                }
-                if (!Double_TryParse(test.Measurement, out dMeasurement)) {
+                if (dLow > dHigh) throw new InvalidOperationException($"Invalid Limit; App.config TestElement ID '{test.ID}' LimitLow '{sLow}' > LimitHigh '{sHigh}'.");
+                if (!Double_TryParse(test.Measurement, out dMeasurement)) throw new InvalidOperationException($"Invalid measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
                 // Measurement must be numeric, or Test is erroneous.
-                    throw new InvalidOperationException($"Invalid measurement; App.config TestElement ID " +
-                        $"'{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
-                }
                 if ((dLow <= dMeasurement) && (dMeasurement <= dHigh)) return EventCodes.PASS;
                 else return EventCodes.FAIL;
             }
@@ -98,8 +85,7 @@ namespace TestLibrary.TestSupport {
                         case EventCodes.UNSET:
                             return test.Measurement;
                         default:
-                            throw new InvalidOperationException($"Invalid CUSTOM measurement; App.config TestElement ID " +
-                                $"'{test.ID}' Measurement '{test.Measurement}' didn't return valid EventCode.");
+                            throw new InvalidOperationException($"Invalid CUSTOM measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' didn't return valid EventCode.");
                     }
                 }
                 if (String.Equals(sLow, test.Measurement)) return EventCodes.PASS;
