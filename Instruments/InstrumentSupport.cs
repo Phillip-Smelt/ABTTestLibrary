@@ -24,42 +24,49 @@ namespace TestLibrary.Instruments {
             return Message;
         }
 
-        public static void ResetMinimal(Dictionary<String, Instrument> instruments) {
-            foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Reset(i.Value.Address);
+        public static void SCPI99Reset(Dictionary<String, Instrument> instruments) { foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Reset(i.Value.Address); }
+
+        public static void SCPI99Clear(Dictionary<String, Instrument> instruments) { foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Clear(i.Value.Address); }
+
+        public static void SCPI99ResetClear(Dictionary<String, Instrument> instruments) {
+            foreach (KeyValuePair<String, Instrument> i in instruments) {
+                SCPI99.Clear(i.Value.Address);
+                SCPI99.Reset(i.Value.Address);
+            }
         }
 
-        public static void ResetMaximal(Dictionary<String, Instrument> instruments) {
+        public static void SCPI99Test(Dictionary<String, Instrument> instruments) {
+            Int32 SelfTestResult;
+            foreach (KeyValuePair<String, Instrument> i in instruments) {
+                SelfTestResult = SCPI99.SelfTest(i.Value.Address);
+                if (SelfTestResult != 0) throw new InvalidOperationException(GetMessage(i.Value));
+            }
+        }
+
+        public static void InstrumentResetClear(Dictionary<String, Instrument> instruments) {
             foreach (KeyValuePair<String, Instrument> i in instruments) {
                 switch (i.Value.ID) {
                     case Instrument.POWER_PRELIMINARY:
                     case Instrument.POWER_PRIMARY:
                     case Instrument.POWER_SECONDARY:
-                        E3610xB.Reset(i.Value);
+                        E3610xB.ResetClear(i.Value);
                         break;
                     case Instrument.POWER_MAIN:
-                        E36234A.Reset(i.Value);
+                        E36234A.ResetClear(i.Value);
                         break;
                     case Instrument.LOAD:
-
+                        // TODO: case Instrument.LOAD:
                         break;
                     case Instrument.WAVE_GENERATOR:
-
+                        // TODO: case Instrument.WAVE_GENERATOR:
                         break;
                     case Instrument.MULTI_METER:
-
+                        // TODO: case Instrument.MULTI_METER:
                         break;
                     default:
                         throw new NotImplementedException($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
                             $"Update Class TestLibrary.InstrumentTasks.Instrument, adding '{i.Value.ID}'.");
                 }
-            }
-        }
-
-            public static void Test(Dictionary<String, Instrument> instruments) {
-            Int32 SelfTestResult;
-            foreach (KeyValuePair<String, Instrument> i in instruments) {
-                SelfTestResult = SCPI99.SelfTest(i.Value.Address);
-                if (SelfTestResult != 0) throw new InvalidOperationException(GetMessage(i.Value));
             }
         }
     }

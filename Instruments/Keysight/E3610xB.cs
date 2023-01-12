@@ -18,8 +18,11 @@ namespace TestLibrary.Instruments.Keysight {
 
         public static void RemoteLock(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void Reset(Instrument instrument) {
+        public static void Reset(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.RST.Command(); }
+
+        public static void ResetClear(Instrument instrument) {
             ((AgE3610XB)instrument.Instance).SCPI.RST.Command();
+            ((AgE3610XB)instrument.Instance).SCPI.CLS.Command();
             ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.CLEar.Command();
             ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.CLEar.Command();
             ((AgE3610XB)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command();
