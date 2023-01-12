@@ -74,18 +74,15 @@ namespace TestLibrary.TestSupport {
 
             if (Double_TryParse(sLow, out dLow) && Double_TryParse(sHigh, out dHigh)) {
                 //   - LimitLow & LimitHigh both parse to Doubles; both low & high limits.
+                if (dLow > dHigh) {
+                    throw new InvalidOperationException($"Invalid Limit; App.config TestElement ID '{test.ID}' LimitLow '{sLow}' > LimitHigh '{sHigh}'.");
+                }
                 if (!Double_TryParse(test.Measurement, out dMeasurement)) {
-                    // Measurement must be numeric, or Test is erroneous.
+                // Measurement must be numeric, or Test is erroneous.
                     throw new InvalidOperationException($"Invalid measurement; App.config TestElement ID " +
                         $"'{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
                 }
-                if (dLow <= dHigh) {
-                    if ((dLow <= dMeasurement) && (dMeasurement <= dHigh)) return EventCodes.PASS;
-                    else return EventCodes.FAIL;
-                }
-                if (dMeasurement >= dLow || dMeasurement <= dHigh) return EventCodes.PASS;
-                //   - LimitLow is allowed to be > LimitHigh if both parse to Double.
-                //     This simply excludes a range of measurements from passing, rather than including a range from passing.
+                if ((dLow <= dMeasurement) && (dMeasurement <= dHigh)) return EventCodes.PASS;
                 else return EventCodes.FAIL;
             }
 
