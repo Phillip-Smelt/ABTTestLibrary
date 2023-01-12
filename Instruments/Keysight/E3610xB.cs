@@ -5,7 +5,9 @@ using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 // https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
-
+//
+// Recommend using Command Expert to generate SCPI & IVI drivers commands, which are directly exportable as .Net statements.
+//
 namespace TestLibrary.Instruments.Keysight {
     public static class E3610xB {
         // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
@@ -53,6 +55,7 @@ namespace TestLibrary.Instruments.Keysight {
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("INTernal");
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(Volts);
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(Amps);
+                ((AgE3610XB)Instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command("MAXimum");
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true);
                 ((AgE3610XB)Instrument.Instance).SCPI.OUTPut.STATe.Command(true);
                 if (SettlingDelayMS != 0) Thread.Sleep(SettlingDelayMS);

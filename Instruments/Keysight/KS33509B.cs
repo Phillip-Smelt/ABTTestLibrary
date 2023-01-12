@@ -4,7 +4,9 @@ using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 // https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
-
+//
+// Recommend using Command Expert to generate SCPI & IVI drivers commands, which are directly exportable as .Net statements.
+//
 namespace TestLibrary.Instruments.Keysight {
     // TODO: KS33509B Class.
     public static class KS33509B {

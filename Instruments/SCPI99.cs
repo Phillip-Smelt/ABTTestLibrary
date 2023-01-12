@@ -4,7 +4,9 @@ using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 // https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
-
+//
+// Recommend using Command Expert to generate SCPI & IVI driver commands, which are directly exportable as .Net statements.
+//
 namespace TestLibrary.Instruments {
     public static class SCPI99 {
         // SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 Instruments, which allows shared functionality.

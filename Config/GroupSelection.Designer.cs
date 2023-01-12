@@ -74,7 +74,7 @@ namespace TestLibrary.Config {
             // radioButtonRequired
             // 
             this.radioButtonRequired.AutoSize = true;
-            this.radioButtonRequired.Location = new System.Drawing.Point(6, 18);
+            this.radioButtonRequired.Location = new System.Drawing.Point(7, 18);
             this.radioButtonRequired.Name = "radioButtonRequired";
             this.radioButtonRequired.Size = new System.Drawing.Size(84, 20);
             this.radioButtonRequired.TabIndex = 2;
