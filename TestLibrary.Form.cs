@@ -56,13 +56,16 @@ namespace TestLibrary {
         private void Form_Shown(Object sender, EventArgs e) {
             this.FormReset();
             this.Text = $"{this.configLib.UUT.Number}, {this.configLib.UUT.Description}";
-            if (Directory.Exists(this.configLib.UUT.DocumentationFolder)) {
-                ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.configLib.UUT.DocumentationFolder}\"" };
-                Process.Start(psi);
-                // Paths with embedded spaces require enclosing double-quotes (").
-                // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
-                // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-            } else MessageBox.Show($"Path {this.configLib.UUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            if (!String.Equals(String.Empty, this.configLib.UUT.DocumentationFolder)) {
+                if (Directory.Exists(this.configLib.UUT.DocumentationFolder)) {
+                    ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.configLib.UUT.DocumentationFolder}\"" };
+                    Process.Start(psi);
+                    // Paths with embedded spaces require enclosing double-quotes (").
+                    // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
+                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
+
+                } else MessageBox.Show($"Path {this.configLib.UUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
             this.ButtonSelectGroup.Enabled = true;
         }
 

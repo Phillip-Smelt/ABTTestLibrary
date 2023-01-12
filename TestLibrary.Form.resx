@@ -117,11 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="rtfResults.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="ButtonEmergencyStop.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEsAAABLCAIAAAC3LO29AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wgAADsIBFShKgAAAFQZJREFUeF7NmolfTfkbx2M0kpSkQve2a9+UokQLKZVI0oLsFMJPkTEYLRIttjRI
+        wQAADsEBuJFr7QAAFQZJREFUeF7NmolfTfkbx2M0kpSkQve2a9+UokQLKZVI0oLsFMJPkTEYLRIttjRI
         2ighIaMso5uyhJJGyD5jzN/x+5zznE7nnntvJcvM83pevc49neX7Ps/zfZZzvmrfQtQHDRo3dOhEHZ1Y
         Y+PNNjZ7XF3zp0wp9vc/GxR0ITT0/Jw5FXPmFIaG5gYEbPbwiHZy8jUzGzl4MHfyf1m0Bg+eoq2dIJH8
         6uBQ7uZWOXly1ZQp53x8LkyfXj1zZk1w8KXZs6/MnVs7f/5vUVHXFi6sj4u7vnz5zVWrbiUkNCQmnlm4
