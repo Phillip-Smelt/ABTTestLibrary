@@ -34,7 +34,7 @@ namespace TestLibrary.TestSupport {
 
     public static class TestTasks {
         public static String EvaluateTestResult(Test test) {
-            // NOTE: Sequence of below if conditions blocks interdependent.  That is, if reordered, they may fail.
+            // NOTE: Sequence of below if blocks interdependent.  That is, if reordered, they may fail.
             (String sLow, String sHigh) = (test.LimitLow, test.LimitHigh);
             Double dLow, dHigh, dMeasurement;
 
