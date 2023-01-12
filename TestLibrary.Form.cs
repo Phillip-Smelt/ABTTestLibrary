@@ -57,10 +57,12 @@ namespace TestLibrary {
         private void Form_Shown(Object sender, EventArgs e) {
             this.FormReset();
             this.Text = $"{this.configLib.UUT.Number}, {this.configLib.UUT.Description}";
-            if (Directory.Exists(this.configLib.UUT.DocumentationFolder)) {
-                ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.configLib.UUT.DocumentationFolder}\"" };
-                Process.Start(psi);
-            } else MessageBox.Show($"Path {this.configLib.UUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            if (!String.Equals(String.Empty, this.configLib.UUT.DocumentationFolder)) {
+                if (Directory.Exists(this.configLib.UUT.DocumentationFolder)) {
+                    ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.configLib.UUT.DocumentationFolder}\"" };
+                    Process.Start(psi);
+                } else MessageBox.Show($"Path {this.configLib.UUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
             this.ButtonSelectGroup.Enabled = true;
         }
 
