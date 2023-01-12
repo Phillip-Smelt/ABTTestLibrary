@@ -8,9 +8,10 @@ using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 //
+// https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
+//
 // Recommend using Command Expert to generate SCPI & IVI driver commands, which are directly exportable as .Net statements.
 //
-// https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
 using Keysight.Kt34400; // https://www.keysight.com/us/en/lib/software-detail/driver/34400-digital-multimeters-ivi-instrument-drivers.html
 using Keysight.KtEL30000; // https://www.keysight.com/us/en/lib/software-detail/driver/el30000a-dc-electronic-loads-ivi-instrument-drivers.html
 
