@@ -50,6 +50,7 @@ namespace TestLibrary {
             this.configLib = ConfigLib.Get();
             this.instruments = Instrument.Get();
             InstrumentTasks.Test(this.instruments);
+            InstrumentTasks.ResetMaximal(this.instruments);
             this._cancellationTokenSource = new CancellationTokenSource();
         }
 
@@ -161,7 +162,7 @@ namespace TestLibrary {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            InstrumentTasks.Reset(this.instruments);
+            InstrumentTasks.ResetMaximal(this.instruments);
             if (this.ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
 
@@ -197,7 +198,7 @@ namespace TestLibrary {
                 t.Value.Result = EventCodes.UNSET;
             }
             this.configLib.UUT.EventCode = EventCodes.UNSET;
-            InstrumentTasks.Reset(this.instruments);
+            InstrumentTasks.ResetMinimal(this.instruments);
             LogTasks.Start(this.configLib, this._appAssemblyVersion, this._libraryAssemblyVersion, this.configTest.Group, ref this.rtfResults);
             this.ButtonCancelReset(Enabled: true);
         }
@@ -211,7 +212,7 @@ namespace TestLibrary {
                     if ((e.GetType() == typeof(TestCancellationException)) || (e.InnerException.GetType() == typeof(TestCancellationException))) {
                         t.Value.Result = EventCodes.CANCEL;
                     } else {
-                        InstrumentTasks.Reset(this.instruments);
+                        InstrumentTasks.ResetMaximal(this.instruments);
                         t.Value.Result = EventCodes.ERROR;
                         Log.Error(e.ToString());
                         MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
@@ -229,7 +230,7 @@ namespace TestLibrary {
         }
 
         private void PostRun() {
-            InstrumentTasks.Reset(this.instruments);
+            InstrumentTasks.ResetMinimal(this.instruments);
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(Enabled: true);
             this.ButtonCancelReset(Enabled: false);

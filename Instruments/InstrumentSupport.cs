@@ -23,11 +23,45 @@ namespace TestLibrary.Instruments {
             return Message;
         }
 
-        public static void Reset(Dictionary<String, Instrument> instruments) {
+        public static void ResetMinimal(Dictionary<String, Instrument> instruments) {
             foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Reset(i.Value.Address);
         }
 
-        public static void Test(Dictionary<String, Instrument> instruments) {
+        public static void ResetMaximal(Dictionary<String, Instrument> instruments) {
+            ResetMinimal(instruments);
+            foreach (KeyValuePair<String, Instrument> i in instruments) {
+                switch (i.Value.ID) {
+                    case Instrument.POWER_PRELIMINARY:
+                    case Instrument.POWER_PRIMARY:
+                    case Instrument.POWER_SECONDARY:
+                        ((AgE3610XB)i.Value.Instance).SCPI.SOURce.CURRent.PROTection.CLEar.Command();
+                        ((AgE3610XB)i.Value.Instance).SCPI.SOURce.VOLTage.PROTection.CLEar.Command();
+                        ((AgE3610XB)i.Value.Instance).SCPI.OUTPut.PROTection.CLEar.Command();
+                        ((AgE3610XB)i.Value.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
+                        break;
+                    case Instrument.POWER_MAIN:
+                        ((AgE36200)i.Value.Instance).SCPI.SOURce.CURRent.PROTection.CLEar.Command("(@1:2)");
+                        ((AgE36200)i.Value.Instance).SCPI.SOURce.VOLTage.PROTection.CLEar.Command("(@1:2)");
+                        ((AgE36200)i.Value.Instance).SCPI.OUTPut.PROTection.CLEar.Command("(@1:2)");
+                        ((AgE36200)i.Value.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
+                        break;
+                    case Instrument.LOAD:
+
+                        break;
+                    case Instrument.WAVE_GENERATOR:
+
+                        break;
+                    case Instrument.MULTI_METER:
+
+                        break;
+                    default:
+                        throw new NotImplementedException($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
+                            $"Update Class TestLibrary.InstrumentTasks.Instrument, adding '{i.Value.ID}'.");
+                }
+            }
+        }
+
+            public static void Test(Dictionary<String, Instrument> instruments) {
             Int32 SelfTestResult;
             foreach (KeyValuePair<String, Instrument> i in instruments) {
                 SelfTestResult = SCPI99.SelfTest(i.Value.Address);

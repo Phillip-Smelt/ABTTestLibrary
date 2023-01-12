@@ -55,9 +55,9 @@ namespace TestLibrary.Instruments.Keysight {
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("INTernal");
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(Volts);
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(Amps);
-                ((AgE3610XB)Instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command("MAXimum");
+                ((AgE3610XB)Instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command("MINimum");
                 ((AgE3610XB)Instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true);
-                ((AgE3610XB)Instrument.Instance).SCPI.OUTPut.STATe.Command(true);
+                 ((AgE3610XB)Instrument.Instance).SCPI.OUTPut.STATe.Command(true);
                 if (SettlingDelayMS != 0) Thread.Sleep(SettlingDelayMS);
             } catch (InvalidOperationException) {
                 throw;
