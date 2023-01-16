@@ -33,8 +33,8 @@ namespace TestLibrary.Config {
         }
 
         private void FormRefresh() {
-            if (this.radioButtonRequired.Checked) foreach (String key in this._keysRequired) this.ListGroups.Items.Add(new ListViewItem(new String[] { this._groups[key].ID, this._groups[key].Summary }));
-            else if (this.radioButtonNotRequired.Checked) foreach (String key in this._keysNotRequired) this.ListGroups.Items.Add(new ListViewItem(new String[] { this._groups[key].ID, this._groups[key].Summary }));
+            if (this.radioButtonRequired.Checked) foreach (String key in this._keysRequired) this.ListGroups.Items.Add(new ListViewItem(new String[] { this._groups[key].ID, this._groups[key].Title }));
+            else if (this.radioButtonNotRequired.Checked) foreach (String key in this._keysNotRequired) this.ListGroups.Items.Add(new ListViewItem(new String[] { this._groups[key].ID, this._groups[key].Title }));
             this.ListGroups.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
             this.ListGroups.Columns[1].Width = -2;
             // https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.columnheader.width?redirectedfrom=MSDN&view=windowsdesktop-7.0#System_Windows_Forms_ColumnHeader_Width

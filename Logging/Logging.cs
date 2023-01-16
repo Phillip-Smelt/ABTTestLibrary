@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using TestLibrary.Config;
 using TestLibrary.TestSupport;
 using Serilog;
+using System.Runtime.Remoting.Channels;
 
 namespace TestLibrary.Logging {
     public static class LogTasks {
@@ -60,9 +61,9 @@ namespace TestLibrary.Logging {
             Log.Information($"UUT Revision           : {configLib.UUT.Revision}");
             Log.Information($"UUT Group ID           : {group.ID}");
             Log.Information($"UUT Group Revision     : {group.Revision}");
-            Log.Information($"UUT Group Summary      : {group.Summary}");
-            Log.Information($"UUT Group Detail{Environment.NewLine}{Environment.NewLine}" +
-                $"{group.Detail}{Environment.NewLine}");
+            Log.Information($"UUT Group Summary      : {group.Title}");
+            Log.Information($"UUT Group Description  :{Environment.NewLine}{Environment.NewLine}" +
+                $"{group.Description}{Environment.NewLine}");
             Log.Information($"Test Operator          : {UserPrincipal.Current.DisplayName}");
             Log.Information($"UUT Serial Number      : {configLib.UUT.SerialNumber}\n");
             Log.Debug($"Environment.UserDomainName         : {Environment.UserDomainName}");
@@ -77,13 +78,32 @@ namespace TestLibrary.Logging {
             String message;
             message =  $"Test ID '{test.ID}'{Environment.NewLine}";
             message += $"  Revision    : {test.Revision}{Environment.NewLine}";
-            message += $"  Summary     : {test.Summary}{Environment.NewLine}";
-            message += $"  Detail      : {test.Detail}{Environment.NewLine}";
-            message += $"  Limit High  : {test.LimitHigh}{Environment.NewLine}";
-            message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
-            message += $"  Limit Low   : {test.LimitLow}{Environment.NewLine}";
-            message += $"  Units       : {test.Units}{Environment.NewLine}";
-            message += $"  UnitType    : {test.UnitType}{Environment.NewLine}";
+            message += $"  Description : {test.Description}{Environment.NewLine}";
+            message += $"  Type        : {test.Type}{Environment.NewLine}";
+
+            switch (test.Type) {
+                case TestCustomized.Type:
+                    // TODO: put a foreach field in class, print.
+                    TestCustomized tc = (TestCustomized)test.TestClass;
+                    break;
+                case TestProgrammed.Type:
+                    TestProgrammed tp = (TestProgrammed)test.TestClass;
+                    message += $"  Firmware    : {tp.FirmwareFile}{Environment.NewLine}";
+                    message += $"  CRC         : {tp.FirmwareCRC}{Environment.NewLine}";
+                    message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
+                    break;
+                case TestRanged.Type:
+                    TestRanged tr = (TestRanged)test.TestClass;
+                    message += $"  High Limit  : {tr.High}{Environment.NewLine}";
+                    message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
+                    message += $"  Low Limit   : {tr.Low}{Environment.NewLine}";
+                    message += $"  Units       : {tr.Unit}{Environment.NewLine}";
+                    message += $"  UnitType    : {tr.UnitType}{Environment.NewLine}";
+                    break;
+                default:
+                    throw new NotImplementedException($"TestElement ID '{test.ID}' with Type '{test.Type}' not implemented.");
+            }
+
             message += $"  Result      : {test.Result}{Environment.NewLine}";
             Log.Information(message);
         }

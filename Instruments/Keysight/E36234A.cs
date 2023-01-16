@@ -52,7 +52,7 @@ namespace TestLibrary.Instruments.Keysight {
             ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(false, sChannel);
         }
 
-        public static void ON(Instrument instrument, Double Volts, Double Amps, String sChannel, Int32 SettlingDelayMS = 0) {
+        public static void ON(Instrument instrument, Double Volts, Double Amps, String sChannel, Double SettlingDelaySeconds = 0.5) {
             ConvertChannel(instrument, sChannel, out Int32 iChannel);
             try {
                 String s;
@@ -75,11 +75,10 @@ namespace TestLibrary.Instruments.Keysight {
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal", sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(Volts, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(Amps, sChannel);
-                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(0.5, sChannel);
+                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(SettlingDelaySeconds, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(true, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false, sChannel);
-                if (SettlingDelayMS != 0) Thread.Sleep(SettlingDelayMS);
             } catch (InvalidOperationException) {
                 throw;
             } catch (Exception e) {

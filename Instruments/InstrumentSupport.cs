@@ -16,6 +16,9 @@ using Keysight.Kt34400; // https://www.keysight.com/us/en/lib/software-detail/dr
 using Keysight.KtEL30000; // https://www.keysight.com/us/en/lib/software-detail/driver/el30000a-dc-electronic-loads-ivi-instrument-drivers.html
 using TestLibrary.Instruments.Keysight;
 
+// NOTE: Consider adding ScpiQuery & ScpiCommand methods to all Instrument classes, to pass raw SCPI strings to the Instrument.
+// Eliminates need to wrap every SCPI command, and allows all Instrument specific commands/queries to be handle by the Instrument
+// classes, rather than directly invoking them from TestPrograms.
 namespace TestLibrary.Instruments {
     public static class InstrumentTasks {
         public static String GetMessage(Instrument instrument, String OptionalHeader = "") {
@@ -24,9 +27,11 @@ namespace TestLibrary.Instruments {
             return Message;
         }
 
-        public static void SCPI99Reset(Dictionary<String, Instrument> instruments) { foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Reset(i.Value.Address); }
+        public static void SCPI99Reset(Dictionary<String, Instrument> instruments) {
+            foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Reset(i.Value.Address); }
 
-        public static void SCPI99Clear(Dictionary<String, Instrument> instruments) { foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Clear(i.Value.Address); }
+        public static void SCPI99Clear(Dictionary<String, Instrument> instruments) {
+            foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Clear(i.Value.Address); }
 
         public static void SCPI99ResetClear(Dictionary<String, Instrument> instruments) {
             foreach (KeyValuePair<String, Instrument> i in instruments) {
@@ -44,6 +49,8 @@ namespace TestLibrary.Instruments {
         }
 
         public static void InstrumentResetClear(Dictionary<String, Instrument> instruments) {
+            // TODO: Use Reflection instead of below switch to invoke ResetClear() below, as
+            // then won't have to update below switch every time another Instrument is added.
             foreach (KeyValuePair<String, Instrument> i in instruments) {
                 switch (i.Value.ID) {
                     case Instrument.POWER_PRELIMINARY:

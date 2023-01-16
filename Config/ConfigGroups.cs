@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Configuration;
 
 namespace TestLibrary.Config {
+    // NOTE: If TestLibrary transitions from current C# 7.3 to ≥ C# 8.0,add 'readonly'
+    // modifier to all { get; private set; } fields in namespace TestLibrary.Config.
+    // NOTE: Add verification of App.config key-value pairs & configuration collections into namespace TestLibrary.Config.
+    // That is, check for errors in the .Get methods, rather than current checks in TestSupport.TestTasks.EvaluateTestResult().
     public class GroupElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return (String)base["ID"]; } }
         [ConfigurationProperty("Required", IsKey = false, IsRequired = true)] public Boolean Required { get { return (Boolean)base["Required"]; } }
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return (String)base["Revision"]; } }
-        [ConfigurationProperty("Summary", IsKey = false, IsRequired = true)] public String Summary { get { return (String)base["Summary"]; } }
-        [ConfigurationProperty("Detail", IsKey = false, IsRequired = false)] public String Detail { get { return (String)base["Detail"]; } }
+        [ConfigurationProperty("Title", IsKey = false, IsRequired = true)] public String Title { get { return (String)base["Title"]; } }
+        [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return (String)base["Description"]; } }
         [ConfigurationProperty("TestIDs", IsKey = false, IsRequired = true)] public String TestIDs { get { return (String)base["TestIDs"]; } }
     }
 
@@ -49,16 +53,16 @@ namespace TestLibrary.Config {
         public String ID { get; private set; }
         public Boolean Required { get; private set; }
         public String Revision { get; private set; }
-        public String Summary { get; private set; }
-        public String Detail { get; private set; }
+        public String Title { get; private set; }
+        public String Description { get; private set; }
         public String TestIDs { get; private set; }
 
-        private Group(String ID, Boolean Required, String Revision, String Summary, String Detail, String TestIDs) {
+        private Group(String ID, Boolean Required, String Revision, String Title, String Description, String TestIDs) {
             this.ID = ID;
             this.Required = Required;
             this.Revision = Revision;
-            this.Summary = Summary;
-            this.Detail = Detail;
+            this.Title = Title;
+            this.Description = Description;
             this.TestIDs = TestIDs;
         }
 
@@ -66,7 +70,7 @@ namespace TestLibrary.Config {
             GroupElementsSection s = (GroupElementsSection)ConfigurationManager.GetSection("GroupElementsSection");
             GroupElements e = s.GroupElements;
             Dictionary<String, Group> d = new Dictionary<String, Group>();
-            foreach (GroupElement ge in e) d.Add(ge.ID, new Group(ge.ID, ge.Required, ge.Revision, ge.Summary, ge.Detail, ge.TestIDs));
+            foreach (GroupElement ge in e) d.Add(ge.ID, new Group(ge.ID, ge.Required, ge.Revision, ge.Title, ge.Description, ge.TestIDs));
             return d;
         }
     }

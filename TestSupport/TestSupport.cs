@@ -35,75 +35,20 @@ namespace TestLibrary.TestSupport {
     public static class TestTasks {
         public static String EvaluateTestResult(Test test) {
             // NOTE: Sequence of below if blocks interdependent.  That is, if reordered, they may fail.
-            (String sLow, String sHigh) = (test.LimitLow, test.LimitHigh);
-            Double dLow, dHigh, dMeasurement;
-
-            if (String.Equals(sLow, String.Empty) || String.Equals(sHigh, String.Empty)) {
-                // If either Limit is String.Empty, non-empty Limit & Measurement must parse to numeric.
-                if (String.Equals(sLow, String.Empty) && String.Equals(sHigh, String.Empty)) throw new InvalidOperationException($"Invalid limits; App.config TestElement ID '{test.ID}' has LimitLow = LimitHigh = String.Empty.");
-                //   - LimitLow = LimitHigh = String.Empty.
-
-                if (!Double_TryParse(sLow, out _) && !Double_TryParse(sHigh, out _)) {
-                    // One or both Limits must be numeric, or TestElement is erroneous.
-                    if (String.Equals(sLow, String.Empty)) throw new InvalidOperationException($"Invalid Limit; App.config TestElement ID '{test.ID}' LimitHigh '{sHigh}' ≠ System.Double.");
-                    else throw new InvalidOperationException($"Invalid Limit; App.config TestElement ID '{test.ID}' LimitLow '{sLow}' ≠ System.Double.");
-                }
-
-                if (!Double_TryParse(test.Measurement, out dMeasurement)) throw new InvalidOperationException($"Invalid measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
-
-                if (Double_TryParse(sLow, out dLow) && String.Equals(sHigh, String.Empty)) {
-                    //   - LimitLow parses to Double, LimitHigh = String.Empty; only low limit, no high.
-                    if (dLow <= dMeasurement) return EventCodes.PASS;
+            switch (test.Type) {
+                case TestCustomized.Type:
+                    return test.Measurement;
+                case TestProgrammed.Type:
+                    if (String.Equals(((TestProgrammed)test.TestClass).FirmwareCRC, test.Measurement)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
-                }
-
-                if (String.Equals(sLow, String.Empty) && Double_TryParse(sHigh, out dHigh)) {
-                    //   - LimitLow = String.Empty, LimitHigh parses to Double; no low limit, only high.
-                    if (dMeasurement <= dHigh) return EventCodes.PASS;
+                case TestRanged.Type:
+                    if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
+                    TestRanged t = (TestRanged)test.TestClass;
+                    if ((t.Low <= dMeasurement) && (dMeasurement <= t.High)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
-                }
+                default:
+                    throw new NotImplementedException($"TestElement ID '{test.ID}' with Type '{test.Type}' not implemented.");
             }
-
-            if (Double_TryParse(sLow, out dLow) && Double_TryParse(sHigh, out dHigh)) {
-                //   - LimitLow & LimitHigh both parse to Doubles; both low & high limits.
-                if (dLow > dHigh) throw new InvalidOperationException($"Invalid Limit; App.config TestElement ID '{test.ID}' LimitLow '{sLow}' > LimitHigh '{sHigh}'.");
-                if (!Double_TryParse(test.Measurement, out dMeasurement)) throw new InvalidOperationException($"Invalid measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
-                // Measurement must be numeric, or Test is erroneous.
-                if ((dLow <= dMeasurement) && (dMeasurement <= dHigh)) return EventCodes.PASS;
-                else return EventCodes.FAIL;
-            }
-
-            if (String.Equals(sLow, sHigh)) {
-                // Either CUSTOM test or CRC/String comparison test.
-                if (String.Equals(sLow, "CUSTOM")) {
-                    //   - LimitLow = LimitHigh = CUSTOM, for custom Tests.
-                    switch (test.Measurement) {
-                        case EventCodes.CANCEL:
-                        case EventCodes.ERROR:
-                        case EventCodes.FAIL:
-                        case EventCodes.PASS:
-                        case EventCodes.UNSET:
-                            return test.Measurement;
-                        default:
-                            throw new InvalidOperationException($"Invalid CUSTOM measurement; App.config TestElement ID '{test.ID}' Measurement '{test.Measurement}' didn't return valid EventCode.");
-                    }
-                }
-                if (String.Equals(sLow, test.Measurement)) return EventCodes.PASS;
-                // CRC or String comparison Test.
-                else return EventCodes.FAIL;
-            } else throw new InvalidOperationException($"Invalid Limits; App.config TestElement ID '{test.ID}' LimitLow '{sLow}' ≠ LimitHigh '{sHigh}'.");
-                // Limits are non-numeric & non-empty Strings, but LimitLow ≠ LimitHigh, therefore invalid.
-
-            // If none of the above conditions occur, there's a logic bug buried in them; report it.
-            throw new InvalidOperationException($"I'm so embarrassed!{Environment.NewLine}" +
-                $"App.config TestElement ID '{test.ID}', Measurement '{test.Measurement}', LimitLow '{test.LimitLow}', LimitHigh '{test.LimitHigh}{Environment.NewLine}" +
-                $"inexplicably escaped my impeccable logic & didn't evaluate correctly.");
-        }
-
-        private static Boolean Double_TryParse(String s, out Double d) {
-            return Double.TryParse(s, NumberStyles.Float, CultureInfo.CurrentCulture, out d);
-            // Convenience wrapper method to add NumberStyles.Float & CultureInfo.CurrentCulture to Double.TryParse().
-            // NumberStyles.Float best for parsing floating point decimal values, including scientific/exponential notation.
         }
 
         public static String EvaluateUUTResult(ConfigTest configTest) {

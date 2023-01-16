@@ -38,7 +38,7 @@ namespace TestLibrary.Instruments.Keysight {
 
         public static void Off(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.OUTPut.STATe.Command(false); }
 
-        public static void ON(Instrument instrument, Double Volts, Double Amps, Int32 SettlingDelayMS = 0) {
+        public static void ON(Instrument instrument, Double Volts, Double Amps, Double SettlingDelaySeconds = 0.5) {
             try {
                 String s;
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", out Double V);
@@ -60,11 +60,10 @@ namespace TestLibrary.Instruments.Keysight {
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(Volts);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(Amps);
-                ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(0.5);
+                ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(SettlingDelaySeconds);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false);
                 ((AgE3610XB)instrument.Instance).SCPI.OUTPut.STATe.Command(true);
-                if (SettlingDelayMS != 0) Thread.Sleep(SettlingDelayMS);
             } catch (InvalidOperationException) {
                 throw;
             } catch (Exception e) {
