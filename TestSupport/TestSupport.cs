@@ -37,11 +37,11 @@ namespace TestLibrary.TestSupport {
         public static String EvaluateTestResult(Test test) {
             // NOTE: Sequence of below if blocks interdependent.  That is, if reordered, they may fail.
             switch (test.ClassName) {
-                case TestCustomized.ClassName:
+                case TestCustom.ClassName:
                     return test.Measurement;
                 case TestProgrammed.ClassName:
                     TestProgrammed tp = (TestProgrammed)test.ClassObject;
-                    if (String.Equals(tp.FirmwareCRC, test.Measurement)) return EventCodes.PASS;
+                    if (String.Equals(tp.CRC, test.Measurement)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestRanged.ClassName:
                     if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");

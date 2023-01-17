@@ -21,11 +21,11 @@ namespace TestLibrary.Config {
 
         public static Logger Get() {
             return new Logger(
-                Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_FileEnabled"]),
-                ConfigurationManager.AppSettings["LOGGER_FilePath"],
-                Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_SQLEnabled"]),
-                ConfigurationManager.AppSettings["LOGGER_SQLConnectionString"],
-                Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_TestEventsEnabled"])
+                Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_FileEnabled"].Trim()),
+                ConfigurationManager.AppSettings["LOGGER_FilePath"].Trim(),
+                Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_SQLEnabled"].Trim()),
+                ConfigurationManager.AppSettings["LOGGER_SQLConnectionString"].Trim(),
+                Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_TestEventsEnabled"].Trim())
             );
         }
     }
@@ -55,13 +55,13 @@ namespace TestLibrary.Config {
 
         public static UUT Get() {
             return new UUT(
-                ConfigurationManager.AppSettings["UUT_Customer"],
-                ConfigurationManager.AppSettings["UUT_Type"],
-                ConfigurationManager.AppSettings["UUT_Number"],
-                ConfigurationManager.AppSettings["UUT_Revision"],
-                ConfigurationManager.AppSettings["UUT_Description"],
-                ConfigurationManager.AppSettings["UUT_TestSpecification"],
-                ConfigurationManager.AppSettings["UUT_DocumentationFolder"],
+                ConfigurationManager.AppSettings["UUT_Customer"].Trim(),
+                ConfigurationManager.AppSettings["UUT_Type"].Trim(),
+                ConfigurationManager.AppSettings["UUT_Number"].Trim(),
+                ConfigurationManager.AppSettings["UUT_Revision"].Trim(),
+                ConfigurationManager.AppSettings["UUT_Description"].Trim(),
+                ConfigurationManager.AppSettings["UUT_TestSpecification"].Trim(),
+                ConfigurationManager.AppSettings["UUT_DocumentationFolder"].Trim(),
                 String.Empty, // Input during testing.
                 EventCodes.UNSET // Determined post-test.
             );

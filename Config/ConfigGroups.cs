@@ -8,12 +8,12 @@ namespace TestLibrary.Config {
     // NOTE: Add verification of App.config key-value pairs & configuration collections into namespace TestLibrary.Config.
     // That is, check for errors in the .Get methods, rather than current checks in TestSupport.TestTasks.EvaluateTestResult().
     public class GroupElement : ConfigurationElement {
-        [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return (String)base["ID"]; } }
+        [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
         [ConfigurationProperty("Required", IsKey = false, IsRequired = true)] public Boolean Required { get { return (Boolean)base["Required"]; } }
-        [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return (String)base["Revision"]; } }
-        [ConfigurationProperty("Name", IsKey = false, IsRequired = true)] public String Name { get { return (String)base["Name"]; } }
-        [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return (String)base["Description"]; } }
-        [ConfigurationProperty("TestIDs", IsKey = false, IsRequired = true)] public String TestIDs { get { return (String)base["TestIDs"]; } }
+        [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
+        [ConfigurationProperty("Name", IsKey = false, IsRequired = true)] public String Name { get { return ((String)base["Name"]).Trim(); } }
+        [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
+        [ConfigurationProperty("TestIDs", IsKey = false, IsRequired = true)] public String TestIDs { get { return ((String)base["TestIDs"]).Trim(); } }
     }
 
     [ConfigurationCollection(typeof(GroupElement))]

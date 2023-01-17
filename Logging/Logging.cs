@@ -82,14 +82,13 @@ namespace TestLibrary.Logging {
             message += $"  Description : {test.Description}{Environment.NewLine}";
             message += $"  ClassName   : {test.ClassName}{Environment.NewLine}";
             switch (test.ClassName) {
-                case TestCustomized.ClassName:
-                    TestCustomized tc = (TestCustomized)test.ClassObject;
+                case TestCustom.ClassName:
+                    TestCustom tc = (TestCustom)test.ClassObject;
                     foreach (KeyValuePair<String, String> kvp in tc.Arguments) message += $"  Key=Value   : {kvp.Key}={kvp.Value}{Environment.NewLine}";
                     break;
                 case TestProgrammed.ClassName:
                     TestProgrammed tp = (TestProgrammed)test.ClassObject;
-                    message += $"  Firmware    : {tp.FirmwareFile}{Environment.NewLine}";
-                    message += $"  CRC         : {tp.FirmwareCRC}{Environment.NewLine}";
+                    message += $"  CRC         : {tp.CRC}{Environment.NewLine}";
                     message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
                     break;
                 case TestRanged.ClassName:

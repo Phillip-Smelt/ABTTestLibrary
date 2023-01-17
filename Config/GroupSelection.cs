@@ -29,7 +29,7 @@ namespace TestLibrary.Config {
             this.ListGroups.Clear();
             this.ListGroups.View = View.Details;
             this.ListGroups.Columns.Add("ID");
-            this.ListGroups.Columns.Add("Summary");
+            this.ListGroups.Columns.Add("Name");
         }
 
         private void FormRefresh() {

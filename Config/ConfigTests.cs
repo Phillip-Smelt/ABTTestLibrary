@@ -1,25 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Threading;
-using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09.SCPI.MMEMory.CDIRectory;
-using TestLibrary.Instruments;
 using TestLibrary.TestSupport;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace TestLibrary.Config {
     public class TestElement : ConfigurationElement {
-        [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return (String)base["ID"]; } }
-        [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return (String)base["Description"]; } }
-        [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return (String)base["Revision"]; } }
-        [ConfigurationProperty("ClassName", IsKey = false, IsRequired = true)] public String ClassName { get { return (String)base["ClassName"]; } }
-        [ConfigurationProperty("Arguments", IsKey = false, IsRequired = true)] public String Arguments { get { return (String)base["Arguments"]; } }
+        [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
+        [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
+        [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
+        [ConfigurationProperty("ClassName", IsKey = false, IsRequired = true)] public String ClassName { get { return ((String)base["ClassName"]).Trim(); } }
+        [ConfigurationProperty("Arguments", IsKey = false, IsRequired = true)] public String Arguments { get { return ((String)base["Arguments"]).Trim(); } }
     }
 
     [ConfigurationCollection(typeof(TestElement))]
@@ -54,20 +46,22 @@ namespace TestLibrary.Config {
             Dictionary<String, String> argDictionary = new Dictionary<String, String>();
             for (int i = 0; i < args.Length; i++) {
                 kvp = args[i].Split('=');
-                argDictionary.Add(kvp[0], kvp[1]);
+                argDictionary.Add(kvp[0].Trim(), kvp[1].Trim());
             }
             return argDictionary;
         }
     }
 
-    public class TestCustomized : TestAbstract {
-        public new const String ClassName = nameof(TestCustomized);
+    public class TestCustom : TestAbstract {
+        public new const String ClassName = nameof(TestCustom);
         public Dictionary<String, String> Arguments;
 
-        public TestCustomized(String ID, String Arguments) {
+        public TestCustom(String ID, String Arguments) {
             this.Arguments = TestAbstract.SplitArguments(Arguments);
             if (this.Arguments.Count == 0) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 1 or more internally formatted arguments:{Environment.NewLine}" +
-                    $"   Example: 'Key1=Value1|Key2=Value2|Key3=Value3'{Environment.NewLine}" +
+                    $"   Example: 'Key1=Value1|" +
+                    $"             Key2=Value2|" +
+                    $"             Key3=Value3'{Environment.NewLine}" +
                     $"   Actual : '{Arguments}'");
         }
     }
@@ -77,38 +71,27 @@ namespace TestLibrary.Config {
         public String AppFolder;
         public String AppFile;
         public String AppArguments;
-        public String FirmwareFolder;
-        public String FirmwareFile;
-        public String FirmwareCRC;
+        public String CRC;
 
         public TestProgrammed(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            if (argsDict.Count != 5) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 5 internally formatted arguments:{Environment.NewLine}" +
-                $@"   Example: 'AppFile=ipecmd.exe|AppFolder=C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe|AppArguments=|FirmwareFile=U1_Firmware.hex|FirmwareCRC=0xAC0E'{Environment.NewLine}" +
+            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 internally formatted arguments:{Environment.NewLine}" +
+                $@"   Example: 'AppFile=ipecmd.exe|
+                                AppFolder=C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe|
+                                AppArguments=C:\TBD\U1_Firmware.hex|
+                                CRC=0xAC0E'{Environment.NewLine}" +
                 $"   Actual : '{Arguments}'");
             if (!argsDict.ContainsKey("AppFolder")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'AppFolder' key-value pair.");
             if (!argsDict.ContainsKey("AppFile")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'AppFile' key-value pair.");
             if (!argsDict.ContainsKey("AppArguments")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'AppArguments' key-value pair.");
-            if (!argsDict.ContainsKey("FirmwareFolder")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'FirmwareFolder' key-value pair.");
-            if (!argsDict.ContainsKey("FirmwareFile")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'FirmwareFile' key-value pair.");
-            if (!argsDict.ContainsKey("FirmwareCRC")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'FirmwareCRC' key-value pair.");
-
             if (!argsDict["AppFolder"].EndsWith(@"\")) argsDict["AppFolder"] += @"\";
-            if (!argsDict["FirmwareFolder"].EndsWith(@"\")) argsDict["FirmwareFolder"] += @"\";
-
             if (!File.Exists(argsDict["AppFolder"])) throw new ArgumentException($"TestElement ID '{ID}' AppFolder '{argsDict["AppFolder"]}' does not exist.");
             if (!File.Exists(argsDict["AppFolder"] + argsDict["AppFile"])) throw new ArgumentException($"TestElement ID '{ID}' AppFile '{argsDict["AppFolder"] + argsDict["AppFile"]}' does not exist.");
 
-            if (!File.Exists(argsDict["FirmwareFolder"])) throw new ArgumentException($"TestElement ID '{ID}' FirmwareFolder '{argsDict["FirmwareFolder"]}' does not exist.");
-            if (!File.Exists(argsDict["FirmwareFolder"] + argsDict["FirmwareFile"])) throw new ArgumentException($"TestElement ID '{ID}' FirmwareFile '{argsDict["FirmwareFolder"] + argsDict["FirmwareFile"]}' does not exist.");
-
-            if (String.Equals(argsDict["FirmwareCRC"], String.Empty)) throw new ArgumentException($"TestElement ID '{ID}' CRC '{argsDict["FirmwareCRC"]}' = String.Empty.");
             this.AppFolder = argsDict["AppFolder"];
             this.AppFile = argsDict["AppFile"];
             this.AppArguments = argsDict["AppArguments"];
-            this.FirmwareFile = argsDict["FirmwareFile"];
-            this.FirmwareFolder = argsDict["FirmwareFolder"];
-            this.FirmwareCRC = argsDict["FirmwareCRC"];
+            this.CRC = argsDict["CRC"];
         }
     }
 
@@ -122,7 +105,10 @@ namespace TestLibrary.Config {
         public TestRanged(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
             if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 internally formatted arguments:{Environment.NewLine}" +
-                $"   Example: 'Low=0.002|High=0.004|Unit=A|UnitType=DC'{Environment.NewLine}" +
+                $"   Example: 'Low=0.002|" +
+                $"             High=0.004|" +
+                $"             Unit=A|" +
+                $"             UnitType=DC'{Environment.NewLine}" +
                 $"   Actual : '{Arguments}'");
             if (!argsDict.ContainsKey("Low")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'Low' key-value pair.");
             if (!argsDict.ContainsKey("High")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'High' key-value pair.");
@@ -138,6 +124,7 @@ namespace TestLibrary.Config {
             this.Unit = argsDict["Unit"];
             this.UnitType = argsDict["UnitType"];
         }
+
         private static Boolean TryDouble(String s, out Double d) {
             return Double.TryParse(s, NumberStyles.Float, CultureInfo.CurrentCulture, out d);
             // Convenience wrapper method to add NumberStyles.Float & CultureInfo.CurrentCulture to Double.TryParse().
@@ -175,10 +162,7 @@ namespace TestLibrary.Config {
             this.ClassName = ClassName;
             this.Measurement = String.Empty; // Measured during test execution
             this.Result = EventCodes.UNSET;  // Determined during test execution
-            Type t = Type.GetType("TestLibrary.Config." + this.ClassName);
-            Object[] o = new Object[] { this.ID, Arguments };
-            this.ClassObject = Activator.CreateInstance(t, o);
-            // this.ClassObject = Activator.CreateInstance(Type.GetType(this.ClassName), new Object[] { this.ID, Arguments });
+            this.ClassObject = Activator.CreateInstance(Type.GetType(GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, Arguments });
         }
 
         public static Dictionary<String, Test> Get() {
@@ -204,9 +188,11 @@ namespace TestLibrary.Config {
             Dictionary<String, Test> tests = Test.Get();
             this.Tests = new Dictionary<String, Test>();
             String[] g = this.Group.TestIDs.Split(Test.SPLIT_ARGUMENTS_CHAR);
+            String sTrim;
             foreach (String s in g) {
-                if (!tests.ContainsKey(s)) throw new InvalidOperationException($"Group '{Group.ID}' includes IDTest '{s}', which isn't present in TestElements in App.config.");
-                this.Tests.Add(s, tests[s]);
+                sTrim = s.Trim();
+                if (!tests.ContainsKey(sTrim)) throw new InvalidOperationException($"Group '{Group.ID}' includes IDTest '{sTrim}', which isn't present in TestElements in App.config.");
+                this.Tests.Add(sTrim, tests[sTrim]);
                 // Add only Tests correlated to the Group previously selected by operator.
             }
         }
