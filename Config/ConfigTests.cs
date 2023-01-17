@@ -4,15 +4,21 @@ using System.Configuration;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Threading;
 using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09.SCPI.MMEMory.CDIRectory;
+using TestLibrary.Instruments;
 using TestLibrary.TestSupport;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TestLibrary.Config {
     public class TestElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return (String)base["ID"]; } }
         [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return (String)base["Description"]; } }
-        [ConfigurationProperty("Type", IsKey = false, IsRequired = true)] public String Type { get { return (String)base["Type"]; } }
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return (String)base["Revision"]; } }
+        [ConfigurationProperty("ClassName", IsKey = false, IsRequired = true)] public String ClassName { get { return (String)base["ClassName"]; } }
         [ConfigurationProperty("Arguments", IsKey = false, IsRequired = true)] public String Arguments { get { return (String)base["Arguments"]; } }
     }
 
@@ -38,11 +44,11 @@ namespace TestLibrary.Config {
         public IEnumerable<TestElement> TestElement { get { foreach (TestElement te in this.TestElements) if (te != null) yield return te; } }
     }
 
-    internal abstract class TestAbstract {
-        private protected const String Type = "Abstract";
+    public abstract class TestAbstract {
+        public const String ClassName = nameof(TestAbstract);
         private protected TestAbstract() { }
 
-        internal static Dictionary<String, String> SplitArguments(String Arguments) {
+        public static Dictionary<String, String> SplitArguments(String Arguments) {
             String[] args = Arguments.Split(Test.SPLIT_ARGUMENTS_CHAR);
             String[] kvp;
             Dictionary<String, String> argDictionary = new Dictionary<String, String>();
@@ -54,30 +60,30 @@ namespace TestLibrary.Config {
         }
     }
 
-    internal class TestCustomized : TestAbstract {
-        internal new const String Type = "Custom";
-        internal Dictionary<String, String> Arguments;
+    public class TestCustomized : TestAbstract {
+        public new const String ClassName = nameof(TestCustomized);
+        public Dictionary<String, String> Arguments;
 
-        internal TestCustomized(String ID, String Arguments) : base() {
+        public TestCustomized(String ID, String Arguments) {
             this.Arguments = TestAbstract.SplitArguments(Arguments);
-            if (this.Arguments.Count == 0) throw new ArgumentException($"TestElement ID '{ID}' with Type '{Type}' requires 1 or more internally formatted arguments:{Environment.NewLine}" +
+            if (this.Arguments.Count == 0) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 1 or more internally formatted arguments:{Environment.NewLine}" +
                     $"   Example: 'Key1=Value1|Key2=Value2|Key3=Value3'{Environment.NewLine}" +
                     $"   Actual : '{Arguments}'");
         }
     }
 
-    internal class TestProgrammed : TestAbstract {
-        internal new const String Type = "Program";
-        internal String AppFolder;
-        internal String AppFile;
-        internal String AppArguments;
-        internal String FirmwareFolder;
-        internal String FirmwareFile;
-        internal String FirmwareCRC;
+    public class TestProgrammed : TestAbstract {
+        public new const String ClassName = nameof(TestProgrammed);
+        public String AppFolder;
+        public String AppFile;
+        public String AppArguments;
+        public String FirmwareFolder;
+        public String FirmwareFile;
+        public String FirmwareCRC;
 
-        internal TestProgrammed(String ID, String Arguments) : base() {
+        public TestProgrammed(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            if (argsDict.Count != 5) throw new ArgumentException($"TestElement ID '{ID}' with Type '{Type}' requires 5 internally formatted arguments:{Environment.NewLine}" +
+            if (argsDict.Count != 5) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 5 internally formatted arguments:{Environment.NewLine}" +
                 $@"   Example: 'AppFile=ipecmd.exe|AppFolder=C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe|AppArguments=|FirmwareFile=U1_Firmware.hex|FirmwareCRC=0xAC0E'{Environment.NewLine}" +
                 $"   Actual : '{Arguments}'");
             if (!argsDict.ContainsKey("AppFolder")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'AppFolder' key-value pair.");
@@ -106,16 +112,16 @@ namespace TestLibrary.Config {
         }
     }
 
-    internal class TestRanged : TestAbstract {
-        internal new const String Type = "Range";
-        internal Double Low { get; private set; }
-        internal Double High { get; private set; }
-        internal String Unit { get; private set; }
-        internal String UnitType { get; private set; }
+    public class TestRanged : TestAbstract {
+        public new const String ClassName = nameof(TestRanged);
+        public Double Low { get; private set; }
+        public Double High { get; private set; }
+        public String Unit { get; private set; }
+        public String UnitType { get; private set; }
 
-        internal TestRanged(String ID, String Arguments) : base() {
+        public TestRanged(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with Type '{Type}' requires 4 internally formatted arguments:{Environment.NewLine}" +
+            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 internally formatted arguments:{Environment.NewLine}" +
                 $"   Example: 'Low=0.002|High=0.004|Unit=A|UnitType=DC'{Environment.NewLine}" +
                 $"   Actual : '{Arguments}'");
             if (!argsDict.ContainsKey("Low")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'Low' key-value pair.");
@@ -123,32 +129,15 @@ namespace TestLibrary.Config {
             if (!argsDict.ContainsKey("Unit")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'Unit' key-value pair.");
             if (!argsDict.ContainsKey("UnitType")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'UnitType' key-value pair.");
 
-            if (String.Equals(argsDict["Low"], String.Empty) && String.Equals(argsDict["High"], String.Empty)) throw new ArgumentException($"TestElement ID '{ID}' 'Low' = 'High' = String.Empty.");
-
-            Double low, high;
-            if (String.Equals(argsDict["Low"], String.Empty)) {
-                this.Low = Double.NegativeInfinity;
-                if (!TryDouble(argsDict["High"], out high)) throw new ArgumentException($"TestElement ID '{ID}' High '{argsDict["High"]}' ≠ System.Double.");
-                else this.High = high;
-            }
-
-            if (String.Equals(argsDict["High"], String.Empty)) {
-                this.High = Double.PositiveInfinity;
-                if (!TryDouble(argsDict["Low"], out low)) throw new ArgumentException($"TestElement ID '{ID}' Low '{argsDict["Low"]}' ≠ System.Double.");
-                else this.Low = low;
-            }
-
-            if (TryDouble(argsDict["Low"], out low) && TryDouble(argsDict["High"], out high)) {
+            if (TryDouble(argsDict["Low"], out Double low) && TryDouble(argsDict["High"], out Double high)) {
                 this.Low = low;
-                this.High = High;
-            } else throw new ArgumentException($"TestElement ID '{ID}' Low '{argsDict["Low"]}' or High '{argsDict["High"]}' ≠ System.Double.");
-
+                this.High = high;
+            } else throw new ArgumentException($"TestElement ID '{ID}' Low '{argsDict["Low"]}' and/or High '{argsDict["High"]}' ≠ System.Double.");
+            
             if (low > high) throw new ArgumentException($"TestElement ID '{ID}' Low '{low}' > High '{high}'.");
-
             this.Unit = argsDict["Unit"];
             this.UnitType = argsDict["UnitType"];
         }
-
         private static Boolean TryDouble(String s, out Double d) {
             return Double.TryParse(s, NumberStyles.Float, CultureInfo.CurrentCulture, out d);
             // Convenience wrapper method to add NumberStyles.Float & CultureInfo.CurrentCulture to Double.TryParse().
@@ -156,43 +145,47 @@ namespace TestLibrary.Config {
         }
     }
 
+    public class TestTextual : TestAbstract {
+        public new const String ClassName = nameof(TestTextual);
+        internal String Text { get; private set; }
+        public TestTextual(String ID, String Arguments) {
+            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
+            if (argsDict.Count != 1) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 1 or more internally formatted arguments:{Environment.NewLine}" +
+                    $"   Example: 'Text=The quick brown fox jumps over the lazy dog.'{Environment.NewLine}" +
+                    $"   Actual : '{Arguments}'");
+            if (!argsDict.ContainsKey("Text")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'Text' key-value pair.");
+            this.Text = argsDict["Text"];
+        }
+    }
+
     public class Test {
         internal const Char SPLIT_ARGUMENTS_CHAR = '|';
         public String ID { get; private set; }
         public String Description { get; private set; }
-        public String Type { get; private set; }
         public String Revision { get; private set; }
-        public object TestClass { get; private set; }
+        public String ClassName { get; private set; }
+        public object ClassObject { get; private set; }
         public String Measurement { get; set; }
         public String Result { get; set; }
 
-        private Test(String ID, String Description, String Type, String Revision, String Arguments) {
+        private Test(String ID, String Description, String Revision, String ClassName, String Arguments) {
             this.ID = ID;
             this.Description = Description;
-            this.Type = Type;
             this.Revision = Revision;
+            this.ClassName = ClassName;
             this.Measurement = String.Empty; // Measured during test execution
             this.Result = EventCodes.UNSET;  // Determined during test execution
-            switch (this.Type) {
-                case TestCustomized.Type:
-                    this.TestClass = new TestCustomized(this.ID, Arguments);
-                    break;
-                case TestProgrammed.Type:
-                    this.TestClass = new TestProgrammed(this.ID, Arguments);
-                    break;
-                case TestRanged.Type:
-                    this.TestClass = new TestRanged(this.ID, Arguments);
-                    break;
-                default:
-                    throw new NotImplementedException($"TestElement ID '{ID}' with Type '{Type}' not implemented.");
-            }
+            Type t = Type.GetType("TestLibrary.Config." + this.ClassName);
+            Object[] o = new Object[] { this.ID, Arguments };
+            this.ClassObject = Activator.CreateInstance(t, o);
+            // this.ClassObject = Activator.CreateInstance(Type.GetType(this.ClassName), new Object[] { this.ID, Arguments });
         }
 
         public static Dictionary<String, Test> Get() {
             TestElementsSection s = (TestElementsSection)ConfigurationManager.GetSection("TestElementsSection");
             TestElements e = s.TestElements;
             Dictionary<String, Test> d = new Dictionary<String, Test>();
-            foreach (TestElement te in e) d.Add(te.ID, new Test(te.ID, te.Description, te.Type, te.Revision, te.Arguments));
+            foreach (TestElement te in e) d.Add(te.ID, new Test(te.ID, te.Description, te.Revision, te.ClassName, te.Arguments));
             return d;
         }
     }

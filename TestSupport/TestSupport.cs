@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Forms;
 using TestLibrary.Config;
 
 namespace TestLibrary.TestSupport {
@@ -35,19 +36,24 @@ namespace TestLibrary.TestSupport {
     public static class TestTasks {
         public static String EvaluateTestResult(Test test) {
             // NOTE: Sequence of below if blocks interdependent.  That is, if reordered, they may fail.
-            switch (test.Type) {
-                case TestCustomized.Type:
+            switch (test.ClassName) {
+                case TestCustomized.ClassName:
                     return test.Measurement;
-                case TestProgrammed.Type:
-                    if (String.Equals(((TestProgrammed)test.TestClass).FirmwareCRC, test.Measurement)) return EventCodes.PASS;
+                case TestProgrammed.ClassName:
+                    TestProgrammed tp = (TestProgrammed)test.ClassObject;
+                    if (String.Equals(tp.FirmwareCRC, test.Measurement)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
-                case TestRanged.Type:
+                case TestRanged.ClassName:
                     if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
-                    TestRanged t = (TestRanged)test.TestClass;
-                    if ((t.Low <= dMeasurement) && (dMeasurement <= t.High)) return EventCodes.PASS;
+                    TestRanged tr = (TestRanged)test.ClassObject;
+                    if ((tr.Low <= dMeasurement) && (dMeasurement <= tr.High)) return EventCodes.PASS;
+                    else return EventCodes.FAIL;
+                case TestTextual.ClassName:
+                    TestTextual tt = (TestTextual)test.ClassObject;
+                    if (String.Equals(tt.Text, test.Measurement)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 default:
-                    throw new NotImplementedException($"TestElement ID '{test.ID}' with Type '{test.Type}' not implemented.");
+                    throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
             }
         }
 
