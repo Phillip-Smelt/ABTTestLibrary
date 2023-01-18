@@ -39,8 +39,8 @@ namespace TestLibrary.TestSupport {
                 case TestCustom.ClassName:
                     return test.Measurement;
                 case TestISP.ClassName:
-                    TestISP tp = (TestISP)test.ClassObject;
-                    if (String.Equals(tp.ISPResult, test.Measurement)) return EventCodes.PASS;
+                    TestISP tisp = (TestISP)test.ClassObject;
+                    if (String.Equals(tisp.ISPResult, test.Measurement)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestRanged.ClassName:
                     if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");

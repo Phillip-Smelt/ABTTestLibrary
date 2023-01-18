@@ -13,11 +13,12 @@ using TestLibrary.TestSupport;
 using Microsoft.VisualBasic;
 using Serilog;
 
-// NOTE: Update to .Net 7.0 & C# 11.0 when possible.
-// - Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas Instruments
-//   TIDP.SAA Fusion Library compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
+// TODO: Replace RichTextBox in this TestLibraryForm with a DataGridView, change Logging output from current discrete records to DataGrid rows.
+// TODO: Update to .Net 7.0 & C# 11.0 when possible.
+// - Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas Instruments TIDP.SAA Fusion Library
+//   is compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
 // https://www.ti.com/tool/FUSION_USB_ADAPTER_API
-// NOTE: Update to UWP instead of WinForms when possible.
+// TODO: Update to UWP instead of WinForms when possible.
 // - Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
 // NOTE: With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 //
@@ -102,15 +103,15 @@ namespace TestLibrary {
             //        which simply sets this._cancelled Boolean to true, checked at the end of RunTest()'s foreach loop.
             //      - If this._cancelled is true, RunTest()'s foreach loop is broken, causing reactive cancellation
             //        prior to the next Test's execution.
-            //      - Note this doesn't proactively cancel the *currently* executing Test, which runs to completion.
+            //      - Note: This doesn't proactively cancel the *currently* executing Test, which runs to completion.
             //  Summary:
             //      - If it's necessary to deterministically cancel a specific Test's execution, Microsoft's
             //        CancellationTokenSource technique *must* be implemented by the Test Developer.
             //      - If it's only necessary to deterministically cancel Program execution, TestLibrary's basic
             //        "Cancel before next Test" technique is already available without any Test Developer
             //        implemenation needed.
-            //      - Some Test's may not be safely cancellable mid-execution.  For these, simply don't implement
-            //        Microsoft's CancellationTokenSource technique.
+            //      - Note: Some Test's may not be safely cancellable mid-execution.
+            //          - For such, simply don't implement Microsoft's CancellationTokenSource technique.
             // https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
             // https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
             // https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
@@ -167,11 +168,6 @@ namespace TestLibrary {
        }
 
         private void ButtonSaveOutput_Click(Object sender, EventArgs e) {
-            // NOTE: Using RichTextBox instead of TextBox control in TestLibraryForm for below reasons:
-            // - RichTextBox doesn't have a character limit, whereas TextBox control limited to 64KByte of characters.
-            //   Doubt > 64KBytes necessary, but why risk it?
-            // - RichTextBox can display rich text, specifically the color coded text of EventCode.CANCEL, EventCode.ERROR, 
-            //   EventCode.FAIL, EventCode.PASS & EventCode.UNSET.
             SaveFileDialog sfd = new SaveFileDialog {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
@@ -188,7 +184,7 @@ namespace TestLibrary {
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
             ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.configLib.Logger.FilePath}\"" };
             Process.Start(psi);
-            // Will fail if invalid this.configLib.Logger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
+            // Will fail if this.configLib.Logger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
         }
 
         private void PreRun() {
@@ -206,8 +202,10 @@ namespace TestLibrary {
         private void Run() {
             foreach (KeyValuePair<String, Test> t in this.configTest.Tests) {
                 try {
+                    Application.DoEvents(); // Necessary for ButtonEmergencyStop_Clicked() & ButtonCancel_Clicked().
                     t.Value.Measurement = RunTest(t.Value, this.instruments, this._cancellationTokenSource.Token);
                     t.Value.Result = TestTasks.EvaluateTestResult(t.Value);
+                    Application.DoEvents();
                 } catch (Exception e) {
                     if ((e.GetType() == typeof(TestCancellationException)) || (e.InnerException.GetType() == typeof(TestCancellationException))) {
                         t.Value.Result = EventCodes.CANCEL;

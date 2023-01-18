@@ -86,7 +86,7 @@ namespace TestLibrary.Config {
             if (!argsDict.ContainsKey("ISPExecutableArguments")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'ISPExecutableArguments' key-value pair.");
             if (!argsDict.ContainsKey("ISPResult")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'ISPResult' key-value pair.");
             if (!argsDict["ISPExecutableFolder"].EndsWith(@"\")) argsDict["ISPExecutableFolder"] += @"\";
-            if (!File.Exists(argsDict["ISPExecutableFolder"])) throw new ArgumentException($"TestElement ID '{ID}' ISPExecutableFolder '{argsDict["ISPExecutableFolder"]}' does not exist.");
+            if (!Directory.Exists(argsDict["ISPExecutableFolder"])) throw new ArgumentException($"TestElement ID '{ID}' ISPExecutableFolder '{argsDict["ISPExecutableFolder"]}' does not exist.");
             if (!File.Exists(argsDict["ISPExecutableFolder"] + argsDict["ISPExecutable"])) throw new ArgumentException($"TestElement ID '{ID}' ISPExecutable '{argsDict["ISPExecutableFolder"] + argsDict["ISPExecutable"]}' does not exist.");
 
             this.ISPExecutableFolder = argsDict["ISPExecutableFolder"];

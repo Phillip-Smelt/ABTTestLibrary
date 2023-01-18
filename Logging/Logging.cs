@@ -2,12 +2,10 @@
 using System.IO;
 using System.DirectoryServices.AccountManagement;
 using System.Reflection;
-using System.Text;
 using System.Windows.Forms;
 using TestLibrary.Config;
 using TestLibrary.TestSupport;
 using Serilog;
-using System.Runtime.Remoting.Channels;
 using System.Collections.Generic;
 
 namespace TestLibrary.Logging {
@@ -80,29 +78,28 @@ namespace TestLibrary.Logging {
             message =  $"Test ID '{test.ID}'{Environment.NewLine}";
             message += $"  Revision    : {test.Revision}{Environment.NewLine}";
             message += $"  Description : {test.Description}{Environment.NewLine}";
-            message += $"  ClassName   : {test.ClassName}{Environment.NewLine}";
+            message += $"  Test Type   : {test.ClassName}{Environment.NewLine}";
             switch (test.ClassName) {
                 case TestCustom.ClassName:
                     TestCustom tc = (TestCustom)test.ClassObject;
                     foreach (KeyValuePair<String, String> kvp in tc.Arguments) message += $"  Key=Value   : {kvp.Key}={kvp.Value}{Environment.NewLine}";
                     break;
                 case TestISP.ClassName:
-                    TestISP tp = (TestISP)test.ClassObject;
-                    message += $"  ISPResult   : {tp.ISPResult}{Environment.NewLine}";
-                    message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
+                    TestISP tisp = (TestISP)test.ClassObject;
+                    message += $"  Expected    : {tisp.ISPResult}{Environment.NewLine}";
+                    message += $"  Actual      : {test.Measurement}{Environment.NewLine}";
                     break;
                 case TestRanged.ClassName:
                     TestRanged tr = (TestRanged)test.ClassObject;
                     message += $"  High Limit  : {tr.High}{Environment.NewLine}";
                     message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
                     message += $"  Low Limit   : {tr.Low}{Environment.NewLine}";
-                    message += $"  Units       : {tr.Unit}{Environment.NewLine}";
-                    message += $"  UnitType    : {tr.UnitType}{Environment.NewLine}";
+                    message += $"  Units       : {tr.Unit}{tr.UnitType}{Environment.NewLine}";
                     break;
                 case TestTextual.ClassName:
                     TestTextual tt = (TestTextual)test.ClassObject;
-                    message += $"  Text        : {tt.Text}{Environment.NewLine}";
-                    message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
+                    message += $"  Expected    : {tt.Text}{Environment.NewLine}";
+                    message += $"  Actual      : {test.Measurement}{Environment.NewLine}";
                     break;
                 default:
                     throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
