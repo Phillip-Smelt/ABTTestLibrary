@@ -75,11 +75,11 @@ namespace TestLibrary.Config {
 
         public TestISP(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 internally formatted arguments:{Environment.NewLine}" +
-                $@"   Example: 'AppFile=ipecmd.exe|
-                                AppFolder=C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe|
-                                AppArguments=C:\TBD\U1_Firmware.hex|
-                                CRC=0xAC0E'{Environment.NewLine}" +
+            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
+                $@"   Example: 'ISPExecutable=ipecmd.exe|
+                                ISPExecutableFolder=C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe|
+                                ISPExecutableArguments=C:\TBD\U1_Firmware.hex|
+                                ISPResult=0xAC0E'{Environment.NewLine}" +
                 $"   Actual : '{Arguments}'");
             if (!argsDict.ContainsKey("ISPExecutableFolder")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'ISPExecutableFolder' key-value pair.");
             if (!argsDict.ContainsKey("ISPExecutable")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'ISPExecutable' key-value pair.");
