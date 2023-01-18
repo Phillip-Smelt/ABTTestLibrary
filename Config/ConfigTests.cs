@@ -58,10 +58,10 @@ namespace TestLibrary.Config {
 
         public TestCustom(String ID, String Arguments) {
             this.Arguments = TestAbstract.SplitArguments(Arguments);
-            if (this.Arguments.Count == 0) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 1 or more internally formatted arguments:{Environment.NewLine}" +
-                    $"   Example: 'Key1=Value1|" +
-                    $"             Key2=Value2|" +
-                    $"             Key3=Value3'{Environment.NewLine}" +
+            if (this.Arguments.Count == 0) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 1 or more key=value arguments:{Environment.NewLine}" +
+                    $"   Example: 'key1=value1|" +
+                    $"             key2=value2|" +
+                    $"             key3=value3'{Environment.NewLine}" +
                     $"   Actual : '{Arguments}'");
         }
     }
@@ -75,7 +75,7 @@ namespace TestLibrary.Config {
 
         public TestProgrammed(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 internally formatted arguments:{Environment.NewLine}" +
+            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $@"   Example: 'AppFile=ipecmd.exe|
                                 AppFolder=C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe|
                                 AppArguments=C:\TBD\U1_Firmware.hex|
@@ -104,7 +104,7 @@ namespace TestLibrary.Config {
 
         public TestRanged(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 internally formatted arguments:{Environment.NewLine}" +
+            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $"   Example: 'Low=0.002|" +
                 $"             High=0.004|" +
                 $"             Unit=A|" +
@@ -115,20 +115,15 @@ namespace TestLibrary.Config {
             if (!argsDict.ContainsKey("Unit")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'Unit' key-value pair.");
             if (!argsDict.ContainsKey("UnitType")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'UnitType' key-value pair.");
 
-            if (TryDouble(argsDict["Low"], out Double low) && TryDouble(argsDict["High"], out Double high)) {
-                this.Low = low;
-                this.High = high;
-            } else throw new ArgumentException($"TestElement ID '{ID}' Low '{argsDict["Low"]}' and/or High '{argsDict["High"]}' ≠ System.Double.");
-            
+            if (Double.TryParse(argsDict["Low"], NumberStyles.Float, CultureInfo.CurrentCulture, out Double low)) this.Low = low;
+            else throw new ArgumentException($"TestElement ID '{ID}' Low '{argsDict["Low"]}' ≠ System.Double.");
+
+            if (Double.TryParse(argsDict["High"], NumberStyles.Float, CultureInfo.CurrentCulture, out Double high)) this.High = high;
+            else throw new ArgumentException($"TestElement ID '{ID}' High '{argsDict["High"]}' ≠ System.Double.");
+
             if (low > high) throw new ArgumentException($"TestElement ID '{ID}' Low '{low}' > High '{high}'.");
             this.Unit = argsDict["Unit"];
             this.UnitType = argsDict["UnitType"];
-        }
-
-        private static Boolean TryDouble(String s, out Double d) {
-            return Double.TryParse(s, NumberStyles.Float, CultureInfo.CurrentCulture, out d);
-            // Convenience wrapper method to add NumberStyles.Float & CultureInfo.CurrentCulture to Double.TryParse().
-            // NumberStyles.Float best for parsing floating point decimal values, including scientific/exponential notation.
         }
     }
 
@@ -137,7 +132,7 @@ namespace TestLibrary.Config {
         internal String Text { get; private set; }
         public TestTextual(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            if (argsDict.Count != 1) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 1 or more internally formatted arguments:{Environment.NewLine}" +
+            if (argsDict.Count != 1) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 1 case-sensitive argument:{Environment.NewLine}" +
                     $"   Example: 'Text=The quick brown fox jumps over the lazy dog.'{Environment.NewLine}" +
                     $"   Actual : '{Arguments}'");
             if (!argsDict.ContainsKey("Text")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'Text' key-value pair.");
