@@ -86,9 +86,9 @@ namespace TestLibrary.Logging {
                     TestCustom tc = (TestCustom)test.ClassObject;
                     foreach (KeyValuePair<String, String> kvp in tc.Arguments) message += $"  Key=Value   : {kvp.Key}={kvp.Value}{Environment.NewLine}";
                     break;
-                case TestProgrammed.ClassName:
-                    TestProgrammed tp = (TestProgrammed)test.ClassObject;
-                    message += $"  CRC         : {tp.CRC}{Environment.NewLine}";
+                case TestISP.ClassName:
+                    TestISP tp = (TestISP)test.ClassObject;
+                    message += $"  ISPResult   : {tp.ISPResult}{Environment.NewLine}";
                     message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
                     break;
                 case TestRanged.ClassName:
