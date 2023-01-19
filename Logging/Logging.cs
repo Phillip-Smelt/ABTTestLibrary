@@ -7,6 +7,7 @@ using TestLibrary.Config;
 using TestLibrary.TestSupport;
 using Serilog;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace TestLibrary.Logging {
     public static class LogTasks {
@@ -91,9 +92,9 @@ namespace TestLibrary.Logging {
                     break;
                 case TestNumerical.ClassName:
                     TestNumerical tn = (TestNumerical)test.ClassObject;
-                    message += $"  High Limit  : {tn.High}{Environment.NewLine}";
-                    message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
-                    message += $"  Low Limit   : {tn.Low}{Environment.NewLine}";
+                    message += $"  High Limit  : {tn.High:G}{Environment.NewLine}";
+                    message += $"  Measurement : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}{Environment.NewLine}";
+                    message += $"  Low Limit   : {tn.Low:G}{Environment.NewLine}";
                     message += $"  Units       : {tn.Unit}{tn.UnitType}{Environment.NewLine}";
                     break;
                 case TestTextual.ClassName:
