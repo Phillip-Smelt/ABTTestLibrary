@@ -36,15 +36,15 @@ namespace TestLibrary.TestSupport {
     public static class TestTasks {
         public static String EvaluateTestResult(Test test) {
             switch (test.ClassName) {
-                case TestCustom.ClassName:
+                case TestCustomizable.ClassName:
                     return test.Measurement;
                 case TestISP.ClassName:
                     TestISP tisp = (TestISP)test.ClassObject;
                     if (String.Equals(tisp.ISPResult, test.Measurement)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
-                case TestNumeric.ClassName:
+                case TestNumerical.ClassName:
                     if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
-                    TestNumeric tn = (TestNumeric)test.ClassObject;
+                    TestNumerical tn = (TestNumerical)test.ClassObject;
                     if ((tn.Low <= dMeasurement) && (dMeasurement <= tn.High)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestTextual.ClassName:

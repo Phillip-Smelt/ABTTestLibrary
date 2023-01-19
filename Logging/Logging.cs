@@ -80,8 +80,8 @@ namespace TestLibrary.Logging {
             message += $"  Description : {test.Description}{Environment.NewLine}";
             message += $"  Test Type   : {test.ClassName}{Environment.NewLine}";
             switch (test.ClassName) {
-                case TestCustom.ClassName:
-                    TestCustom tc = (TestCustom)test.ClassObject;
+                case TestCustomizable.ClassName:
+                    TestCustomizable tc = (TestCustomizable)test.ClassObject;
                     foreach (KeyValuePair<String, String> kvp in tc.Arguments) message += $"  Key=Value   : {kvp.Key}={kvp.Value}{Environment.NewLine}";
                     break;
                 case TestISP.ClassName:
@@ -89,8 +89,8 @@ namespace TestLibrary.Logging {
                     message += $"  Expected    : {tisp.ISPResult}{Environment.NewLine}";
                     message += $"  Actual      : {test.Measurement}{Environment.NewLine}";
                     break;
-                case TestNumeric.ClassName:
-                    TestNumeric tn = (TestNumeric)test.ClassObject;
+                case TestNumerical.ClassName:
+                    TestNumerical tn = (TestNumerical)test.ClassObject;
                     message += $"  High Limit  : {tn.High}{Environment.NewLine}";
                     message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
                     message += $"  Low Limit   : {tn.Low}{Environment.NewLine}";

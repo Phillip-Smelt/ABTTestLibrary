@@ -52,11 +52,11 @@ namespace TestLibrary.Config {
         }
     }
 
-    public class TestCustom : TestAbstract {
-        public new const String ClassName = nameof(TestCustom);
+    public class TestCustomizable : TestAbstract {
+        public new const String ClassName = nameof(TestCustomizable);
         public Dictionary<String, String> Arguments;
 
-        public TestCustom(String ID, String Arguments) {
+        public TestCustomizable(String ID, String Arguments) {
             this.Arguments = TestAbstract.SplitArguments(Arguments);
             if (this.Arguments.Count == 0) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 1 or more key=value arguments:{Environment.NewLine}" +
                     $"   Example: 'NameFirst=Harry|" +
@@ -96,14 +96,14 @@ namespace TestLibrary.Config {
         }
     }
 
-    public class TestNumeric : TestAbstract {
-        public new const String ClassName = nameof(TestNumeric);
+    public class TestNumerical : TestAbstract {
+        public new const String ClassName = nameof(TestNumerical);
         public Double Low { get; private set; }
         public Double High { get; private set; }
         public String Unit { get; private set; }
         public String UnitType { get; private set; }
 
-        public TestNumeric(String ID, String Arguments) {
+        public TestNumerical(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
             if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $"   Example: 'Low=0.002|" +
