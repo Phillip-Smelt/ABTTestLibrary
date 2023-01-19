@@ -40,7 +40,7 @@ namespace TestLibrary.TestSupport {
                     return test.Measurement;
                 case TestISP.ClassName:
                     TestISP tisp = (TestISP)test.ClassObject;
-                    if (String.Equals(tisp.ISPResult, test.Measurement)) return EventCodes.PASS;
+                    if (String.Equals(tisp.ISPResult, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestNumerical.ClassName:
                     if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
@@ -49,7 +49,7 @@ namespace TestLibrary.TestSupport {
                     else return EventCodes.FAIL;
                 case TestTextual.ClassName:
                     TestTextual tt = (TestTextual)test.ClassObject;
-                    if (String.Equals(tt.Text, test.Measurement)) return EventCodes.PASS;
+                    if (String.Equals(tt.Text, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 default:
                     throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
