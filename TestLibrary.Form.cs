@@ -37,7 +37,7 @@ namespace TestLibrary {
         private Boolean _cancelled;
         private CancellationTokenSource _cancellationTokenSource;
 
-        protected abstract String RunTest(Test test, Dictionary<String, Instrument> instruments, CancellationToken cToken);
+        protected abstract String RunTest(Test test, Dictionary<String, Instrument> instruments, CancellationToken cancellationToken);
 
         protected TestLibraryForm(Icon icon) {
             this.InitializeComponent();
