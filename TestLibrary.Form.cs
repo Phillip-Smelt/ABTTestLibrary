@@ -60,7 +60,11 @@ namespace TestLibrary {
             this.Text = $"{this.configLib.UUT.Number}, {this.configLib.UUT.Description}";
             if (!String.Equals(String.Empty, this.configLib.UUT.DocumentationFolder)) {
                 if (Directory.Exists(this.configLib.UUT.DocumentationFolder)) {
-                    ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.configLib.UUT.DocumentationFolder}\"" };
+                    ProcessStartInfo psi = new ProcessStartInfo {
+                        FileName = "explorer.exe",
+                        WindowStyle= ProcessWindowStyle.Minimized,
+                        Arguments = $"\"{this.configLib.UUT.DocumentationFolder}\""
+                    };
                     Process.Start(psi);
                     // Paths with embedded spaces require enclosing double-quotes (").
                     // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.

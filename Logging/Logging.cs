@@ -89,12 +89,12 @@ namespace TestLibrary.Logging {
                     message += $"  Expected    : {tisp.ISPResult}{Environment.NewLine}";
                     message += $"  Actual      : {test.Measurement}{Environment.NewLine}";
                     break;
-                case TestRanged.ClassName:
-                    TestRanged tr = (TestRanged)test.ClassObject;
-                    message += $"  High Limit  : {tr.High}{Environment.NewLine}";
+                case TestNumeric.ClassName:
+                    TestNumeric tn = (TestNumeric)test.ClassObject;
+                    message += $"  High Limit  : {tn.High}{Environment.NewLine}";
                     message += $"  Measurement : {test.Measurement}{Environment.NewLine}";
-                    message += $"  Low Limit   : {tr.Low}{Environment.NewLine}";
-                    message += $"  Units       : {tr.Unit}{tr.UnitType}{Environment.NewLine}";
+                    message += $"  Low Limit   : {tn.Low}{Environment.NewLine}";
+                    message += $"  Units       : {tn.Unit}{tn.UnitType}{Environment.NewLine}";
                     break;
                 case TestTextual.ClassName:
                     TestTextual tt = (TestTextual)test.ClassObject;

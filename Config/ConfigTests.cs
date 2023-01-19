@@ -96,14 +96,14 @@ namespace TestLibrary.Config {
         }
     }
 
-    public class TestRanged : TestAbstract {
-        public new const String ClassName = nameof(TestRanged);
+    public class TestNumeric : TestAbstract {
+        public new const String ClassName = nameof(TestNumeric);
         public Double Low { get; private set; }
         public Double High { get; private set; }
         public String Unit { get; private set; }
         public String UnitType { get; private set; }
 
-        public TestRanged(String ID, String Arguments) {
+        public TestNumeric(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
             if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $"   Example: 'Low=0.002|" +
@@ -130,7 +130,7 @@ namespace TestLibrary.Config {
 
     public class TestTextual : TestAbstract {
         public new const String ClassName = nameof(TestTextual);
-        internal String Text { get; private set; }
+        public String Text { get; private set; }
         public TestTextual(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
             if (argsDict.Count != 1) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 1 case-sensitive argument:{Environment.NewLine}" +

@@ -96,9 +96,9 @@ namespace TestLibrary.Instruments {
             // { MULTI_METER, "TBD" },
             // { WAVE_GENERATOR,"USB0::0x0957::0x2507::MY59003604::0::INSTR" },
             // { POWER_MAIN, "USB0::0x2A8D::0x3402::MY61002598::0::INSTR" },
-            { POWER_PRELIMINARY , "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
-            { POWER_PRIMARY, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
-            { POWER_SECONDARY, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" }
+            // { POWER_PRELIMINARY , "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
+            // { POWER_PRIMARY, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
+            // { POWER_SECONDARY, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" }
             };
         public String ID { get; private set; }
         public String Category { get; private set; }

@@ -42,10 +42,10 @@ namespace TestLibrary.TestSupport {
                     TestISP tisp = (TestISP)test.ClassObject;
                     if (String.Equals(tisp.ISPResult, test.Measurement)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
-                case TestRanged.ClassName:
+                case TestNumeric.ClassName:
                     if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
-                    TestRanged tr = (TestRanged)test.ClassObject;
-                    if ((tr.Low <= dMeasurement) && (dMeasurement <= tr.High)) return EventCodes.PASS;
+                    TestNumeric tn = (TestNumeric)test.ClassObject;
+                    if ((tn.Low <= dMeasurement) && (dMeasurement <= tn.High)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestTextual.ClassName:
                     TestTextual tt = (TestTextual)test.ClassObject;
