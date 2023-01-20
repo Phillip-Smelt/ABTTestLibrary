@@ -95,7 +95,7 @@ namespace TestLibrary {
             this._cancelled = true;
             this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
             this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = Color.Red;
-            // NOTE: Two types of TestLibrary/operator initiated cancellations possible, proactive & reactive:
+            // NOTE: Two types of TestLibrary/Operator initiated cancellations possible, proactive & reactive:
             //  1)  Proactive:
             //      - Microsoft's recommended CancellationTokenSource technique, which can proactively
             //        cancel currently executing Test, *if* implemented.
@@ -120,7 +120,7 @@ namespace TestLibrary {
             //  https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
             //  https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
             //
-            //  And Finally:
+            //  NOTE: TestProgram/Test Developer initiated cancellations also possible:
             //      - Any TestProgram's Test can initiate a cancellation programmatically by simply
             //        throwing a TestCancellationException:
             //        - Let's say we want to abort if specific conditions occur in a Test, for example if
@@ -130,8 +130,9 @@ namespace TestLibrary {
             //          correctly.
             //        - So, simply directly set test.Measurement's value, then throw a
             //          TestCancellationException if an applied power bus fails.
-            //        - This is pseudo-simulated in T03 in https://github.com/Amphenol-Borisch-Technologies/TestProgram/blob/master/TestProgram.Shared.cs
-            //
+            //        - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestProgram/blob/master/TestProgram.Shared.cs
+            //        - Test Developer must set test.Measurement's value for it to be Logged,
+            //          else default String.Empty or Double.NaN values are Logged.
         }
 
         private void ButtonStartReset(Boolean Enabled) {
@@ -207,7 +208,8 @@ namespace TestLibrary {
         private void PreRun() {
             this.FormReset();
             foreach (KeyValuePair<String, Test> t in this.configTest.Tests) {
-                t.Value.Measurement = String.Empty;
+                if (String.Equals(t.Value.ClassName, TestNumerical.ClassName)) t.Value.Measurement = Double.NaN.ToString();
+                else t.Value.Measurement = String.Empty;
                 t.Value.Result = EventCodes.UNSET;
             }
             this.configLib.UUT.EventCode = EventCodes.UNSET;

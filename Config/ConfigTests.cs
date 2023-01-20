@@ -156,8 +156,9 @@ namespace TestLibrary.Config {
             this.Description = Description;
             this.Revision = Revision;
             this.ClassName = ClassName;
-            this.Measurement = String.Empty; // Measured during test execution.
-            this.Result = EventCodes.UNSET;  // Set during test execution.
+            if (String.Equals(this.ClassName, TestNumerical.ClassName)) this.Measurement = Double.NaN.ToString();
+            else this.Measurement = String.Empty;
+            this.Result = EventCodes.UNSET;
             this.ClassObject = Activator.CreateInstance(Type.GetType(GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, Arguments });
         }
 
