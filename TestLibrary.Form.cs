@@ -226,7 +226,7 @@ namespace TestLibrary {
                     t.Value.Result = TestTasks.EvaluateTestResult(t.Value);
                     Application.DoEvents();
                 } catch (Exception e) {
-                    if ((e.GetType() == typeof(TestCancellationException)) || (e.InnerException.GetType() == typeof(TestCancellationException))) {
+                    if (e.GetType() == typeof(TestCancellationException)) {
                         t.Value.Result = EventCodes.CANCEL;
                     } else {
                         InstrumentTasks.InstrumentResetClear(this.instruments);
