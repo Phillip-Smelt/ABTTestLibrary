@@ -225,8 +225,8 @@ namespace TestLibrary {
                     t.Value.Result = TestTasks.EvaluateTestResult(t.Value);
                     Application.DoEvents();
                 } catch (Exception e) {
-                    if (e.GetType() == typeof(TestCancellationException)) {
-                        if (!String.IsNullOrEmpty(e.Message)) t.Value.Measurement = e.Message;
+                    if (e.GetType() == typeof(TargetInvocationException) && e.InnerException.GetType() == typeof(TestCancellationException)) {
+                        if (!String.IsNullOrEmpty(e.InnerException.Message)) t.Value.Measurement = e.InnerException.Message;
                         t.Value.Result = EventCodes.CANCEL;
                     } else {
                         InstrumentTasks.InstrumentResetClear(this.instruments);

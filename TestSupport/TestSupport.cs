@@ -9,9 +9,7 @@ using TestLibrary.Config;
 
 namespace TestLibrary.TestSupport {
     public class TestCancellationException : Exception {
-        public TestCancellationException() { }
-        public TestCancellationException(String message) : base(message) { }
-        public TestCancellationException(String message, Exception inner) : base(message, inner) { }
+        public TestCancellationException(String message = "") : base(message) { }
     }
 
     public static class EventCodes {
