@@ -95,7 +95,7 @@ namespace TestLibrary {
             this._cancelled = true;
             this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
             this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = Color.Red;
-            // NOTE: Two types of cancellation possible, proactive & reactive:
+            // NOTE: Two types of TestLibrary/operator initiated cancellations possible, proactive & reactive:
             //  1)  Proactive:
             //      - Microsoft's recommended CancellationTokenSource technique, which can proactively
             //        cancel currently executing Test, *if* implemented.
@@ -111,14 +111,27 @@ namespace TestLibrary {
             //  Summary:
             //      - If it's necessary to deterministically cancel a specific Test's execution, Microsoft's
             //        CancellationTokenSource technique *must* be implemented by the Test Developer.
-            //      - If it's only necessary to deterministically cancel Program execution, TestLibrary's basic
-            //        "Cancel before next Test" technique is already available without any Test Developer
-            //        implemenation needed.
+            //      - If it's only necessary to deterministically cancel overall Test Program execution,
+            //        TestLibrary's basic "Cancel before next Test" technique is already available without
+            //        any Test Developer implemenation needed.
             //      - Note: Some Test's may not be safely cancellable mid-execution.
             //          - For such, simply don't implement Microsoft's CancellationTokenSource technique.
-            // https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
-            // https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
-            // https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
+            //  https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
+            //  https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
+            //  https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
+            //
+            //  And Finally:
+            //      - Any TestProgram's Test can initiate a cancellation programmatically by simply
+            //        throwing a TestCancellationException:
+            //        - Let's say we want to abort if specific conditions occur in a Test, for example if
+            //          power application fails.
+            //        - We don't want to continue testing if the UUT's applied power busses fail,
+            //          because any downstream failures are likely due to the UUT not being powered
+            //          correctly.
+            //        - So, simply directly set test.Measurement's value, then throw a
+            //          TestCancellationException if an applied power bus fails.
+            //        - This is pseudo-simulated in T03 in https://github.com/Amphenol-Borisch-Technologies/TestProgram/blob/master/TestProgram.Shared.cs
+            //
         }
 
         private void ButtonStartReset(Boolean Enabled) {
