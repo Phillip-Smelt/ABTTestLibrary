@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using TestLibrary.Config;
+using TestLibrary.Instruments;
 
 namespace TestLibrary.TestSupport {
     public class TestCancellationException : Exception {
