@@ -113,7 +113,7 @@ namespace TestLibrary {
             //        CancellationTokenSource technique *must* be implemented by the Test Developer.
             //      - If it's only necessary to deterministically cancel overall Test Program execution,
             //        TestLibrary's basic "Cancel before next Test" technique is already available without
-            //        any Test Developer implemenation needed.
+            //        any Test Developer implementation needed.
             //      - Note: Some Test's may not be safely cancellable mid-execution.
             //          - For such, simply don't implement Microsoft's CancellationTokenSource technique.
             //  https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
