@@ -1,4 +1,4 @@
-# TestLibrary is a simple functional test sequencing library for sibling project TestProgram.
+# TestLibrary is a simple functional test sequencer/test executive library for sibling project TestProgram.
    
   Sibling project TestProgram is both a demonstration program and a functional test of TestLibrary.
   
