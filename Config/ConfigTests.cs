@@ -98,29 +98,29 @@ namespace TestLibrary.Config {
 
     public class TestNumerical : TestAbstract {
         public new const String ClassName = nameof(TestNumerical);
-        public Double Low { get; private set; }
         public Double High { get; private set; }
+        public Double Low { get; private set; }
         public String Unit { get; private set; }
         public String UnitType { get; private set; }
 
         public TestNumerical(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
             if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
-                $"   Example: 'Low=0.002|" +
-                $"             High=0.004|" +
+                $"   Example: 'High=0.004|" +
+                $"             Low=0.002|" +
                 $"             Unit=A|" +
                 $"             UnitType=DC'{Environment.NewLine}" +
                 $"   Actual : '{Arguments}'");
-            if (!argsDict.ContainsKey("Low")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'Low' key-value pair.");
             if (!argsDict.ContainsKey("High")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'High' key-value pair.");
+            if (!argsDict.ContainsKey("Low")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'Low' key-value pair.");
             if (!argsDict.ContainsKey("Unit")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'Unit' key-value pair.");
             if (!argsDict.ContainsKey("UnitType")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'UnitType' key-value pair.");
 
-            if (Double.TryParse(argsDict["Low"], NumberStyles.Float, CultureInfo.CurrentCulture, out Double low)) this.Low = low;
-            else throw new ArgumentException($"TestElement ID '{ID}' Low '{argsDict["Low"]}' ≠ System.Double.");
-
             if (Double.TryParse(argsDict["High"], NumberStyles.Float, CultureInfo.CurrentCulture, out Double high)) this.High = high;
             else throw new ArgumentException($"TestElement ID '{ID}' High '{argsDict["High"]}' ≠ System.Double.");
+
+            if (Double.TryParse(argsDict["Low"], NumberStyles.Float, CultureInfo.CurrentCulture, out Double low)) this.Low = low;
+            else throw new ArgumentException($"TestElement ID '{ID}' Low '{argsDict["Low"]}' ≠ System.Double.");
 
             if (low > high) throw new ArgumentException($"TestElement ID '{ID}' Low '{low}' > High '{high}'.");
             this.Unit = argsDict["Unit"];

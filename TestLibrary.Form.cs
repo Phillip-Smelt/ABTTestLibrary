@@ -103,7 +103,7 @@ namespace TestLibrary {
             //      - Implementation necessary if the *currently* executing Test must be cancellable during
             //        execution.
             //  2)  Reactive:
-            //      - TestLibrary's already implemented/always available & default reactive "Cancel before next Test" technique,
+            //      - TestLibrary's already implemented, always available & default reactive "Cancel before next Test" technique,
             //        which simply sets this._cancelled Boolean to true, checked at the end of RunTest()'s foreach loop.
             //      - If this._cancelled is true, RunTest()'s foreach loop is broken, causing reactive cancellation
             //        prior to the next Test's execution.
@@ -114,7 +114,7 @@ namespace TestLibrary {
             //      - If it's only necessary to deterministically cancel overall Test Program execution,
             //        TestLibrary's basic "Cancel before next Test" technique is already available without
             //        any Test Developer implementation needed.
-            //      - Note: Some Test's may not be safely cancellable mid-execution.
+            //      - Note: Some Tests may not be safely cancellable mid-execution.
             //          - For such, simply don't implement Microsoft's CancellationTokenSource technique.
             //  https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
             //  https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
@@ -130,7 +130,7 @@ namespace TestLibrary {
             //          correctly.
             //        - So, simply throw a TestCancellationException if an applied power bus fails.
             //        - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestProgram/blob/master/TestProgram.Shared.cs
-            //        - Test Developer must set TestCancellationException's message to Measeured
+            //        - Test Developer must set TestCancellationException's message to the Measured
             //          value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
         }
 
