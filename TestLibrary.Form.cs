@@ -12,6 +12,7 @@ using TestLibrary.Logging;
 using TestLibrary.TestSupport;
 using Microsoft.VisualBasic;
 using Serilog;
+using System.Threading.Tasks;
 
 // TODO: Replace RichTextBox in this TestLibraryForm with a DataGridView, change Logging output from current discrete records to DataGrid rows.
 // TODO: Update to .Net 7.0 & C# 11.0 when possible.
@@ -37,7 +38,7 @@ namespace TestLibrary {
         private Boolean _cancelled;
         private CancellationTokenSource _cancellationTokenSource;
 
-        protected abstract String RunTest(Test test, Dictionary<String, Instrument> instruments, CancellationToken cancellationToken);
+        protected abstract Task<String> RunTest(Test test, Dictionary<String, Instrument> instruments, CancellationToken cancellationToken);
 
         protected TestLibraryForm(Icon icon) {
             this.InitializeComponent();
@@ -220,10 +221,13 @@ namespace TestLibrary {
         private void Run() {
             foreach (KeyValuePair<String, Test> t in this.configTest.Tests) {
                 try {
-                    Application.DoEvents(); // Necessary for ButtonEmergencyStop_Clicked() & ButtonCancel_Clicked().
-                    t.Value.Measurement = RunTest(t.Value, this.instruments, this._cancellationTokenSource.Token);
+                    // Application.DoEvents(); // Necessary for ButtonEmergencyStop_Clicked() & ButtonCancel_Clicked().
+                    // t.Value.Measurement = RunTest(t.Value, this.instruments, this._cancellationTokenSource.Token);
+                    // t.Value.Measurement = await RunTest(t.Value, this.instruments, this._cancellationTokenSource.Token);
+                    Task k = Task.Run(() => RunTest(t.Value, this.instruments, this._cancellationTokenSource.Token));
+                    k.Wait();
+                    t.Value.Measurement = 
                     t.Value.Result = TestTasks.EvaluateTestResult(t.Value);
-                    Application.DoEvents();
                 } catch (Exception e) {
                     if (e.GetType() == typeof(TargetInvocationException) && e.InnerException.GetType() == typeof(TestCancellationException)) {
                         if (!String.IsNullOrEmpty(e.InnerException.Message)) t.Value.Measurement = e.InnerException.Message;
