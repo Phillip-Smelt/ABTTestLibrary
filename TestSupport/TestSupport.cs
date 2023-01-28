@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using Serilog;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +14,7 @@ using TestLibrary.Instruments;
 namespace TestLibrary.TestSupport {
     public class TestCancellationException : Exception {
         public TestCancellationException(String message = "") : base(message) { }
+        public const String ClassName = nameof(TestCancellationException);
     }
 
     public static class EventCodes {
@@ -69,23 +71,29 @@ namespace TestLibrary.TestSupport {
             if (GetResultCount(configTest.Tests, EventCodes.CANCEL) > 0) return EventCodes.CANCEL;
             // 3rd priority evaluation:
             // - If any test result is CANCEL, and none were ERROR, overall UUT result is CANCEL.
-            if (GetResultCount(configTest.Tests, EventCodes.UNSET) > 0) throw new InvalidOperationException("One or more Tests didn't execute!");
-            // 4th priority evaluation:
-            // - If any test result is UNSET, and there are no explicit ERROR or CANCEL results, it implies the test didn't complete
-            //   without erroring or cancelling, which shouldn't occur, but...
+            if (GetResultCount(configTest.Tests, EventCodes.UNSET) > 0) {
+                // 4th priority evaluation:
+                // - If any test result is UNSET, and there are no explicit ERROR or CANCEL results, it implies Test(s) didn't complete
+                //   without erroring or cancelling, which shouldn't occur, but...
+                String s = String.Empty;
+                foreach (KeyValuePair<String, Test> t in configTest.Tests) s += $"ID: '{t.Key}' Result: '{t.Value.Result}'.{Environment.NewLine}";
+                Log.Error($"Encountered Test(s) with EventCodes.UNSET:{Environment.NewLine}{Environment.NewLine}{s}");
+                _ = MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
+                    $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return EventCodes.ERROR;
+            }
             if (GetResultCount(configTest.Tests, EventCodes.FAIL) > 0) return EventCodes.FAIL;
             // 5th priority evaluation:
             // - If there are no ERROR, CANCEL or UNSET results, but there is a FAIL result, UUT result is FAIL.
 
-            // Else, handle oopsies!
+            // Else, we're really in the Twilight Zone...
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
-            foreach (KeyValuePair<String, Test> t in configTest.Tests) {
-                if (!validEvents.Contains(t.Value.Result)) invalidTests += $"ID: '{t.Key}' Result: '{t.Value.Result}'.{Environment.NewLine}";
-            }
-            if (!String.Equals(invalidTests, String.Empty)) throw new NotImplementedException($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
-            else throw new NotImplementedException("Sigh...unexpected Error.  Am clueless why.");
-            // EventCodes was modified without updating EvaluateUUTResult; take Exception to that.
+            foreach (KeyValuePair<String, Test> t in configTest.Tests) if (!validEvents.Contains(t.Value.Result)) invalidTests += $"ID: '{t.Key}' Result: '{t.Value.Result}'.{Environment.NewLine}";
+            Log.Error($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
+            _ = MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
+                $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return EventCodes.ERROR;
         }
 
         private static Int32 GetResultCount(Dictionary<String, Test> tests, String eventCode) {

@@ -45,11 +45,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TestLibrary.Form.cs">
+    <Compile Include="TestExecutive.Form.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TestLibrary.Form.Designer.cs">
-      <DependentUpon>TestLibrary.Form.cs</DependentUpon>
+    <Compile Include="TestExecutive.Form.Designer.cs">
+      <DependentUpon>TestExecutive.Form.cs</DependentUpon>
     </Compile>
     <Compile Include="Config\ConfigGroups.cs" />
     <Compile Include="Config\ConfigLib.cs" />
@@ -76,8 +76,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="TestLibrary.Form.resx">
-      <DependentUpon>TestLibrary.Form.cs</DependentUpon>
+    <EmbeddedResource Include="TestExecutive.Form.resx">
+      <DependentUpon>TestExecutive.Form.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Config\GroupSelection.resx">

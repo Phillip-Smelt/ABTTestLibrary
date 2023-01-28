@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 
 namespace TestLibrary {
-    public abstract partial class TestLibraryForm : Form {
+    public abstract partial class TestExecutiveForm : Form {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -24,7 +24,7 @@ namespace TestLibrary {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestLibraryForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestExecutiveForm));
             this.ButtonStart = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.TextUUTResult = new System.Windows.Forms.TextBox();
@@ -38,6 +38,7 @@ namespace TestLibrary {
             // 
             // ButtonStart
             // 
+            this.ButtonStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonStart.BackColor = System.Drawing.Color.Green;
             this.ButtonStart.Location = new System.Drawing.Point(152, 560);
             this.ButtonStart.Name = "ButtonStart";
@@ -49,6 +50,7 @@ namespace TestLibrary {
             // 
             // ButtonCancel
             // 
+            this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonCancel.BackColor = System.Drawing.Color.Yellow;
             this.ButtonCancel.Location = new System.Drawing.Point(281, 560);
             this.ButtonCancel.Name = "ButtonCancel";
@@ -60,6 +62,7 @@ namespace TestLibrary {
             // 
             // TextUUTResult
             // 
+            this.TextUUTResult.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.TextUUTResult.Location = new System.Drawing.Point(493, 580);
             this.TextUUTResult.Name = "TextUUTResult";
             this.TextUUTResult.ReadOnly = true;
@@ -70,6 +73,7 @@ namespace TestLibrary {
             // 
             // LabelUUTResult
             // 
+            this.LabelUUTResult.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LabelUUTResult.AutoSize = true;
             this.LabelUUTResult.Location = new System.Drawing.Point(490, 564);
             this.LabelUUTResult.Name = "LabelUUTResult";
@@ -80,6 +84,9 @@ namespace TestLibrary {
             // 
             // rtfResults
             // 
+            this.rtfResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.rtfResults.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtfResults.Location = new System.Drawing.Point(23, 21);
             this.rtfResults.Name = "rtfResults";
@@ -91,6 +98,7 @@ namespace TestLibrary {
             // 
             // ButtonSaveOutput
             // 
+            this.ButtonSaveOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonSaveOutput.Location = new System.Drawing.Point(683, 564);
             this.ButtonSaveOutput.Name = "ButtonSaveOutput";
             this.ButtonSaveOutput.Size = new System.Drawing.Size(88, 47);
@@ -101,6 +109,7 @@ namespace TestLibrary {
             // 
             // ButtonSelectGroup
             // 
+            this.ButtonSelectGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonSelectGroup.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonSelectGroup.Location = new System.Drawing.Point(23, 561);
             this.ButtonSelectGroup.Name = "ButtonSelectGroup";
@@ -112,6 +121,7 @@ namespace TestLibrary {
             // 
             // ButtonOpenTestDataFolder
             // 
+            this.ButtonOpenTestDataFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonOpenTestDataFolder.Location = new System.Drawing.Point(813, 563);
             this.ButtonOpenTestDataFolder.Name = "ButtonOpenTestDataFolder";
             this.ButtonOpenTestDataFolder.Size = new System.Drawing.Size(88, 47);
@@ -122,6 +132,7 @@ namespace TestLibrary {
             // 
             // ButtonEmergencyStop
             // 
+            this.ButtonEmergencyStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonEmergencyStop.Image = ((System.Drawing.Image)(resources.GetObject("ButtonEmergencyStop.Image")));
             this.ButtonEmergencyStop.Location = new System.Drawing.Point(942, 546);
             this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";
@@ -130,7 +141,7 @@ namespace TestLibrary {
             this.ButtonEmergencyStop.UseVisualStyleBackColor = true;
             this.ButtonEmergencyStop.Click += new System.EventHandler(this.ButtonEmergencyStop_Clicked);
             // 
-            // TestLibraryForm
+            // TestExecutiveForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -145,7 +156,7 @@ namespace TestLibrary {
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonStart);
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "TestLibraryForm";
+            this.Name = "TestExecutiveForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Test Program";
             this.Load += new System.EventHandler(this.Form_Load);
