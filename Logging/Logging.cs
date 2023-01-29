@@ -64,6 +64,8 @@ namespace TestLibrary.Logging {
             Log.Information($"UUT Group Name         : {group.Name}");
             Log.Information($"UUT Group Description  :{Environment.NewLine}{Environment.NewLine}" +
                 $"{group.Description}{Environment.NewLine}");
+            // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
+            // Haven't used it on non-Active Directory PCs.
             Log.Information($"Test Operator          : {UserPrincipal.Current.DisplayName}");
             Log.Information($"UUT Serial Number      : {configLib.UUT.SerialNumber}\n");
             Log.Debug($"Environment.UserDomainName         : {Environment.UserDomainName}");

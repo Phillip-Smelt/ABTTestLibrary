@@ -14,7 +14,6 @@ using TestLibrary.Instruments;
 namespace TestLibrary.TestSupport {
     public class TestCancellationException : Exception {
         // NOTE: Only ever throw TestCancellationException from TestPrograms, never from TestLibrary.
-        // TestExecutive deliberately doesn't check for TestCancellationExceptions thrown from TestLibrary.
         public TestCancellationException(String message = "") : base(message) { }
         public const String ClassName = nameof(TestCancellationException);
     }

@@ -219,35 +219,16 @@ namespace TestLibrary {
             PreRun();
             foreach (KeyValuePair<String, Test> test in this.configTest.Tests) {
                 try {
-                    // test.Value.Measurement = RunTest(t.Value, this.instruments, this._cancellationTokenSource.Token);
-                    // test.Value.Measurement = await RunTest(test.Value, this.instruments, this._cancellationTokenSource.Token);
-                    // Task<String> task = Task.Run(() => RunTest(test.Value, this.instruments, this._cancellationTokenSource.Token));
-                    Task<String> task = Task.Factory.StartNew(() => RunTestAsync(test.Value, this.instruments, this._cancellationTokenSource.Token), this._cancellationTokenSource.Token);
-                    task.Start();
-                    task.Wait();
-                    test.Value.Measurement = task.Result;
+                    test.Value.Measurement = await Task.Run(() => RunTestAsync(test.Value, this.instruments, this._cancellationTokenSource.Token));
                     test.Value.Result = TestTasks.EvaluateTestResult(test.Value);
-                } catch (AggregateException ae) {
-                    ae = ae.Flatten();
-                    if (ae.ToString().Contains(TestCancellationException.ClassName)) {
-                        test.Value.Result = EventCodes.CANCEL;
-                        Exception e;
-                        foreach (Exception aeie in ae.InnerExceptions) {
-                            while (aeie.InnerException != null) {
-                                e = aeie.InnerException;
-                                if (e is TestCancellationException) {
-                                    if (!String.IsNullOrEmpty(e.Message)) test.Value.Measurement = e.Message;
-                                    goto ExitAEHandler;
-                                }
-                            }
-                        }
-                    } else {
-                        StopRun(test, ae.ToString());
-                    }
-                    ExitAEHandler: break;
                 } catch (Exception e) {
-                    // NOTE: TestLibrary should never throw TestCancellationException, only TestPrograms, which aggregate TestCancellationExceptions into AggregateExceptions.
-                    StopRun(test, e.ToString());
+                    if (e.ToString().Contains(TestCancellationException.ClassName)) {
+                        test.Value.Result = EventCodes.CANCEL;
+                        while (!(e is TestCancellationException) && (e.InnerException != null)) e = e.InnerException;
+                        if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) test.Value.Measurement = e.Message;
+                    } else {
+                        StopRun(test, e.ToString());
+                    }
                     break;
                 } finally {
                     LogTasks.LogTest(test.Value);
