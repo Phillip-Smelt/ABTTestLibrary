@@ -13,6 +13,8 @@ using TestLibrary.Instruments;
 
 namespace TestLibrary.TestSupport {
     public class TestCancellationException : Exception {
+        // NOTE: Only ever throw TestCancellationException from TestPrograms, never from TestLibrary.
+        // TestExecutive deliberately doesn't check for TestCancellationExceptions thrown from TestLibrary.
         public TestCancellationException(String message = "") : base(message) { }
         public const String ClassName = nameof(TestCancellationException);
     }
@@ -77,9 +79,7 @@ namespace TestLibrary.TestSupport {
                 //   without erroring or cancelling, which shouldn't occur, but...
                 String s = String.Empty;
                 foreach (KeyValuePair<String, Test> t in configTest.Tests) s += $"ID: '{t.Key}' Result: '{t.Value.Result}'.{Environment.NewLine}";
-                Log.Error($"Encountered Test(s) with EventCodes.UNSET:{Environment.NewLine}{Environment.NewLine}{s}");
-                _ = MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
-                    $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UnexpectedErrorHandler($"Encountered Test(s) with EventCodes.UNSET:{Environment.NewLine}{Environment.NewLine}{s}");
                 return EventCodes.ERROR;
             }
             if (GetResultCount(configTest.Tests, EventCodes.FAIL) > 0) return EventCodes.FAIL;
@@ -90,14 +90,18 @@ namespace TestLibrary.TestSupport {
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
             foreach (KeyValuePair<String, Test> t in configTest.Tests) if (!validEvents.Contains(t.Value.Result)) invalidTests += $"ID: '{t.Key}' Result: '{t.Value.Result}'.{Environment.NewLine}";
-            Log.Error($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
-            _ = MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
-                $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            UnexpectedErrorHandler($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
             return EventCodes.ERROR;
         }
 
         private static Int32 GetResultCount(Dictionary<String, Test> tests, String eventCode) {
             return (from t in tests where String.Equals(t.Value.Result, eventCode) select t).Count();
+        }
+
+        public static void UnexpectedErrorHandler(String logMessage) {
+            Log.Error(logMessage);
+            MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
+                            $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

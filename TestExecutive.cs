@@ -11,10 +11,9 @@ using TestLibrary.Instruments;
 using TestLibrary.Logging;
 using TestLibrary.TestSupport;
 using Microsoft.VisualBasic;
-using Serilog;
 using System.Threading.Tasks;
 
-// TODO: Replace RichTextBox in this TestExecutiveForm with a DataGridView, change Logging output from current discrete records to DataGrid rows.
+// TODO: Replace RichTextBox in this TestExecutive with a DataGridView, change Logging output from current discrete records to DataGrid rows.
 // TODO: Update to .Net 7.0 & C# 11.0 when possible.
 // - Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas Instruments TIDP.SAA Fusion Library
 //   is compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
@@ -28,7 +27,7 @@ using System.Threading.Tasks;
 //  - https://github.com/Amphenol-Borisch-Technologies/TestProgram
 //  - https://github.com/Amphenol-Borisch-Technologies/TestLibraryTests
 namespace TestLibrary {
-    public abstract partial class TestExecutiveForm : Form {
+    public abstract partial class TestExecutive : Form {
         protected ConfigLib configLib;
         protected ConfigTest configTest;
         protected Dictionary<String, Instrument> instruments;
@@ -38,9 +37,9 @@ namespace TestLibrary {
         private Boolean _cancelled;
         private CancellationTokenSource _cancellationTokenSource;
 
-        protected abstract Task<String> RunTest(Test test, Dictionary<String, Instrument> instruments, CancellationToken cancellationToken);
+        protected abstract Task<String> RunTestAsync(Test test, Dictionary<String, Instrument> instruments, CancellationToken cancellationToken);
 
-        protected TestExecutiveForm(Icon icon) {
+        protected TestExecutive(Icon icon) {
             this.InitializeComponent();
             this._appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
             this._libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -83,12 +82,10 @@ namespace TestLibrary {
             this.ButtonStartReset(Enabled: true);
         }
 
-        private void ButtonStart_Clicked(Object sender, EventArgs e) {
+        private async void ButtonStart_Clicked(Object sender, EventArgs e) {
             this.configLib.UUT.SerialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.configLib.UUT.SerialNumber);
             if (String.Equals(this.configLib.UUT.SerialNumber, String.Empty)) return;
-            this.PreRun();
-            this.Run();
-            this.PostRun();
+            await this.RunAsync();
         }
 
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
@@ -218,13 +215,15 @@ namespace TestLibrary {
             this.ButtonCancelReset(Enabled: true);
         }
 
-        private void Run() {
+        private async Task RunAsync() {
+            PreRun();
             foreach (KeyValuePair<String, Test> test in this.configTest.Tests) {
                 try {
-                    // TODO: Application.DoEvents(); // Necessary for ButtonEmergencyStop_Clicked() & ButtonCancel_Clicked().
                     // test.Value.Measurement = RunTest(t.Value, this.instruments, this._cancellationTokenSource.Token);
                     // test.Value.Measurement = await RunTest(test.Value, this.instruments, this._cancellationTokenSource.Token);
-                    Task<String> task = Task.Run(() => RunTest(test.Value, this.instruments, this._cancellationTokenSource.Token));
+                    // Task<String> task = Task.Run(() => RunTest(test.Value, this.instruments, this._cancellationTokenSource.Token));
+                    Task<String> task = Task.Factory.StartNew(() => RunTestAsync(test.Value, this.instruments, this._cancellationTokenSource.Token), this._cancellationTokenSource.Token);
+                    task.Start();
                     task.Wait();
                     test.Value.Measurement = task.Result;
                     test.Value.Result = TestTasks.EvaluateTestResult(test.Value);
@@ -232,29 +231,23 @@ namespace TestLibrary {
                     ae = ae.Flatten();
                     if (ae.ToString().Contains(TestCancellationException.ClassName)) {
                         test.Value.Result = EventCodes.CANCEL;
-                        foreach (Exception ie in ae.InnerExceptions) {
-                            if ((ie is TargetInvocationException) && (ie.InnerException is TestCancellationException)) {
-                                if(!String.IsNullOrEmpty(ie.InnerException.Message)) test.Value.Measurement = ie.InnerException.Message;
-                                break;
+                        Exception e;
+                        foreach (Exception aeie in ae.InnerExceptions) {
+                            while (aeie.InnerException != null) {
+                                e = aeie.InnerException;
+                                if (e is TestCancellationException) {
+                                    if (!String.IsNullOrEmpty(e.Message)) test.Value.Measurement = e.Message;
+                                    goto ExitAEHandler;
+                                }
                             }
                         }
                     } else {
-                        AbortRun(test, ae.ToString());
+                        StopRun(test, ae.ToString());
                     }
-                    break;
+                    ExitAEHandler: break;
                 } catch (Exception e) {
-                    if (e.ToString().Contains(TestCancellationException.ClassName)) {
-                        test.Value.Result = EventCodes.CANCEL;
-                        while (e.InnerException != null) {
-                            e = e.InnerException;
-                            if (e is TestCancellationException) {
-                                if (!String.IsNullOrEmpty(e.Message)) test.Value.Measurement = e.Message;
-                                break;
-                            }
-                        }
-                    } else {
-                        AbortRun(test, e.ToString());
-                    }
+                    // NOTE: TestLibrary should never throw TestCancellationException, only TestPrograms, which aggregate TestCancellationExceptions into AggregateExceptions.
+                    StopRun(test, e.ToString());
                     break;
                 } finally {
                     LogTasks.LogTest(test.Value);
@@ -264,14 +257,13 @@ namespace TestLibrary {
                     break;
                 }
             }
+            PostRun();
         }
 
-        private void AbortRun(KeyValuePair<String, Test> test, String exceptionString) {
+        private void StopRun(KeyValuePair<String, Test> test, String exceptionString) {
             InstrumentTasks.InstrumentResetClear(this.instruments);
             test.Value.Result = EventCodes.ERROR;
-            Log.Error(exceptionString.ToString());
-            _ = MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
-                $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            TestTasks.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
         private void PostRun() {

@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 
 namespace TestLibrary {
-    public abstract partial class TestExecutiveForm : Form {
+    public abstract partial class TestExecutive : Form {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -24,7 +24,7 @@ namespace TestLibrary {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestExecutiveForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestExecutive));
             this.ButtonStart = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.TextUUTResult = new System.Windows.Forms.TextBox();
@@ -141,7 +141,7 @@ namespace TestLibrary {
             this.ButtonEmergencyStop.UseVisualStyleBackColor = true;
             this.ButtonEmergencyStop.Click += new System.EventHandler(this.ButtonEmergencyStop_Clicked);
             // 
-            // TestExecutiveForm
+            // TestExecutive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -156,7 +156,7 @@ namespace TestLibrary {
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonStart);
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "TestExecutiveForm";
+            this.Name = "TestExecutive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Test Program";
             this.Load += new System.EventHandler(this.Form_Load);
