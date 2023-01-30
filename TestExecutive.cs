@@ -127,7 +127,7 @@ namespace TestLibrary {
             //          because any downstream failures are likely due to the UUT not being powered
             //          correctly.
             //        - So, simply throw a TestCancellationException if an applied power bus fails.
-            //        - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestProgram/blob/master/TestProgram.Shared.cs
+            //        - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestProgram/blob/master/TestProgram.T-Shared.cs
             //        - Test Developer must set TestCancellationException's message to the Measured
             //          value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
         }

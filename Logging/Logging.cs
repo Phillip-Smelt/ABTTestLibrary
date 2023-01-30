@@ -26,7 +26,7 @@ namespace TestLibrary.Logging {
                 Log.Information($"UUT Number             : {configLib.UUT.Number}");
                 Log.Information($"UUT Revision           : {configLib.UUT.Revision}");
                 Log.Information($"UUT Serial Number      : {configLib.UUT.SerialNumber}");
-                Log.Information($"UUT Group ID           : {group.ID}");
+                Log.Information($"UUT Group ID           : {group.ID}\n");
                 return;
                 // Log Header isn't written to Console when Group not Required, futher emphasizing test results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
@@ -63,14 +63,13 @@ namespace TestLibrary.Logging {
             Log.Information($"UUT Group ID           : {group.ID}");
             Log.Information($"UUT Group Revision     : {group.Revision}");
             Log.Information($"UUT Group Name         : {group.Name}");
-            Log.Information($"UUT Group Description  : {Environment.NewLine}{group.Description}{Environment.NewLine}");
-            StringBuilder s = new StringBuilder("\t");
-            foreach (KeyValuePair<String, Test> test in configTest.Tests) s.Append($"{test.Value.ID}, ");
-            Log.Information($"UUT Group Tests        : {Environment.NewLine}{s}{Environment.NewLine}");
+            Log.Information($"UUT Group Description  : \n{group.Description}\n");
+            StringBuilder s = new StringBuilder();
+            foreach (KeyValuePair<String, Test> test in configTest.Tests) s.Append($"\t{test.Value.ID,15}: {test.Value.Description}\n");
+            Log.Information($"UUT Group Tests        : \n{s}");
             Log.Information($"Test Operator          : {UserPrincipal.Current.DisplayName}");
             // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             // Haven't used it on non-Active Directory PCs.
-            Log.Information($"Test Operator          : {UserPrincipal.Current.DisplayName}");
             Log.Information($"UUT Serial Number      : {configLib.UUT.SerialNumber}\n");
             Log.Debug($"Environment.UserDomainName         : {Environment.UserDomainName}");
             Log.Debug($"Environment.MachineName            : {Environment.MachineName}");
@@ -82,31 +81,31 @@ namespace TestLibrary.Logging {
 
         public static void LogTest(Test test) {
             String message;
-            message =  $"Test ID '{test.ID}'{Environment.NewLine}";
-            message += $"  Revision    : {test.Revision}{Environment.NewLine}";
-            message += $"  Description : {test.Description}{Environment.NewLine}";
-            message += $"  Test Type   : {test.ClassName}{Environment.NewLine}";
+            message =  $"Test ID '{test.ID}'\n";
+            message += $"  Revision    : {test.Revision}\n";
+            message += $"  Description : {test.Description}\n";
+            message += $"  Test Type   : {test.ClassName}\n";
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
                     TestCustomizable tc = (TestCustomizable)test.ClassObject;
-                    foreach (KeyValuePair<String, String> kvp in tc.Arguments) message += $"  Key=Value   : {kvp.Key}={kvp.Value}{Environment.NewLine}";
+                    foreach (KeyValuePair<String, String> kvp in tc.Arguments) message += $"  Key=Value   : {kvp.Key}={kvp.Value}\n";
                     break;
                 case TestISP.ClassName:
                     TestISP tisp = (TestISP)test.ClassObject;
-                    message += $"  Expected    : {tisp.ISPResult}{Environment.NewLine}";
-                    message += $"  Actual      : {test.Measurement}{Environment.NewLine}";
+                    message += $"  Expected    : {tisp.ISPResult}\n";
+                    message += $"  Actual      : {test.Measurement}\n";
                     break;
                 case TestNumerical.ClassName:
                     TestNumerical tn = (TestNumerical)test.ClassObject;
-                    message += $"  High Limit  : {tn.High:G}{Environment.NewLine}";
-                    message += $"  Measurement : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}{Environment.NewLine}";
-                    message += $"  Low Limit   : {tn.Low:G}{Environment.NewLine}";
-                    message += $"  Units       : {tn.Unit}{tn.UnitType}{Environment.NewLine}";
+                    message += $"  High Limit  : {tn.High:G}\n";
+                    message += $"  Measurement : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}\n";
+                    message += $"  Low Limit   : {tn.Low:G}\n";
+                    message += $"  Units       : {tn.Unit}{tn.UnitType}\n";
                     break;
                 case TestTextual.ClassName:
                     TestTextual tt = (TestTextual)test.ClassObject;
-                    message += $"  Expected    : {tt.Text}{Environment.NewLine}";
-                    message += $"  Actual      : {test.Measurement}{Environment.NewLine}";
+                    message += $"  Expected    : {tt.Text}\n";
+                    message += $"  Actual      : {test.Measurement}\n";
                     break;
                 default:
                     throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
