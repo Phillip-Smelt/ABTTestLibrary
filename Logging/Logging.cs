@@ -65,7 +65,7 @@ namespace TestLibrary.Logging {
             Log.Information($"UUT Group Name         : {group.Name}");
             Log.Information($"UUT Group Description  : {Environment.NewLine}{group.Description}{Environment.NewLine}");
             StringBuilder s = new StringBuilder("\t");
-            foreach (KeyValuePair<String, Test> test in configTest.Tests) s.Append($"{test.Value.ID}");
+            foreach (KeyValuePair<String, Test> test in configTest.Tests) s.Append($"{test.Value.ID}, ");
             Log.Information($"UUT Group Tests        : {Environment.NewLine}{s}{Environment.NewLine}");
             Log.Information($"Test Operator          : {UserPrincipal.Current.DisplayName}");
             // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
