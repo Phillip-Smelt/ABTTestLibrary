@@ -88,6 +88,7 @@ namespace TestLibrary.Instruments {
         public const String POWER_PRELIMINARY = "POWER_PRELIMINARY";
         private static Dictionary<String, String> InstrumentsToVISA_Addresses = new Dictionary<String, String> {
             // TODO: Add MULTI_METER's address, enable other Instruments.
+            // NOTE: Add/remove instruments as needed.
             // VISA (Virtual Instrument Software Architecture) Resource Names.
             // - https://www.ivifoundation.org/specifications/default.aspx
             // - Technically, these are actually VISA 'Resource Names' instead of VISA 'Addresses',
@@ -96,9 +97,9 @@ namespace TestLibrary.Instruments {
             // { MULTI_METER, "TBD" },
             // { WAVE_GENERATOR,"USB0::0x0957::0x2507::MY59003604::0::INSTR" },
             // { POWER_MAIN, "USB0::0x2A8D::0x3402::MY61002598::0::INSTR" },
-            // { POWER_PRELIMINARY , "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
-            // { POWER_PRIMARY, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
-            // { POWER_SECONDARY, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" }
+            { POWER_PRELIMINARY , "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
+            { POWER_PRIMARY, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
+            { POWER_SECONDARY, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" }
             };
         public String ID { get; private set; }
         public String Category { get; private set; }

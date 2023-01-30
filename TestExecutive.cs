@@ -211,7 +211,7 @@ namespace TestLibrary {
             }
             this.configLib.UUT.EventCode = EventCodes.UNSET;
             InstrumentTasks.SCPI99Reset(this.instruments);
-            LogTasks.Start(this.configLib, this._appAssemblyVersion, this._libraryAssemblyVersion, this.configTest.Group, ref this.rtfResults);
+            LogTasks.Start(this.configLib, this.configTest, this._appAssemblyVersion, this._libraryAssemblyVersion, this.configTest.Group, ref this.rtfResults);
             this.ButtonCancelReset(Enabled: true);
         }
 

@@ -8,12 +8,13 @@ using TestLibrary.TestSupport;
 using Serilog;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 
 namespace TestLibrary.Logging {
     public static class LogTasks {
         public const String LOGGER_TEMPLATE = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}";
 
-        public static void Start(ConfigLib configLib, String appAssemblyVersion, String libraryAssemblyVersion, Group group, ref RichTextBox rtfResults) {
+        public static void Start(ConfigLib configLib, ConfigTest configTest, String appAssemblyVersion, String libraryAssemblyVersion, Group group, ref RichTextBox rtfResults) {
             if (!group.Required) {
                 // When non-Required Groups are executed, test data is never saved to config.Logger.FilePath as Rich Text.  Never.
                 // RichTextBox only. 
@@ -62,8 +63,11 @@ namespace TestLibrary.Logging {
             Log.Information($"UUT Group ID           : {group.ID}");
             Log.Information($"UUT Group Revision     : {group.Revision}");
             Log.Information($"UUT Group Name         : {group.Name}");
-            Log.Information($"UUT Group Description  :{Environment.NewLine}{Environment.NewLine}" +
-                $"{group.Description}{Environment.NewLine}");
+            Log.Information($"UUT Group Description  : {Environment.NewLine}{group.Description}{Environment.NewLine}");
+            StringBuilder s = new StringBuilder("\t");
+            foreach (KeyValuePair<String, Test> test in configTest.Tests) s.Append($"{test.Value.ID}");
+            Log.Information($"UUT Group Tests        : {Environment.NewLine}{s}{Environment.NewLine}");
+            Log.Information($"Test Operator          : {UserPrincipal.Current.DisplayName}");
             // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             // Haven't used it on non-Active Directory PCs.
             Log.Information($"Test Operator          : {UserPrincipal.Current.DisplayName}");
