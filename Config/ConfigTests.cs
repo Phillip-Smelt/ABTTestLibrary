@@ -61,7 +61,7 @@ namespace TestLibrary.Config {
             if (this.Arguments.Count == 0) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 1 or more key=value arguments:{Environment.NewLine}" +
                     $"   Example: 'NameFirst=Harry|" +
                     $"             NameLast=Potter|" +
-                    $"             Occupation=Wizard'{Environment.NewLine}" +
+                    $"             Occupation=Auror'{Environment.NewLine}" +
                     $"   Actual : '{Arguments}'");
         }
     }
