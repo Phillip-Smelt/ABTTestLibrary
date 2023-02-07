@@ -98,7 +98,7 @@ namespace TestLibrary.TestSupport {
 
         public static void UnexpectedErrorHandler(String logMessage) {
             Log.Error(logMessage);
-            MessageBox.Show($"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
+            MessageBox.Show(Form.ActiveForm, $"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
                             $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }

@@ -81,7 +81,7 @@ namespace TestLibrary.Config {
             this.radioButtonRequired.TabStop = true;
             this.radioButtonRequired.Text = "Required";
             this.radioButtonRequired.UseVisualStyleBackColor = true;
-            this.radioButtonRequired.CheckedChanged += new System.EventHandler(this.groupBoxRequired_CheckedChanged);
+            this.radioButtonRequired.CheckedChanged += new System.EventHandler(this.GroupBoxRequired_CheckedChanged);
             // 
             // radioButtonNotRequired
             // 
@@ -93,7 +93,7 @@ namespace TestLibrary.Config {
             this.radioButtonNotRequired.TabStop = true;
             this.radioButtonNotRequired.Text = "Not Required";
             this.radioButtonNotRequired.UseVisualStyleBackColor = true;
-            this.radioButtonNotRequired.CheckedChanged += new System.EventHandler(this.groupBoxRequired_CheckedChanged);
+            this.radioButtonNotRequired.CheckedChanged += new System.EventHandler(this.GroupBoxRequired_CheckedChanged);
             // 
             // groupBoxRequired
             // 

@@ -69,7 +69,7 @@ namespace TestLibrary {
                     // Paths with embedded spaces require enclosing double-quotes (").
                     // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-                } else MessageBox.Show($"Path {this.configLib.UUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                } else MessageBox.Show(Form.ActiveForm, $"Path {this.configLib.UUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             this.ButtonSelectGroup.Enabled = true;
         }
