@@ -122,10 +122,6 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TIDP.SAA, Version=3.0.8.15626, Culture=neutral, PublicKeyToken=4ce2ce38201aeb82, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\TIDP.SAA\v4.0_3.0.8.15626__4ce2ce38201aeb82\TIDP.SAA.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
