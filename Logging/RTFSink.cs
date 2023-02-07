@@ -2,11 +2,11 @@
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using TestLibrary.TestSupport;
-using Serilog.Core;
+using Serilog.Core; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
+using TestLibrary.TestSupport;
 
 namespace TestLibrary.Logging {
     public class RichTextBoxSink : ILogEventSink {

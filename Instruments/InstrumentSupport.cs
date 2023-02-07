@@ -17,7 +17,7 @@ using Keysight.KtEL30000; // https://www.keysight.com/us/en/lib/software-detail/
 using TestLibrary.Instruments.Keysight;
 
 // NOTE: Consider adding ScpiQuery & ScpiCommand methods to all Instrument classes, to pass raw SCPI strings to the Instrument.
-// Eliminates need to wrap every SCPI command, and allows all Instrument specific commands/queries to be handle by the Instrument
+// Eliminates need to wrap every SCPI command, and allows all Instrument specific commands/queries to be handled by the Instrument
 // classes, rather than directly invoking them from TestPrograms.
 namespace TestLibrary.Instruments {
     public static class InstrumentTasks {

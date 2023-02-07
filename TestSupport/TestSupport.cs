@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
-using Serilog;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using TestLibrary.Config;
 
 namespace TestLibrary.TestSupport {
