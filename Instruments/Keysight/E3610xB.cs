@@ -67,8 +67,8 @@ namespace TestLibrary.Instruments.Keysight {
                 //  - [SOURce:] CURRent: PROTection: DELay[:TIME]?[MINimum | MAXimum]
                 //  - Sets the time (in milliseconds) that the overcurrent protection is temporarily disabled after a current level change.
                 //  - The query returns a number of the form +#.########E+##.
-                // However, the MIN/MAX query returned values are 0/32.767 respectively, which I take to mean 0 to 32.767 *seconds* instead of *milli-seconds*.
                 //
+                // However, the MIN/MAX query returned values are 0/32.767 respectively, which I assume are 0 to 32.767 *seconds* instead of *milli-seconds*.
                 // Keysight's E36100B Series Operating and Service Guide states the same thing.
                 //  - https://www.keysight.com/us/en/assets/9018-04288/user-manuals/9018-04288.pdf
                 //
