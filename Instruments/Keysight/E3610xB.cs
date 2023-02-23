@@ -38,28 +38,28 @@ namespace TestLibrary.Instruments.Keysight {
 
         public static void Off(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.OUTPut.STATe.Command(false); }
 
-        public static void ON(Instrument instrument, Double Volts, Double Amps, Double SettlingDelaySeconds = 0.5) {
+        public static void ON(Instrument instrument, Double VoltsDC, Double AmpsDC, Double SettlingDelaySeconds = 0.5) {
             try {
                 String s;
-                ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", out Double V);
-                ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", out Double A);
-                if ((Volts < V) || (Amps < A)) {
+                ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", out Double VDC);
+                ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", out Double ADC);
+                if ((VoltsDC < VDC) || (AmpsDC < ADC)) {
                     s = $"< MINimum Voltage/Current.{Environment.NewLine}";
-                    s += $" - Programmed:  Voltage={Volts}/Current={Amps}.{Environment.NewLine}";
-                    s += $" - Minimal   :  Voltage={V}/Current={A}.";
+                    s += $" - Programmed:  Voltage={VoltsDC}/Current={AmpsDC}.{Environment.NewLine}";
+                    s += $" - Minimal   :  Voltage={VDC}/Current={ADC}.";
                     throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
                 }
-                ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MAXimum", out V);
-                ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", out A);
-                if ((Volts > V) || (Amps > A)) {
+                ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MAXimum", out VDC);
+                ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", out ADC);
+                if ((VoltsDC > VDC) || (AmpsDC > ADC)) {
                     s = $"> MAXimum Voltage/Current.{Environment.NewLine}";
-                    s += $" - Programmed:  Voltage={Volts}/Current={Amps}.{2}";
-                    s += $" - Maximal   :  Voltage={V}/Current={A}.";
+                    s += $" - Programmed:  Voltage={VoltsDC}/Current={AmpsDC}.{2}";
+                    s += $" - Maximal   :  Voltage={VDC}/Current={ADC}.";
                     throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
                 }
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
-                ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(Volts);
-                ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(Amps);
+                ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC);
+                ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(VoltsDC);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(SettlingDelaySeconds);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false);
@@ -71,10 +71,10 @@ namespace TestLibrary.Instruments.Keysight {
             }
         }
 
-        public static (Double V, Double A) MeasureVA(Instrument instrument) {
-            ((AgE3610XB)instrument.Instance).SCPI.MEASure.VOLTage.DC.Query(out Double V);
-            ((AgE3610XB)instrument.Instance).SCPI.MEASure.CURRent.DC.Query(out Double A);
-            return (V, A);
+        public static (Double VoltsDC, Double AmpsDC) MeasureVA(Instrument instrument) {
+            ((AgE3610XB)instrument.Instance).SCPI.MEASure.VOLTage.DC.Query(out Double VDC);
+            ((AgE3610XB)instrument.Instance).SCPI.MEASure.CURRent.DC.Query(out Double ADC);
+            return (VDC, ADC);
         }
     }
 }

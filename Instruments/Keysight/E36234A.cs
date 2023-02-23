@@ -52,29 +52,29 @@ namespace TestLibrary.Instruments.Keysight {
             ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(false, sChannel);
         }
 
-        public static void ON(Instrument instrument, Double Volts, Double Amps, String sChannel, Double SettlingDelaySeconds = 0.5) {
+        public static void ON(Instrument instrument, Double VoltsDC, Double AmpsDC, String sChannel, Double SettlingDelaySeconds = 0.5) {
             ConvertChannel(instrument, sChannel, out Int32 iChannel);
             try {
                 String s;
-                ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", sChannel, out Double[] V);
-                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", sChannel, out Double[] A);
-                if ((Volts < V[iChannel]) || (Amps < A[iChannel])) {
+                ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", sChannel, out Double[] VDC);
+                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", sChannel, out Double[] ADC);
+                if ((VoltsDC < VDC[iChannel]) || (AmpsDC < ADC[iChannel])) {
                     s = $"< MINimum Voltage/Current with Channel '{sChannel}'.{Environment.NewLine}";
-                    s += $" - Programmed:  Voltage={Volts}/Current={Amps}.{Environment.NewLine}";
-                    s += $" - Minimal   :  Voltage={V[iChannel]}/Current={A[iChannel]}.";
+                    s += $" - Programmed:  Voltage={VoltsDC}/Current={AmpsDC}.{Environment.NewLine}";
+                    s += $" - Minimal   :  Voltage={VDC[iChannel]}/Current={ADC[iChannel]}.";
                     throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
                 }
-                ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MAXimum", sChannel, out V);
-                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", sChannel, out A);
-                if ((Volts < V[iChannel]) || (Amps < A[iChannel])) {
+                ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MAXimum", sChannel, out VDC);
+                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", sChannel, out ADC);
+                if ((VoltsDC < VDC[iChannel]) || (AmpsDC < ADC[iChannel])) {
                     s = $"> MAXimum Voltage/Current with Channel '{sChannel}'.{Environment.NewLine}";
-                    s += $" - Programmed:  Voltage={Volts}/Current={Amps}.{Environment.NewLine}";
-                    s += $" - Maximal   :  Voltage={V[iChannel]}/Current={A[iChannel]}.";
+                    s += $" - Programmed:  Voltage={VoltsDC}/Current={AmpsDC}.{Environment.NewLine}";
+                    s += $" - Maximal   :  Voltage={VDC[iChannel]}/Current={ADC[iChannel]}.";
                     throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
                 }
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal", sChannel);
-                ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(Volts, sChannel);
-                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(Amps, sChannel);
+                ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC, sChannel);
+                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(SettlingDelaySeconds, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(true, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true, sChannel);
@@ -86,11 +86,11 @@ namespace TestLibrary.Instruments.Keysight {
             }
         }
 
-        public static (Double V, Double A) MeasureVA(Instrument instrument, String sChannel) {
+        public static (Double VoltsDC, Double AmpsDC) MeasureVA(Instrument instrument, String sChannel) {
             ConvertChannel(instrument, sChannel, out Int32 iChannel);
-            ((AgE36200)instrument.Instance).SCPI.MEASure.SCALar.VOLTage.DC.Query(sChannel, out Double[] V);
-            ((AgE36200)instrument.Instance).SCPI.MEASure.SCALar.CURRent.DC.Query(sChannel, out Double[] A);
-            return (V[iChannel], A[iChannel]);
+            ((AgE36200)instrument.Instance).SCPI.MEASure.SCALar.VOLTage.DC.Query(sChannel, out Double[] VDC);
+            ((AgE36200)instrument.Instance).SCPI.MEASure.SCALar.CURRent.DC.Query(sChannel, out Double[] ADC);
+            return (VDC[iChannel], ADC[iChannel]);
         }
     }
 }
