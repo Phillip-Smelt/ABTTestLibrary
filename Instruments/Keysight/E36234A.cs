@@ -52,30 +52,41 @@ namespace TestLibrary.Instruments.Keysight {
             ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(false, sChannel);
         }
 
-        public static void ON(Instrument instrument, Double VoltsDC, Double AmpsDC, String sChannel, Double SettlingDelaySeconds = 0.5) {
+        public static void ON(Instrument instrument, Double VoltsDC, Double AmpsDC, String sChannel, Double CurrentProtectionDelaySeconds = 0.5) {
             ConvertChannel(instrument, sChannel, out Int32 iChannel);
             try {
                 String s;
-                ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", sChannel, out Double[] VDC);
-                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", sChannel, out Double[] ADC);
-                if ((VoltsDC < VDC[iChannel]) || (AmpsDC < ADC[iChannel])) {
-                    s = $"< MINimum Voltage/Current with Channel '{sChannel}'.{Environment.NewLine}";
-                    s += $" - Programmed:  Voltage={VoltsDC}/Current={AmpsDC}.{Environment.NewLine}";
-                    s += $" - Minimal   :  Voltage={VDC[iChannel]}/Current={ADC[iChannel]}.";
+                ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", sChannel, out Double[] min);
+                ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MAXimum", sChannel, out Double[] max);
+                if ((VoltsDC < min[iChannel]) || (VoltsDC > max[iChannel])) {
+                    s = $"< MINimum/MAXimum Voltage.{Environment.NewLine}";
+                    s += $" - MINimum   :  Voltage={min[iChannel]} VDC.{Environment.NewLine}";
+                    s += $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}";
+                    s += $" - MAXimum   :  Voltage={max[iChannel]} VDC.";
                     throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
                 }
-                ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MAXimum", sChannel, out VDC);
-                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", sChannel, out ADC);
-                if ((VoltsDC < VDC[iChannel]) || (AmpsDC < ADC[iChannel])) {
-                    s = $"> MAXimum Voltage/Current with Channel '{sChannel}'.{Environment.NewLine}";
-                    s += $" - Programmed:  Voltage={VoltsDC}/Current={AmpsDC}.{Environment.NewLine}";
-                    s += $" - Maximal   :  Voltage={VDC[iChannel]}/Current={ADC[iChannel]}.";
+                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", sChannel, out min);
+                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", sChannel, out max);
+                if ((AmpsDC < min[iChannel]) || (AmpsDC > max[iChannel])) {
+                    s = $"> MINimum/MAXimum Current.{Environment.NewLine}";
+                    s += $" - MINimum   :  Current={min[iChannel]} ADC.{Environment.NewLine}";
+                    s += $" - Programmed:  Current={AmpsDC} ADC.{Environment.NewLine}";
+                    s += $" - MAXimum   :  Current={max[iChannel]} ADC.";
+                    throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
+                }
+                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MINimum", sChannel, out min);
+                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MAXimum", sChannel, out max);
+                if ((CurrentProtectionDelaySeconds < min[iChannel]) || (CurrentProtectionDelaySeconds > max[iChannel])) {
+                    s = $"> MINimum/MAXimum Current Protection Delay.{Environment.NewLine}";
+                    s += $" - MINimum   :  Delay={min[iChannel]} seconds.{Environment.NewLine}";
+                    s += $" - Programmed:  Delay={CurrentProtectionDelaySeconds} seconds.{Environment.NewLine}";
+                    s += $" - MAXimum   :  Delay={max[iChannel]} seconds.";
                     throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
                 }
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal", sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC, sChannel);
-                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(SettlingDelaySeconds, sChannel);
+                ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(CurrentProtectionDelaySeconds, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(true, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false, sChannel);
@@ -86,8 +97,9 @@ namespace TestLibrary.Instruments.Keysight {
             }
         }
 
-        public static (Double VoltsDC, Double AmpsDC) MeasureVA(Instrument instrument, String sChannel) {
-            ConvertChannel(instrument, sChannel, out Int32 iChannel);
+        public static (Double VoltsDC, Double AmpsDC) MeasureVA(Instrument instrument, String sChannel, Double MeasureDelaySeconds = 0) {
+                ConvertChannel(instrument, sChannel, out Int32 iChannel);
+            if (MeasureDelaySeconds > 0) Thread.Sleep((Int32)(MeasureDelaySeconds * 1000));
             ((AgE36200)instrument.Instance).SCPI.MEASure.SCALar.VOLTage.DC.Query(sChannel, out Double[] VDC);
             ((AgE36200)instrument.Instance).SCPI.MEASure.SCALar.CURRent.DC.Query(sChannel, out Double[] ADC);
             return (VDC[iChannel], ADC[iChannel]);
