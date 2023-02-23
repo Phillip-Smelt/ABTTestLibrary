@@ -53,13 +53,13 @@ namespace TestLibrary.Instruments.Keysight {
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", out ADC);
                 if ((VoltsDC > VDC) || (AmpsDC > ADC)) {
                     s = $"> MAXimum Voltage/Current.{Environment.NewLine}";
-                    s += $" - Programmed:  Voltage={VoltsDC}/Current={AmpsDC}.{2}";
+                    s += $" - Programmed:  Voltage={VoltsDC}/Current={AmpsDC}.{Environment.NewLine}";
                     s += $" - Maximal   :  Voltage={VDC}/Current={ADC}.";
                     throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
                 }
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC);
-                ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(VoltsDC);
+                ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(SettlingDelaySeconds);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false);
