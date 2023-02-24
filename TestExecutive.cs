@@ -37,7 +37,7 @@ namespace TestLibrary {
         private Boolean _cancelled;
         private CancellationTokenSource _cancellationTokenSource;
 
-        protected abstract Task<String> RunTestAsync(Test test, Dictionary<String, Instrument> instruments, CancellationToken cancellationToken);
+        protected abstract Task<String> RunTestAsync(Test test, Dictionary<String, Instrument> instruments, CancellationToken CT);
 
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();
