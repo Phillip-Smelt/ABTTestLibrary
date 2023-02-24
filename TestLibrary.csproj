@@ -40,6 +40,7 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Instruments\MeasurementComputing\ERB24.cs" />
     <Compile Include="Logging\Logging.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -103,6 +104,10 @@
     <Reference Include="Keysight.KtEL30000.Fx45, Version=1.1.0.0, Culture=neutral, PublicKeyToken=7e3f5d0cd5f27736, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\IVI Foundation\IVI\Microsoft.NET\Framework32\v4.5.50709\Keysight.KtEL30000 1.1.0\Keysight.KtEL30000.Fx45.dll</HintPath>
+    </Reference>
+    <Reference Include="MccDaq, Version=2.9.0.0, Culture=neutral, PublicKeyToken=a37eefcf5c6ca10a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Measurement Computing\DAQ\MccDaq.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic" />
