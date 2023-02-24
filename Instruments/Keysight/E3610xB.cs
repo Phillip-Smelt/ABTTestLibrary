@@ -39,7 +39,7 @@ namespace TestLibrary.Instruments.Keysight {
 
         public static void Off(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.OUTPut.STATe.Command(false); }
 
-        public static void ON(Instrument instrument, Double VoltsDC, Double AmpsDC, Double CurrentProtectionDelaySeconds = 0.5) {
+        public static void ON(Instrument instrument, Double VoltsDC, Double AmpsDC, Double CurrentProtectionDelaySeconds = 0, Double MeasureDelaySeconds = 0) {
             try {
                 String s;
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", out Double min);
@@ -86,6 +86,7 @@ namespace TestLibrary.Instruments.Keysight {
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false);
                 ((AgE3610XB)instrument.Instance).SCPI.OUTPut.STATe.Command(true);
+                if (MeasureDelaySeconds > 0) Thread.Sleep((Int32)(MeasureDelaySeconds * 1000));
             } catch (InvalidOperationException) {
                 throw;
             } catch (Exception e) {
@@ -93,8 +94,7 @@ namespace TestLibrary.Instruments.Keysight {
             }
         }
 
-        public static (Double VoltsDC, Double AmpsDC) MeasureVA(Instrument instrument, Double MeasureDelaySeconds = 0) {
-            if (MeasureDelaySeconds > 0) Thread.Sleep((Int32)(MeasureDelaySeconds * 1000));
+        public static (Double VoltsDC, Double AmpsDC) MeasureVA(Instrument instrument) {
             ((AgE3610XB)instrument.Instance).SCPI.MEASure.VOLTage.DC.Query(out Double VDC);
             ((AgE3610XB)instrument.Instance).SCPI.MEASure.CURRent.DC.Query(out Double ADC);
             return (VDC, ADC);

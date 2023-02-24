@@ -52,7 +52,7 @@ namespace TestLibrary.Instruments.Keysight {
             ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(false, sChannel);
         }
 
-        public static void ON(Instrument instrument, Double VoltsDC, Double AmpsDC, String sChannel, Double CurrentProtectionDelaySeconds = 0.5) {
+        public static void ON(Instrument instrument, Double VoltsDC, Double AmpsDC, String sChannel, Double CurrentProtectionDelaySeconds = 0, Double MeasureDelaySeconds = 0) {
             ConvertChannel(instrument, sChannel, out Int32 iChannel);
             try {
                 String s;
@@ -87,9 +87,10 @@ namespace TestLibrary.Instruments.Keysight {
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(CurrentProtectionDelaySeconds, sChannel);
-                ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(true, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true, sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false, sChannel);
+                ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(true, sChannel);
+                if (MeasureDelaySeconds > 0) Thread.Sleep((Int32)(MeasureDelaySeconds * 1000));
             } catch (InvalidOperationException) {
                 throw;
             } catch (Exception e) {
@@ -97,9 +98,8 @@ namespace TestLibrary.Instruments.Keysight {
             }
         }
 
-        public static (Double VoltsDC, Double AmpsDC) MeasureVA(Instrument instrument, String sChannel, Double MeasureDelaySeconds = 0) {
-                ConvertChannel(instrument, sChannel, out Int32 iChannel);
-            if (MeasureDelaySeconds > 0) Thread.Sleep((Int32)(MeasureDelaySeconds * 1000));
+        public static (Double VoltsDC, Double AmpsDC) MeasureVA(Instrument instrument, String sChannel) {
+            ConvertChannel(instrument, sChannel, out Int32 iChannel);
             ((AgE36200)instrument.Instance).SCPI.MEASure.SCALar.VOLTage.DC.Query(sChannel, out Double[] VDC);
             ((AgE36200)instrument.Instance).SCPI.MEASure.SCALar.CURRent.DC.Query(sChannel, out Double[] ADC);
             return (VDC[iChannel], ADC[iChannel]);
