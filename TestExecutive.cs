@@ -31,6 +31,7 @@ namespace TestLibrary {
         protected ConfigLib configLib;
         protected ConfigTest configTest;
         protected Dictionary<String, Instrument> instruments;
+        // TODO: Create an Instruments class that's simply Dictionary<String, Instrument>.  Concises Dictionary<String, Instrument> everywhere used.
         // NOTE: Above object declarations protected so they can be inhereited & extended if needed.
         private String _appAssemblyVersion;
         private String _libraryAssemblyVersion;

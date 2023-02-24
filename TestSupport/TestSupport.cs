@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using TestLibrary.Config;
+using TestLibrary.Instruments;
 
 namespace TestLibrary.TestSupport {
     public class TestCancellationException : Exception {
@@ -35,6 +38,89 @@ namespace TestLibrary.TestSupport {
     }
 
     public static class TestTasks {
+
+        private static void ISP_Connect(String ISP, String Connector, Dictionary<String, Instrument> instruments) {
+            InstrumentTasks.SCPI99Reset(instruments);
+            _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
+                    $"Connect '{ISP}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
+                    $"AFTER connecting, click OK to continue.",
+                    $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private static void ISP_DisConnect(String ISP, String Connector, Dictionary<String, Instrument> instruments) {
+            InstrumentTasks.SCPI99Reset(instruments);
+            _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
+                    $"Disconnect '{ISP}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
+                    $"AFTER disconnecting, click OK to continue.",
+                    $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        public static String ProcessExitCode(String Arguments, String FileName, String WorkingDirectory) {
+            Int32 ExitCode = -1;
+            using (Process process = new Process()) {
+                ProcessStartInfo PSI = new ProcessStartInfo {
+                    Arguments = Arguments,
+                    FileName = FileName,
+                    WorkingDirectory = WorkingDirectory,
+                    CreateNoWindow = false,
+                    UseShellExecute = false,
+                    RedirectStandardError = false,
+                    RedirectStandardOutput = false
+                };
+                process.StartInfo = PSI;
+                process.Start();
+                process.WaitForExit();
+                ExitCode = process.ExitCode;
+            }
+            return ExitCode.ToString();
+        }
+
+        public static (String StandardError, String StandardOutput, Int32 ExitCode) ProcessRedirect(String Arguments, String FileName, String WorkingDirectory, String ExpectedResult) {
+            String StandardError, StandardOutput;
+            Int32 ExitCode = -1;
+            using (Process process = new Process()) {
+                ProcessStartInfo PSI = new ProcessStartInfo {
+                    Arguments = Arguments,
+                    FileName = FileName,
+                    WorkingDirectory = WorkingDirectory,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true
+                };
+                process.StartInfo = PSI;
+                process.Start();
+                process.WaitForExit();
+                StreamReader SE = process.StandardError;
+                StandardError = SE.ReadToEnd();
+                StreamReader SO = process.StandardOutput;
+                StandardOutput = SO.ReadToEnd();
+                ExitCode = process.ExitCode;
+            }
+            if (StandardOutput.Contains(ExpectedResult)) return (StandardError, ExpectedResult, ExitCode);
+            else return (StandardError, StandardOutput, ExitCode);
+        }
+
+        public static String ISP_ExitCode(String ISP, String Connector, Test test,
+            Dictionary<String, Instrument> instruments, Func<Dictionary<String, Instrument>, (String, String)> powerSupplyOnMethod) {
+            ISP_Connect(ISP, Connector, instruments);
+            _ = powerSupplyOnMethod(instruments);
+            TestISP tisp = (TestISP)test.ClassObject;
+            String ExitCode = ProcessExitCode(tisp.ISPExecutableArguments, tisp.ISPExecutable, tisp.ISPExecutableFolder);
+            ISP_DisConnect(ISP, Connector, instruments);
+            return ExitCode;
+        }
+
+        public static (String StandardError, String StandardOutput, Int32 ExitCode) ISP_Redirect(String ISP, String Connector, Test test,
+            Dictionary<String, Instrument> instruments, Func<Dictionary<String, Instrument>, (String, String)> powerSupplyOnMethod) {
+            ISP_Connect(ISP, Connector, instruments);
+            _ = powerSupplyOnMethod(instruments);
+            TestISP tisp = (TestISP)test.ClassObject;
+            (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(tisp.ISPExecutableArguments, tisp.ISPExecutable, tisp.ISPExecutableFolder, tisp.ISPResult);
+            ISP_DisConnect(ISP, Connector, instruments);
+            return (StandardError, StandardOutput, ExitCode);
+        }
+
         public static String EvaluateTestResult(Test test) {
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
