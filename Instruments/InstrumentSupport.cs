@@ -79,6 +79,9 @@ namespace TestLibrary.Instruments {
     }
 
     public class Instrument {
+        // TODO: Replace this Instrument class with an XML app.config configuration file defining each Test System's Instruments.
+        //  - Will permit dynamic configuration of Test Systems, without requiring re-compilation.
+        //  - Also moves each Test System's configuration out of global Test Library and into a local XML configuration file.
         public const String LOAD = "LOAD";
         public const String MULTI_METER = "MULTI_METER";
         public const String WAVE_GENERATOR = "WAVE_GENERATOR";
