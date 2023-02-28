@@ -5,13 +5,16 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic;
 using TestLibrary.Config;
 using TestLibrary.Instruments;
 using TestLibrary.Logging;
 using TestLibrary.TestSupport;
-using Microsoft.VisualBasic;
-using System.Threading.Tasks;
+using TestLibrary.SwitchMatrices.MeasurementComputing;
+
 
 // TODO: Replace RichTextBox in this TestExecutive with a DataGridView, change Logging output from current discrete records to DataGrid rows.
 // TODO: Update to .Net 7.0 & C# 11.0 when possible.
@@ -53,6 +56,7 @@ namespace TestLibrary {
             this.instruments = Instrument.Get();
             InstrumentTasks.SCPI99Test(this.instruments);
             InstrumentTasks.InstrumentResetClear(this.instruments);
+            ERB24.RelaysReset(ERB24.ERB24s);
             this._cancellationTokenSource = new CancellationTokenSource();
         }
 
@@ -180,6 +184,7 @@ namespace TestLibrary {
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             InstrumentTasks.InstrumentResetClear(this.instruments);
+            ERB24.RelaysReset(ERB24.ERB24s);
             if (this.ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
 
@@ -212,6 +217,7 @@ namespace TestLibrary {
             }
             this.configLib.UUT.EventCode = EventCodes.UNSET;
             InstrumentTasks.SCPI99Reset(this.instruments);
+            ERB24.RelaysReset(ERB24.ERB24s);
             LogTasks.Start(this.configLib, this.configTest, this._appAssemblyVersion, this._libraryAssemblyVersion, this.configTest.Group, ref this.rtfResults);
             this.ButtonCancelReset(Enabled: true);
         }
@@ -244,12 +250,14 @@ namespace TestLibrary {
 
         private void StopRun(KeyValuePair<String, Test> test, String exceptionString) {
             InstrumentTasks.InstrumentResetClear(this.instruments);
+            ERB24.RelaysReset(ERB24.ERB24s);
             test.Value.Result = EventCodes.ERROR;
             TestTasks.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
         private void PostRun() {
             InstrumentTasks.SCPI99Reset(this.instruments);
+            ERB24.RelaysReset(ERB24.ERB24s);
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(Enabled: true);
             this.ButtonCancelReset(Enabled: false);

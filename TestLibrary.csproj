@@ -40,13 +40,14 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Instruments\MeasurementComputing\ERB24.cs" />
+    <Compile Include="SwitchMatrices\MeasurementComputing\ERB24.cs" />
     <Compile Include="Logging\Logging.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SwitchMatrices\MeasurementComputing\UL_Support.cs" />
     <Compile Include="TestExecutive.cs">
       <SubType>Form</SubType>
     </Compile>
