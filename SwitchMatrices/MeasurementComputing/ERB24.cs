@@ -6,12 +6,12 @@ namespace TestLibrary.SwitchMatrices.MeasurementComputing {
     public static class ERB24 {
         private static MccBoard Erb24;
         private static ErrorInfo EI;
-        // TODO: Add 2nd USB-ERB24 board.  Use InstaCal to configure as Board Number 1.
         public static readonly List<Int32> ERB24s = new List<Int32>() {0};
-        // TODO: Above member ERB24s is a very quick & dirty approach to defining the List of MCC USB-ERB24s.
-        // Better ways:
-        // - Discover them programmatically: https://www.mccdaq.com/pdfs/manuals/Mcculw_WebHelp/ULStart.htm.
-        // - Read them from InstaCal's cb.cfg file.
+        // TODO: Add 2nd USB-ERB24 board.  Use InstaCal to configure as Board Number 1.
+        // TODO: Above member ERB24s is a very quick & dirty approach to defining the Test System's MCC USB-ERB24s.  Better ways:
+        //  - Read them from InstaCal's cb.cfg file.
+        //  - Dynamically discover them programmatically: https://www.mccdaq.com/pdfs/manuals/Mcculw_WebHelp/ULStart.htm.
+        //  - Read them from Test Library's forthcoming app.config XML configuration file, then configure them dynamically/programmatically.
 
         public static void RelaysReset(List<Int32> BoardNumbers) {
             MccBoard Erb24;

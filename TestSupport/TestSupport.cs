@@ -40,7 +40,7 @@ namespace TestLibrary.TestSupport {
     public static class TestTasks {
 
         private static void ISP_Connect(String ISP, String Connector, Dictionary<String, Instrument> instruments) {
-            InstrumentTasks.SCPI99Reset(instruments);
+            InstrumentTasks.SCPI99_Reset(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Connect '{ISP}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER connecting, click OK to continue.",
@@ -48,7 +48,7 @@ namespace TestLibrary.TestSupport {
         }
 
         private static void ISP_DisConnect(String ISP, String Connector, Dictionary<String, Instrument> instruments) {
-            InstrumentTasks.SCPI99Reset(instruments);
+            InstrumentTasks.SCPI99_Reset(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Disconnect '{ISP}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER disconnecting, click OK to continue.",

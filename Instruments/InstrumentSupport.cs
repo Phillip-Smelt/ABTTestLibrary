@@ -27,20 +27,23 @@ namespace TestLibrary.Instruments {
             return Message;
         }
 
-        public static void SCPI99Reset(Dictionary<String, Instrument> instruments) {
-            foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Reset(i.Value.Address); }
 
-        public static void SCPI99Clear(Dictionary<String, Instrument> instruments) {
-            foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Clear(i.Value.Address); }
+        public static void SCPI99_Reset(Dictionary<String, Instrument> instruments) {
+            foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Reset(i.Value.Address);
+        }
 
-        public static void SCPI99ResetClear(Dictionary<String, Instrument> instruments) {
+        public static void SCPI99_Clear(Dictionary<String, Instrument> instruments) {
+            foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Clear(i.Value.Address);
+        }
+
+        public static void SCPI99_ResetClear(Dictionary<String, Instrument> instruments) {
             foreach (KeyValuePair<String, Instrument> i in instruments) {
-                SCPI99.Clear(i.Value.Address);
                 SCPI99.Reset(i.Value.Address);
+                SCPI99.Clear(i.Value.Address);
             }
         }
 
-        public static void SCPI99Test(Dictionary<String, Instrument> instruments) {
+        public static void SCPI99_Test(Dictionary<String, Instrument> instruments) {
             Int32 SelfTestResult;
             foreach (KeyValuePair<String, Instrument> i in instruments) {
                 SelfTestResult = SCPI99.SelfTest(i.Value.Address);
@@ -79,9 +82,9 @@ namespace TestLibrary.Instruments {
     }
 
     public class Instrument {
-        // TODO: Replace this Instrument class with an XML app.config configuration file defining each Test System's Instruments.
-        //  - Will permit dynamic configuration of Test Systems, without requiring re-compilation.
-        //  - Also moves each Test System's configuration out of global Test Library and into a local XML configuration file.
+        // TODO: Replace this Instrument definition/configuration class with an XML app.config configuration file defining each Test System's Instruments.
+        //  - Permitting dynamic configuration of Test Systems, without requiring re-compilation.
+        //  - Moving each Test System's configuration out of global Test Library, into a local XML configuration file.
         public const String LOAD = "LOAD";
         public const String MULTI_METER = "MULTI_METER";
         public const String WAVE_GENERATOR = "WAVE_GENERATOR";
@@ -89,7 +92,7 @@ namespace TestLibrary.Instruments {
         public const String POWER_PRIMARY = "POWER_PRIMARY";
         public const String POWER_SECONDARY = "POWER_SECONDARY";
         public const String POWER_PRELIMINARY = "POWER_PRELIMINARY";
-        private static Dictionary<String, String> InstrumentsToVISA_Addresses = new Dictionary<String, String> {
+        private static readonly Dictionary<String, String> InstrumentsToVISA_Addresses = new Dictionary<String, String> {
             // TODO: Add MULTI_METER's address, enable other Instruments.
             // NOTE: Add/remove instruments as needed.
             // VISA (Virtual Instrument Software Architecture) Resource Names.

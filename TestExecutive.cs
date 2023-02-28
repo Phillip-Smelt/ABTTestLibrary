@@ -8,13 +8,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic;
 using TestLibrary.Config;
 using TestLibrary.Instruments;
 using TestLibrary.Logging;
 using TestLibrary.TestSupport;
 using TestLibrary.SwitchMatrices.MeasurementComputing;
-
 
 // TODO: Replace RichTextBox in this TestExecutive with a DataGridView, change Logging output from current discrete records to DataGrid rows.
 // TODO: Update to .Net 7.0 & C# 11.0 when possible.
@@ -54,7 +52,7 @@ namespace TestLibrary {
         private void Form_Load(Object sender, EventArgs e) {
             this.configLib = ConfigLib.Get();
             this.instruments = Instrument.Get();
-            InstrumentTasks.SCPI99Test(this.instruments);
+            InstrumentTasks.SCPI99_Test(this.instruments);
             InstrumentTasks.InstrumentResetClear(this.instruments);
             ERB24.RelaysReset(ERB24.ERB24s);
             this._cancellationTokenSource = new CancellationTokenSource();
@@ -216,7 +214,7 @@ namespace TestLibrary {
                 t.Value.Result = EventCodes.UNSET;
             }
             this.configLib.UUT.EventCode = EventCodes.UNSET;
-            InstrumentTasks.SCPI99Reset(this.instruments);
+            InstrumentTasks.SCPI99_Reset(this.instruments);
             ERB24.RelaysReset(ERB24.ERB24s);
             LogTasks.Start(this.configLib, this.configTest, this._appAssemblyVersion, this._libraryAssemblyVersion, this.configTest.Group, ref this.rtfResults);
             this.ButtonCancelReset(Enabled: true);
@@ -256,7 +254,7 @@ namespace TestLibrary {
         }
 
         private void PostRun() {
-            InstrumentTasks.SCPI99Reset(this.instruments);
+            InstrumentTasks.SCPI99_Reset(this.instruments);
             ERB24.RelaysReset(ERB24.ERB24s);
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(Enabled: true);
