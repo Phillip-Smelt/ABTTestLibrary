@@ -39,7 +39,7 @@ namespace TestLibrary.TestSupport {
 
     public static class TestTasks {
 
-        private static void ISP_Connect(String ISP, String Connector, Dictionary<Int32, Instrument> instruments) {
+        private static void ISP_Connect(String ISP, String Connector, Dictionary<INSTRUMENTS, Instrument> instruments) {
             InstrumentTasks.SCPI99_Reset(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Connect '{ISP}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
@@ -47,7 +47,7 @@ namespace TestLibrary.TestSupport {
                     $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        private static void ISP_DisConnect(String ISP, String Connector, Dictionary<Int32, Instrument> instruments) {
+        private static void ISP_DisConnect(String ISP, String Connector, Dictionary<INSTRUMENTS, Instrument> instruments) {
             InstrumentTasks.SCPI99_Reset(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Disconnect '{ISP}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
@@ -102,7 +102,7 @@ namespace TestLibrary.TestSupport {
         }
 
         public static String ISP_ExitCode(String ISP, String Connector, Test test,
-            Dictionary<Int32, Instrument> instruments, Func<Dictionary<Int32, Instrument>, (String, String)> powerSupplyOnMethod) {
+            Dictionary<INSTRUMENTS, Instrument> instruments, Func<Dictionary<INSTRUMENTS, Instrument>, (String, String)> powerSupplyOnMethod) {
             ISP_Connect(ISP, Connector, instruments);
             _ = powerSupplyOnMethod(instruments);
             TestISP tisp = (TestISP)test.ClassObject;
@@ -112,7 +112,7 @@ namespace TestLibrary.TestSupport {
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) ISP_Redirect(String ISP, String Connector, Test test,
-            Dictionary<Int32, Instrument> instruments, Func<Dictionary<Int32, Instrument>, (String, String)> powerSupplyOnMethod) {
+            Dictionary<INSTRUMENTS, Instrument> instruments, Func<Dictionary<INSTRUMENTS, Instrument>, (String, String)> powerSupplyOnMethod) {
             ISP_Connect(ISP, Connector, instruments);
             _ = powerSupplyOnMethod(instruments);
             TestISP tisp = (TestISP)test.ClassObject;

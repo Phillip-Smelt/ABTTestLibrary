@@ -31,15 +31,15 @@ namespace TestLibrary {
     public abstract partial class TestExecutive : Form {
         protected ConfigLib configLib;
         protected ConfigTest configTest;
-        protected Dictionary<Int32, Instrument> instruments;
-        // TODO: Create an Instruments class that's simply Dictionary<Int32, Instrument>.  Concises Dictionary<Int32, Instrument> everywhere used.
+        protected Dictionary<INSTRUMENTS, Instrument> instruments;
+        // TODO: Create an Instruments class that's simply Dictionary<INSTRUMENTS, Instrument>.  Concises Dictionary<INSTRUMENTS, Instrument> everywhere used.
         // NOTE: Above object declarations protected so they can be inhereited & extended if needed.
         private String _appAssemblyVersion;
         private String _libraryAssemblyVersion;
         private Boolean _cancelled;
         private CancellationTokenSource _cancellationTokenSource;
 
-        protected abstract Task<String> RunTestAsync(Test test, Dictionary<Int32, Instrument> instruments, CancellationToken CT);
+        protected abstract Task<String> RunTestAsync(Test test, Dictionary<INSTRUMENTS, Instrument> instruments, CancellationToken CT);
 
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();
