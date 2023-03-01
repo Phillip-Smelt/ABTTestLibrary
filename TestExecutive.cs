@@ -54,7 +54,7 @@ namespace TestLibrary {
             this.instruments = Instrument.Get();
             InstrumentTasks.SCPI99_Test(this.instruments);
             InstrumentTasks.InstrumentResetClear(this.instruments);
-            ERB24.RelaysReset(ERB24.ERB24s);
+            USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             this._cancellationTokenSource = new CancellationTokenSource();
         }
 
@@ -182,7 +182,7 @@ namespace TestLibrary {
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             InstrumentTasks.InstrumentResetClear(this.instruments);
-            ERB24.RelaysReset(ERB24.ERB24s);
+            USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             if (this.ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
 
@@ -215,7 +215,7 @@ namespace TestLibrary {
             }
             this.configLib.UUT.EventCode = EventCodes.UNSET;
             InstrumentTasks.SCPI99_Reset(this.instruments);
-            ERB24.RelaysReset(ERB24.ERB24s);
+            USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             LogTasks.Start(this.configLib, this.configTest, this._appAssemblyVersion, this._libraryAssemblyVersion, this.configTest.Group, ref this.rtfResults);
             this.ButtonCancelReset(Enabled: true);
         }
@@ -248,14 +248,14 @@ namespace TestLibrary {
 
         private void StopRun(KeyValuePair<String, Test> test, String exceptionString) {
             InstrumentTasks.InstrumentResetClear(this.instruments);
-            ERB24.RelaysReset(ERB24.ERB24s);
+            USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             test.Value.Result = EventCodes.ERROR;
             TestTasks.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
         private void PostRun() {
             InstrumentTasks.SCPI99_Reset(this.instruments);
-            ERB24.RelaysReset(ERB24.ERB24s);
+            USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(Enabled: true);
             this.ButtonCancelReset(Enabled: false);
