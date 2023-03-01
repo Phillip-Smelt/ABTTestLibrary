@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
-using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.

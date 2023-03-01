@@ -15,6 +15,7 @@ using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using Keysight.Kt34400; // https://www.keysight.com/us/en/lib/software-detail/driver/34400-digital-multimeters-ivi-instrument-drivers.html
 using Keysight.KtEL30000; // https://www.keysight.com/us/en/lib/software-detail/driver/el30000a-dc-electronic-loads-ivi-instrument-drivers.html
 using TestLibrary.Instruments.Keysight;
+using static TestLibrary.Instruments.Instrument;
 
 // NOTE: Consider adding ScpiQuery & ScpiCommand methods to all Instrument classes, to pass raw SCPI strings to the Instrument.
 // Eliminates need to wrap every SCPI command, and allows all Instrument specific commands/queries to be handled by the Instrument
@@ -27,51 +28,50 @@ namespace TestLibrary.Instruments {
             return Message;
         }
 
-
-        public static void SCPI99_Reset(Dictionary<String, Instrument> instruments) {
-            foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Reset(i.Value.Address);
+        public static void SCPI99_Reset(Dictionary<Int32, Instrument> instruments) {
+            foreach (KeyValuePair<Int32, Instrument> i in instruments) SCPI99.Reset(i.Value.Address);
         }
 
-        public static void SCPI99_Clear(Dictionary<String, Instrument> instruments) {
-            foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Clear(i.Value.Address);
+        public static void SCPI99_Clear(Dictionary<Int32, Instrument> instruments) {
+            foreach (KeyValuePair<Int32, Instrument> i in instruments) SCPI99.Clear(i.Value.Address);
         }
-
-        public static void SCPI99_ResetClear(Dictionary<String, Instrument> instruments) {
-            foreach (KeyValuePair<String, Instrument> i in instruments) {
+    
+        public static void SCPI99_ResetClear(Dictionary<Int32, Instrument> instruments) {
+            foreach (KeyValuePair<Int32, Instrument> i in instruments) {
                 SCPI99.Reset(i.Value.Address);
                 SCPI99.Clear(i.Value.Address);
             }
         }
 
-        public static void SCPI99_Test(Dictionary<String, Instrument> instruments) {
+        public static void SCPI99_Test(Dictionary<Int32, Instrument> instruments) {
             Int32 SelfTestResult;
-            foreach (KeyValuePair<String, Instrument> i in instruments) {
+            foreach (KeyValuePair<Int32, Instrument> i in instruments) {
                 SelfTestResult = SCPI99.SelfTest(i.Value.Address);
                 if (SelfTestResult != 0) throw new InvalidOperationException(GetMessage(i.Value));
             }
         }
 
-        public static void InstrumentResetClear(Dictionary<String, Instrument> instruments) {
+        public static void InstrumentResetClear(Dictionary<Int32, Instrument> instruments) {
             // TODO: Use Reflection instead of below switch to invoke ResetClear() below, as
             // then won't have to update below switch every time another Instrument is added.
-            foreach (KeyValuePair<String, Instrument> i in instruments) {
-                switch (i.Value.ID) {
-                    case Instrument.POWER_PRELIMINARY:
-                    case Instrument.POWER_PRIMARY:
-                    case Instrument.POWER_SECONDARY:
+            foreach (KeyValuePair<Int32, Instrument> i in instruments) {
+                switch ((INSTRUMENTS)i.Value.ID) {
+                    case INSTRUMENTS.Keysight_E36103B_Power_Supply_1:
+                    case INSTRUMENTS.Keysight_E36103B_Power_Supply_2:
+                    case INSTRUMENTS.Keysight_E36105B_Power_Supply:
                         E3610xB.ResetClear(i.Value);
                         break;
-                    case Instrument.POWER_MAIN:
+                    case INSTRUMENTS.Keysight_E36234A_Power_Supply:
                         E36234A.ResetClear(i.Value);
                         break;
-                    case Instrument.LOAD:
-                        // TODO: case Instrument.LOAD:
+                    case INSTRUMENTS.Keysight_EL34143A_Electronic_Load:
+                        // TODO: case (Int32)INSTRUMENTS.Keysight_EL34143A_Electronic_Load:
                         break;
-                    case Instrument.WAVE_GENERATOR:
-                        // TODO: case Instrument.WAVE_GENERATOR:
+                    case INSTRUMENTS.Keysight_E33509B_WaveForm_Generator:
+                        // TODO: case (Int32)INSTRUMENTS.Keysight_E33509B_WaveForm_Generator:
                         break;
-                    case Instrument.MULTI_METER:
-                        // TODO: case Instrument.MULTI_METER:
+                    case INSTRUMENTS.Keysight_33461A_Multi_Meter:
+                        // TODO: case (Int32)INSTRUMENTS.Keysight_33461A_Multi_Meter:
                         break;
                     default:
                         throw new NotImplementedException($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
@@ -85,62 +85,65 @@ namespace TestLibrary.Instruments {
         // TODO: Replace this Instrument definition/configuration class with an XML app.config configuration file defining each Test System's Instruments.
         //  - Permitting dynamic configuration of Test Systems, without requiring re-compilation.
         //  - Moving each Test System's configuration out of global Test Library, into a local XML configuration file.
-        public const String LOAD = "LOAD";
-        public const String MULTI_METER = "MULTI_METER";
-        public const String WAVE_GENERATOR = "WAVE_GENERATOR";
-        public const String POWER_MAIN = "POWER_MAIN";
-        public const String POWER_PRIMARY = "POWER_PRIMARY";
-        public const String POWER_SECONDARY = "POWER_SECONDARY";
-        public const String POWER_PRELIMINARY = "POWER_PRELIMINARY";
-        private static readonly Dictionary<String, String> InstrumentsToVISA_Addresses = new Dictionary<String, String> {
-            // TODO: Add MULTI_METER's address, enable other Instruments.
+        public enum INSTRUMENTS {
+            Keysight_33461A_Multi_Meter,
+            Keysight_E33509B_WaveForm_Generator,
+            Keysight_E36103B_Power_Supply_1,
+            Keysight_E36103B_Power_Supply_2,
+            Keysight_E36105B_Power_Supply,
+            Keysight_E36234A_Power_Supply,
+            Keysight_EL34143A_Electronic_Load
+        }
+
+        private static readonly Dictionary<Int32, String> InstrumentsToVISA_Addresses = new Dictionary<Int32, String> {
+            // TODO: Add Keysight_33461A_Multi_Meter's address, enable other Instruments.
             // NOTE: Add/remove instruments as needed.
             // VISA (Virtual Instrument Software Architecture) Resource Names.
             // - https://www.ivifoundation.org/specifications/default.aspx
             // - Technically, these are actually VISA 'Resource Names' instead of VISA 'Addresses',
             //   but 'Address' has widespread usage and is more descriptive than 'Resource Name'.
-            // { LOAD, "USB0::0x2A8D::0x3802::MY61001295::0::INSTR" },
-            // { MULTI_METER, "TBD" },
-            // { WAVE_GENERATOR,"USB0::0x0957::0x2507::MY59003604::0::INSTR" },
-            // { POWER_MAIN, "USB0::0x2A8D::0x3402::MY61002598::0::INSTR" },
-            { POWER_PRELIMINARY , "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
-            { POWER_PRIMARY, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
-            { POWER_SECONDARY, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" }
+            // { (Int32)INSTRUMENTS.Keysight_EL34143A_Electronic_Load, "USB0::0x2A8D::0x3802::MY61001295::0::INSTR" },
+            // { (Int32)INSTRUMENTS.Keysight_33461A_Multi_Meter, "TBD" },
+            // { (Int32)INSTRUMENTS.Keysight_E33509B_WaveForm_Generator, "USB0::0x0957::0x2507::MY59003604::0::INSTR" },
+            // { (Int32)INSTRUMENTS.Keysight_E36234A_Power_Supply, "USB0::0x2A8D::0x3402::MY61002598::0::INSTR" },
+            { (Int32)INSTRUMENTS.Keysight_E36105B_Power_Supply, "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
+            { (Int32)INSTRUMENTS.Keysight_E36103B_Power_Supply_1, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
+            { (Int32)INSTRUMENTS.Keysight_E36103B_Power_Supply_2, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" }
             };
-        public String ID { get; private set; }
+        public Int32 ID { get; private set; }
         public String Category { get; private set; }
         public String Address { get; private set; }
         public object Instance { get; private set; }
         public String Manufacturer { get; private set; }
         public String Model { get; private set; }
 
-        private Instrument(String ID, String Address) {
+        private Instrument(Int32 ID, String Address) {
             this.ID = ID;
             this.Address = Address;
 
             try {
-                switch (ID) {
-                    case POWER_PRELIMINARY:
-                    case POWER_PRIMARY:
-                    case POWER_SECONDARY:
+                switch ((INSTRUMENTS)ID) {
+                    case INSTRUMENTS.Keysight_E36103B_Power_Supply_1:
+                    case INSTRUMENTS.Keysight_E36103B_Power_Supply_2:
+                    case INSTRUMENTS.Keysight_E36105B_Power_Supply:
                         this.Category = "Power Supply";
                         this.Instance = new AgE3610XB(this.Address);
                         ((AgE3610XB)this.Instance).SCPI.SYSTem.RWLock.Command();
                         break;
-                    case POWER_MAIN:
+                    case INSTRUMENTS.Keysight_E36234A_Power_Supply:
                         this.Category = "Power Supply";
                         this.Instance = new AgE36200(this.Address);
                         ((AgE36200)this.Instance).SCPI.SYSTem.RWLock.Command();
                         break;
-                    case LOAD:
+                    case INSTRUMENTS.Keysight_EL34143A_Electronic_Load:
                         this.Category = "Electronic Load";
                         this.Instance = new KtEL30000(this.Address, false, false);
                         break;
-                    case WAVE_GENERATOR:
+                    case INSTRUMENTS.Keysight_E33509B_WaveForm_Generator:
                         this.Category = "Waveform Generator";
                         this.Instance = new Ag33500B_33600A(this.Address);
                         break;
-                    case MULTI_METER:
+                    case INSTRUMENTS.Keysight_33461A_Multi_Meter:
                         this.Category = "Multi-Meter";
                         this.Instance = new Kt34400(this.Address, false, false);
                         break;
@@ -158,9 +161,9 @@ namespace TestLibrary.Instruments {
             }
         }
 
-        public static Dictionary<String, Instrument> Get() {
-            Dictionary<String, Instrument> d = new Dictionary<String, Instrument>();
-            foreach (KeyValuePair<String, String> itva in InstrumentsToVISA_Addresses) d.Add(itva.Key, new Instrument(itva.Key, itva.Value));
+        public static Dictionary<Int32, Instrument> Get() {
+            Dictionary<Int32, Instrument> d = new Dictionary<Int32, Instrument>();
+            foreach (KeyValuePair<Int32, String> itva in InstrumentsToVISA_Addresses) d.Add(itva.Key, new Instrument(itva.Key, itva.Value));
             return d;
         }
     }

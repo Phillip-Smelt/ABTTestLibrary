@@ -27,22 +27,22 @@ namespace TestLibrary.Instruments {
             return Message;
         }
 
-        public static void SCPI99_Reset(Dictionary<String, Instrument> instruments) {
+        public static void SCPI99_Reset(Dictionary<Int32, Instrument> instruments) {
             foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Reset(i.Value.Address);
         }
 
-        public static void SCPI99_Clear(Dictionary<String, Instrument> instruments) {
+        public static void SCPI99_Clear(Dictionary<Int32, Instrument> instruments) {
             foreach (KeyValuePair<String, Instrument> i in instruments) SCPI99.Clear(i.Value.Address);
         }
 
-        public static void SCPI99_ResetClear(Dictionary<String, Instrument> instruments) {
+        public static void SCPI99_ResetClear(Dictionary<Int32, Instrument> instruments) {
             foreach (KeyValuePair<String, Instrument> i in instruments) {
                 SCPI99.Reset(i.Value.Address);
                 SCPI99.Clear(i.Value.Address);
             }
         }
 
-        public static void SCPI99_Test(Dictionary<String, Instrument> instruments) {
+        public static void SCPI99_Test(Dictionary<Int32, Instrument> instruments) {
             Int32 SelfTestResult;
             foreach (KeyValuePair<String, Instrument> i in instruments) {
                 SelfTestResult = SCPI99.SelfTest(i.Value.Address);
@@ -50,7 +50,7 @@ namespace TestLibrary.Instruments {
             }
         }
 
-        public static void InstrumentResetClear(Dictionary<String, Instrument> instruments) {
+        public static void InstrumentResetClear(Dictionary<Int32, Instrument> instruments) {
             // TODO: Use Reflection instead of below switch to invoke ResetClear() below, as
             // then won't have to update below switch every time another Instrument is added.
             foreach (KeyValuePair<String, Instrument> i in instruments) {
@@ -157,7 +157,7 @@ namespace TestLibrary.Instruments {
             }
         }
 
-        public static Dictionary<String, Instrument> Get() {
+        public static Dictionary<Int32, Instrument> Get() {
             Instruments d = new Instruments();
             foreach (KeyValuePair<String, String> itva in InstrumentsToVISA_Addresses) d.Add(itva.Key, new Instrument(itva.Key, itva.Value));
             return d;
