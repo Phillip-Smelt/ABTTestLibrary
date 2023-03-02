@@ -37,7 +37,7 @@ namespace TestLibrary.Instruments.Keysight {
 
         public static void Off(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.OUTPut.STATe.Command(false); }
 
-        public static void ON(Instrument instrument, Double VoltsDC, Double AmpsDC, Double CurrentProtectionDelaySeconds = 0, Double MeasureDelaySeconds = 0) {
+        public static void ON(Instrument instrument, Double VoltsDC, Double AmpsDC, Double SecondsDelayCurrentProtection = 0, Double SecondsDelayMeasurement = 0) {
             try {
                 String s;
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", out Double min);
@@ -70,21 +70,21 @@ namespace TestLibrary.Instruments.Keysight {
                 // Keysight's E36100B Series Operating and Service Guide states the same thing.
                 //  - https://www.keysight.com/us/en/assets/9018-04288/user-manuals/9018-04288.pdf
                 //
-                if ((CurrentProtectionDelaySeconds < min) || (CurrentProtectionDelaySeconds > max)) {
+                if ((SecondsDelayCurrentProtection < min) || (SecondsDelayCurrentProtection > max)) {
                     s = $"> MINimum/MAXimum Current Protection Delay.{Environment.NewLine}";
                     s += $" - MINimum   :  Delay={min} seconds.{Environment.NewLine}";
-                    s += $" - Programmed:  Delay={CurrentProtectionDelaySeconds} seconds.{Environment.NewLine}";
+                    s += $" - Programmed:  Delay={SecondsDelayCurrentProtection} seconds.{Environment.NewLine}";
                     s += $" - MAXimum   :  Delay={max} seconds.";
                     throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
                 }
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC);
-                ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(CurrentProtectionDelaySeconds);
+                ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(SecondsDelayCurrentProtection);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false);
                 ((AgE3610XB)instrument.Instance).SCPI.OUTPut.STATe.Command(true);
-                if (MeasureDelaySeconds > 0) Thread.Sleep((Int32)(MeasureDelaySeconds * 1000));
+                if (SecondsDelayMeasurement > 0) Thread.Sleep((Int32)(SecondsDelayMeasurement * 1000));
             } catch (InvalidOperationException) {
                 throw;
             } catch (Exception e) {

@@ -21,6 +21,7 @@ using TestLibrary.Instruments.Keysight;
 // classes, rather than directly invoking them from TestPrograms.
 namespace TestLibrary.Instruments {
     public enum INSTRUMENTS {
+        // NOTE: Add/remove instruments as needed.
         Keysight_33461A_Multi_Meter,
         Keysight_E33509B_WaveForm_Generator,
         Keysight_E36103B_Power_Supply_1,
@@ -28,6 +29,84 @@ namespace TestLibrary.Instruments {
         Keysight_E36105B_Power_Supply,
         Keysight_E36234A_Power_Supply,
         Keysight_EL34143A_Electronic_Load
+    }
+
+    public class Instrument {
+        // TODO: Replace this Instrument definition/configuration class with an XML app.config configuration file defining each Test System's Instruments.
+        //  - Permitting dynamic configuration of Test Systems, without requiring re-compilation.
+        //  - Moving each Test System's configuration out of global Test Library, into a local XML configuration file.
+
+        private static readonly Dictionary<INSTRUMENTS, String> InstrumentAddresses = new Dictionary<INSTRUMENTS, String> {
+            // TODO: Add Keysight_33461A_Multi_Meter's address, enable other Instruments.
+            // NOTE: Add/remove instruments as needed.
+            // VISA (Virtual Instrument Software Architecture) Resource Names.
+            // - https://www.ivifoundation.org/specifications/default.aspx
+            // - Technically, these are actually VISA 'Resource Names' instead of VISA 'Addresses',
+            //   but 'Address' has widespread usage and is more descriptive than 'Resource Name'.
+            // { INSTRUMENTS.Keysight_EL34143A_Electronic_Load, "USB0::0x2A8D::0x3802::MY61001295::0::INSTR" },
+            // { INSTRUMENTS.Keysight_33461A_Multi_Meter, "TBD" },
+            // { INSTRUMENTS.Keysight_E33509B_WaveForm_Generator, "USB0::0x0957::0x2507::MY59003604::0::INSTR" },
+            // { INSTRUMENTS.Keysight_E36234A_Power_Supply, "USB0::0x2A8D::0x3402::MY61002598::0::INSTR" },
+            // { INSTRUMENTS.Keysight_E36105B_Power_Supply, "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
+            { INSTRUMENTS.Keysight_E36103B_Power_Supply_1, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
+            { INSTRUMENTS.Keysight_E36103B_Power_Supply_2, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" }
+            };
+        public INSTRUMENTS ID { get; private set; }
+        public String Category { get; private set; }
+        public String Address { get; private set; }
+        public object Instance { get; private set; }
+        public String Manufacturer { get; private set; }
+        public String Model { get; private set; }
+
+        private Instrument(INSTRUMENTS ID, String Address) {
+            this.ID = ID;
+            this.Address = Address;
+
+            try {
+                switch (ID) {
+                    case INSTRUMENTS.Keysight_E36103B_Power_Supply_1:
+                    case INSTRUMENTS.Keysight_E36103B_Power_Supply_2:
+                    case INSTRUMENTS.Keysight_E36105B_Power_Supply:
+                        this.Category = "Power Supply";
+                        this.Instance = new AgE3610XB(this.Address);
+                        ((AgE3610XB)this.Instance).SCPI.SYSTem.RWLock.Command();
+                        break;
+                    case INSTRUMENTS.Keysight_E36234A_Power_Supply:
+                        this.Category = "Power Supply";
+                        this.Instance = new AgE36200(this.Address);
+                        ((AgE36200)this.Instance).SCPI.SYSTem.RWLock.Command();
+                        break;
+                    case INSTRUMENTS.Keysight_EL34143A_Electronic_Load:
+                        this.Category = "Electronic Load";
+                        this.Instance = new KtEL30000(this.Address, false, false);
+                        break;
+                    case INSTRUMENTS.Keysight_E33509B_WaveForm_Generator:
+                        this.Category = "Waveform Generator";
+                        this.Instance = new Ag33500B_33600A(this.Address);
+                        break;
+                    case INSTRUMENTS.Keysight_33461A_Multi_Meter:
+                        this.Category = "Multi-Meter";
+                        this.Instance = new Kt34400(this.Address, false, false);
+                        break;
+                    default:
+                        throw new NotImplementedException($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
+                            $"Update Class TestLibrary.InstrumentTasks.Instrument, adding '{ID}'.");
+                }
+                this.Manufacturer = SCPI99.GetManufacturer(this.Address);
+                this.Model = SCPI99.GetModel(this.Address);
+            } catch (NotImplementedException) {
+                throw;
+            } catch (Exception e) {
+                String[] a = this.Address.Split(':');
+                throw new InvalidOperationException($"Check to see if {this.Category} with VISA Address '{this.Address}' is powered and it's {a[0]} bus is communicating.", e);
+            }
+        }
+
+        public static Dictionary<INSTRUMENTS, Instrument> Get() {
+            Dictionary<INSTRUMENTS, Instrument> d = new Dictionary<INSTRUMENTS, Instrument>();
+            foreach (KeyValuePair<INSTRUMENTS, String> ia in InstrumentAddresses) d.Add(ia.Key, new Instrument(ia.Key, ia.Value));
+            return d;
+        }
     }
 
     public static class InstrumentTasks {
@@ -85,84 +164,6 @@ namespace TestLibrary.Instruments {
                             $"Update Class TestLibrary.InstrumentTasks.Instrument, adding '{i.Value.ID}'.");
                 }
             }
-        }
-    }
-
-    public class Instrument {
-        // TODO: Replace this Instrument definition/configuration class with an XML app.config configuration file defining each Test System's Instruments.
-        //  - Permitting dynamic configuration of Test Systems, without requiring re-compilation.
-        //  - Moving each Test System's configuration out of global Test Library, into a local XML configuration file.
-
-        private static readonly Dictionary<INSTRUMENTS, String> InstrumentsToVISA_Addresses = new Dictionary<INSTRUMENTS, String> {
-            // TODO: Add Keysight_33461A_Multi_Meter's address, enable other Instruments.
-            // NOTE: Add/remove instruments as needed.
-            // VISA (Virtual Instrument Software Architecture) Resource Names.
-            // - https://www.ivifoundation.org/specifications/default.aspx
-            // - Technically, these are actually VISA 'Resource Names' instead of VISA 'Addresses',
-            //   but 'Address' has widespread usage and is more descriptive than 'Resource Name'.
-            // { INSTRUMENTS.Keysight_EL34143A_Electronic_Load, "USB0::0x2A8D::0x3802::MY61001295::0::INSTR" },
-            // { INSTRUMENTS.Keysight_33461A_Multi_Meter, "TBD" },
-            // { INSTRUMENTS.Keysight_E33509B_WaveForm_Generator, "USB0::0x0957::0x2507::MY59003604::0::INSTR" },
-            // { INSTRUMENTS.Keysight_E36234A_Power_Supply, "USB0::0x2A8D::0x3402::MY61002598::0::INSTR" },
-            { INSTRUMENTS.Keysight_E36105B_Power_Supply, "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
-            { INSTRUMENTS.Keysight_E36103B_Power_Supply_1, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
-            { INSTRUMENTS.Keysight_E36103B_Power_Supply_2, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" }
-            };
-        public INSTRUMENTS ID { get; private set; }
-        public String Category { get; private set; }
-        public String Address { get; private set; }
-        public object Instance { get; private set; }
-        public String Manufacturer { get; private set; }
-        public String Model { get; private set; }
-
-        private Instrument(INSTRUMENTS ID, String Address) {
-            this.ID = ID;
-            this.Address = Address;
-
-            try {
-                switch (ID) {
-                    case INSTRUMENTS.Keysight_E36103B_Power_Supply_1:
-                    case INSTRUMENTS.Keysight_E36103B_Power_Supply_2:
-                    case INSTRUMENTS.Keysight_E36105B_Power_Supply:
-                        this.Category = "Power Supply";
-                        this.Instance = new AgE3610XB(this.Address);
-                        ((AgE3610XB)this.Instance).SCPI.SYSTem.RWLock.Command();
-                        break;
-                    case INSTRUMENTS.Keysight_E36234A_Power_Supply:
-                        this.Category = "Power Supply";
-                        this.Instance = new AgE36200(this.Address);
-                        ((AgE36200)this.Instance).SCPI.SYSTem.RWLock.Command();
-                        break;
-                    case INSTRUMENTS.Keysight_EL34143A_Electronic_Load:
-                        this.Category = "Electronic Load";
-                        this.Instance = new KtEL30000(this.Address, false, false);
-                        break;
-                    case INSTRUMENTS.Keysight_E33509B_WaveForm_Generator:
-                        this.Category = "Waveform Generator";
-                        this.Instance = new Ag33500B_33600A(this.Address);
-                        break;
-                    case INSTRUMENTS.Keysight_33461A_Multi_Meter:
-                        this.Category = "Multi-Meter";
-                        this.Instance = new Kt34400(this.Address, false, false);
-                        break;
-                    default:
-                        throw new NotImplementedException($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
-                            $"Update Class TestLibrary.InstrumentTasks.Instrument, adding '{ID}'.");
-                }
-                this.Manufacturer = SCPI99.GetManufacturer(this.Address);
-                this.Model = SCPI99.GetModel(this.Address);
-            } catch (NotImplementedException) {
-                throw;
-            } catch (Exception e) {
-                String[] a = this.Address.Split(':');
-                throw new InvalidOperationException($"Check to see if {this.Category} with VISA Address '{this.Address}' is powered and it's {a[0]} bus is communicating.", e);
-            }
-        }
-
-        public static Dictionary<INSTRUMENTS, Instrument> Get() {
-            Dictionary<INSTRUMENTS, Instrument> d = new Dictionary<INSTRUMENTS, Instrument>();
-            foreach (KeyValuePair<INSTRUMENTS, String> itva in InstrumentsToVISA_Addresses) d.Add(itva.Key, new Instrument(itva.Key, itva.Value));
-            return d;
         }
     }
 }
