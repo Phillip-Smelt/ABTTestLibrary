@@ -44,7 +44,7 @@ namespace TestLibrary.TestSupport {
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Connect '{ISP}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER connecting, click OK to continue.",
-                    $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public static void ISP_DisConnect(String ISP, String Connector, Dictionary<INSTRUMENTS, Instrument> instruments) {
@@ -52,7 +52,7 @@ namespace TestLibrary.TestSupport {
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Disconnect '{ISP}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER disconnecting, click OK to continue.",
-                    $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public static String ProcessExitCode(String Arguments, String FileName, String WorkingDirectory) {
