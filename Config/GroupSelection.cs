@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -12,9 +10,9 @@ namespace TestLibrary.Config {
         private readonly List<String> _keysRequired;
         private readonly List<String> _keysNotRequired;
 
-        public GroupSelect(Dictionary<String, Group> Groups) {
+        public GroupSelect(Dictionary<String, Group> groups) {
             this.InitializeComponent();
-            this.Groups = Groups;
+            this.Groups = groups;
             this._keysRequired = this.Groups.Where(g => (g.Value.Required)).Select(g => g.Key).ToList();
             this._keysNotRequired = this.Groups.Where(g => (!g.Value.Required)).Select(g => g.Key).ToList();
             this.ListGroups.MultiSelect = false;
@@ -42,15 +40,15 @@ namespace TestLibrary.Config {
             this.OK.Enabled = false;
         }
 
-        private void OK_Click(object sender, EventArgs e) {
+        private void OK_Click(Object sender, EventArgs e) {
             if (this.ListGroups.SelectedItems.Count == 1) {
                 this.GroupSelected = this.ListGroups.SelectedItems[0].Text;
                 this.DialogResult = DialogResult.OK;
             }
         }
 
-        public static String Get(Dictionary<String, Group> Groups) {
-            GroupSelect gs = new GroupSelect(Groups);
+        public static String Get(Dictionary<String, Group> groups) {
+            GroupSelect gs = new GroupSelect(groups);
             gs.ShowDialog(); // Waits until user clicks OK button.
             String g = gs.GroupSelected;
             gs.Dispose();

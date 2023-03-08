@@ -12,8 +12,8 @@ namespace TestLibrary.Instruments.Keysight {
     public static class KS33509B {
         // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
 
-        public static void ApplyDC(Instrument instrument, Double VoltsDC) {
-            ((Ag33500B_33600A)instrument.Instance).SCPI.SOURce.APPLy.DC.Command(1u, "DEFAult", "DEFAult", VoltsDC);
+        public static void ApplyDC(Instrument instrument, Double voltsDC) {
+            ((Ag33500B_33600A)instrument.Instance).SCPI.SOURce.APPLy.DC.Command(1u, "DEFAult", "DEFAult", voltsDC);
         }
 
         public static void SetOutputOn(Instrument instrument) {

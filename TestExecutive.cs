@@ -16,7 +16,7 @@ using TestLibrary.SwitchMatrices.MeasurementComputing;
 
 // TODO: Replace RichTextBox in this TestExecutive with a DataGridView, change Logging output from current discrete records to DataGrid rows.
 // TODO: Update to .Net 7.0 & C# 11.0 when possible.
-// - Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas Instruments TIDP.SAA Fusion Library
+// - Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library
 //   is compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
 // https://www.ti.com/tool/FUSION_USB_ADAPTER_API
 // TODO: Update to UWP instead of WinForms when possible.
@@ -29,17 +29,15 @@ using TestLibrary.SwitchMatrices.MeasurementComputing;
 //  - https://github.com/Amphenol-Borisch-Technologies/TestLibraryTests
 namespace TestLibrary {
     public abstract partial class TestExecutive : Form {
-        protected ConfigLib configLib;
-        protected ConfigTest configTest;
-        protected Dictionary<INSTRUMENTS, Instrument> instruments;
-        // TODO: Create an Instruments class that's simply Dictionary<INSTRUMENTS, Instrument>.  Concises Dictionary<INSTRUMENTS, Instrument> everywhere used.
-        // NOTE: Above object declarations protected so they can be inhereited & extended if needed.
-        private String _appAssemblyVersion;
-        private String _libraryAssemblyVersion;
+        public ConfigLib ConfigLib;
+        public ConfigTest ConfigTest;
+        public Dictionary<INSTRUMENTS, Instrument> Instruments;
+        public CancellationTokenSource CancelTokenSource;
+        private readonly String _appAssemblyVersion;
+        private readonly String _libraryAssemblyVersion;
         private Boolean _cancelled;
-        private CancellationTokenSource _cancellationTokenSource;
 
-        protected abstract Task<String> RunTestAsync(Test test, Dictionary<INSTRUMENTS, Instrument> instruments, CancellationToken CT);
+        protected abstract Task<String> RunTestAsync(Test test);
 
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();
@@ -50,49 +48,49 @@ namespace TestLibrary {
         }
 
         private void Form_Load(Object sender, EventArgs e) {
-            this.configLib = ConfigLib.Get();
-            this.instruments = Instrument.Get();
-            InstrumentTasks.SCPI99_Test(this.instruments);
-            InstrumentTasks.InstrumentResetClear(this.instruments);
+            this.ConfigLib = ConfigLib.Get();
+            this.Instruments = Instrument.Get();
+            InstrumentTasks.SCPI99_Test(this.Instruments);
+            InstrumentTasks.InstrumentResetClear(this.Instruments);
             USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
-            this._cancellationTokenSource = new CancellationTokenSource();
+            this.CancelTokenSource = new CancellationTokenSource();
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
             this.FormReset();
-            this.Text = $"{this.configLib.UUT.Number}, {this.configLib.UUT.Description}";
-            if (!String.Equals(String.Empty, this.configLib.UUT.DocumentationFolder)) {
-                if (Directory.Exists(this.configLib.UUT.DocumentationFolder)) {
+            this.Text = $"{this.ConfigLib.UUT.Number}, {this.ConfigLib.UUT.Description}";
+            if (!String.Equals(String.Empty, this.ConfigLib.UUT.DocumentationFolder)) {
+                if (Directory.Exists(this.ConfigLib.UUT.DocumentationFolder)) {
                     ProcessStartInfo psi = new ProcessStartInfo {
                         FileName = "explorer.exe",
                         WindowStyle= ProcessWindowStyle.Minimized,
-                        Arguments = $"\"{this.configLib.UUT.DocumentationFolder}\""
+                        Arguments = $"\"{this.ConfigLib.UUT.DocumentationFolder}\""
                     };
                     Process.Start(psi);
                     // Paths with embedded spaces require enclosing double-quotes (").
                     // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-                } else MessageBox.Show(Form.ActiveForm, $"Path {this.configLib.UUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                } else MessageBox.Show(Form.ActiveForm, $"Path {this.ConfigLib.UUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             this.ButtonSelectGroup.Enabled = true;
         }
 
         private void ButtonSelectGroup_Click(Object sender, EventArgs e) {
-            this.configTest = ConfigTest.Get();
-            this.Text = $"{this.configLib.UUT.Number}, {this.configLib.UUT.Description}, {this.configTest.Group.ID}";
+            this.ConfigTest = ConfigTest.Get();
+            this.Text = $"{this.ConfigLib.UUT.Number}, {this.ConfigLib.UUT.Description}, {this.ConfigTest.Group.ID}";
             this.FormReset();
             this.ButtonSelectGroup.Enabled = true;
-            this.ButtonStartReset(Enabled: true);
+            this.ButtonStartReset(enabled: true);
         }
 
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
-            this.configLib.UUT.SerialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.configLib.UUT.SerialNumber);
-            if (String.Equals(this.configLib.UUT.SerialNumber, String.Empty)) return;
+            this.ConfigLib.UUT.SerialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.ConfigLib.UUT.SerialNumber);
+            if (String.Equals(this.ConfigLib.UUT.SerialNumber, String.Empty)) return;
             await this.RunAsync();
         }
 
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            this._cancellationTokenSource.Cancel();
+            this.CancelTokenSource.Cancel();
             this._cancelled = true;
             this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
             this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = Color.Red;
@@ -135,19 +133,19 @@ namespace TestLibrary {
             //          value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
         }
 
-        private void ButtonStartReset(Boolean Enabled) {
-            if (Enabled) {
+        private void ButtonStartReset(Boolean enabled) {
+            if (enabled) {
                 this.ButtonStart.UseVisualStyleBackColor = false;
                 this.ButtonStart.BackColor = Color.Green;
             } else {
                 this.ButtonStart.BackColor = SystemColors.Control;
                 this.ButtonStart.UseVisualStyleBackColor = true;
             }
-            this.ButtonStart.Enabled = Enabled;
+            this.ButtonStart.Enabled = enabled;
         }
 
-        private void ButtonCancelReset(Boolean Enabled) {
-            if (Enabled) {
+        private void ButtonCancelReset(Boolean enabled) {
+            if (enabled) {
                 this.ButtonCancel.UseVisualStyleBackColor = false;
                 this.ButtonCancel.BackColor = Color.Yellow;
             } else {
@@ -155,23 +153,23 @@ namespace TestLibrary {
                 this.ButtonCancel.UseVisualStyleBackColor = true;
             }
             this.ButtonCancel.Text = "Cancel";
-            if (this._cancellationTokenSource.IsCancellationRequested) {
-                this._cancellationTokenSource.Dispose();
-                this._cancellationTokenSource = new CancellationTokenSource();
+            if (this.CancelTokenSource.IsCancellationRequested) {
+                this.CancelTokenSource.Dispose();
+                this.CancelTokenSource = new CancellationTokenSource();
             }
             this._cancelled = false;
-            this.ButtonCancel.Enabled = Enabled;
+            this.ButtonCancel.Enabled = enabled;
         }
 
         private void FormReset() {
             this.ButtonSelectGroup.Enabled = false;
-            this.ButtonStartReset(Enabled: false);
-            this.ButtonCancelReset(Enabled: false);
+            this.ButtonStartReset(enabled: false);
+            this.ButtonCancelReset(enabled: false);
             this.TextUUTResult.Text = String.Empty;
             this.TextUUTResult.BackColor = Color.White;
-            if (this.configTest != null) {
-                this.ButtonSaveOutput.Enabled = !this.configTest.Group.Required;
-                this.ButtonOpenTestDataFolder.Enabled = (this.configTest.Group.Required && this.configLib.Logger.FileEnabled);
+            if (this.ConfigTest != null) {
+                this.ButtonSaveOutput.Enabled = !this.ConfigTest.Group.Required;
+                this.ButtonOpenTestDataFolder.Enabled = (this.ConfigTest.Group.Required && this.ConfigLib.Logger.FileEnabled);
             } else {
                 this.ButtonSaveOutput.Enabled = false;
                 this.ButtonOpenTestDataFolder.Enabled = false;
@@ -181,7 +179,7 @@ namespace TestLibrary {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            InstrumentTasks.InstrumentResetClear(this.instruments);
+            InstrumentTasks.InstrumentResetClear(this.Instruments);
             USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             if (this.ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
@@ -191,7 +189,7 @@ namespace TestLibrary {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{this.configLib.UUT.Number}_{this.configLib.UUT.SerialNumber}",
+                FileName = $"{this.ConfigLib.UUT.Number}_{this.ConfigLib.UUT.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -201,30 +199,30 @@ namespace TestLibrary {
         }
 
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
-            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.configLib.Logger.FilePath}\"" };
+            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.ConfigLib.Logger.FilePath}\"" };
             Process.Start(psi);
-            // Will fail if this.configLib.Logger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
+            // Will fail if this.ConfigLib.Logger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
         }
 
         private void PreRun() {
             this.FormReset();
-            foreach (KeyValuePair<String, Test> t in this.configTest.Tests) {
-                if (String.Equals(t.Value.ClassName, TestNumerical.ClassName)) t.Value.Measurement = Double.NaN.ToString();
-                else t.Value.Measurement = String.Empty;
-                t.Value.Result = EventCodes.UNSET;
+            foreach (KeyValuePair<String, Test> test in this.ConfigTest.Tests) {
+                if (String.Equals(test.Value.ClassName, TestNumerical.ClassName)) test.Value.Measurement = Double.NaN.ToString();
+                else test.Value.Measurement = String.Empty;
+                test.Value.Result = EventCodes.UNSET;
             }
-            this.configLib.UUT.EventCode = EventCodes.UNSET;
-            InstrumentTasks.SCPI99_Reset(this.instruments);
+            this.ConfigLib.UUT.EventCode = EventCodes.UNSET;
+            InstrumentTasks.SCPI99_Reset(this.Instruments);
             USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
-            LogTasks.Start(this.configLib, this.configTest, this._appAssemblyVersion, this._libraryAssemblyVersion, this.configTest.Group, ref this.rtfResults);
-            this.ButtonCancelReset(Enabled: true);
+            LogTasks.Start(this.ConfigLib, this.ConfigTest, this._appAssemblyVersion, this._libraryAssemblyVersion, this.ConfigTest.Group, ref this.rtfResults);
+            this.ButtonCancelReset(enabled: true);
         }
 
         private async Task RunAsync() {
             PreRun();
-            foreach (KeyValuePair<String, Test> test in this.configTest.Tests) {
+            foreach (KeyValuePair<String, Test> test in this.ConfigTest.Tests) {
                 try {
-                    test.Value.Measurement = await Task.Run(() => RunTestAsync(test.Value, this.instruments, this._cancellationTokenSource.Token));
+                    test.Value.Measurement = await Task.Run(() => RunTestAsync(test.Value));
                     test.Value.Result = TestTasks.EvaluateTestResult(test.Value);
                 } catch (Exception e) {
                     if (e.ToString().Contains(TestCancellationException.ClassName)) {
@@ -247,22 +245,22 @@ namespace TestLibrary {
         }
 
         private void StopRun(KeyValuePair<String, Test> test, String exceptionString) {
-            InstrumentTasks.InstrumentResetClear(this.instruments);
+            InstrumentTasks.InstrumentResetClear(this.Instruments);
             USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             test.Value.Result = EventCodes.ERROR;
             TestTasks.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
         private void PostRun() {
-            InstrumentTasks.SCPI99_Reset(this.instruments);
+            InstrumentTasks.SCPI99_Reset(this.Instruments);
             USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             this.ButtonSelectGroup.Enabled = true;
-            this.ButtonStartReset(Enabled: true);
-            this.ButtonCancelReset(Enabled: false);
-            this.configLib.UUT.EventCode = TestTasks.EvaluateUUTResult(this.configTest);
-            this.TextUUTResult.Text = this.configLib.UUT.EventCode;
-            this.TextUUTResult.BackColor = EventCodes.GetColor(this.configLib.UUT.EventCode);
-            LogTasks.Stop(this.configLib, this.configTest.Group, ref this.rtfResults);
+            this.ButtonStartReset(enabled: false);
+            this.ButtonCancelReset(enabled: false);
+            this.ConfigLib.UUT.EventCode = TestTasks.EvaluateUUTResult(this.ConfigTest);
+            this.TextUUTResult.Text = this.ConfigLib.UUT.EventCode;
+            this.TextUUTResult.BackColor = EventCodes.GetColor(this.ConfigLib.UUT.EventCode);
+            LogTasks.Stop(this.ConfigLib, this.ConfigTest.Group, ref this.rtfResults);
         }
     }
 }

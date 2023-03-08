@@ -40,8 +40,8 @@ namespace TestLibrary.Config {
         public const String ClassName = nameof(TestAbstract);
         private protected TestAbstract() { }
 
-        public static Dictionary<String, String> SplitArguments(String Arguments) {
-            String[] args = Arguments.Split(Test.SPLIT_ARGUMENTS_CHAR);
+        public static Dictionary<String, String> SplitArguments(String arguments) {
+            String[] args = arguments.Split(Test.SPLIT_ARGUMENTS_CHAR);
             String[] kvp;
             Dictionary<String, String> argDictionary = new Dictionary<String, String>();
             for (int i = 0; i < args.Length; i++) {
@@ -56,9 +56,9 @@ namespace TestLibrary.Config {
         public new const String ClassName = nameof(TestCustomizable);
         public Dictionary<String, String> Arguments;
 
-        public TestCustomizable(String ID, String Arguments) {
-            this.Arguments = TestAbstract.SplitArguments(Arguments);
-            if (this.Arguments.Count == 0) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 1 or more key=value arguments:{Environment.NewLine}" +
+        public TestCustomizable(String id, String arguments) {
+            this.Arguments = TestAbstract.SplitArguments(arguments);
+            if (this.Arguments.Count == 0) throw new ArgumentException($"TestElement ID '{id}' with ClassName '{ClassName}' requires 1 or more key=value arguments:{Environment.NewLine}" +
                     $"   Example: 'NameFirst=Harry|" +
                     $"             NameLast=Potter|" +
                     $"             Occupation=Auror'{Environment.NewLine}" +
@@ -73,21 +73,21 @@ namespace TestLibrary.Config {
         public String ISPExecutableArguments;
         public String ISPResult;
 
-        public TestISP(String ID, String Arguments) {
-            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
+        public TestISP(String id, String arguments) {
+            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(arguments);
+            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{id}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $@"   Example: 'ISPExecutable=ipecmd.exe|
                                 ISPExecutableFolder=C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe|
                                 ISPExecutableArguments=C:\TBD\U1_Firmware.hex|
                                 ISPResult=0xAC0E'{Environment.NewLine}" +
-                $"   Actual : '{Arguments}'");
-            if (!argsDict.ContainsKey("ISPExecutableFolder")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'ISPExecutableFolder' key-value pair.");
-            if (!argsDict.ContainsKey("ISPExecutable")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'ISPExecutable' key-value pair.");
-            if (!argsDict.ContainsKey("ISPExecutableArguments")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'ISPExecutableArguments' key-value pair.");
-            if (!argsDict.ContainsKey("ISPResult")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'ISPResult' key-value pair.");
+                $"   Actual : '{arguments}'");
+            if (!argsDict.ContainsKey("ISPExecutableFolder")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'ISPExecutableFolder' key-value pair.");
+            if (!argsDict.ContainsKey("ISPExecutable")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'ISPExecutable' key-value pair.");
+            if (!argsDict.ContainsKey("ISPExecutableArguments")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'ISPExecutableArguments' key-value pair.");
+            if (!argsDict.ContainsKey("ISPResult")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'ISPResult' key-value pair.");
             if (!argsDict["ISPExecutableFolder"].EndsWith(@"\")) argsDict["ISPExecutableFolder"] += @"\";
-            if (!Directory.Exists(argsDict["ISPExecutableFolder"])) throw new ArgumentException($"TestElement ID '{ID}' ISPExecutableFolder '{argsDict["ISPExecutableFolder"]}' does not exist.");
-            if (!File.Exists(argsDict["ISPExecutableFolder"] + argsDict["ISPExecutable"])) throw new ArgumentException($"TestElement ID '{ID}' ISPExecutable '{argsDict["ISPExecutableFolder"] + argsDict["ISPExecutable"]}' does not exist.");
+            if (!Directory.Exists(argsDict["ISPExecutableFolder"])) throw new ArgumentException($"TestElement ID '{id}' ISPExecutableFolder '{argsDict["ISPExecutableFolder"]}' does not exist.");
+            if (!File.Exists(argsDict["ISPExecutableFolder"] + argsDict["ISPExecutable"])) throw new ArgumentException($"TestElement ID '{id}' ISPExecutable '{argsDict["ISPExecutableFolder"] + argsDict["ISPExecutable"]}' does not exist.");
 
             this.ISPExecutableFolder = argsDict["ISPExecutableFolder"];
             this.ISPExecutable = argsDict["ISPExecutable"];
@@ -103,26 +103,26 @@ namespace TestLibrary.Config {
         public String Unit { get; private set; }
         public String UnitType { get; private set; }
 
-        public TestNumerical(String ID, String Arguments) {
-            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
+        public TestNumerical(String id, String arguments) {
+            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(arguments);
+            if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{id}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $"   Example: 'High=0.004|" +
                 $"             Low=0.002|" +
                 $"             Unit=A|" +
                 $"             UnitType=DC'{Environment.NewLine}" +
-                $"   Actual : '{Arguments}'");
-            if (!argsDict.ContainsKey("High")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'High' key-value pair.");
-            if (!argsDict.ContainsKey("Low")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'Low' key-value pair.");
-            if (!argsDict.ContainsKey("Unit")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'Unit' key-value pair.");
-            if (!argsDict.ContainsKey("UnitType")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'UnitType' key-value pair.");
+                $"   Actual : '{arguments}'");
+            if (!argsDict.ContainsKey("High")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'High' key-value pair.");
+            if (!argsDict.ContainsKey("Low")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'Low' key-value pair.");
+            if (!argsDict.ContainsKey("Unit")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'Unit' key-value pair.");
+            if (!argsDict.ContainsKey("UnitType")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'UnitType' key-value pair.");
 
             if (Double.TryParse(argsDict["High"], NumberStyles.Float, CultureInfo.CurrentCulture, out Double high)) this.High = high;
-            else throw new ArgumentException($"TestElement ID '{ID}' High '{argsDict["High"]}' ≠ System.Double.");
+            else throw new ArgumentException($"TestElement ID '{id}' High '{argsDict["High"]}' ≠ System.Double.");
 
             if (Double.TryParse(argsDict["Low"], NumberStyles.Float, CultureInfo.CurrentCulture, out Double low)) this.Low = low;
-            else throw new ArgumentException($"TestElement ID '{ID}' Low '{argsDict["Low"]}' ≠ System.Double.");
+            else throw new ArgumentException($"TestElement ID '{id}' Low '{argsDict["Low"]}' ≠ System.Double.");
 
-            if (low > high) throw new ArgumentException($"TestElement ID '{ID}' Low '{low}' > High '{high}'.");
+            if (low > high) throw new ArgumentException($"TestElement ID '{id}' Low '{low}' > High '{high}'.");
             this.Unit = argsDict["Unit"];
             this.UnitType = argsDict["UnitType"];
         }
@@ -131,12 +131,12 @@ namespace TestLibrary.Config {
     public class TestTextual : TestAbstract {
         public new const String ClassName = nameof(TestTextual);
         public String Text { get; private set; }
-        public TestTextual(String ID, String Arguments) {
-            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            if (argsDict.Count != 1) throw new ArgumentException($"TestElement ID '{ID}' with ClassName '{ClassName}' requires 1 case-sensitive argument:{Environment.NewLine}" +
+        public TestTextual(String id, String arguments) {
+            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(arguments);
+            if (argsDict.Count != 1) throw new ArgumentException($"TestElement ID '{id}' with ClassName '{ClassName}' requires 1 case-sensitive argument:{Environment.NewLine}" +
                     $"   Example: 'Text=The quick brown fox jumps over the lazy dog.'{Environment.NewLine}" +
-                    $"   Actual : '{Arguments}'");
-            if (!argsDict.ContainsKey("Text")) throw new ArgumentException($"TestElement ID '{ID}' does not contain 'Text' key-value pair.");
+                    $"   Actual : '{arguments}'");
+            if (!argsDict.ContainsKey("Text")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'Text' key-value pair.");
             this.Text = argsDict["Text"];
         }
     }
@@ -151,15 +151,15 @@ namespace TestLibrary.Config {
         public String Measurement { get; set; }
         public String Result { get; set; }
 
-        private Test(String ID, String Description, String Revision, String ClassName, String Arguments) {
-            this.ID = ID;
-            this.Description = Description;
-            this.Revision = Revision;
-            this.ClassName = ClassName;
+        private Test(String id, String description, String revision, String className, String arguments) {
+            this.ID = id;
+            this.Description = description;
+            this.Revision = revision;
+            this.ClassName = className;
             if (String.Equals(this.ClassName, TestNumerical.ClassName)) this.Measurement = Double.NaN.ToString();
             else this.Measurement = String.Empty;
             this.Result = EventCodes.UNSET;
-            this.ClassObject = Activator.CreateInstance(Type.GetType(GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, Arguments });
+            this.ClassObject = Activator.CreateInstance(Type.GetType(GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
         }
 
         public static Dictionary<String, Test> Get() {

@@ -25,118 +25,118 @@ namespace TestLibrary.TestSupport {
         public const String PASS = "PASS";
         public const String UNSET = "UNSET";
 
-        public static Color GetColor(String EventCode) {
-            Dictionary<String, Color> CodesToColors = new Dictionary<String, Color>() {
+        public static Color GetColor(String eventCode) {
+            Dictionary<String, Color> codesToColors = new Dictionary<String, Color>() {
                 {EventCodes.CANCEL, Color.Yellow },
                 {EventCodes.ERROR, Color.Aqua },
                 {EventCodes.FAIL, Color.Red },
                 {EventCodes.PASS, Color.Green },
                 {EventCodes.UNSET, Color.Gray }
             };
-            return CodesToColors[EventCode];
+            return codesToColors[eventCode];
         }
     }
 
     public static class TestTasks {
 
-        public static void ISP_Connect(String ISP, String Connector, Dictionary<INSTRUMENTS, Instrument> instruments) {
+        public static void ISP_Connect(String isp, String connector, Dictionary<INSTRUMENTS, Instrument> instruments) {
             InstrumentTasks.SCPI99_Reset(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
-                    $"Connect '{ISP}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
+                    $"Connect '{isp}' to UUT '{connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER connecting, click OK to continue.",
-                    $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    $"Connect '{connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public static void ISP_DisConnect(String ISP, String Connector, Dictionary<INSTRUMENTS, Instrument> instruments) {
+        public static void ISP_DisConnect(String isp, String connector, Dictionary<INSTRUMENTS, Instrument> instruments) {
             InstrumentTasks.SCPI99_Reset(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
-                    $"Disconnect '{ISP}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
+                    $"Disconnect '{isp}' from UUT '{connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER disconnecting, click OK to continue.",
-                    $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    $"Disconnect '{connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public static String ProcessExitCode(String Arguments, String FileName, String WorkingDirectory) {
-            Int32 ExitCode = -1;
+        public static String ProcessExitCode(String arguments, String fileName, String workingDirectory) {
+            Int32 exitCode = -1;
             using (Process process = new Process()) {
-                ProcessStartInfo PSI = new ProcessStartInfo {
-                    Arguments = Arguments,
-                    FileName = FileName,
-                    WorkingDirectory = WorkingDirectory,
+                ProcessStartInfo psi = new ProcessStartInfo {
+                    Arguments = arguments,
+                    FileName = fileName,
+                    WorkingDirectory = workingDirectory,
                     CreateNoWindow = false,
                     UseShellExecute = false,
                     RedirectStandardError = false,
                     RedirectStandardOutput = false
                 };
-                process.StartInfo = PSI;
+                process.StartInfo = psi;
                 process.Start();
                 process.WaitForExit();
-                ExitCode = process.ExitCode;
+                exitCode = process.ExitCode;
             }
-            return ExitCode.ToString();
+            return exitCode.ToString();
         }
 
-        public static (String StandardError, String StandardOutput, Int32 ExitCode) ProcessRedirect(String Arguments, String FileName, String WorkingDirectory, String ExpectedResult) {
-            String StandardError, StandardOutput;
-            Int32 ExitCode = -1;
+        public static (String StandardError, String StandardOutput, Int32 ExitCode) ProcessRedirect(String arguments, String fileName, String workingDirectory, String expectedResult) {
+            String standardError, standardOutput;
+            Int32 exitCode = -1;
             using (Process process = new Process()) {
-                ProcessStartInfo PSI = new ProcessStartInfo {
-                    Arguments = Arguments,
-                    FileName = FileName,
-                    WorkingDirectory = WorkingDirectory,
+                ProcessStartInfo psi = new ProcessStartInfo {
+                    Arguments = arguments,
+                    FileName = fileName,
+                    WorkingDirectory = workingDirectory,
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     RedirectStandardError = true,
                     RedirectStandardOutput = true
                 };
-                process.StartInfo = PSI;
+                process.StartInfo = psi;
                 process.Start();
                 process.WaitForExit();
-                StreamReader SE = process.StandardError;
-                StandardError = SE.ReadToEnd();
-                StreamReader SO = process.StandardOutput;
-                StandardOutput = SO.ReadToEnd();
-                ExitCode = process.ExitCode;
+                StreamReader se = process.StandardError;
+                standardError = se.ReadToEnd();
+                StreamReader so = process.StandardOutput;
+                standardOutput = so.ReadToEnd();
+                exitCode = process.ExitCode;
             }
-            if (StandardOutput.Contains(ExpectedResult)) return (StandardError, ExpectedResult, ExitCode);
-            else return (StandardError, StandardOutput, ExitCode);
+            if (standardOutput.Contains(expectedResult)) return (standardError, expectedResult, exitCode);
+            else return (standardError, standardOutput, exitCode);
         }
 
-        public static String ISP_ExitCode(String ISP, String Connector, Test test,
+        public static String ISP_ExitCode(String isp, String connector, Test test,
             Dictionary<INSTRUMENTS, Instrument> instruments, Func<Dictionary<INSTRUMENTS, Instrument>, (String, String)> powerSupplyOnMethod) {
-            ISP_Connect(ISP, Connector, instruments);
+            ISP_Connect(isp, connector, instruments);
             _ = powerSupplyOnMethod(instruments);
-            TestISP tisp = (TestISP)test.ClassObject;
-            String ExitCode = ProcessExitCode(tisp.ISPExecutableArguments, tisp.ISPExecutable, tisp.ISPExecutableFolder);
-            ISP_DisConnect(ISP, Connector, instruments);
-            return ExitCode;
+            TestISP testISP = (TestISP)test.ClassObject;
+            String exitCode = ProcessExitCode(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder);
+            ISP_DisConnect(isp, connector, instruments);
+            return exitCode;
         }
 
-        public static (String StandardError, String StandardOutput, Int32 ExitCode) ISP_Redirect(String ISP, String Connector, Test test,
+        public static (String StandardError, String StandardOutput, Int32 ExitCode) ISP_Redirect(String isp, String connector, Test test,
             Dictionary<INSTRUMENTS, Instrument> instruments, Func<Dictionary<INSTRUMENTS, Instrument>, (String, String)> powerSupplyOnMethod) {
-            ISP_Connect(ISP, Connector, instruments);
+            ISP_Connect(isp, connector, instruments);
             _ = powerSupplyOnMethod(instruments);
-            TestISP tisp = (TestISP)test.ClassObject;
-            (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(tisp.ISPExecutableArguments, tisp.ISPExecutable, tisp.ISPExecutableFolder, tisp.ISPResult);
-            ISP_DisConnect(ISP, Connector, instruments);
+            TestISP testISP = (TestISP)test.ClassObject;
+            (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder, testISP.ISPResult);
+            ISP_DisConnect(isp, connector, instruments);
             return (StandardError, StandardOutput, ExitCode);
         }
 
         public static String EvaluateTestResult(Test test) {
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
-                    return test.Measurement;
+                    return test.Result;
                 case TestISP.ClassName:
-                    TestISP tisp = (TestISP)test.ClassObject;
-                    if (String.Equals(tisp.ISPResult, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
+                    TestISP testISP = (TestISP)test.ClassObject;
+                    if (String.Equals(testISP.ISPResult, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestNumerical.ClassName:
                     if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
-                    TestNumerical tn = (TestNumerical)test.ClassObject;
-                    if ((tn.Low <= dMeasurement) && (dMeasurement <= tn.High)) return EventCodes.PASS;
+                    TestNumerical testNumerical = (TestNumerical)test.ClassObject;
+                    if ((testNumerical.Low <= dMeasurement) && (dMeasurement <= testNumerical.High)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestTextual.ClassName:
-                    TestTextual tt = (TestTextual)test.ClassObject;
-                    if (String.Equals(tt.Text, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
+                    TestTextual testTextual = (TestTextual)test.ClassObject;
+                    if (String.Equals(testTextual.Text, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 default:
                     throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
@@ -160,7 +160,7 @@ namespace TestLibrary.TestSupport {
                 // - If any test result is UNSET, and there are no explicit ERROR or CANCEL results, it implies Test(s) didn't complete
                 //   without erroring or cancelling, which shouldn't occur, but...
                 String s = String.Empty;
-                foreach (KeyValuePair<String, Test> t in configTest.Tests) s += $"ID: '{t.Key}' Result: '{t.Value.Result}'.{Environment.NewLine}";
+                foreach (KeyValuePair<String, Test> test in configTest.Tests) s += $"ID: '{test.Key}' Result: '{test.Value.Result}'.{Environment.NewLine}";
                 UnexpectedErrorHandler($"Encountered Test(s) with EventCodes.UNSET:{Environment.NewLine}{Environment.NewLine}{s}");
                 return EventCodes.ERROR;
             }
@@ -171,13 +171,13 @@ namespace TestLibrary.TestSupport {
             // Else, we're really in the Twilight Zone...
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
-            foreach (KeyValuePair<String, Test> t in configTest.Tests) if (!validEvents.Contains(t.Value.Result)) invalidTests += $"ID: '{t.Key}' Result: '{t.Value.Result}'.{Environment.NewLine}";
+            foreach (KeyValuePair<String, Test> test in configTest.Tests) if (!validEvents.Contains(test.Value.Result)) invalidTests += $"ID: '{test.Key}' Result: '{test.Value.Result}'.{Environment.NewLine}";
             UnexpectedErrorHandler($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
             return EventCodes.ERROR;
         }
 
         private static Int32 GetResultCount(Dictionary<String, Test> tests, String eventCode) {
-            return (from t in tests where String.Equals(t.Value.Result, eventCode) select t).Count();
+            return (from test in tests where String.Equals(test.Value.Result, eventCode) select test).Count();
         }
 
         public static void UnexpectedErrorHandler(String logMessage) {

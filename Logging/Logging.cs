@@ -14,7 +14,7 @@ namespace TestLibrary.Logging {
     public static class LogTasks {
         public const String LOGGER_TEMPLATE = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}";
 
-        public static void Start(ConfigLib configLib, ConfigTest configTest, String appAssemblyVersion, String libraryAssemblyVersion, Group group, ref RichTextBox rtfResults) {
+        public static void Start(ConfigLib configLib, ConfigTest configTest, String _appAssemblyVersion, String _libraryAssemblyVersion, Group group, ref RichTextBox rtfResults) {
             if (!group.Required) {
                 // When non-Required Groups are executed, test data is never saved to config.Logger.FilePath as Rich Text.  Never.
                 // RichTextBox only. 
@@ -52,8 +52,8 @@ namespace TestLibrary.Logging {
                     .CreateLogger();
             }
             Log.Information($"START                  : {DateTime.Now}");
-            Log.Information($"TestProgram Version    : {appAssemblyVersion}");
-            Log.Information($"TestLibrary Version    : {libraryAssemblyVersion}");
+            Log.Information($"TestProgram Version    : {_appAssemblyVersion}");
+            Log.Information($"TestLibrary Version    : {_libraryAssemblyVersion}");
             Log.Information($"UUT Customer           : {configLib.UUT.Customer}");
             Log.Information($"UUT Test Specification : {configLib.UUT.TestSpecification}");
             Log.Information($"UUT Description        : {configLib.UUT.Description}");
@@ -87,24 +87,25 @@ namespace TestLibrary.Logging {
             message += $"  Test Type   : {test.ClassName}\n";
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
-                    TestCustomizable tc = (TestCustomizable)test.ClassObject;
-                    foreach (KeyValuePair<String, String> kvp in tc.Arguments) message += $"  Key=Value   : {kvp.Key}={kvp.Value}\n";
+                    TestCustomizable testCustomizable = (TestCustomizable)test.ClassObject;
+                    foreach (KeyValuePair<String, String> kvp in testCustomizable.Arguments) message += $"  Key=Value   : {kvp.Key}={kvp.Value}\n";
+                    message += $"  Actual      : {test.Measurement}\n";
                     break;
                 case TestISP.ClassName:
-                    TestISP tisp = (TestISP)test.ClassObject;
-                    message += $"  Expected    : {tisp.ISPResult}\n";
+                    TestISP testISP = (TestISP)test.ClassObject;
+                    message += $"  Expected    : {testISP.ISPResult}\n";
                     message += $"  Actual      : {test.Measurement}\n";
                     break;
                 case TestNumerical.ClassName:
-                    TestNumerical tn = (TestNumerical)test.ClassObject;
-                    message += $"  High Limit  : {tn.High:G}\n";
+                    TestNumerical testNumerical = (TestNumerical)test.ClassObject;
+                    message += $"  High Limit  : {testNumerical.High:G}\n";
                     message += $"  Measurement : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}\n";
-                    message += $"  Low Limit   : {tn.Low:G}\n";
-                    message += $"  Units       : {tn.Unit}{tn.UnitType}\n";
+                    message += $"  Low Limit   : {testNumerical.Low:G}\n";
+                    message += $"  Units       : {testNumerical.Unit}{testNumerical.UnitType}\n";
                     break;
                 case TestTextual.ClassName:
-                    TestTextual tt = (TestTextual)test.ClassObject;
-                    message += $"  Expected    : {tt.Text}\n";
+                    TestTextual testTextual = (TestTextual)test.ClassObject;
+                    message += $"  Expected    : {testTextual.Text}\n";
                     message += $"  Actual      : {test.Measurement}\n";
                     break;
                 default:
@@ -131,7 +132,7 @@ namespace TestLibrary.Logging {
         private static void FileStop(ConfigLib configLib, Group group, ref RichTextBox rtfResults) {
             String fileName = $"{configLib.UUT.Number}_{configLib.UUT.SerialNumber}_{group.ID}";
             String[] files = Directory.GetFiles(configLib.Logger.FilePath, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
-            // Will fail if invalid this.configLib.Logger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
+            // Will fail if invalid this.ConfigLib.Logger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
             // Otherwise, files is the set of all files in config.Logger.FilePath like
             // config.UUT.Number_Config.UUT.SerialNumber_Config.Group.ID_*.rtf.
             Int32 maxNumber = 0; String s;

@@ -3,13 +3,13 @@ using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Soft
 
 namespace TestLibrary.SwitchMatrices.MeasurementComputing {
     public static class UL_Support {
-        public static void MccBoardErrorHandler(MccBoard MCCB, ErrorInfo EI) {
+        public static void MccBoardErrorHandler(MccBoard mccb, ErrorInfo ei) {
             throw new InvalidOperationException(
-                $"MccBoard BoardNum   : {MCCB.BoardNum}.{Environment.NewLine}" +
-                $"MccBoard BoardName  : {MCCB.BoardName}.{Environment.NewLine}" +
-                $"MccBoard Descriptor : {MCCB.Descriptor}.{Environment.NewLine}" +
-                $"ErrorInfo Value     : {EI.Value}.{Environment.NewLine}" +
-                $"ErrorInfo Message   : {EI.Message}.{Environment.NewLine}");
+                $"MccBoard BoardNum   : {mccb.BoardNum}.{Environment.NewLine}" +
+                $"MccBoard BoardName  : {mccb.BoardName}.{Environment.NewLine}" +
+                $"MccBoard Descriptor : {mccb.Descriptor}.{Environment.NewLine}" +
+                $"ErrorInfo Value     : {ei.Value}.{Environment.NewLine}" +
+                $"ErrorInfo Message   : {ei.Message}.{Environment.NewLine}");
         }
     }
 }

@@ -32,17 +32,17 @@ namespace TestLibrary.Instruments {
     }
 
     public class Instrument {
-        // TODO: Replace this Instrument definition/configuration class with an XML app.config configuration file defining each Test System's Instruments.
+        // TODO: Replace this Instrument definition/configuration class with an XML app.config configuration file defining each Test System's instruments.
         //  - Permitting dynamic configuration of Test Systems, without requiring re-compilation.
         //  - Moving each Test System's configuration out of global Test Library, into a local XML configuration file.
-        // TODO: Add Keysight_33461A_Multi_Meter's address, enable other Instruments.
+        // TODO: Add Keysight_33461A_Multi_Meter's address, enable other instruments.
         // NOTE: Add/remove instruments as needed.
         // VISA (Virtual Instrument Software Architecture) Resource Names.
         // - https://www.ivifoundation.org/specifications/default.aspx
         // - Technically, these are actually VISA 'Resource Names' instead of VISA 'Addresses',
         //   but 'Address' has widespread usage and is more descriptive than 'Resource Name'.
 
-        private static readonly Dictionary<INSTRUMENTS, String> InstrumentAddresses = new Dictionary<INSTRUMENTS, String> {
+        private static readonly Dictionary<INSTRUMENTS, String> _instrumentAddresses = new Dictionary<INSTRUMENTS, String> {
          // { INSTRUMENTS.Keysight_33461A_Multi_Meter, "TBD" },
          // { INSTRUMENTS.Keysight_E33509B_WaveForm_Generator, "USB0::0x0957::0x2507::MY59003604::0::INSTR" },
             { INSTRUMENTS.Keysight_E36103B_Power_Supply_1, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
@@ -58,9 +58,9 @@ namespace TestLibrary.Instruments {
         public String Manufacturer { get; private set; }
         public String Model { get; private set; }
 
-        private Instrument(INSTRUMENTS ID, String Address) {
-            this.ID = ID;
-            this.Address = Address;
+        private Instrument(INSTRUMENTS id, String address) {
+            this.ID = id;
+            this.Address = address;
 
             try {
                 switch (ID) {
@@ -104,14 +104,14 @@ namespace TestLibrary.Instruments {
 
         public static Dictionary<INSTRUMENTS, Instrument> Get() {
             Dictionary<INSTRUMENTS, Instrument> d = new Dictionary<INSTRUMENTS, Instrument>();
-            foreach (KeyValuePair<INSTRUMENTS, String> ia in InstrumentAddresses) d.Add(ia.Key, new Instrument(ia.Key, ia.Value));
+            foreach (KeyValuePair<INSTRUMENTS, String> ia in _instrumentAddresses) d.Add(ia.Key, new Instrument(ia.Key, ia.Value));
             return d;
         }
     }
 
     public static class InstrumentTasks {
-        public static String GetMessage(Instrument instrument, String OptionalHeader = "") {
-            String Message = (OptionalHeader == "") ? "" : OptionalHeader += Environment.NewLine;
+        public static String GetMessage(Instrument instrument, String optionalHeader = "") {
+            String Message = (optionalHeader == "") ? "" : optionalHeader += Environment.NewLine;
             foreach (PropertyInfo pi in instrument.GetType().GetProperties()) Message += $"{pi.Name,-14}: {pi.GetValue(instrument)}{Environment.NewLine}";
             return Message;
         }
