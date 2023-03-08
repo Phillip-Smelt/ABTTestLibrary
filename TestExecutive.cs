@@ -255,7 +255,7 @@ namespace TestLibrary {
             InstrumentTasks.SCPI99_Reset(this.Instruments);
             USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             this.ButtonSelectGroup.Enabled = true;
-            this.ButtonStartReset(enabled: false);
+            this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);
             this.ConfigLib.UUT.EventCode = TestTasks.EvaluateUUTResult(this.ConfigTest);
             this.TextUUTResult.Text = this.ConfigLib.UUT.EventCode;
