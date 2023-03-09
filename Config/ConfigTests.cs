@@ -163,11 +163,11 @@ namespace TestLibrary.Config {
         }
 
         public static Dictionary<String, Test> Get() {
-            TestElementsSection s = (TestElementsSection)ConfigurationManager.GetSection("TestElementsSection");
-            TestElements e = s.TestElements;
-            Dictionary<String, Test> d = new Dictionary<String, Test>();
-            foreach (TestElement te in e) d.Add(te.ID, new Test(te.ID, te.Description, te.Revision, te.ClassName, te.Arguments));
-            return d;
+            TestElementsSection testElementsSection = (TestElementsSection)ConfigurationManager.GetSection("TestElementsSection");
+            TestElements testElements = testElementsSection.TestElements;
+            Dictionary<String, Test> dictionary = new Dictionary<String, Test>();
+            foreach (TestElement testElement in testElements) dictionary.Add(testElement.ID, new Test(testElement.ID, testElement.Description, testElement.Revision, testElement.ClassName, testElement.Arguments));
+            return dictionary;
         }
     }
 

@@ -13,7 +13,7 @@ namespace TestLibrary.Config {
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
         [ConfigurationProperty("Name", IsKey = false, IsRequired = true)] public String Name { get { return ((String)base["Name"]).Trim(); } }
         [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return (String)base["Description"]; } }
-        // Don't .Trim Description, as it's a user-formatted field.
+        // Don't .Trim() Description, as it's a user-formatted field.
         [ConfigurationProperty("TestIDs", IsKey = false, IsRequired = true)] public String TestIDs { get { return ((String)base["TestIDs"]).Trim(); } }
     }
 
@@ -44,11 +44,11 @@ namespace TestLibrary.Config {
     //  - 3rd tier would be Groups to SubGroups to Tests.
     //  - Would permit Groups to relate to SubGroups like 'Shorts', 'Opens', 'Analog to Digital", "In System-Programming", "Boundary Scan", etc.
     //  - Implementation would simply be another nested foreach loop like below:
-    //      Dictionary<String, Group> d = new Dictionary<String, Group>();
-    //      foreach (GroupElement ge in e) {
-    //          foreach (SubGroupElement sge in ge) d.Add(sge.ID, new Group(sge.ID, sge.Required, sge.Revision, sge.Summary, sge.Detail, sge.TestIDs));
+    //      Dictionary<String, Group> dictionary = new Dictionary<String, Group>();
+    //      foreach (GroupElement groupElement in groupElements) {
+    //          foreach (SubGroupElement sge in groupElements) dictionary.Add(sge.ID, new Group(sge.ID, sge.Required, sge.Revision, sge.Summary, sge.Detail, sge.TestIDs));
     //      }
-    //      return d;
+    //      return dictionary;
     //  - Possibly desirable if there are numerous Tests, too many to easily keep track of, and organizing into SubGroups would help.
     public class Group {
         public String ID { get; private set; }
@@ -58,21 +58,21 @@ namespace TestLibrary.Config {
         public String Description { get; private set; }
         public String TestIDs { get; private set; }
 
-        private Group(String ID, Boolean Required, String Revision, String Name, String Description, String TestIDs) {
-            this.ID = ID;
-            this.Required = Required;
-            this.Revision = Revision;
-            this.Name = Name;
-            this.Description = Description;
-            this.TestIDs = TestIDs;
+        private Group(String id, Boolean required, String revision, String name, String description, String testIDs) {
+            this.ID = id;
+            this.Required = required;
+            this.Revision = revision;
+            this.Name = name;
+            this.Description = description;
+            this.TestIDs = testIDs;
         }
 
         public static Dictionary<String, Group> Get() {
-            GroupElementsSection s = (GroupElementsSection)ConfigurationManager.GetSection("GroupElementsSection");
-            GroupElements e = s.GroupElements;
-            Dictionary<String, Group> d = new Dictionary<String, Group>();
-            foreach (GroupElement ge in e) d.Add(ge.ID, new Group(ge.ID, ge.Required, ge.Revision, ge.Name, ge.Description, ge.TestIDs));
-            return d;
+            GroupElementsSection groupElementsSection = (GroupElementsSection)ConfigurationManager.GetSection("GroupElementsSection");
+            GroupElements groupElements = groupElementsSection.GroupElements;
+            Dictionary<String, Group> dictionary = new Dictionary<String, Group>();
+            foreach (GroupElement groupElement in groupElements) dictionary.Add(groupElement.ID, new Group(groupElement.ID, groupElement.Required, groupElement.Revision, groupElement.Name, groupElement.Description, groupElement.TestIDs));
+            return dictionary;
         }
     }
 }

@@ -32,10 +32,10 @@ namespace TestLibrary.Instruments {
 
         public static Int32 SelfTest(String address) {
             AgSCPI99 SCPI99 = new AgSCPI99(address);
-            SCPI99.SCPI.TST.Query(out Int32 SelfTestResult);
-            if (SelfTestResult != 0) throw new InvalidOperationException($"VISA address '{address}' failed it's Self-Test with result '{SelfTestResult}'.");
+            SCPI99.SCPI.TST.Query(out Int32 selfTestResult);
+            if (selfTestResult != 0) throw new InvalidOperationException($"VISA address '{address}' failed it's Self-Test with result '{selfTestResult}'.");
             // SCPI99 command *TST issues a Factory Reset (*RST) command after *TST completes.
-            return SelfTestResult;
+            return selfTestResult;
         }
 
         public static Int32 QuestionCondition(String address) {

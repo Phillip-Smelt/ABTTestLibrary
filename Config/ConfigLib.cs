@@ -10,13 +10,13 @@ namespace TestLibrary.Config {
         public String SQLConnectionString { get; private set; }
         public Boolean TestEventsEnabled { get; private set; }
 
-        private Logger(Boolean FileEnabled, String FilePath, Boolean SQLEnabled, String SQLConnectionString, Boolean TestEventsEnabled) {
-            this.FileEnabled = FileEnabled;
-            if (!FilePath.EndsWith(@"\")) FilePath += @"\"; // Logging.FileStop() requires terminating "\" character.
-            this.FilePath = FilePath;
-            this.SQLEnabled = SQLEnabled;
-            this.SQLConnectionString = SQLConnectionString;
-            this.TestEventsEnabled = TestEventsEnabled;
+        private Logger(Boolean fileEnabled, String filePath, Boolean sqlEnabled, String sqlConnectionString, Boolean testEventsEnabled) {
+            this.FileEnabled = fileEnabled;
+            if (!filePath.EndsWith(@"\")) filePath += @"\"; // Logging.FileStop() requires terminating "\" character.
+            this.FilePath = filePath;
+            this.SQLEnabled = sqlEnabled;
+            this.SQLConnectionString = sqlConnectionString;
+            this.TestEventsEnabled = testEventsEnabled;
         }
 
         public static Logger Get() {
@@ -41,16 +41,16 @@ namespace TestLibrary.Config {
         public String SerialNumber { get; set; }
         public String EventCode { get; set; }
 
-        private UUT(String Customer, String Type, String Number, String Revision, String Description, String TestSpecification, String DocumentationFolder, String SerialNumber, String EventCode) {
-            this.Customer = Customer;
-            this.Type = Type;
-            this.Number = Number;
-            this.Revision = Revision;
-            this.Description = Description;
-            this.TestSpecification = TestSpecification;
-            this.DocumentationFolder = DocumentationFolder;
-            this.SerialNumber = SerialNumber;
-            this.EventCode = EventCode;
+        private UUT(String customer, String type, String number, String revision, String description, String testSpecification, String documentationFolder, String serialNumber, String eventCode) {
+            this.Customer = customer;
+            this.Type = type;
+            this.Number = number;
+            this.Revision = revision;
+            this.Description = description;
+            this.TestSpecification = testSpecification;
+            this.DocumentationFolder = documentationFolder;
+            this.SerialNumber = serialNumber;
+            this.EventCode = eventCode;
         }
 
         public static UUT Get() {

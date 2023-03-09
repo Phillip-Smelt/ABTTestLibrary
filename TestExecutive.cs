@@ -37,7 +37,7 @@ namespace TestLibrary {
         private readonly String _libraryAssemblyVersion;
         private Boolean _cancelled;
 
-        protected abstract Task<String> RunTestAsync(Test test);
+        protected abstract Task<String> RunTestAsync(String testID);
 
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();
@@ -185,7 +185,7 @@ namespace TestLibrary {
        }
 
         private void ButtonSaveOutput_Click(Object sender, EventArgs e) {
-            SaveFileDialog sfd = new SaveFileDialog {
+            SaveFileDialog saveFileDialog = new SaveFileDialog {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
@@ -194,8 +194,8 @@ namespace TestLibrary {
                 CreatePrompt = false,
                 OverwritePrompt = true
             };
-            DialogResult dr = sfd.ShowDialog();
-            if ((dr == DialogResult.OK) && !String.Equals(sfd.FileName, String.Empty)) this.rtfResults.SaveFile(sfd.FileName);
+            DialogResult dialogResult = saveFileDialog.ShowDialog();
+            if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) this.rtfResults.SaveFile(saveFileDialog.FileName);
         }
 
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
@@ -222,7 +222,7 @@ namespace TestLibrary {
             PreRun();
             foreach (KeyValuePair<String, Test> test in this.ConfigTest.Tests) {
                 try {
-                    test.Value.Measurement = await Task.Run(() => RunTestAsync(test.Value));
+                    test.Value.Measurement = await Task.Run(() => RunTestAsync(test.Value.ID));
                     test.Value.Result = TestTasks.EvaluateTestResult(test.Value);
                 } catch (Exception e) {
                     if (e.ToString().Contains(TestCancellationException.ClassName)) {
