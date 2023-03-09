@@ -47,8 +47,8 @@ namespace TestLibrary.Instruments {
          // { INSTRUMENTS.Keysight_E33509B_WaveForm_Generator, "USB0::0x0957::0x2507::MY59003604::0::INSTR" },
             { INSTRUMENTS.Keysight_E36103B_Power_Supply_1, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
             { INSTRUMENTS.Keysight_E36103B_Power_Supply_2, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" },
-            { INSTRUMENTS.Keysight_E36105B_Power_Supply, "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
-         // { INSTRUMENTS.Keysight_E36234A_Power_Supply, "USB0::0x2A8D::0x3402::MY61002598::0::INSTR" }
+         // { INSTRUMENTS.Keysight_E36105B_Power_Supply, "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
+            { INSTRUMENTS.Keysight_E36234A_Power_Supply, "USB0::0x2A8D::0x3402::MY61002598::0::INSTR" }
          // { INSTRUMENTS.Keysight_EL34143A_Electronic_Load, "USB0::0x2A8D::0x3802::MY61001295::0::INSTR" }
             };
         public INSTRUMENTS ID { get; private set; }
