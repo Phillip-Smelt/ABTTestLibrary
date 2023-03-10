@@ -103,9 +103,9 @@ namespace TestLibrary.TestSupport {
         }
 
         public static String ISP_ExitCode(String isp, String connector, Test test,
-            Dictionary<INSTRUMENTS, Instrument> instruments, Action<Dictionary<INSTRUMENTS, Instrument>> powerSupplyOnMethod) {
+            Dictionary<INSTRUMENTS, Instrument> instruments, Action powerOnMethod) {
             ISP_Connect(isp, connector, instruments);
-            powerSupplyOnMethod(instruments);
+            powerOnMethod();
             TestISP testISP = (TestISP)test.ClassObject;
             String exitCode = ProcessExitCode(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder);
             ISP_DisConnect(isp, connector, instruments);
@@ -113,9 +113,9 @@ namespace TestLibrary.TestSupport {
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) ISP_Redirect(String isp, String connector, Test test,
-            Dictionary<INSTRUMENTS, Instrument> instruments, Action<Dictionary<INSTRUMENTS, Instrument>> powerSupplyOnMethod) {
+            Dictionary<INSTRUMENTS, Instrument> instruments, Action powerOnMethod) {
             ISP_Connect(isp, connector, instruments);
-            powerSupplyOnMethod(instruments);
+            powerOnMethod();
             TestISP testISP = (TestISP)test.ClassObject;
             (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder, testISP.ISPResult);
             ISP_DisConnect(isp, connector, instruments);
