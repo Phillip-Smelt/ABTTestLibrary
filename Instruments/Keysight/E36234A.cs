@@ -56,7 +56,7 @@ namespace TestLibrary.Instruments.Keysight {
             ConvertChannel(instrument, sChannel, out Int32 iChannel);
             try {
                 // NOTE: When Keysight resolves Case # 01284828, uncomment below code.
-                // NOTE: Similar code works in Note identical code works in https://github.com/Amphenol-Borisch-Technologies/TestLibrary/blob/master/TestInstruments/Keysight/E3610xB.cs
+                // NOTE: Similar code works in https://github.com/Amphenol-Borisch-Technologies/TestLibrary/blob/master/TestInstruments/Keysight/E3610xB.cs
                 //String s;
                 //((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", sChannel, out Double[] min);
                 //((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MAXimum", sChannel, out Double[] max);
