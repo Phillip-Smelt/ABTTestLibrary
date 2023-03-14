@@ -98,14 +98,13 @@
     <Reference Include="AgE36200_1_0_0_1_0_2_1_00">
       <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgE36200_1_0_0_1_0_2_1_00.dll</HintPath>
     </Reference>
+    <Reference Include="AgEL30000_1_2_5_1_0_6_17_114">
+      <HintPath>..\..\..\..\..\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgEL30000_1_2_5_1_0_6_17_114.dll</HintPath>
+    </Reference>
     <Reference Include="AgSCPI99_1_0">
       <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgSCPI99_1_0.dll</HintPath>
     </Reference>
     <Reference Include="Keysight.Kt34400.Fx45, Version=1.0.1.0, Culture=neutral, PublicKeyToken=a05325b628672156, processorArchitecture=MSIL" />
-    <Reference Include="Keysight.KtEL30000.Fx45, Version=1.1.0.0, Culture=neutral, PublicKeyToken=7e3f5d0cd5f27736, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\IVI Foundation\IVI\Microsoft.NET\Framework32\v4.5.50709\Keysight.KtEL30000 1.1.0\Keysight.KtEL30000.Fx45.dll</HintPath>
-    </Reference>
     <Reference Include="MccDaq, Version=2.9.0.0, Culture=neutral, PublicKeyToken=a37eefcf5c6ca10a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\Measurement Computing\DAQ\MccDaq.dll</HintPath>

@@ -4,6 +4,7 @@ using System.Reflection;
 using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
+using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -13,7 +14,6 @@ using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 // Recommend using Command Expert to generate SCPI & IVI driver commands, which are directly exportable as .Net statements.
 //
 using Keysight.Kt34400; // https://www.keysight.com/us/en/lib/software-detail/driver/34400-digital-multimeters-ivi-instrument-drivers.html
-using Keysight.KtEL30000; // https://www.keysight.com/us/en/lib/software-detail/driver/el30000a-dc-electronic-loads-ivi-instrument-drivers.html
 using TestLibrary.Instruments.Keysight;
 
 // NOTE: Consider adding ScpiQuery & ScpiCommand methods to all Instrument classes, to pass raw SCPI strings to the Instrument.
@@ -48,8 +48,8 @@ namespace TestLibrary.Instruments {
             { INSTRUMENTS.Keysight_E36103B_Power_Supply_1, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
             { INSTRUMENTS.Keysight_E36103B_Power_Supply_2, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" },
          // { INSTRUMENTS.Keysight_E36105B_Power_Supply, "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
-            { INSTRUMENTS.Keysight_E36234A_Power_Supply, "USB0::0x2A8D::0x3402::MY61002598::0::INSTR" }
-         // { INSTRUMENTS.Keysight_EL34143A_Electronic_Load, "USB0::0x2A8D::0x3802::MY61001295::0::INSTR" }
+            { INSTRUMENTS.Keysight_E36234A_Power_Supply, "USB0::0x2A8D::0x3402::MY61002598::0::INSTR" },
+            { INSTRUMENTS.Keysight_EL34143A_Electronic_Load, "USB0::0x2A8D::0x3802::MY61001295::0::INSTR" }
             };
         public INSTRUMENTS ID { get; private set; }
         public String Category { get; private set; }
@@ -78,7 +78,8 @@ namespace TestLibrary.Instruments {
                         break;
                     case INSTRUMENTS.Keysight_EL34143A_Electronic_Load:
                         this.Category = "Electronic Load";
-                        this.Instance = new KtEL30000(this.Address, false, false);
+                        this.Instance = new AgEL30000(this.Address);
+                        ((AgEL30000)this.Instance).SCPI.SYSTem.RWLock.Command();
                         break;
                     case INSTRUMENTS.Keysight_E33509B_WaveForm_Generator:
                         this.Category = "Waveform Generator";
