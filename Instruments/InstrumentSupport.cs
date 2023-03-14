@@ -43,7 +43,7 @@ namespace TestLibrary.Instruments {
         //   but 'Address' has widespread usage and is more descriptive than 'Resource Name'.
 
         private static readonly Dictionary<INSTRUMENTS, String> _instrumentAddresses = new Dictionary<INSTRUMENTS, String> {
-         // { INSTRUMENTS.Keysight_33461A_Multi_Meter, "TBD" },
+         // { INSTRUMENTS.Keysight_33461A_Multi_Meter, "USB0::0x2A8D::0x1301::MY60049978::0::INSTR" },
          // { INSTRUMENTS.Keysight_E33509B_WaveForm_Generator, "USB0::0x0957::0x2507::MY59003604::0::INSTR" },
             { INSTRUMENTS.Keysight_E36103B_Power_Supply_1, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
             { INSTRUMENTS.Keysight_E36103B_Power_Supply_2, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" },
