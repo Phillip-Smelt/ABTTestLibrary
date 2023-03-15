@@ -152,7 +152,7 @@ namespace TestLibrary.Instruments {
                         E36234A.ResetClear(i.Value);
                         break;
                     case INSTRUMENTS.Keysight_EL34143A_Electronic_Load:
-                        // TODO: case INSTRUMENTS.Keysight_EL34143A_Electronic_Load:
+                        EL34143A.ResetClear(i.Value);
                         break;
                     case INSTRUMENTS.Keysight_E33509B_WaveForm_Generator:
                         // TODO: case INSTRUMENTS.Keysight_E33509B_WaveForm_Generator:

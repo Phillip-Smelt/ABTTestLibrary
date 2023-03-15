@@ -1,4 +1,5 @@
 ﻿using System;
+using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
@@ -27,6 +28,18 @@ namespace TestLibrary.Instruments.Keysight {
             ((AgEL30000)instrument.Instance).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
         }
 
+
+        public static Boolean IsOff(Instrument instrument) { return !IsOn(instrument); }
+
+        public static Boolean IsOn(Instrument instrument) {
+            ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Query(out Boolean State);
+            return State;
+        }
+
+        public static void Off(Instrument instrument) {
+            ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(false, null);
+        }
+
         public static void OnConstantCurrent(Instrument instrument, Double amps) {
             ((AgEL30000)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", null, out Double min);
             ((AgEL30000)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", null, out Double max);
@@ -37,6 +50,7 @@ namespace TestLibrary.Instruments.Keysight {
                     + $" - MAXimum   :  Current={max} A.";
                 throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
             }
+            ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
             ((AgEL30000)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(amps, null);
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);
         }
@@ -51,6 +65,7 @@ namespace TestLibrary.Instruments.Keysight {
                     + $" - MAXimum   :  Voltage={max[1]} V.";
                 throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
             }
+            ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(volts, null);
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);
         }
@@ -65,26 +80,25 @@ namespace TestLibrary.Instruments.Keysight {
                     + $" - MAXimum   :  Wattage={max[1]} W.";
                 throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
             }
+            ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
             ((AgEL30000)instrument.Instance).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Command(watts, null);
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);
         }
 
-        public static void OnConstantResistance(Instrument instrument, Double resistance) {
+        public static void OnConstantResistance(Instrument instrument, Double ohms) {
             ((AgEL30000)instrument.Instance).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query("MINimum", null, out Double[] min);
             ((AgEL30000)instrument.Instance).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query("MAXimum", null, out Double[] max);
-            if ((resistance < min[0]) || (resistance > max[1])) {
+            if ((ohms < min[0]) || (ohms > max[1])) {
                 String s = $"< MINimum/MAXimum Resistance.{Environment.NewLine}"
                     + $" - MINimum   :  Resistance={min[0]} Ω.{Environment.NewLine}"
-                    + $" - Programmed:  Resistance={resistance} Ω.{Environment.NewLine}"
+                    + $" - Programmed:  Resistance={ohms} Ω.{Environment.NewLine}"
                     + $" - MAXimum   :  Resistance={max[1]} Ω.";
                 throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
             }
-            ((AgEL30000)instrument.Instance).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Command(resistance, null);
-            ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);
-        }
 
-        public static void Off(Instrument instrument) {
-            ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(false, null);
+            ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
+            ((AgEL30000)instrument.Instance).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Command(ohms, null);
+            ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);
         }
     }
 }

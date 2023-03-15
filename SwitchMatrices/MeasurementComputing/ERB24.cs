@@ -25,6 +25,30 @@ namespace TestLibrary.SwitchMatrices.MeasurementComputing {
         //  - Read them from TestLibrary's forthcoming app.config XML configuration file, then configure them dynamically/programmatically.
         //  - Pass them in from TestProgram during instantiation of TestExecutive form.
 
+
+        public static Boolean AreRelaysReset(List<Int32> boardNumbers) {
+            MccBoard erb24;
+            ErrorInfo ei;
+            Boolean relaysAreReset = true;
+            UInt16 dataValue;
+            foreach (Int32 boardNumber in boardNumbers) {
+                erb24 = new MccBoard(boardNumber);
+                ei = erb24.DIn(DigitalPortType.FirstPortA, out dataValue);
+                if (ei.Value != ErrorInfo.ErrorCode.NoErrors) UL_Support.MccBoardErrorHandler(erb24, ei);
+                relaysAreReset = relaysAreReset && dataValue == 0;
+                ei = erb24.DIn(DigitalPortType.FirstPortB, out dataValue);
+                if (ei.Value != ErrorInfo.ErrorCode.NoErrors) UL_Support.MccBoardErrorHandler(erb24, ei);
+                relaysAreReset = relaysAreReset && dataValue == 0;
+                ei = erb24.DIn(DigitalPortType.FirstPortCL, out dataValue);
+                if (ei.Value != ErrorInfo.ErrorCode.NoErrors) UL_Support.MccBoardErrorHandler(erb24, ei);
+                relaysAreReset = relaysAreReset && dataValue == 0;
+                ei = erb24.DIn(DigitalPortType.FirstPortCH, out dataValue);
+                if (ei.Value != ErrorInfo.ErrorCode.NoErrors) UL_Support.MccBoardErrorHandler(erb24, ei);
+                relaysAreReset = relaysAreReset && dataValue == 0;
+            }
+            return relaysAreReset;
+        }
+
         public static void RelaysReset(List<Int32> boardNumbers) {
             MccBoard erb24;
             ErrorInfo ei;
@@ -41,20 +65,34 @@ namespace TestLibrary.SwitchMatrices.MeasurementComputing {
             }
         }
 
-        public static void RelayOn((Int32 board, Int32 relay) br) {
-            MccBoard erb24;
-            ErrorInfo ei;
-            erb24 = new MccBoard(br.board);
-            ei = erb24.DBitOut(DigitalPortType.FirstPortA, br.relay, DigitalLogicState.High);
-            if (ei.Value != ErrorInfo.ErrorCode.NoErrors) UL_Support.MccBoardErrorHandler(erb24, ei);
-        }
-
         public static void RelayOff((Int32 board, Int32 relay) br) {
             MccBoard erb24;
             ErrorInfo ei;
             erb24 = new MccBoard(br.board);
             ei = erb24.DBitOut(DigitalPortType.FirstPortA, br.relay, DigitalLogicState.Low);
             if (ei.Value != ErrorInfo.ErrorCode.NoErrors) UL_Support.MccBoardErrorHandler(erb24, ei);
+        }
+
+        public static void RelayOn((Int32 board, Int32 relay) br) {
+            MccBoard erb24;
+            ErrorInfo ei;
+            erb24 = new MccBoard(br.board);
+            ei = erb24.DBitOut(DigitalPortType.FirstPortA, br.relay, DigitalLogicState.High);
+            ei = erb24.DBitIn(DigitalPortType.FirstPortA, br.relay, out DigitalLogicState bitValue);
+            if (ei.Value != ErrorInfo.ErrorCode.NoErrors) UL_Support.MccBoardErrorHandler(erb24, ei);
+        }
+
+        public static Boolean IsRelayOff((Int32 board, Int32 relay) br) {
+            return !(IsRelayOn(br));
+        }
+
+        public static Boolean IsRelayOn((Int32 board, Int32 relay) br) {
+            MccBoard erb24;
+            ErrorInfo ei;
+            erb24 = new MccBoard(br.board);
+            ei = erb24.DBitIn(DigitalPortType.FirstPortA, br.relay, out DigitalLogicState bitValue);
+            if (ei.Value != ErrorInfo.ErrorCode.NoErrors) UL_Support.MccBoardErrorHandler(erb24, ei);
+            return (bitValue == DigitalLogicState.High);
         }
     }
 }
