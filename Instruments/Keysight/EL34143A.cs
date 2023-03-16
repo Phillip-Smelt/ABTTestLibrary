@@ -33,6 +33,11 @@ namespace TestLibrary.Instruments.Keysight {
             return State;
         }
 
+        public static String Mode(Instrument instrument) {
+            ((AgEL30000)instrument.Instance).SCPI.SOURce.MODE.Query("@1", out String Mode);
+            return Mode;
+        }
+
         public static void Off(Instrument instrument) {
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(false, "@1");
         }

@@ -35,12 +35,12 @@ namespace TestLibrary.Instruments.Keysight {
             ((AgE36200)instrument.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
         }
 
+        public static Boolean IsOff(Instrument instrument, String sChannel) { return !IsOn(instrument, sChannel); }
+
         public static Boolean IsOn(Instrument instrument, String sChannel) {
             ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Query(sChannel, out Boolean[] States);
             return States[ConvertChannel(instrument, sChannel)];
         }
-
-        public static Boolean IsOff(Instrument instrument, String sChannel) { return !IsOn(instrument, sChannel); }
 
         public static void Off(Instrument instrument, String sChannel) { ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(false, sChannel); }
 
