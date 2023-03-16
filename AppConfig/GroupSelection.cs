@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace TestLibrary.Config {
+namespace TestLibrary.AppConfig {
     public partial class GroupSelect : Form {
         public String GroupSelected;
         internal Dictionary<String, Group> Groups { get; private set; }

@@ -2,7 +2,7 @@
 using System.Configuration;
 using TestLibrary.TestSupport;
 
-namespace TestLibrary.Config {
+namespace TestLibrary.AppConfig {
     public class Logger {
         public Boolean FileEnabled { get; private set; }
         public String FilePath { get; private set; }

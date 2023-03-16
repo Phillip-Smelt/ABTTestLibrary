@@ -5,7 +5,7 @@ using System.Globalization;
 using System.IO;
 using TestLibrary.TestSupport;
 
-namespace TestLibrary.Config {
+namespace TestLibrary.AppConfig {
     public class TestElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
         [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }

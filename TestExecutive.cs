@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
-using TestLibrary.Config;
+using TestLibrary.AppConfig;
 using TestLibrary.Instruments;
 using TestLibrary.Logging;
 using TestLibrary.TestSupport;

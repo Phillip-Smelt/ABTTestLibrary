@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
-using TestLibrary.Config;
+using TestLibrary.AppConfig;
 using TestLibrary.Instruments;
 using static System.Net.Mime.MediaTypeNames;
 

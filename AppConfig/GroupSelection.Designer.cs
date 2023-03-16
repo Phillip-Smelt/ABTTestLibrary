@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace TestLibrary.Config {
+namespace TestLibrary.AppConfig {
     partial class GroupSelect {
         /// <summary>
         /// Required designer variable.

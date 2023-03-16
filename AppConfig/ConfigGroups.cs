@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Configuration;
 
-namespace TestLibrary.Config {
+namespace TestLibrary.AppConfig {
     // NOTE: If TestLibrary transitions from current C# 7.3 to ≥ C# 8.0,add 'readonly'
-    // modifier to all { get; private set; } fields in namespace TestLibrary.Config.
-    // NOTE: Add verification of App.config key-value pairs & configuration collections into namespace TestLibrary.Config.
+    // modifier to all { get; private set; } fields in namespace TestLibrary.AppConfig.
+    // NOTE: Add verification of App.config key-value pairs & configuration collections into namespace TestLibrary.AppConfig.
     // That is, check for errors in the .Get methods, rather than current checks in TestSupport.TestTasks.EvaluateTestResult().
     public class GroupElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }

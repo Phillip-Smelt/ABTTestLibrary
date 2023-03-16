@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
-using TestLibrary.Config;
+using TestLibrary.AppConfig;
 using TestLibrary.TestSupport;
 
 namespace TestLibrary.Logging {
