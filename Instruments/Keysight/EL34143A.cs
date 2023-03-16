@@ -1,5 +1,4 @@
 ﻿using System;
-using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
@@ -24,10 +23,7 @@ namespace TestLibrary.Instruments.Keysight {
             ((AgEL30000)instrument.Instance).SCPI.CLS.Command();
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command();
             ((AgEL30000)instrument.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
-            ((AgEL30000)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(false, null);
-            ((AgEL30000)instrument.Instance).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
         }
-
 
         public static Boolean IsOff(Instrument instrument) { return !IsOn(instrument); }
 
@@ -51,6 +47,7 @@ namespace TestLibrary.Instruments.Keysight {
                 throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
             }
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
+            ((AgEL30000)instrument.Instance).SCPI.SOURce.MODE.Command("CURRent", null);
             ((AgEL30000)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(amps, null);
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);
         }
@@ -66,6 +63,7 @@ namespace TestLibrary.Instruments.Keysight {
                 throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
             }
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
+            ((AgEL30000)instrument.Instance).SCPI.SOURce.MODE.Command("VOLTage", null);
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(volts, null);
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);
         }
@@ -81,6 +79,7 @@ namespace TestLibrary.Instruments.Keysight {
                 throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
             }
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
+            ((AgEL30000)instrument.Instance).SCPI.SOURce.MODE.Command("POWer", null);
             ((AgEL30000)instrument.Instance).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Command(watts, null);
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);
         }
@@ -95,7 +94,7 @@ namespace TestLibrary.Instruments.Keysight {
                     + $" - MAXimum   :  Resistance={max[1]} Ω.";
                 throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
             }
-
+            ((AgEL30000)instrument.Instance).SCPI.SOURce.MODE.Command("RESistance", null);
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
             ((AgEL30000)instrument.Instance).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Command(ohms, null);
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);

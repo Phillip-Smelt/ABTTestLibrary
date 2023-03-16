@@ -39,7 +39,6 @@ namespace TestLibrary.TestSupport {
     }
 
     public static class TestTasks {
-
         public static void ISP_Connect(String isp, String connector, Dictionary<INSTRUMENTS, Instrument> instruments) {
             InstrumentTasks.SCPI99_Reset(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
