@@ -11,44 +11,13 @@ namespace TestLibrary.Instruments.Keysight {
     // TODO: KS33509B Class.
     public static class KS33509B {
         // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
-        //public static void Local(Instrument instrument) { ((Ag33500B_33600A)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
 
-        //public static void Remote(Instrument instrument) { ((Ag33500B_33600A)instrument.Instance).SCPI.SYSTem.REMote.Command(); }
+        public static void Reset(Instrument instrument) { ((Ag33500B_33600A)instrument.Instance).SCPI.RST.Command(); }
 
-        //public static void RemoteLock(Instrument instrument) { ((Ag33500B_33600A)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
-
-        //public static void Reset(Instrument instrument) { ((Ag33500B_33600A)instrument.Instance).SCPI.RST.Command(); }
-
-        //public static void ResetClear(Instrument instrument) {
-        //    ((Ag33500B_33600A)instrument.Instance).SCPI.RST.Command();
-        //    ((Ag33500B_33600A)instrument.Instance).SCPI.CLS.Command();
-        //    ((Ag33500B_33600A)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command();
-        //    ((Ag33500B_33600A)instrument.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
-        //    ((Ag33500B_33600A)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(false, null);
-        //    ((Ag33500B_33600A)instrument.Instance).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
-        //}
-
-        //public static Boolean IsOff(Instrument instrument) { return !IsOn(instrument); }
-
-        //public static Boolean IsOn(Instrument instrument) {
-        //    ((Ag33500B_33600A)instrument.Instance).SCPI.OUTPut.Query(out Boolean State);
-        //    return State;
-        //}
-
-        //public static void Off(Instrument instrument) {
-        //    ((Ag33500B_33600A)instrument.Instance).SCPI.OUTPut.STATe.Command(false);
-        //}
-
-        //public static void ApplyDC(Instrument instrument, Double voltsDC) {
-        //    ((Ag33500B_33600A)instrument.Instance).SCPI.SOURce.APPLy.DC.Command(1u, "DEFAult", "DEFAult", voltsDC);
-        //}
-
-        //public static void SetOutputOn(Instrument instrument) {
-        //    ((Ag33500B_33600A)instrument.Instance).SCPI.OUTPut.Command(null, true);
-        //}
-
-        //public static void SetOutputOff(Instrument instrument) {
-        //    ((Ag33500B_33600A)instrument.Instance).SCPI.OUTPut.Command(null, false);
-        //}
+        public static void ResetClear(Instrument instrument) {
+            ((Ag33500B_33600A)instrument.Instance).SCPI.RST.Command();
+            ((Ag33500B_33600A)instrument.Instance).SCPI.CLS.Command();
+            ((Ag33500B_33600A)instrument.Instance).SCPI.DISPlay.TEXT.CLEar.Command();
+        }
     }
 }
