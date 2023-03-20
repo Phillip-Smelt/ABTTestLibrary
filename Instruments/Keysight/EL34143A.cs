@@ -54,7 +54,7 @@ namespace TestLibrary.Instruments.Keysight {
                     + $" - MAXimum   :  Current={max} A.";
                 throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
             }
-            ((AgEL30000)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(false, null);
+            // TODO: ((AgEL30000)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(false, null);
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);
         }
