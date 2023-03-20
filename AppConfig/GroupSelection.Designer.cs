@@ -45,7 +45,7 @@ namespace TestLibrary.AppConfig {
             // 
             this.OK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.OK.Enabled = false;
-            this.OK.Location = new System.Drawing.Point(225, 367);
+            this.OK.Location = new System.Drawing.Point(414, 366);
             this.OK.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(77, 44);
@@ -65,7 +65,7 @@ namespace TestLibrary.AppConfig {
             this.ListGroups.MultiSelect = false;
             this.ListGroups.Name = "ListGroups";
             this.ListGroups.ShowGroups = false;
-            this.ListGroups.Size = new System.Drawing.Size(487, 312);
+            this.ListGroups.Size = new System.Drawing.Size(886, 312);
             this.ListGroups.TabIndex = 0;
             this.ListGroups.UseCompatibleStateImageBehavior = false;
             this.ListGroups.View = System.Windows.Forms.View.Details;
@@ -109,7 +109,7 @@ namespace TestLibrary.AppConfig {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(525, 457);
+            this.ClientSize = new System.Drawing.Size(912, 466);
             this.ControlBox = false;
             this.Controls.Add(this.groupBoxRequired);
             this.Controls.Add(this.ListGroups);

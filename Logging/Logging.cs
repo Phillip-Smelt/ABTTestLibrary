@@ -62,7 +62,6 @@ namespace TestLibrary.Logging {
             Log.Information($"UUT Revision           : {configLib.UUT.Revision}");
             Log.Information($"UUT Group ID           : {group.ID}");
             Log.Information($"UUT Group Revision     : {group.Revision}");
-            Log.Information($"UUT Group Name         : {group.Name}");
             Log.Information($"UUT Group Description  : \n{group.Description}\n");
             StringBuilder s = new StringBuilder();
             foreach (KeyValuePair<String, Test> test in configTest.Tests) s.Append(String.Format("\t{0:" + configTest.LogFormattingLength + "} : {1}\n", test.Value.ID, test.Value.Description));

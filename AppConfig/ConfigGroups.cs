@@ -11,9 +11,7 @@ namespace TestLibrary.AppConfig {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
         [ConfigurationProperty("Required", IsKey = false, IsRequired = true)] public Boolean Required { get { return (Boolean)base["Required"]; } }
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
-        [ConfigurationProperty("Name", IsKey = false, IsRequired = true)] public String Name { get { return ((String)base["Name"]).Trim(); } }
-        [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return (String)base["Description"]; } }
-        // Don't .Trim() Description, as it's a user-formatted field.
+        [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
         [ConfigurationProperty("TestIDs", IsKey = false, IsRequired = true)] public String TestIDs { get { return ((String)base["TestIDs"]).Trim(); } }
     }
 
@@ -54,15 +52,13 @@ namespace TestLibrary.AppConfig {
         public String ID { get; private set; }
         public Boolean Required { get; private set; }
         public String Revision { get; private set; }
-        public String Name { get; private set; }
         public String Description { get; private set; }
         public String TestIDs { get; private set; }
 
-        private Group(String id, Boolean required, String revision, String name, String description, String testIDs) {
+        private Group(String id, Boolean required, String revision, String description, String testIDs) {
             this.ID = id;
             this.Required = required;
             this.Revision = revision;
-            this.Name = name;
             this.Description = description;
             this.TestIDs = testIDs;
         }
@@ -71,7 +67,7 @@ namespace TestLibrary.AppConfig {
             GroupElementsSection groupElementsSection = (GroupElementsSection)ConfigurationManager.GetSection("GroupElementsSection");
             GroupElements groupElements = groupElementsSection.GroupElements;
             Dictionary<String, Group> dictionary = new Dictionary<String, Group>();
-            foreach (GroupElement groupElement in groupElements) dictionary.Add(groupElement.ID, new Group(groupElement.ID, groupElement.Required, groupElement.Revision, groupElement.Name, groupElement.Description, groupElement.TestIDs));
+            foreach (GroupElement groupElement in groupElements) dictionary.Add(groupElement.ID, new Group(groupElement.ID, groupElement.Required, groupElement.Revision, groupElement.Description, groupElement.TestIDs));
             return dictionary;
         }
     }

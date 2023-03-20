@@ -57,5 +57,11 @@ namespace TestLibrary.Instruments {
             String[] s = Identity.Split(IDNSepChar);
             return s[1] ?? "Unknown";
         }
+
+        public static String Query(String query, String address) {
+            AgSCPI99 SCPI99 = new AgSCPI99(address);
+            SCPI99.Transport.Query.Invoke(query, out String ReturnString);
+            return ReturnString;
+        }
     }
 }
