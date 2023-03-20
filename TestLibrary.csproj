@@ -92,6 +92,9 @@
     <Reference Include="Ag33500B_33600A_2_09">
       <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\Ag33500B_33600A_2_09.dll</HintPath>
     </Reference>
+    <Reference Include="Ag3466x_2_08">
+      <HintPath>..\..\..\..\..\ProgramData\Keysight\Command Expert\ScpiNetDrivers\Ag3466x_2_08.dll</HintPath>
+    </Reference>
     <Reference Include="AgE3610XB_1_0_0_1_00">
       <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgE3610XB_1_0_0_1_00.dll</HintPath>
     </Reference>
@@ -104,7 +107,6 @@
     <Reference Include="AgSCPI99_1_0">
       <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgSCPI99_1_0.dll</HintPath>
     </Reference>
-    <Reference Include="Keysight.Kt34400.Fx45, Version=1.0.1.0, Culture=neutral, PublicKeyToken=a05325b628672156, processorArchitecture=MSIL" />
     <Reference Include="MccDaq, Version=2.9.0.0, Culture=neutral, PublicKeyToken=a37eefcf5c6ca10a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\Measurement Computing\DAQ\MccDaq.dll</HintPath>

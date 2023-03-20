@@ -13,8 +13,8 @@ namespace TestLibrary.Instruments.Keysight {
     public static class E36234A {
         // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
         private static Int32 ConvertChannel(Instrument instrument, String sChannel) {
-            if (String.Equals(sChannel, "@1")) return 0;
-            else if (String.Equals(sChannel, "@2")) return 1;
+            if (String.Equals(sChannel, INSTRUMENT.CHANNEL_1)) return 0;
+            else if (String.Equals(sChannel, INSTRUMENT.CHANNEL_2)) return 1;
             else throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, $"Invalid Channel '{sChannel}'"));
         }
 
@@ -29,9 +29,9 @@ namespace TestLibrary.Instruments.Keysight {
         public static void ResetClear(Instrument instrument) {
             ((AgE36200)instrument.Instance).SCPI.RST.Command();
             ((AgE36200)instrument.Instance).SCPI.CLS.Command();
-            ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.CLEar.Command("@1:2");
-            ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.CLEar.Command("@1:2");
-            ((AgE36200)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command("@1:2");
+            ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.CLEar.Command(INSTRUMENT.CHANNEL_1_2);
+            ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(INSTRUMENT.CHANNEL_1_2);
+            ((AgE36200)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command(INSTRUMENT.CHANNEL_1_2);
             ((AgE36200)instrument.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
         }
 

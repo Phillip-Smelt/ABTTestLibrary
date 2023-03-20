@@ -39,7 +39,7 @@ namespace TestLibrary.TestSupport {
     }
 
     public static class TestTasks {
-        public static void ISP_Connect(String isp, String connector, Dictionary<INSTRUMENTS, Instrument> instruments) {
+        public static void ISP_Connect(String isp, String connector, Dictionary<INSTRUMENT.ID, Instrument> instruments) {
             InstrumentTasks.SCPI99_Reset(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Connect '{isp}' to UUT '{connector}'.{Environment.NewLine}{Environment.NewLine}" +
@@ -47,7 +47,7 @@ namespace TestLibrary.TestSupport {
                     $"Connect '{connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public static void ISP_DisConnect(String isp, String connector, Dictionary<INSTRUMENTS, Instrument> instruments) {
+        public static void ISP_DisConnect(String isp, String connector, Dictionary<INSTRUMENT.ID, Instrument> instruments) {
             InstrumentTasks.SCPI99_Reset(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Disconnect '{isp}' from UUT '{connector}'.{Environment.NewLine}{Environment.NewLine}" +
@@ -102,7 +102,7 @@ namespace TestLibrary.TestSupport {
         }
 
         public static String ISP_ExitCode(String isp, String connector, Test test,
-            Dictionary<INSTRUMENTS, Instrument> instruments, Action powerOnMethod) {
+            Dictionary<INSTRUMENT.ID, Instrument> instruments, Action powerOnMethod) {
             ISP_Connect(isp, connector, instruments);
             powerOnMethod();
             TestISP testISP = (TestISP)test.ClassObject;
@@ -112,7 +112,7 @@ namespace TestLibrary.TestSupport {
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) ISP_Redirect(String isp, String connector, Test test,
-            Dictionary<INSTRUMENTS, Instrument> instruments, Action powerOnMethod) {
+            Dictionary<INSTRUMENT.ID, Instrument> instruments, Action powerOnMethod) {
             ISP_Connect(isp, connector, instruments);
             powerOnMethod();
             TestISP testISP = (TestISP)test.ClassObject;

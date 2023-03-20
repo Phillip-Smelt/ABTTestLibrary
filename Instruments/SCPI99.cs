@@ -11,7 +11,7 @@ namespace TestLibrary.Instruments {
     public static class SCPI99 {
         // SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 instruments, which allows shared functionality.
         // Can Reset, Self-Test & Question Condition all SCPI-99 conforming instruments with below methods; handy.
-        // TODO: Add wrapper methods for remaining SCPI-99 commands.
+        // TODO: Add wrapper methods for remaining SCPI-99 commands, particularly Command Batching.
         private const Char IDNSepChar = ',';
 
         public static void Reset(String address) {
@@ -56,6 +56,11 @@ namespace TestLibrary.Instruments {
             SCPI99.SCPI.IDN.Query(out String Identity);
             String[] s = Identity.Split(IDNSepChar);
             return s[1] ?? "Unknown";
+        }
+
+        public static void Command(String command, String address) {
+            AgSCPI99 SCPI99 = new AgSCPI99(address);
+            SCPI99.Transport.Command.Invoke(command);
         }
 
         public static String Query(String query, String address) {

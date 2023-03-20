@@ -31,7 +31,7 @@ namespace TestLibrary {
     public abstract partial class TestExecutive : Form {
         public ConfigLib ConfigLib;
         public ConfigTest ConfigTest;
-        public Dictionary<INSTRUMENTS, Instrument> Instruments;
+        public Dictionary<INSTRUMENT.ID, Instrument> Instruments;
         public CancellationTokenSource CancelTokenSource;
         private readonly String _appAssemblyVersion;
         private readonly String _libraryAssemblyVersion;
