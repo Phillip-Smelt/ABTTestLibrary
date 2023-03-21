@@ -10,7 +10,7 @@ using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 namespace TestLibrary.Instruments {
     public static class SCPI99 {
         // SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 instruments, which allows shared functionality.
-        // Can Reset, Self-Test & Question Condition all SCPI-99 conforming instruments with below methods; handy.
+        // Can Reset, Self-Test, Question Condition, issue Commands & Queries to all SCPI-99 conforming instruments with below methods.
         // TODO: Add wrapper methods for remaining SCPI-99 commands, particularly Command Batching.
         private const Char IDNSepChar = ',';
 
@@ -21,12 +21,6 @@ namespace TestLibrary.Instruments {
 
         public static void Clear(String address) {
             AgSCPI99 SCPI99 = new AgSCPI99(address);
-            SCPI99.SCPI.CLS.Command();
-        }
-
-        public static void ResetClear(String address) {
-            AgSCPI99 SCPI99 = new AgSCPI99(address);
-            SCPI99.SCPI.RST.Command();
             SCPI99.SCPI.CLS.Command();
         }
 

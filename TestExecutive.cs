@@ -50,8 +50,7 @@ namespace TestLibrary {
         private void Form_Load(Object sender, EventArgs e) {
             this.ConfigLib = ConfigLib.Get();
             this.Instruments = Instrument.Get();
-            InstrumentTasks.SCPI99_Test(this.Instruments);
-            InstrumentTasks.InstrumentResetClear(this.Instruments);
+            Instrument.SCPI99_Reset(this.Instruments);
             USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             this.CancelTokenSource = new CancellationTokenSource();
         }
@@ -179,7 +178,7 @@ namespace TestLibrary {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            InstrumentTasks.InstrumentResetClear(this.Instruments);
+            Instrument.SCPI99_Reset(this.Instruments);
             USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             if (this.ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
@@ -212,7 +211,7 @@ namespace TestLibrary {
                 test.Value.Result = EventCodes.UNSET;
             }
             this.ConfigLib.UUT.EventCode = EventCodes.UNSET;
-            InstrumentTasks.SCPI99_Reset(this.Instruments);
+            Instrument.SCPI99_Reset(this.Instruments);
             USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             LogTasks.Start(this.ConfigLib, this.ConfigTest, this._appAssemblyVersion, this._libraryAssemblyVersion, this.ConfigTest.Group, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
@@ -245,14 +244,14 @@ namespace TestLibrary {
         }
 
         private void StopRun(KeyValuePair<String, Test> test, String exceptionString) {
-            InstrumentTasks.InstrumentResetClear(this.Instruments);
+            Instrument.SCPI99_Reset(this.Instruments);
             USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             test.Value.Result = EventCodes.ERROR;
             TestTasks.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
         private void PostRun() {
-            InstrumentTasks.SCPI99_Reset(this.Instruments);
+            Instrument.SCPI99_Reset(this.Instruments);
             USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(enabled: true);

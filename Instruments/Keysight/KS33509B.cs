@@ -12,8 +12,6 @@ namespace TestLibrary.Instruments.Keysight {
     public static class KS33509B {
         // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
 
-        public static void Reset(Instrument instrument) { ((Ag33500B_33600A)instrument.Instance).SCPI.RST.Command(); }
-
         public static void ResetClear(Instrument instrument) {
             ((Ag33500B_33600A)instrument.Instance).SCPI.RST.Command();
             ((Ag33500B_33600A)instrument.Instance).SCPI.CLS.Command();

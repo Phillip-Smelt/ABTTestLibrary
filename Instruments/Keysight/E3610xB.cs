@@ -17,8 +17,6 @@ namespace TestLibrary.Instruments.Keysight {
 
         public static void RemoteLock(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void Reset(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.RST.Command(); }
-
         public static void ResetClear(Instrument instrument) {
             ((AgE3610XB)instrument.Instance).SCPI.RST.Command();
             ((AgE3610XB)instrument.Instance).SCPI.CLS.Command();
@@ -47,7 +45,7 @@ namespace TestLibrary.Instruments.Keysight {
                     +   $" - MINimum   :  Voltage={min} VDC.{Environment.NewLine}"
                     +   $" - Programmed:  Voltage={voltsDC} VDC.{Environment.NewLine}"
                     +   $" - MAXimum   :  Voltage={max} VDC.";
-                    throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
+                    throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
                 }
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", out min);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", out max);
@@ -56,7 +54,7 @@ namespace TestLibrary.Instruments.Keysight {
                     +   $" - MINimum   :  Current={min} ADC.{Environment.NewLine}"
                     +   $" - Programmed:  Current={ampsDC} ADC.{Environment.NewLine}"
                     +   $" - MAXimum   :  Current={max} ADC.";
-                    throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
+                    throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
                 }
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MINimum", out min);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MAXimum", out max);
@@ -75,7 +73,7 @@ namespace TestLibrary.Instruments.Keysight {
                     +   $" - MINimum   :  Delay={min} seconds.{Environment.NewLine}"
                     +   $" - Programmed:  Delay={secondsDelayCurrentProtection} seconds.{Environment.NewLine}"
                     +   $" - MAXimum   :  Delay={max} seconds.";
-                    throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
+                    throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
                 }
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(voltsDC);
@@ -88,7 +86,7 @@ namespace TestLibrary.Instruments.Keysight {
             } catch (InvalidOperationException) {
                 throw;
             } catch (Exception e) {
-                throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument), e);
+                throw new InvalidOperationException(Instrument.GetMessage(instrument), e);
             }
         }
 

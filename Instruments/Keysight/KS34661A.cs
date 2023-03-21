@@ -8,13 +8,10 @@ using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 // Recommend using Command Expert to generate SCPI & IVI drivers commands, which are directly exportable as .Net statements.
 //
 namespace TestLibrary.Instruments.Keysight {
-    // TODO: KS34661A Class.
     public static class KS34661A {
-        // No good SCPI device driver, only IVI.
+        // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
 
         public static void Local(Instrument instrument) { ((Ag3466x)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
-
-        public static void Reset(Instrument instrument) { ((Ag3466x)instrument.Instance).SCPI.RST.Command(); }
 
         public static void ResetClear(Instrument instrument) {
             ((Ag3466x)instrument.Instance).SCPI.RST.Command();

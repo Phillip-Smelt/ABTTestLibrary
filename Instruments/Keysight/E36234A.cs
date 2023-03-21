@@ -9,13 +9,13 @@ using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 // Recommend using Command Expert to generate SCPI & IVI drivers commands, which are directly exportable as .Net statements.
 //
 namespace TestLibrary.Instruments.Keysight {
-    // NOTE: Channel lists aren't allowed in any methods though many, perhaps most, E36234A SCPI commands do permit them.
+    // NOTE: Channel lists aren't allowed in any below methods though many, perhaps most, E36234A SCPI commands do permit them.
     public static class E36234A {
         // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
         private static Int32 ConvertChannel(Instrument instrument, String sChannel) {
             if (String.Equals(sChannel, Instrument.CHANNEL_1)) return 0;
             else if (String.Equals(sChannel, Instrument.CHANNEL_2)) return 1;
-            else throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, $"Invalid Channel '{sChannel}'"));
+            else throw new InvalidOperationException(Instrument.GetMessage(instrument, $"Invalid Channel '{sChannel}'"));
         }
 
         public static void Local(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
@@ -23,8 +23,6 @@ namespace TestLibrary.Instruments.Keysight {
         public static void Remote(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.REMote.Command(); }
 
         public static void RemoteLock(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
-
-        public static void Reset(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.RST.Command(); }
 
         public static void ResetClear(Instrument instrument) {
             ((AgE36200)instrument.Instance).SCPI.RST.Command();
@@ -55,7 +53,7 @@ namespace TestLibrary.Instruments.Keysight {
                     + $" - MINimum   :  Voltage={min[iChannel]} VDC.{Environment.NewLine}"
                     + $" - Programmed:  Voltage={voltsDC} VDC.{Environment.NewLine}"
                     + $" - MAXimum   :  Voltage={max[iChannel]} VDC.";
-                    throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
+                    throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
                 }
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", sChannel, out min);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", sChannel, out max);
@@ -64,7 +62,7 @@ namespace TestLibrary.Instruments.Keysight {
                     + $" - MINimum   :  Current={min[iChannel]} ADC.{Environment.NewLine}"
                     + $" - Programmed:  Current={ampsDC} ADC.{Environment.NewLine}"
                     + $" - MAXimum   :  Current={max[iChannel]} ADC.";
-                    throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
+                    throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
                 }
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MINimum", sChannel, out min);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MAXimum", sChannel, out max);
@@ -73,7 +71,7 @@ namespace TestLibrary.Instruments.Keysight {
                     + $" - MINimum   :  Delay={min[iChannel]} seconds.{Environment.NewLine}"
                     + $" - Programmed:  Delay={secondsDelayCurrentProtection} seconds.{Environment.NewLine}"
                     + $" - MAXimum   :  Delay={max[iChannel]} seconds.";
-                    throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument, s));
+                    throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
                 }
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal", sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(voltsDC, sChannel);
@@ -86,7 +84,7 @@ namespace TestLibrary.Instruments.Keysight {
             } catch (InvalidOperationException) {
                 throw;
             } catch (Exception e) {
-                throw new InvalidOperationException(InstrumentTasks.GetMessage(instrument), e);
+                throw new InvalidOperationException(Instrument.GetMessage(instrument), e);
             }
         }
 
