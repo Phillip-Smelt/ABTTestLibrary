@@ -25,9 +25,9 @@ namespace TestLibrary.AppConfig {
             this.OK = new System.Windows.Forms.Button();
             this.ListGroups = new System.Windows.Forms.ListView();
             this.radioButtonRequired = new System.Windows.Forms.RadioButton();
-            this.radioButtonNotRequired = new System.Windows.Forms.RadioButton();
-            this.groupBoxRequired = new System.Windows.Forms.GroupBox();
-            this.groupBoxRequired.SuspendLayout();
+            this.radioButtonOptional = new System.Windows.Forms.RadioButton();
+            this.groupBoxSelect = new System.Windows.Forms.GroupBox();
+            this.groupBoxSelect.SuspendLayout();
             this.SuspendLayout();
             // 
             // LabelGroups
@@ -81,29 +81,29 @@ namespace TestLibrary.AppConfig {
             this.radioButtonRequired.TabStop = true;
             this.radioButtonRequired.Text = "Required";
             this.radioButtonRequired.UseVisualStyleBackColor = true;
-            this.radioButtonRequired.CheckedChanged += new System.EventHandler(this.GroupBoxRequired_CheckedChanged);
+            this.radioButtonRequired.CheckedChanged += new System.EventHandler(this.GroupBoxSelect_CheckedChanged);
             // 
-            // radioButtonNotRequired
+            // radioButtonOptional
             // 
-            this.radioButtonNotRequired.AutoSize = true;
-            this.radioButtonNotRequired.Location = new System.Drawing.Point(6, 44);
-            this.radioButtonNotRequired.Name = "radioButtonNotRequired";
-            this.radioButtonNotRequired.Size = new System.Drawing.Size(108, 20);
-            this.radioButtonNotRequired.TabIndex = 3;
-            this.radioButtonNotRequired.TabStop = true;
-            this.radioButtonNotRequired.Text = "Not Required";
-            this.radioButtonNotRequired.UseVisualStyleBackColor = true;
-            this.radioButtonNotRequired.CheckedChanged += new System.EventHandler(this.GroupBoxRequired_CheckedChanged);
+            this.radioButtonOptional.AutoSize = true;
+            this.radioButtonOptional.Location = new System.Drawing.Point(6, 44);
+            this.radioButtonOptional.Name = "radioButtonOptional";
+            this.radioButtonOptional.Size = new System.Drawing.Size(78, 20);
+            this.radioButtonOptional.TabIndex = 3;
+            this.radioButtonOptional.TabStop = true;
+            this.radioButtonOptional.Text = "Optional";
+            this.radioButtonOptional.UseVisualStyleBackColor = true;
+            this.radioButtonOptional.CheckedChanged += new System.EventHandler(this.GroupBoxSelect_CheckedChanged);
             // 
-            // groupBoxRequired
+            // groupBoxSelect
             // 
-            this.groupBoxRequired.Controls.Add(this.radioButtonNotRequired);
-            this.groupBoxRequired.Controls.Add(this.radioButtonRequired);
-            this.groupBoxRequired.Location = new System.Drawing.Point(12, 346);
-            this.groupBoxRequired.Name = "groupBoxRequired";
-            this.groupBoxRequired.Size = new System.Drawing.Size(138, 70);
-            this.groupBoxRequired.TabIndex = 1;
-            this.groupBoxRequired.TabStop = false;
+            this.groupBoxSelect.Controls.Add(this.radioButtonOptional);
+            this.groupBoxSelect.Controls.Add(this.radioButtonRequired);
+            this.groupBoxSelect.Location = new System.Drawing.Point(12, 346);
+            this.groupBoxSelect.Name = "groupBoxSelect";
+            this.groupBoxSelect.Size = new System.Drawing.Size(138, 70);
+            this.groupBoxSelect.TabIndex = 1;
+            this.groupBoxSelect.TabStop = false;
             // 
             // GroupSelect
             // 
@@ -111,7 +111,7 @@ namespace TestLibrary.AppConfig {
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(912, 466);
             this.ControlBox = false;
-            this.Controls.Add(this.groupBoxRequired);
+            this.Controls.Add(this.groupBoxSelect);
             this.Controls.Add(this.ListGroups);
             this.Controls.Add(this.OK);
             this.Controls.Add(this.LabelGroups);
@@ -122,8 +122,8 @@ namespace TestLibrary.AppConfig {
             this.Name = "GroupSelect";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose Test Group";
-            this.groupBoxRequired.ResumeLayout(false);
-            this.groupBoxRequired.PerformLayout();
+            this.groupBoxSelect.ResumeLayout(false);
+            this.groupBoxSelect.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -133,7 +133,7 @@ namespace TestLibrary.AppConfig {
         private Button OK;
         private ListView ListGroups;
         private RadioButton radioButtonRequired;
-        private RadioButton radioButtonNotRequired;
-        private GroupBox groupBoxRequired;
+        private RadioButton radioButtonOptional;
+        private GroupBox groupBoxSelect;
     }
 }

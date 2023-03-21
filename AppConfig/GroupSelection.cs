@@ -8,18 +8,18 @@ namespace TestLibrary.AppConfig {
         public String GroupSelected;
         internal Dictionary<String, Group> Groups { get; private set; }
         private readonly List<String> _keysRequired;
-        private readonly List<String> _keysNotRequired;
+        private readonly List<String> _keysOptional;
 
         public GroupSelect(Dictionary<String, Group> groups) {
             this.InitializeComponent();
             this.Groups = groups;
             this._keysRequired = this.Groups.Where(g => (g.Value.Required)).Select(g => g.Key).ToList();
-            this._keysNotRequired = this.Groups.Where(g => (!g.Value.Required)).Select(g => g.Key).ToList();
+            this._keysOptional = this.Groups.Where(g => (!g.Value.Required)).Select(g => g.Key).ToList();
             this.ListGroups.MultiSelect = false;
 
             this.ListViewRefresh();
             this.radioButtonRequired.Enabled = (this._keysRequired.Count > 0);
-            this.radioButtonNotRequired.Enabled = (this._keysNotRequired.Count > 0);
+            this.radioButtonOptional.Enabled = (this._keysOptional.Count > 0);
             this.FormRefresh();
         }
 
@@ -32,7 +32,7 @@ namespace TestLibrary.AppConfig {
 
         private void FormRefresh() {
             if (this.radioButtonRequired.Checked) foreach (String key in this._keysRequired) this.ListGroups.Items.Add(new ListViewItem(new String[] { this.Groups[key].ID, this.Groups[key].Description }));
-            else if (this.radioButtonNotRequired.Checked) foreach (String key in this._keysNotRequired) this.ListGroups.Items.Add(new ListViewItem(new String[] { this.Groups[key].ID, this.Groups[key].Description }));
+            else if (this.radioButtonOptional.Checked) foreach (String key in this._keysOptional) this.ListGroups.Items.Add(new ListViewItem(new String[] { this.Groups[key].ID, this.Groups[key].Description }));
             this.ListGroups.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
             this.ListGroups.Columns[1].Width = -2;
             // https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.columnheader.width?redirectedfrom=MSDN&view=windowsdesktop-7.0#System_Windows_Forms_ColumnHeader_Width
@@ -59,7 +59,7 @@ namespace TestLibrary.AppConfig {
             this.OK.Enabled = true;
         }
 
-        private void GroupBoxRequired_CheckedChanged(Object sender, EventArgs e) {
+        private void GroupBoxSelect_CheckedChanged(Object sender, EventArgs e) {
             if (((RadioButton)sender).Checked) { // Do stuff only if the radio button is checked (or the action will run twice).
                 this.ListViewRefresh();
                 this.FormRefresh();
