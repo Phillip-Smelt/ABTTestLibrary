@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
@@ -61,6 +62,23 @@ namespace TestLibrary.Instruments {
             AgSCPI99 SCPI99 = new AgSCPI99(address);
             SCPI99.Transport.Query.Invoke(query, out String ReturnString);
             return ReturnString;
+        }
+
+        public static Boolean PowerSuppliesAreOff(Dictionary<Instrument.IDs, Instrument> instruments) {
+            Boolean arePowerSuppliesOff = true;
+            String returnString;
+            foreach (KeyValuePair<Instrument.IDs, Instrument> kvp in instruments) {
+                if (kvp.Value.Category == Instrument.CATEGORIES.PowerSupply) {
+                    if (kvp.Key == Instrument.IDs.PS_E36234A) {
+                        returnString = SCPI99.Query(":OUTPut:STATe? (@1:2)", kvp.Value.Address);
+                        arePowerSuppliesOff = arePowerSuppliesOff && (String.Equals(returnString, "0,0")); // "0,0" = both channels 1 & 2 are off.
+                    } else {
+                        returnString = SCPI99.Query(":OUTPut:STATe?", kvp.Value.Address);
+                        arePowerSuppliesOff = arePowerSuppliesOff && (String.Equals(returnString, "0")); // "0" = off.
+                    }
+                }
+            }
+            return arePowerSuppliesOff;
         }
     }
 }

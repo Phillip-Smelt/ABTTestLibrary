@@ -42,7 +42,7 @@ namespace TestLibrary.Instruments.Keysight {
 
         public static void Off(Instrument instrument, String sChannel) { ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(false, sChannel); }
 
-        public static void ON(Instrument instrument, Double voltsDC, Double ampsDC, String sChannel, Double secondsDelayCurrentProtection = 0, Double secondsDelayMeasurement = 0) {
+        public static void On(Instrument instrument, Double voltsDC, Double ampsDC, String sChannel, Double secondsDelayCurrentProtection = 0, Double secondsDelayMeasurement = 0) {
             Int32 iChannel = ConvertChannel(instrument, sChannel);
             try {
                 String s;

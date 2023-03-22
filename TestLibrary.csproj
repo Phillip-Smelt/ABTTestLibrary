@@ -62,7 +62,7 @@
     <Compile Include="AppConfig\GroupSelection.Designer.cs">
       <DependentUpon>GroupSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="Instruments\InstrumentSupport.cs" />
+    <Compile Include="Instruments\Instrument.cs" />
     <Compile Include="AppConfig\ConfigTests.cs" />
     <Compile Include="Instruments\Keysight\E36234A.cs" />
     <Compile Include="Instruments\Keysight\E3610xB.cs" />

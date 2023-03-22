@@ -51,7 +51,7 @@ namespace TestLibrary {
             this.ConfigLib = ConfigLib.Get();
             this.Instruments = Instrument.Get();
             Instrument.SCPI99_Reset(this.Instruments);
-            USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
+            USB_ERB24.Reset(USB_ERB24.ERB24s);
             this.CancelTokenSource = new CancellationTokenSource();
         }
 
@@ -179,7 +179,7 @@ namespace TestLibrary {
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             Instrument.SCPI99_Reset(this.Instruments);
-            USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
+            USB_ERB24.Reset(USB_ERB24.ERB24s);
             if (this.ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
 
@@ -212,7 +212,7 @@ namespace TestLibrary {
             }
             this.ConfigLib.UUT.EventCode = EventCodes.UNSET;
             Instrument.SCPI99_Reset(this.Instruments);
-            USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
+            USB_ERB24.Reset(USB_ERB24.ERB24s);
             LogTasks.Start(this.ConfigLib, this.ConfigTest, this._appAssemblyVersion, this._libraryAssemblyVersion, this.ConfigTest.Group, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
         }
@@ -245,14 +245,14 @@ namespace TestLibrary {
 
         private void StopRun(KeyValuePair<String, Test> test, String exceptionString) {
             Instrument.SCPI99_Reset(this.Instruments);
-            USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
+            USB_ERB24.Reset(USB_ERB24.ERB24s);
             test.Value.Result = EventCodes.ERROR;
             TestTasks.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
         private void PostRun() {
             Instrument.SCPI99_Reset(this.Instruments);
-            USB_ERB24.RelaysReset(USB_ERB24.ERB24s);
+            USB_ERB24.Reset(USB_ERB24.ERB24s);
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);

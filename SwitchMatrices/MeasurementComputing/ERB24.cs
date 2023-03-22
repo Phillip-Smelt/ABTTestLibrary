@@ -26,12 +26,12 @@ namespace TestLibrary.SwitchMatrices.MeasurementComputing {
         //  - Pass them in from TestProgram during instantiation of TestExecutive form.
 
 
-        public static Boolean AreRelaysReset(List<Int32> boardNumbers) {
+        public static Boolean AreReset() {
             MccBoard erb24;
             ErrorInfo ei;
             Boolean relaysAreReset = true;
             UInt16 dataValue;
-            foreach (Int32 boardNumber in boardNumbers) {
+            foreach (Int32 boardNumber in ERB24s) {
                 erb24 = new MccBoard(boardNumber);
                 ei = erb24.DIn(DigitalPortType.FirstPortA, out dataValue);
                 if (ei.Value != ErrorInfo.ErrorCode.NoErrors) UL_Support.MccBoardErrorHandler(erb24, ei);
@@ -49,7 +49,7 @@ namespace TestLibrary.SwitchMatrices.MeasurementComputing {
             return relaysAreReset;
         }
 
-        public static void RelaysReset(List<Int32> boardNumbers) {
+        public static void Reset(List<Int32> boardNumbers) {
             MccBoard erb24;
             ErrorInfo ei;
             foreach (Int32 boardNumber in boardNumbers) {
@@ -65,7 +65,7 @@ namespace TestLibrary.SwitchMatrices.MeasurementComputing {
             }
         }
 
-        public static void RelayOff((Int32 board, Int32 relay) br) {
+        public static void Off((Int32 board, Int32 relay) br) {
             MccBoard erb24;
             ErrorInfo ei;
             erb24 = new MccBoard(br.board);
@@ -73,7 +73,7 @@ namespace TestLibrary.SwitchMatrices.MeasurementComputing {
             if (ei.Value != ErrorInfo.ErrorCode.NoErrors) UL_Support.MccBoardErrorHandler(erb24, ei);
         }
 
-        public static void RelayOn((Int32 board, Int32 relay) br) {
+        public static void On((Int32 board, Int32 relay) br) {
             MccBoard erb24;
             ErrorInfo ei;
             erb24 = new MccBoard(br.board);
@@ -82,11 +82,11 @@ namespace TestLibrary.SwitchMatrices.MeasurementComputing {
             if (ei.Value != ErrorInfo.ErrorCode.NoErrors) UL_Support.MccBoardErrorHandler(erb24, ei);
         }
 
-        public static Boolean IsRelayOff((Int32 board, Int32 relay) br) {
-            return !(IsRelayOn(br));
+        public static Boolean IsOff((Int32 board, Int32 relay) br) {
+            return !(IsOn(br));
         }
 
-        public static Boolean IsRelayOn((Int32 board, Int32 relay) br) {
+        public static Boolean IsOn((Int32 board, Int32 relay) br) {
             MccBoard erb24;
             ErrorInfo ei;
             erb24 = new MccBoard(br.board);
