@@ -40,7 +40,7 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="SwitchMatrices\MeasurementComputing\ERB24.cs" />
+    <Compile Include="SwitchMatrices\MeasurementComputing\USB_ERB24.cs" />
     <Compile Include="Logging\Logging.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
