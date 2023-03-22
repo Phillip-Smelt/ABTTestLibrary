@@ -15,12 +15,11 @@ using TestLibrary.TestSupport;
 using TestLibrary.SwitchMatrices.MeasurementComputing;
 
 // TODO: Replace RichTextBox in this TestExecutive with a DataGridView, change Logging output from current discrete records to DataGrid rows.
-// TODO: Update to .Net 7.0 & C# 11.0 when possible.
-// - Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library
-//   is compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
+// TODO: Update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.0 when possible.
+// NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library is compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
 // https://www.ti.com/tool/FUSION_USB_ADAPTER_API
 // TODO: Update to UWP instead of WinForms when possible.
-// - Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
+// NOTE: Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
 // NOTE: With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 //
 //  References:
