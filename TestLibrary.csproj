@@ -40,6 +40,7 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Instruments\TexasInstruments\USB-TO-GPIO.cs" />
     <Compile Include="SwitchMatrices\MeasurementComputing\USB_ERB24.cs" />
     <Compile Include="Logging\Logging.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -125,6 +126,10 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="TIDP.SAA, Version=3.0.8.15626, Culture=neutral, PublicKeyToken=4ce2ce38201aeb82, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Texas Instruments Fusion API\Library\TIDP.SAA.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

@@ -18,7 +18,7 @@ namespace TestLibrary.SwitchMatrices.MeasurementComputing {
         //  - Pull-Down:      Relays are de-energized at power-up.
         //  - https://www.mccdaq.com/PDFs/Manuals/usb-erb24.pdf.
         public static readonly List<Int32> ERB24s = new List<Int32>() { 0 };
-        // TODO: Add 2nd USB-erb24 board.  Use InstaCal to configure as Board Number 1.
+        // TODO: Add 2nd USB-ERB24 board.  Use InstaCal to configure as Board Number 1.
         // TODO: Above member ERB24s is a very quick & dirty approach to defining the Test System's MCC USB-ERB24s.  Better ways:
         //  - Read them from InstaCal's cb.cfg file.
         //  - Dynamically discover them programmatically: https://www.mccdaq.com/pdfs/manuals/Mcculw_WebHelp/ULStart.htm.
