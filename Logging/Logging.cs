@@ -10,6 +10,9 @@ using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://se
 using TestLibrary.AppConfig;
 using TestLibrary.TestSupport;
 
+// TODO: Persist test data into Microsoft SQL Server Express.
+// TODO: Create a Microsoft Access front-end exporting/report app for persisted SQL Server Express test data.  Export in CSV, report in PDF.
+// TODO: After test data persisted in MS SQL Server Express & exported/reported from MS Access, eliminate Serilog RTF output, replaced by Access PDF report.
 namespace TestLibrary.Logging {
     public static class LogTasks {
         public const String LOGGER_TEMPLATE = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}";
