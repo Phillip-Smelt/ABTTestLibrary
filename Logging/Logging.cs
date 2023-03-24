@@ -15,7 +15,7 @@ using TestLibrary.TestSupport;
 // TODO: After test data persisted in MS SQL Server Express & exported/reported from MS Access, eliminate Serilog RTF output, replaced by Access PDF report.
 namespace TestLibrary.Logging {
     public static class LogTasks {
-        public const String LOGGER_TEMPLATE = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}";
+        public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
 
         public static void Start(ConfigLib configLib, ConfigTest configTest, String _appAssemblyVersion, String _libraryAssemblyVersion, Group group, ref RichTextBox rtfResults) {
             if (!group.Required) {
