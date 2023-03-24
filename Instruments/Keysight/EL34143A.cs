@@ -9,7 +9,6 @@ using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 //
 namespace TestLibrary.Instruments.Keysight {
     public static class EL34143A {
-        // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
         public static void Local(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
 
         public static void Remote(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.REMote.Command(); }

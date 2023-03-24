@@ -9,8 +9,6 @@ using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 //
 namespace TestLibrary.Instruments.Keysight {
     public static class KS34661A {
-        // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
-
         public static void Local(Instrument instrument) { ((Ag3466x)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
 
         public static void ResetClear(Instrument instrument) {

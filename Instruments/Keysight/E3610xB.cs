@@ -10,7 +10,6 @@ using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 //
 namespace TestLibrary.Instruments.Keysight {
     public static class E3610xB {
-        // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
         public static void Local(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
 
         public static void Remote(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.SYSTem.REMote.Command(); }

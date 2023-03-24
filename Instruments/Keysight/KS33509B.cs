@@ -10,8 +10,6 @@ using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
 namespace TestLibrary.Instruments.Keysight {
     // TODO: KS33509B Class.
     public static class KS33509B {
-        // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
-
         public static void ResetClear(Instrument instrument) {
             ((Ag33500B_33600A)instrument.Instance).SCPI.RST.Command();
             ((Ag33500B_33600A)instrument.Instance).SCPI.CLS.Command();

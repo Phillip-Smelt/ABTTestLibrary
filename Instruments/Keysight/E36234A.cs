@@ -9,7 +9,6 @@ using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 // Recommend using Command Expert to generate SCPI & IVI drivers commands, which are directly exportable as .Net statements.
 //
 namespace TestLibrary.Instruments.Keysight {
-    // NOTE: Channel lists aren't allowed in any below methods though many, perhaps most, E36234A SCPI commands do permit them.
     public static class E36234A {
         // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
         private static Int32 ConvertChannel(Instrument instrument, String sChannel) {

@@ -25,7 +25,6 @@ namespace TestLibrary.SwitchMatrices.MeasurementComputing {
         //  - Read them from TestLibrary's forthcoming app.config XML configuration file, then configure them dynamically/programmatically.
         //  - Pass them in from TestProgram during instantiation of TestExecutive form.
 
-
         public static Boolean AreReset() {
             MccBoard erb24;
             ErrorInfo ei;

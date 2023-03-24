@@ -12,7 +12,7 @@ namespace TestLibrary.Instruments {
     public static class SCPI99 {
         // SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 instruments, which allows shared functionality.
         // Can Reset, Self-Test, Question Condition, issue Commands & Queries to all SCPI-99 conforming instruments with below methods.
-        // TODO: Add wrapper methods for remaining SCPI-99 commands, particularly Command Batching.
+        // TODO: Add wrapper methods for remaining SCPI-99 commands.  Definitely want to fully implement these core commands.
         private const Char IDNSepChar = ',';
 
         public static void Reset(String address) {

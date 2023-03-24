@@ -3,6 +3,8 @@ using TIDP.SAA; // https://www.ti.com/tool/FUSION_USB_ADAPTER_API/
 
 namespace TestLibrary.Instruments.TexasInstruments {
     public sealed class USB_TO_GPIO {
+        // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SMBusAdapter commands are conveniences, not necessities.
+        // NOTE: Will never fully implement wrapper methods for the complete set of SMBusAdapter commands, just some of the most commonly used ones.
         // NOTE: Update to .Net 7.0 & C# 11.0 if possible.  See 2nd Note below.
         // - Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments' TIDP.SAA Fusion API targets
         //   .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.

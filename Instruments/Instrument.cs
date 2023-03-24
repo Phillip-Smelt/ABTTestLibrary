@@ -16,9 +16,14 @@ using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 //
 using TestLibrary.Instruments.Keysight;
 
-// NOTE: Consider adding ScpiQuery & ScpiCommand methods to all Instrument classes, to pass raw SCPI strings to the Instrument.
-// Eliminates need to wrap every SCPI command, and allows all Instrument specific commands/queries to be handled by the Instrument
-// classes, rather than directly invoking them from TestPrograms.
+// TODO: Implement Rohde-Schwarz' recommendations from below link when time permit. 
+// https://www.rohde-schwarz.com/webhelp/Remote_Control_SCPI_HTML_GettingStarted/Content/welcome.htm
+// NOTE: Following notes apply to namespace TestLibrary.Instruments.Keysight:
+// NOTE: Consider using Keysight's IVI drivers instead of wrapping SCPI driver's calls; IVI drivers might prove preferable.
+// NOTE: Wrapper methods hopefully prove useful for the most commonly used SCPI commands.
+// NOTE: But wrapper methods are strictly conveniences, not necessities.
+// NOTE: Won't ever complete wrappers for the full set of SCPI commands, just some of the most commonly used & useful ones.
+
 namespace TestLibrary.Instruments {
     public class Instrument {
         // TODO: Replace _instrumentAddresses with an XML app.config configuration file defining each Test System's instruments.
