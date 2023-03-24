@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using TIDP.SAA; // https://www.ti.com/tool/FUSION_USB_ADAPTER_API/
 
 namespace TestLibrary.Instruments.TexasInstruments {
@@ -63,9 +64,14 @@ namespace TestLibrary.Instruments.TexasInstruments {
             return _blockEncodedResult;
         }
 
-        public static String ReadBlockConvertToText(Byte Address, Byte CommandCode) {
+        public static String ReadBlockConvertToHexString(Byte Address, Byte CommandCode) {
             _blockEncodedResult = ReadBlock(Address, CommandCode);
-            return HexStringToTextString(_blockEncodedResult.ToString());
+            return _blockEncodedResult.ToString();
+        }
+
+        public static String ReadBlockConvertToTextString(Byte Address, Byte CommandCode) {
+            String hexString = ReadBlockConvertToHexString(Address, CommandCode);
+            return HexStringToTextString(hexString);
         }
 
         public static SAAStatus WriteBlock(Byte Address, Byte CommandCode, Byte[] Data) {
