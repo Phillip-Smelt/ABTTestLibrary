@@ -34,24 +34,24 @@ namespace TestLibrary.Instruments {
         public static String CHANNEL_2 = "(@2)";
         public static String CHANNEL_1_2 = "(@1:2)";
 
-        public enum CATEGORIES {
-            CounterTimer,
-            ElectronicLoad,
-            LogicAnalyzer,
-            MultiMeter,
-            OscilloScope,
-            PowerSupply,
-            WaveformGenerator
+        public enum CATEGORIES {// Abbreviations:
+            CounterTimer,       // CT
+            ElectronicLoad,     // EL
+            LogicAnalyzer,      // LA
+            MultiMeter,         // MM
+            OscilloScope,       // OS
+            PowerSupply,        // PS
+            WaveformGenerator   // WG
         }
 
         public enum IDs {
-            EL_EL34143A,
-            MM_33461A,
-            PS_E36103B_1,
-            PS_E36103B_2,
-            PS_E36105B,
-            PS_E36234A,
-            WG_E33509B
+            EL_EL34143A,        // Electronic Load, Keysight EL34143A
+            MM_33461A,          // Multi-Meter, Keysight 33461A,
+            PS_E36103B_1,       // Power Supply, Keysight E36103B, 1 of 2
+            PS_E36103B_2,       // Power Supply, Keysight E36103B, 2 of 2
+            PS_E36105B,         // Power Supply, Keysight E36105B
+            PS_E36234A,         // Power Supply, Keysight E36234A
+            WG_E33509B          // Waveform Generator, Keysight E33509B
         }
 
         private static readonly Dictionary<Instrument.IDs, String> _instrumentAddresses = new Dictionary<Instrument.IDs, String> {
@@ -60,10 +60,10 @@ namespace TestLibrary.Instruments {
         // - Technically, these are actually VISA 'Resource Names' instead of VISA 'Addresses',
         //   but 'Address' has widespread usage and is more descriptive than 'Resource Name'.
             { Instrument.IDs.MM_33461A, "USB0::0x2A8D::0x1301::MY60049978::0::INSTR" },
-         // { Instrument.IDs.WG_E33509B, "USB0::0x0957::0x2507::MY59003604::0::INSTR" },
+        //  { Instrument.IDs.WG_E33509B, "USB0::0x0957::0x2507::MY59003604::0::INSTR" },
             { Instrument.IDs.PS_E36103B_1, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
             { Instrument.IDs.PS_E36103B_2, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" },
-         // { Instrument.IDs.PS_E36105B, "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
+        //  { Instrument.IDs.PS_E36105B, "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
             { Instrument.IDs.PS_E36234A, "USB0::0x2A8D::0x3402::MY61002598::0::INSTR" },
             { Instrument.IDs.EL_EL34143A, "USB0::0x2A8D::0x3802::MY61001295::0::INSTR" }
             };
