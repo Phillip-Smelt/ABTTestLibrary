@@ -187,7 +187,7 @@ namespace TestLibrary {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{this.ConfigLib.UUT.Number}_{this.ConfigLib.UUT.SerialNumber}",
+                FileName = $"{this.ConfigLib.UUT.Number}_{this.ConfigTest.Group.ID}_{this.ConfigLib.UUT.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
