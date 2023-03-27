@@ -8,8 +8,8 @@ using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 //
 // Recommend using Command Expert to generate SCPI & IVI drivers commands, which are directly exportable as .Net statements.
 //
-namespace TestLibrary.Instruments.Keysight {
-    public static class E36234A {
+namespace TestLibrary.VISA {
+    public static class PS_E36234A {
         // NOTE: Consider using IVI driver instead of wrapping SCPI driver's calls.
         private static Int32 ConvertChannel(Instrument instrument, String sChannel) {
             if (String.Equals(sChannel, Instrument.CHANNEL_1)) return 0;
@@ -23,9 +23,7 @@ namespace TestLibrary.Instruments.Keysight {
 
         public static void RemoteLock(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void ResetClear(Instrument instrument) {
-            ((AgE36200)instrument.Instance).SCPI.RST.Command();
-            ((AgE36200)instrument.Instance).SCPI.CLS.Command();
+        public static void ModelSpecificInitialization(Instrument instrument) {
             ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.CLEar.Command(Instrument.CHANNEL_1_2);
             ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(Instrument.CHANNEL_1_2);
             ((AgE36200)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command(Instrument.CHANNEL_1_2);

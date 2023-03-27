@@ -8,7 +8,7 @@ using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 //
 // Recommend using Command Expert to generate SCPI & IVI driver commands, which are directly exportable as .Net statements.
 //
-namespace TestLibrary.Instruments {
+namespace TestLibrary.VISA {
     public static class SCPI99 {
         // SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 instruments, which allows shared functionality.
         // Can Reset, Self-Test, Question Condition, issue Commands & Queries to all SCPI-99 conforming instruments with below methods.
@@ -69,7 +69,8 @@ namespace TestLibrary.Instruments {
             String returnString;
             foreach (KeyValuePair<Instrument.IDs, Instrument> kvp in instruments) {
                 if (kvp.Value.Category == Instrument.CATEGORIES.PowerSupply) {
-                    if (kvp.Key == Instrument.IDs.PS_E36234A) {
+
+                    if (kvp.Key == Instrument.IDs.PS3) {
                         returnString = SCPI99.Query(":OUTPut:STATe? (@1:2)", kvp.Value.Address);
                         arePowerSuppliesOff = arePowerSuppliesOff && (String.Equals(returnString, "0,0")); // "0,0" = both channels 1 & 2 are off.
                     } else {

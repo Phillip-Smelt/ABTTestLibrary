@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using TestLibrary.AppConfig;
-using TestLibrary.Instruments;
+using TestLibrary.VISA;
 using TestLibrary.Logging;
 using TestLibrary.TestSupport;
-using TestLibrary.SwitchMatrices.MeasurementComputing;
+using TestLibrary.Switching;
 
 // TODO: Replace RichTextBox in this TestExecutive with a DataGridView, change Logging output from current discrete records to DataGrid rows.
 // TODO: Update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.0 when possible.
@@ -49,7 +49,6 @@ namespace TestLibrary {
         private void Form_Load(Object sender, EventArgs e) {
             this.ConfigLib = ConfigLib.Get();
             this.Instruments = Instrument.Get();
-            Instrument.SCPI99_Reset(this.Instruments);
             USB_ERB24.Reset(USB_ERB24.ERB24s);
             this.CancelTokenSource = new CancellationTokenSource();
         }

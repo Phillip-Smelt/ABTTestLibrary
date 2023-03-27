@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
+using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
-using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -14,22 +14,17 @@ using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 //
 // Recommend using Command Expert to generate SCPI & IVI driver commands, which are directly exportable as .Net statements.
 //
-using TestLibrary.Instruments.Keysight;
-
 // TODO: Implement Rohde-Schwarz' recommendations from below link when time permit. 
 // https://www.rohde-schwarz.com/webhelp/Remote_Control_SCPI_HTML_GettingStarted/Content/welcome.htm
-// NOTE: Following notes apply to namespace TestLibrary.Instruments.Keysight:
+// NOTE: Following notes apply to namespace TestLibrary.VISA:
 // NOTE: Consider using Keysight's IVI drivers instead of wrapping SCPI driver's calls; IVI drivers might prove preferable.
 // NOTE: Wrapper methods hopefully prove useful for the most commonly used SCPI commands.
 // NOTE: But wrapper methods are strictly conveniences, not necessities.
 // NOTE: Won't ever complete wrappers for the full set of SCPI commands, just some of the most commonly used & useful ones.
+// NOTE: Update as necessary.
 
-namespace TestLibrary.Instruments {
+namespace TestLibrary.VISA {
     public class Instrument {
-        // TODO: Replace _instrumentAddresses with an XML app.config configuration file defining each Test System's instruments.
-        //  - Permitting dynamic configuration of Test Systems, without requiring re-compilation.
-        //  - Moving each Test System's configuration out of global Test Library, into a local XML configuration file.
-        // NOTE: Add/remove instruments as needed.
         public static String CHANNEL_1 = "(@1)";
         public static String CHANNEL_2 = "(@2)";
         public static String CHANNEL_1_2 = "(@1:2)";
@@ -45,89 +40,70 @@ namespace TestLibrary.Instruments {
         }
 
         public enum IDs {
-            EL_EL34143A,        // Electronic Load, Keysight EL34143A
-            MM_33461A,          // Multi-Meter, Keysight 33461A,
-            PS_E36103B_1,       // Power Supply, Keysight E36103B, 1 of 2
-            PS_E36103B_2,       // Power Supply, Keysight E36103B, 2 of 2
-            PS_E36105B,         // Power Supply, Keysight E36105B
-            PS_E36234A,         // Power Supply, Keysight E36234A
-            WG_E33509B          // Waveform Generator, Keysight E33509B
+            // NOTE: Not all VISA Instrument IDs are necessarily present/installed; actual configuration defined in file VISA.Config.xml.
+            CT1, CT2, CT3,                                  // Counter Timer
+            EL1, EL2, EL3,                                  // Electronic Load
+            LA1, LA2, LA3,                                  // Logic Analyzer
+            MM1, MM2, MM3,                                  // Multi-Meter
+            OS1, OS2, OS3,                                  // OscilloScope
+            PS1, PS2, PS3, PS4, PS5, PS6, PS7, PS8, PS9,    // Power Supply
+            WG1, WG2, WG3, WG4, WG5, WG6, WG7, WG8, WG9     // Waveform Generator
         }
 
-        private static readonly Dictionary<Instrument.IDs, String> _instrumentAddresses = new Dictionary<Instrument.IDs, String> {
-        // VISA (Virtual Instrument Software Architecture) Resource Names.
-        // - https://www.ivifoundation.org/specifications/default.aspx
-        // - Technically, these are actually VISA 'Resource Names' instead of VISA 'Addresses',
-        //   but 'Address' has widespread usage and is more descriptive than 'Resource Name'.
-            { Instrument.IDs.MM_33461A, "USB0::0x2A8D::0x1301::MY60049978::0::INSTR" },
-        //  { Instrument.IDs.WG_E33509B, "USB0::0x0957::0x2507::MY59003604::0::INSTR" },
-            { Instrument.IDs.PS_E36103B_1, "USB0::0x2A8D::0x1602::MY61001983::0::INSTR" },
-            { Instrument.IDs.PS_E36103B_2, "USB0::0x2A8D::0x1602::MY61001958::0::INSTR" },
-        //  { Instrument.IDs.PS_E36105B, "USB0::0x2A8D::0x1802::MY61001696::0::INSTR" },
-            { Instrument.IDs.PS_E36234A, "USB0::0x2A8D::0x3402::MY61002598::0::INSTR" },
-            { Instrument.IDs.EL_EL34143A, "USB0::0x2A8D::0x3802::MY61001295::0::INSTR" }
-            };
-        public Instrument.IDs ID { get; private set; }
-        public Instrument.CATEGORIES Category { get; private set; }
+        private static readonly Dictionary<IDs, String> _instrumentAddresses = VISA_Instrument.Get();
+        // TODO: public Instrument.IDs ID { get; private set; }
         public String Address { get; private set; }
+        public Instrument.CATEGORIES Category { get; private set; }
         public object Instance { get; private set; }
-        public String Manufacturer { get; private set; }
-        public String Model { get; private set; }
 
-        private Instrument(Instrument.IDs id, String address) {
-            this.ID = id;
+        private Instrument(String address) {
+            // TODO: this.ID = id;
             this.Address = address;
-            this.Manufacturer = SCPI99.GetManufacturer(this.Address);
-            this.Model = SCPI99.GetModel(this.Address);
-            SCPI99.SelfTest(this.Address);
+            SCPI99.SelfTest(this.Address); // SCPI99.SelfTest() issues a Factory Reset (*RST) command after its *TST completes.
+            SCPI99.Reset(this.Address); 
+
             try {
-                switch (ID) {
-                    case Instrument.IDs.EL_EL34143A:
+                String instrumentModel = SCPI99.GetModel(this.Address);
+                switch (instrumentModel) {
+                    case "EL34143A":
                         this.Category = Instrument.CATEGORIES.ElectronicLoad;
                         this.Instance = new AgEL30000(this.Address);
-                        EL34143A.RemoteLock(this);
-                        EL34143A.ResetClear(this);
-
+                        EL_34143A.ModelSpecificInitialization(this);
                         break;
-                    case Instrument.IDs.MM_33461A:
+                    case "34461A":
                         this.Category = Instrument.CATEGORIES.MultiMeter;
                         this.Instance = new Ag3466x(this.Address);
-                        KS34661A.ResetClear(this);
+                        MM_34661A.ModelSpecificInitialization(this);
                         break;
-                    case Instrument.IDs.PS_E36103B_1:
-                    case Instrument.IDs.PS_E36103B_2:
-                    case Instrument.IDs.PS_E36105B:
+                    case "E36103B":
+                    case "E36105B":
                         this.Category = Instrument.CATEGORIES.PowerSupply;
                         this.Instance = new AgE3610XB(this.Address);
-                        E3610xB.RemoteLock(this);
-                        E3610xB.ResetClear(this);
+                        PS_E3610xB.ModelSpecificInitialization(this);
                         break;
-                    case Instrument.IDs.PS_E36234A:
+                    case "E36234A":
                         this.Category = Instrument.CATEGORIES.PowerSupply;
                         this.Instance = new AgE36200(this.Address);
-                        E36234A.RemoteLock(this);
-                        E36234A.ResetClear(this);
+                        PS_E36234A.ModelSpecificInitialization(this);
                         break;
-                    case Instrument.IDs.WG_E33509B:
+                    case "33509B":
                         this.Category = Instrument.CATEGORIES.WaveformGenerator;
                         this.Instance = new Ag33500B_33600A(this.Address);
-                        KS33509B.ResetClear(this);
+                        WG_33509B.ModelSpecificInitialization(this);
                         break;
                     default:
                         throw new NotImplementedException($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
-                            $"Update Class TestLibrary.Instrument.Instrument, adding '{ID}'.");
+                            $"Update Class TestLibrary.VISA.Instrument, adding '{instrumentModel}'.");
                 }
-            } catch (NotImplementedException) {
-                throw;
             } catch (Exception e) {
-                String[] a = this.Address.Split(':');
-                throw new InvalidOperationException($"Check to see if {Enum.GetName(typeof(Instrument.CATEGORIES), this.Category)} with VISA Address '{this.Address}' is powered and it's {a[0]} bus is communicating.", e);
+                String[] a = address.Split(':');
+                throw new InvalidOperationException($"Check to see if {Enum.GetName(typeof(Instrument.CATEGORIES), this.Category)} with VISA Address '{address}' is powered and it's {a[0]} bus is communicating.", e);
             }
         }
 
-        public static Dictionary<Instrument.IDs, Instrument> Get() {
-            Dictionary<Instrument.IDs, Instrument> d = new Dictionary<Instrument.IDs, Instrument>();
-            foreach (KeyValuePair<Instrument.IDs, String> ia in _instrumentAddresses) d.Add(ia.Key, new Instrument(ia.Key, ia.Value));
+        public static Dictionary<IDs, Instrument> Get() {
+            Dictionary<IDs, Instrument> d = new Dictionary<IDs, Instrument>();
+            foreach (KeyValuePair<IDs, String> ia in _instrumentAddresses) d.Add(ia.Key, new Instrument(ia.Value));
             return d;
         }
 

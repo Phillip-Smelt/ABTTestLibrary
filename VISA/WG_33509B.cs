@@ -7,12 +7,9 @@ using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
 //
 // Recommend using Command Expert to generate SCPI & IVI drivers commands, which are directly exportable as .Net statements.
 //
-namespace TestLibrary.Instruments.Keysight {
-    // TODO: KS33509B Class.
-    public static class KS33509B {
-        public static void ResetClear(Instrument instrument) {
-            ((Ag33500B_33600A)instrument.Instance).SCPI.RST.Command();
-            ((Ag33500B_33600A)instrument.Instance).SCPI.CLS.Command();
+namespace TestLibrary.VISA {
+    public static class WG_33509B {
+        public static void ModelSpecificInitialization(Instrument instrument) {
             ((Ag33500B_33600A)instrument.Instance).SCPI.DISPlay.TEXT.CLEar.Command();
         }
     }

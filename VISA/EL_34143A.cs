@@ -7,17 +7,15 @@ using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 //
 // Recommend using Command Expert to generate SCPI & IVI drivers commands, which are directly exportable as .Net statements.
 //
-namespace TestLibrary.Instruments.Keysight {
-    public static class EL34143A {
+namespace TestLibrary.VISA {
+    public static class EL_34143A {
         public static void Local(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
 
         public static void Remote(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.REMote.Command(); }
 
         public static void RemoteLock(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void ResetClear(Instrument instrument) {
-            ((AgEL30000)instrument.Instance).SCPI.RST.Command();
-            ((AgEL30000)instrument.Instance).SCPI.CLS.Command();
+        public static void ModelSpecificInitialization(Instrument instrument) {
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command();
             ((AgEL30000)instrument.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
         }

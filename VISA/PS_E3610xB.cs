@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
+using static TestLibrary.VISA.Instrument;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -8,17 +9,15 @@ using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 //
 // Recommend using Command Expert to generate SCPI & IVI drivers commands, which are directly exportable as .Net statements.
 //
-namespace TestLibrary.Instruments.Keysight {
-    public static class E3610xB {
+namespace TestLibrary.VISA {
+    public static class PS_E3610xB {
         public static void Local(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
 
         public static void Remote(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.SYSTem.REMote.Command(); }
 
         public static void RemoteLock(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void ResetClear(Instrument instrument) {
-            ((AgE3610XB)instrument.Instance).SCPI.RST.Command();
-            ((AgE3610XB)instrument.Instance).SCPI.CLS.Command();
+        public static void ModelSpecificInitialization(Instrument instrument) {
             ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.CLEar.Command();
             ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.CLEar.Command();
             ((AgE3610XB)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command();
