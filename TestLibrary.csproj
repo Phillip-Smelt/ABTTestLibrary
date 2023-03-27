@@ -41,7 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ISP\Utility.cs" />
-    <Compile Include="VISA\VISA.Config.cs" />
+    <Compile Include="AppConfig\VISA.Config.cs" />
     <Compile Include="InterfaceAdapters\USB-TO-GPIO.cs" />
     <Compile Include="Switching\USB_ERB24.cs" />
     <Compile Include="Logging\Logging.cs" />
@@ -137,9 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="VISA\VISA.Config.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

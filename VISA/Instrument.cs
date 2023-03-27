@@ -6,6 +6,7 @@ using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
+using TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -50,7 +51,6 @@ namespace TestLibrary.VISA {
             WG1, WG2, WG3, WG4, WG5, WG6, WG7, WG8, WG9     // Waveform Generator
         }
 
-        private static readonly Dictionary<IDs, String> _instrumentAddresses = VISA_Instrument.Get();
         // TODO: public Instrument.IDs ID { get; private set; }
         public String Address { get; private set; }
         public Instrument.CATEGORIES Category { get; private set; }
@@ -102,6 +102,7 @@ namespace TestLibrary.VISA {
         }
 
         public static Dictionary<IDs, Instrument> Get() {
+            Dictionary<IDs, String> _instrumentAddresses = VISA_Instrument.Get();
             Dictionary<IDs, Instrument> d = new Dictionary<IDs, Instrument>();
             foreach (KeyValuePair<IDs, String> ia in _instrumentAddresses) d.Add(ia.Key, new Instrument(ia.Value));
             return d;

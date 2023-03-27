@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using static TestLibrary.VISA.Instrument;
 
-namespace TestLibrary.VISA {
+namespace TestLibrary.AppConfig {
     public class VISA_InstrumentElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
         [ConfigurationProperty("Address", IsKey = false, IsRequired = true)] public String Address { get { return ((String)base["Address"]).Trim(); } }
