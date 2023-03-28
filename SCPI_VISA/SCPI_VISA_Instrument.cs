@@ -25,8 +25,8 @@ using TestLibrary.Logging;
 // NOTE: Won't ever complete wrappers for the full set of SCPI commands, just some of the most commonly used & useful ones.
 
 namespace TestLibrary.SCPI_VISA {
-    // TODO: Rename class Instrument to class SCPI_VISA_Instrument.
-    // TODO: Move class SCPI_VISA_Instrument into file ConfigSCPI_VISA_Instruments.
+    // TODO: Refactor class Instrument to class SCPI_VISA_Instrument.
+    // TODO: Refactor class SCPI_VISA_Instrument into file ConfigSCPI_VISA_Instruments.
     public class Instrument {
         public static String CHANNEL_1 = "(@1)";
         public static String CHANNEL_2 = "(@2)";

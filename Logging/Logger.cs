@@ -9,9 +9,9 @@ using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using TestLibrary.AppConfig;
 
-// TODO: Persist test data into Microsoft SQL Server Express.
-// TODO: Create a Microsoft Access front-end exporting/report app for persisted SQL Server Express test data.  Export in CSV, report in PDF.
-// TODO: After test data persisted in MS SQL Server Express & exported/reported from MS Access, eliminate Serilog RTF output, replaced by Access PDF report.
+// TODO: SQL Server Express: Persist test data into Microsoft SQL Server Express.
+// TODO: SQL Server Express: Create a Microsoft C# front-end exporting/report app for persisted SQL Server Express test data.  Export in CSV, report in RTF.
+// TODO: SQL Server Express: Use Logger & RTFSinks to write SQL Server Express' data to RTF then File/Save As RTF.
 namespace TestLibrary.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
@@ -158,11 +158,11 @@ namespace TestLibrary.Logging {
         }
 
         private static void SQLStart(ConfigUUT configUUT, Group group) {
-            // TODO: SQLStart.
+            // TODO: SQL Server Express: SQLStart.
         }
 
         private static void SQLStop(ConfigUUT configUUT, Group group) {
-            // TODO: SQLStop.
+            // TODO: SQL Server Express: SQLStop.
         }
 
         public static void UnexpectedErrorHandler(String logMessage) {

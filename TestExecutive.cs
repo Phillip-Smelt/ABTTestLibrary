@@ -15,8 +15,7 @@ using TestLibrary.Switching;
 using System.Globalization;
 using System.Linq;
 
-// TODO: Refactor to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
-// TODO: Replace RichTextBox in this TestExecutive with a DataGridView, change Logging output from current discrete records to DataGrid rows.
+// TODO: Refactor TestLibrary to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 // TODO: Update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.0 when possible.
 // NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library is compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
 //  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
@@ -33,7 +32,7 @@ namespace TestLibrary {
         public ConfigTest ConfigTest;
         public ConfigUUT ConfigUUT;
         public ConfigLogger ConfigLogger;
-        // TODO: Rename Dictionary<Instrument.IDs, Instrument> Instruments to Dictionary<SCPI_VISA_Instrument.IDs, SCPI_VISA_Instrument> SCPI_VISA_Instruments 
+        // TODO: Refactor Dictionary<Instrument.IDs, Instrument> Instruments to Dictionary<SCPI_VISA_Instrument.IDs, SCPI_VISA_Instrument> SCPI_VISA_Instruments 
         public Dictionary<Instrument.IDs, Instrument> Instruments;
         public CancellationTokenSource CancelTokenSource;
         private readonly String _appAssemblyVersion;
