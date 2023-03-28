@@ -41,7 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ISP\Generic.cs" />
-    <Compile Include="AppConfig\ConfigSCPI_VISA.cs" />
+    <Compile Include="AppConfig\ConfigInstruments.cs" />
     <Compile Include="InterfaceAdapters\USB-TO-GPIO.cs" />
     <Compile Include="Switching\USB_ERB24.cs" />
     <Compile Include="Logging\Logging.cs" />
@@ -57,7 +57,7 @@
       <DependentUpon>TestExecutive.cs</DependentUpon>
     </Compile>
     <Compile Include="AppConfig\ConfigGroups.cs" />
-    <Compile Include="AppConfig\ConfigLib.cs" />
+    <Compile Include="AppConfig\ConfigLibrary.cs" />
     <Compile Include="AppConfig\GroupSelection.cs">
       <SubType>Form</SubType>
     </Compile>

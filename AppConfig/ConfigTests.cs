@@ -26,13 +26,13 @@ namespace TestLibrary.AppConfig {
         protected override object GetElementKey(ConfigurationElement element) { return ((TestElement)(element)).ID; }
     }
 
-    public class TestElementsSection : ConfigurationSection {
+    public class TestsSection : ConfigurationSection {
         [ConfigurationProperty("TestElements")] public TestElements TestElements { get { return ((TestElements)(base["TestElements"])); } }
     }
 
     public class ConfigTests {
-        public TestElementsSection TestElementsSection { get { return (TestElementsSection)ConfigurationManager.GetSection("TestElementsSection"); } }
-        public TestElements TestElements { get { return this.TestElementsSection.TestElements; } }
+        public TestsSection TestsSection { get { return (TestsSection)ConfigurationManager.GetSection("TestsSection"); } }
+        public TestElements TestElements { get { return this.TestsSection.TestElements; } }
         public IEnumerable<TestElement> TestElement { get { foreach (TestElement te in this.TestElements) if (te != null) yield return te; } }
     }
 
@@ -163,7 +163,7 @@ namespace TestLibrary.AppConfig {
         }
 
         public static Dictionary<String, Test> Get() {
-            TestElementsSection testElementsSection = (TestElementsSection)ConfigurationManager.GetSection("TestElementsSection");
+            TestsSection testElementsSection = (TestsSection)ConfigurationManager.GetSection("TestsSection");
             TestElements testElements = testElementsSection.TestElements;
             Dictionary<String, Test> dictionary = new Dictionary<String, Test>();
             foreach (TestElement testElement in testElements) dictionary.Add(testElement.ID, new Test(testElement.ID, testElement.Description, testElement.Revision, testElement.ClassName, testElement.Arguments));

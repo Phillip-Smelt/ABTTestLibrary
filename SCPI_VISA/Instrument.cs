@@ -8,7 +8,7 @@ using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 using TestLibrary.AppConfig;
-using TestLibrary.Utility;
+using TestLibrary.Logging;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -95,7 +95,7 @@ namespace TestLibrary.SCPI_VISA {
                         // This switch adds specific Initializations via .SpecificInitialzation() methods for recognized Instruments.
                         SCPI99.SelfTest(this.Address); // SCPI99.SelfTest() issues a Factory Reset (*RST) command after its *TST completes.
                         SCPI99.Clear(this.Address);    // SCPI99.Clear() issues SCPI *CLS.
-                        TestTasks.UnexpectedErrorHandler($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
+                        LogTasks.UnexpectedErrorHandler($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
                             $"Description : {this.Description}{Environment.NewLine}{Environment.NewLine}" +
                             $"Address     : {this.Address}{Environment.NewLine}{Environment.NewLine}" +
                             $"Update Class TestLibrary.SCPI_VISA.Instrument, adding '{instrumentModel}'.");

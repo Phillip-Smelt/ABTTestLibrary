@@ -17,7 +17,7 @@ namespace TestLibrary.Logging {
     public static class LogTasks {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
 
-        public static void Start(ConfigLib configLib, ConfigTest configTest, String _appAssemblyVersion, String _libraryAssemblyVersion, Group group, ref RichTextBox rtfResults) {
+        public static void Start(ConfigLibrary configLibrary, ConfigTest configTest, String _appAssemblyVersion, String _libraryAssemblyVersion, Group group, ref RichTextBox rtfResults) {
             if (!group.Required) {
                 // When non-Required Groups are executed, test data is never saved to config.Logger.FilePath as Rich Text.  Never.
                 // RichTextBox only. 
@@ -26,27 +26,27 @@ namespace TestLibrary.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
                 Log.Information($"Note: following test results invalid for UUT production testing, only troubleshooting.");
-                Log.Information($"UUT Number             : {configLib.UUT.Number}");
-                Log.Information($"UUT Revision           : {configLib.UUT.Revision}");
-                Log.Information($"UUT Serial Number      : {configLib.UUT.SerialNumber}");
+                Log.Information($"UUT Number             : {configLibrary.UUT.Number}");
+                Log.Information($"UUT Revision           : {configLibrary.UUT.Revision}");
+                Log.Information($"UUT Serial Number      : {configLibrary.UUT.SerialNumber}");
                 Log.Information($"UUT Group ID           : {group.ID}\n");
                 return;
                 // Log Header isn't written to Console when Group not Required, futher emphasizing test results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
 
-            if (configLib.Logger.FileEnabled && !configLib.Logger.SQLEnabled) {
+            if (configLibrary.Logger.FileEnabled && !configLibrary.Logger.SQLEnabled) {
                 // When Required Groups are executed, test data is always & automatically saved to config.Logger.FilePath as Rich Text.  Always.
                 // RichTextBox + File.
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
-            } else if (!configLib.Logger.FileEnabled && configLib.Logger.SQLEnabled) {
+            } else if (!configLibrary.Logger.FileEnabled && configLibrary.Logger.SQLEnabled) {
                 // TODO: RichTextBox + SQL.
-                SQLStart(configLib, group);
-            } else if (configLib.Logger.FileEnabled && configLib.Logger.SQLEnabled) {
+                SQLStart(configLibrary, group);
+            } else if (configLibrary.Logger.FileEnabled && configLibrary.Logger.SQLEnabled) {
                 // TODO: RichTextBox + File + SQL.
-                SQLStart(configLib, group);
+                SQLStart(configLibrary, group);
             } else {
                 // RichTextBox only; customer doesn't require saved test data, unusual for Functional testing, but common for other testing methodologies.
                 Log.Logger = new LoggerConfiguration()
@@ -57,12 +57,12 @@ namespace TestLibrary.Logging {
             Log.Information($"START                  : {DateTime.Now}");
             Log.Information($"TestProgram Version    : {_appAssemblyVersion}");
             Log.Information($"TestLibrary Version    : {_libraryAssemblyVersion}");
-            Log.Information($"UUT Customer           : {configLib.UUT.Customer}");
-            Log.Information($"UUT Test Specification : {configLib.UUT.TestSpecification}");
-            Log.Information($"UUT Description        : {configLib.UUT.Description}");
-            Log.Information($"UUT Type               : {configLib.UUT.Type}");
-            Log.Information($"UUT Number             : {configLib.UUT.Number}");
-            Log.Information($"UUT Revision           : {configLib.UUT.Revision}");
+            Log.Information($"UUT Customer           : {configLibrary.UUT.Customer}");
+            Log.Information($"UUT Test Specification : {configLibrary.UUT.TestSpecification}");
+            Log.Information($"UUT Description        : {configLibrary.UUT.Description}");
+            Log.Information($"UUT Type               : {configLibrary.UUT.Type}");
+            Log.Information($"UUT Number             : {configLibrary.UUT.Number}");
+            Log.Information($"UUT Revision           : {configLibrary.UUT.Revision}");
             Log.Information($"UUT Group ID           : {group.ID}");
             Log.Information($"UUT Group Revision     : {group.Revision}");
             Log.Information($"UUT Group Description  : \n{group.Description}\n");
@@ -72,7 +72,7 @@ namespace TestLibrary.Logging {
             Log.Information($"Test Operator          : {UserPrincipal.Current.DisplayName}");
             // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             // Haven't used it on non-Active Directory PCs.
-            Log.Information($"UUT Serial Number      : {configLib.UUT.SerialNumber}\n");
+            Log.Information($"UUT Serial Number      : {configLibrary.UUT.SerialNumber}\n");
             Log.Debug($"Environment.UserDomainName         : {Environment.UserDomainName}");
             Log.Debug($"Environment.MachineName            : {Environment.MachineName}");
             Log.Debug($"Environment.OSVersion              : {Environment.OSVersion}");
@@ -117,30 +117,30 @@ namespace TestLibrary.Logging {
             Log.Information(message);
         }
 
-        public static void Stop(ConfigLib configLib, Group group, ref RichTextBox rtfResults) {
+        public static void Stop(ConfigLibrary configLibrary, Group group, ref RichTextBox rtfResults) {
             if (!group.Required) Log.CloseAndFlush();
             // Log Trailer isn't written when Group isn't Required, futher emphasizing test results
             // aren't valid for pass verdict/$hip disposition, only troubleshooting failures.
             else {
-                Log.Information($"Final Result: {configLib.UUT.EventCode}");
+                Log.Information($"Final Result: {configLibrary.UUT.EventCode}");
                 Log.Information($"STOP:  {DateTime.Now}");
                 Log.CloseAndFlush();
-                if (configLib.Logger.FileEnabled) FileStop(configLib, group, ref rtfResults);
-                if (configLib.Logger.SQLEnabled) SQLStop(configLib, group);
-                if (configLib.Logger.TestEventsEnabled) TestEvents(configLib.UUT);
+                if (configLibrary.Logger.FileEnabled) FileStop(configLibrary, group, ref rtfResults);
+                if (configLibrary.Logger.SQLEnabled) SQLStop(configLibrary, group);
+                if (configLibrary.Logger.TestEventsEnabled) TestEvents(configLibrary.UUT);
             }
         }
 
-        private static void FileStop(ConfigLib configLib, Group group, ref RichTextBox rtfResults) {
-            String fileName = $"{configLib.UUT.Number}_{configLib.UUT.SerialNumber}_{group.ID}";
-            String[] files = Directory.GetFiles(configLib.Logger.FilePath, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
-            // Will fail if invalid this.ConfigLib.Logger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
+        private static void FileStop(ConfigLibrary configLibrary, Group group, ref RichTextBox rtfResults) {
+            String fileName = $"{configLibrary.UUT.Number}_{configLibrary.UUT.SerialNumber}_{group.ID}";
+            String[] files = Directory.GetFiles(configLibrary.Logger.FilePath, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
+            // Will fail if invalid this.ConfigLibrary.Logger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
             // Otherwise, files is the set of all files in config.Logger.FilePath like
             // config.UUT.Number_Config.UUT.SerialNumber_Config.Group.ID_*.rtf.
             Int32 maxNumber = 0; String s;
             foreach (String f in files) {
                 s = f;
-                s = s.Replace($"{configLib.Logger.FilePath}{fileName}", String.Empty);
+                s = s.Replace($"{configLibrary.Logger.FilePath}{fileName}", String.Empty);
                 s = s.Replace(".rtf", String.Empty);
                 s = s.Replace("_", String.Empty);
                 foreach (FieldInfo fi in typeof(EventCodes).GetFields()) s = s.Replace((String)fi.GetValue(null), String.Empty);
@@ -154,16 +154,22 @@ namespace TestLibrary.Logging {
                 //   foreach (FieldInfo  : '3'
                 //   maxNumber           : '3'
             }
-            fileName += $"_{++maxNumber}_{configLib.UUT.EventCode}.rtf";
-            rtfResults.SaveFile($"{configLib.Logger.FilePath}{fileName}");
+            fileName += $"_{++maxNumber}_{configLibrary.UUT.EventCode}.rtf";
+            rtfResults.SaveFile($"{configLibrary.Logger.FilePath}{fileName}");
         }
 
-        private static void SQLStart(ConfigLib configLib, Group group) {
+        private static void SQLStart(ConfigLibrary configLibrary, Group group) {
             // TODO: SQLStart.
         }
 
-        private static void SQLStop(ConfigLib configLib, Group group) {
+        private static void SQLStop(ConfigLibrary configLibrary, Group group) {
             // TODO: SQLStop.
+        }
+
+        public static void UnexpectedErrorHandler(String logMessage) {
+            Log.Error(logMessage);
+            MessageBox.Show(Form.ActiveForm, $"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
+                            $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public static void TestEvents(UUT uut) {

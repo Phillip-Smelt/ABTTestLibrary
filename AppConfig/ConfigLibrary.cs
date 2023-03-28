@@ -68,17 +68,17 @@ namespace TestLibrary.AppConfig {
         }
     }
 
-    public class ConfigLib {
+    public class ConfigLibrary {
         public Logger Logger { get; private set; }
         public UUT UUT { get; private set; }
 
-        private ConfigLib() {
+        private ConfigLibrary() {
             this.Logger = Logger.Get();
             this.UUT = UUT.Get();
         }
 
-        public static ConfigLib Get() {
-            return new ConfigLib();
+        public static ConfigLibrary Get() {
+            return new ConfigLibrary();
         }
     }
 }

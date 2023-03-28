@@ -5,8 +5,6 @@ using System.Configuration;
 namespace TestLibrary.AppConfig {
     // NOTE: If TestLibrary transitions from current C# 7.3 to ≥ C# 8.0,add 'readonly'
     // modifier to all { get; private set; } fields in namespace TestLibrary.AppConfig.
-    // NOTE: Add verification of App.config key-value pairs & configuration collections into namespace TestLibrary.AppConfig.
-    // That is, check for errors in the .Get methods, rather than current checks in TestSupport.TestTasks.EvaluateTestResult().
     public class GroupElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
         [ConfigurationProperty("Required", IsKey = false, IsRequired = true)] public Boolean Required { get { return (Boolean)base["Required"]; } }
@@ -27,13 +25,13 @@ namespace TestLibrary.AppConfig {
         protected override object GetElementKey(ConfigurationElement element) { return ((GroupElement)(element)).ID; }
     }
 
-    public class GroupElementsSection : ConfigurationSection {
+    public class GroupsSection : ConfigurationSection {
         [ConfigurationProperty("GroupElements")] public GroupElements GroupElements { get { return ((GroupElements)(base["GroupElements"])); } }
     }
 
     public class ConfigGroups {
-        public GroupElementsSection GroupElementsSection { get { return (GroupElementsSection)ConfigurationManager.GetSection("GroupElementsSection"); } }
-        public GroupElements GroupElements { get { return this.GroupElementsSection.GroupElements; } }
+        public GroupsSection GroupsSection { get { return (GroupsSection)ConfigurationManager.GetSection("GroupsSection"); } }
+        public GroupElements GroupElements { get { return this.GroupsSection.GroupElements; } }
         public IEnumerable<GroupElement> GroupElement { get { foreach (GroupElement ge in this.GroupElements) if (ge != null) yield return ge; } }
     }
 
@@ -64,7 +62,8 @@ namespace TestLibrary.AppConfig {
         }
 
         public static Dictionary<String, Group> Get() {
-            GroupElementsSection groupElementsSection = (GroupElementsSection)ConfigurationManager.GetSection("GroupElementsSection");
+            // TODO: Add verification of App.config's GroupsSection fields.
+            GroupsSection groupElementsSection = (GroupsSection)ConfigurationManager.GetSection("GroupsSection");
             GroupElements groupElements = groupElementsSection.GroupElements;
             Dictionary<String, Group> dictionary = new Dictionary<String, Group>();
             foreach (GroupElement groupElement in groupElements) dictionary.Add(groupElement.ID, new Group(groupElement.ID, groupElement.Required, groupElement.Revision, groupElement.Description, groupElement.TestIDs));
