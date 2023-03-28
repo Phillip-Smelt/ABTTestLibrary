@@ -6,7 +6,6 @@ using Serilog.Core; // Install Serilog via NuGet Package Manager.  Site is https
 using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
-using TestLibrary.Utility;
 
 namespace TestLibrary.Logging {
     public class RichTextBoxSink : ILogEventSink {
