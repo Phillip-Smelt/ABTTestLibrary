@@ -25,6 +25,8 @@ using TestLibrary.Logging;
 // NOTE: Won't ever complete wrappers for the full set of SCPI commands, just some of the most commonly used & useful ones.
 
 namespace TestLibrary.SCPI_VISA {
+    // TODO: Rename class Instrument to class SCPI_VISA_Instrument.
+    // TODO: Move class SCPI_VISA_Instrument into file ConfigSCPI_VISA_Instruments.
     public class Instrument {
         public static String CHANNEL_1 = "(@1)";
         public static String CHANNEL_2 = "(@2)";
@@ -95,7 +97,7 @@ namespace TestLibrary.SCPI_VISA {
                         // This switch adds specific Initializations via .SpecificInitialzation() methods for recognized Instruments.
                         SCPI99.SelfTest(this.Address); // SCPI99.SelfTest() issues a Factory Reset (*RST) command after its *TST completes.
                         SCPI99.Clear(this.Address);    // SCPI99.Clear() issues SCPI *CLS.
-                        LogTasks.UnexpectedErrorHandler($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
+                        Logger.UnexpectedErrorHandler($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
                             $"Description : {this.Description}{Environment.NewLine}{Environment.NewLine}" +
                             $"Address     : {this.Address}{Environment.NewLine}{Environment.NewLine}" +
                             $"Update Class TestLibrary.SCPI_VISA.Instrument, adding '{instrumentModel}'.");
@@ -135,22 +137,6 @@ namespace TestLibrary.SCPI_VISA {
             String Message = (optionalHeader == "") ? "" : optionalHeader += Environment.NewLine;
             foreach (PropertyInfo pi in instrument.GetType().GetProperties()) Message += $"{pi.Name,-14}: {pi.GetValue(instrument)}{Environment.NewLine}";
             return Message;
-        }
-
-        public static void SCPI99_Reset(Dictionary<Instrument.IDs, Instrument> instruments) {
-            foreach (KeyValuePair<Instrument.IDs, Instrument> i in instruments) SCPI99.Reset(i.Value.Address);
-        }
-
-        public static void SCPI99_Clear(Dictionary<Instrument.IDs, Instrument> instruments) {
-            foreach (KeyValuePair<Instrument.IDs, Instrument> i in instruments) SCPI99.Clear(i.Value.Address);
-        }
-
-        public static void SCPI99_Test(Dictionary<Instrument.IDs, Instrument> instruments) {
-            Int32 SelfTestResult;
-            foreach (KeyValuePair<Instrument.IDs, Instrument> i in instruments) {
-                SelfTestResult = SCPI99.SelfTest(i.Value.Address);
-                if (SelfTestResult != 0) throw new InvalidOperationException(GetMessage(i.Value));
-            }
         }
     }
 }

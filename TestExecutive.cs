@@ -15,6 +15,7 @@ using TestLibrary.Switching;
 using System.Globalization;
 using System.Linq;
 
+// TODO: Refactor to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 // TODO: Replace RichTextBox in this TestExecutive with a DataGridView, change Logging output from current discrete records to DataGrid rows.
 // TODO: Update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.0 when possible.
 // NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library is compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
@@ -29,8 +30,10 @@ using System.Linq;
 //  - https://github.com/Amphenol-Borisch-Technologies/TestLibraryTests
 namespace TestLibrary {
     public abstract partial class TestExecutive : Form {
-        public ConfigLibrary ConfigLibrary;
         public ConfigTest ConfigTest;
+        public ConfigUUT ConfigUUT;
+        public ConfigLogger ConfigLogger;
+        // TODO: Rename Dictionary<Instrument.IDs, Instrument> Instruments to Dictionary<SCPI_VISA_Instrument.IDs, SCPI_VISA_Instrument> SCPI_VISA_Instruments 
         public Dictionary<Instrument.IDs, Instrument> Instruments;
         public CancellationTokenSource CancelTokenSource;
         private readonly String _appAssemblyVersion;
@@ -48,7 +51,8 @@ namespace TestLibrary {
         }
 
         private void Form_Load(Object sender, EventArgs e) {
-            this.ConfigLibrary = ConfigLibrary.Get();
+            this.ConfigUUT = ConfigUUT.Get();
+            this.ConfigLogger = ConfigLogger.Get();
             this.Instruments = Instrument.Get();
             USB_ERB24.Reset(USB_ERB24.ERB24s);
             this.CancelTokenSource = new CancellationTokenSource();
@@ -56,34 +60,34 @@ namespace TestLibrary {
 
         private void Form_Shown(Object sender, EventArgs e) {
             this.FormReset();
-            this.Text = $"{this.ConfigLibrary.UUT.Number}, {this.ConfigLibrary.UUT.Description}";
-            if (!String.Equals(String.Empty, this.ConfigLibrary.UUT.DocumentationFolder)) {
-                if (Directory.Exists(this.ConfigLibrary.UUT.DocumentationFolder)) {
+            this.Text = $"{this.ConfigUUT.Number}, {this.ConfigUUT.Description}";
+            if (!String.Equals(String.Empty, this.ConfigUUT.DocumentationFolder)) {
+                if (Directory.Exists(this.ConfigUUT.DocumentationFolder)) {
                     ProcessStartInfo psi = new ProcessStartInfo {
                         FileName = "explorer.exe",
                         WindowStyle= ProcessWindowStyle.Minimized,
-                        Arguments = $"\"{this.ConfigLibrary.UUT.DocumentationFolder}\""
+                        Arguments = $"\"{this.ConfigUUT.DocumentationFolder}\""
                     };
                     Process.Start(psi);
                     // Paths with embedded spaces require enclosing double-quotes (").
                     // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-                } else MessageBox.Show(Form.ActiveForm, $"Path {this.ConfigLibrary.UUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                } else MessageBox.Show(Form.ActiveForm, $"Path {this.ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             this.ButtonSelectGroup.Enabled = true;
         }
 
         private void ButtonSelectGroup_Click(Object sender, EventArgs e) {
             this.ConfigTest = ConfigTest.Get();
-            this.Text = $"{this.ConfigLibrary.UUT.Number}, {this.ConfigLibrary.UUT.Description}, {this.ConfigTest.Group.ID}";
+            this.Text = $"{this.ConfigUUT.Number}, {this.ConfigUUT.Description}, {this.ConfigTest.Group.ID}";
             this.FormReset();
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(enabled: true);
         }
 
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
-            this.ConfigLibrary.UUT.SerialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.ConfigLibrary.UUT.SerialNumber);
-            if (String.Equals(this.ConfigLibrary.UUT.SerialNumber, String.Empty)) return;
+            this.ConfigUUT.SerialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.ConfigUUT.SerialNumber);
+            if (String.Equals(this.ConfigUUT.SerialNumber, String.Empty)) return;
             await this.RunAsync();
         }
 
@@ -168,7 +172,7 @@ namespace TestLibrary {
             this.TextUUTResult.BackColor = Color.White;
             if (this.ConfigTest != null) {
                 this.ButtonSaveOutput.Enabled = !this.ConfigTest.Group.Required;
-                this.ButtonOpenTestDataFolder.Enabled = (this.ConfigTest.Group.Required && this.ConfigLibrary.Logger.FileEnabled);
+                this.ButtonOpenTestDataFolder.Enabled = (this.ConfigTest.Group.Required && this.ConfigLogger.FileEnabled);
             } else {
                 this.ButtonSaveOutput.Enabled = false;
                 this.ButtonOpenTestDataFolder.Enabled = false;
@@ -178,7 +182,7 @@ namespace TestLibrary {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            Instrument.SCPI99_Reset(this.Instruments);
+            SCPI99.Reset(this.Instruments);
             USB_ERB24.Reset(USB_ERB24.ERB24s);
             if (this.ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
@@ -188,7 +192,7 @@ namespace TestLibrary {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{this.ConfigLibrary.UUT.Number}_{this.ConfigTest.Group.ID}_{this.ConfigLibrary.UUT.SerialNumber}",
+                FileName = $"{this.ConfigUUT.Number}_{this.ConfigTest.Group.ID}_{this.ConfigUUT.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -198,9 +202,9 @@ namespace TestLibrary {
         }
 
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
-            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.ConfigLibrary.Logger.FilePath}\"" };
+            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.ConfigLogger.FilePath}\"" };
             Process.Start(psi);
-            // Will fail if this.ConfigLibrary.Logger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
+            // Will fail if this.ConfigLogger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
         }
 
         private void PreRun() {
@@ -210,10 +214,10 @@ namespace TestLibrary {
                 else test.Value.Measurement = String.Empty;
                 test.Value.Result = EventCodes.UNSET;
             }
-            this.ConfigLibrary.UUT.EventCode = EventCodes.UNSET;
-            Instrument.SCPI99_Reset(this.Instruments);
+            this.ConfigUUT.EventCode = EventCodes.UNSET;
+            SCPI99.Reset(this.Instruments);
             USB_ERB24.Reset(USB_ERB24.ERB24s);
-            LogTasks.Start(this.ConfigLibrary, this.ConfigTest, this._appAssemblyVersion, this._libraryAssemblyVersion, this.ConfigTest.Group, ref this.rtfResults);
+            Logger.Start(this.ConfigUUT, this.ConfigLogger, this.ConfigTest, this._appAssemblyVersion, this._libraryAssemblyVersion, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
         }
 
@@ -233,7 +237,7 @@ namespace TestLibrary {
                     }
                     break;
                 } finally {
-                    LogTasks.LogTest(test.Value);
+                    Logger.LogTest(test.Value);
                 }
                 if (this._cancelled) {
                     test.Value.Result = EventCodes.CANCEL;
@@ -244,22 +248,22 @@ namespace TestLibrary {
         }
 
         private void StopRun(KeyValuePair<String, Test> test, String exceptionString) {
-            Instrument.SCPI99_Reset(this.Instruments);
+            SCPI99.Reset(this.Instruments);
             USB_ERB24.Reset(USB_ERB24.ERB24s);
             test.Value.Result = EventCodes.ERROR;
-            LogTasks.UnexpectedErrorHandler(exceptionString.ToString());
+            Logger.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
         private void PostRun() {
-            Instrument.SCPI99_Reset(this.Instruments);
+            SCPI99.Reset(this.Instruments);
             USB_ERB24.Reset(USB_ERB24.ERB24s);
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);
-            this.ConfigLibrary.UUT.EventCode = EvaluateUUTResult(this.ConfigTest);
-            this.TextUUTResult.Text = this.ConfigLibrary.UUT.EventCode;
-            this.TextUUTResult.BackColor = EventCodes.GetColor(this.ConfigLibrary.UUT.EventCode);
-            LogTasks.Stop(this.ConfigLibrary, this.ConfigTest.Group, ref this.rtfResults);
+            this.ConfigUUT.EventCode = EvaluateUUTResult(this.ConfigTest);
+            this.TextUUTResult.Text = this.ConfigUUT.EventCode;
+            this.TextUUTResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
+            Logger.Stop(this.ConfigUUT, this.ConfigLogger, this.ConfigTest.Group, ref this.rtfResults);
         }
 
         private String EvaluateTestResult(Test test) {
@@ -290,30 +294,30 @@ namespace TestLibrary {
             if (GetResultCount(configTest.Tests, EventCodes.PASS) == configTest.Tests.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All test results are PASS, so overall UUT result is PASS.
-            if (GetResultCount(configTest.Tests, EventCodes.ERROR) > 0) return EventCodes.ERROR;
+            if (GetResultCount(configTest.Tests, EventCodes.ERROR) != 0) return EventCodes.ERROR;
             // 2nd priority evaluation:
             // - If any test result is ERROR, overall UUT result is ERROR.
-            if (GetResultCount(configTest.Tests, EventCodes.CANCEL) > 0) return EventCodes.CANCEL;
+            if (GetResultCount(configTest.Tests, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
             // 3rd priority evaluation:
             // - If any test result is CANCEL, and none were ERROR, overall UUT result is CANCEL.
-            if (GetResultCount(configTest.Tests, EventCodes.UNSET) > 0) {
+            if (GetResultCount(configTest.Tests, EventCodes.UNSET) != 0) {
                 // 4th priority evaluation:
                 // - If any test result is UNSET, and there are no explicit ERROR or CANCEL results, it implies Test(s) didn't complete
                 //   without erroring or cancelling, which shouldn't occur, but...
                 String s = String.Empty;
                 foreach (KeyValuePair<String, Test> test in configTest.Tests) s += $"ID: '{test.Key}' Result: '{test.Value.Result}'.{Environment.NewLine}";
-                LogTasks.UnexpectedErrorHandler($"Encountered Test(s) with EventCodes.UNSET:{Environment.NewLine}{Environment.NewLine}{s}");
+                Logger.UnexpectedErrorHandler($"Encountered Test(s) with EventCodes.UNSET:{Environment.NewLine}{Environment.NewLine}{s}");
                 return EventCodes.ERROR;
             }
-            if (GetResultCount(configTest.Tests, EventCodes.FAIL) > 0) return EventCodes.FAIL;
+            if (GetResultCount(configTest.Tests, EventCodes.FAIL) != 0) return EventCodes.FAIL;
             // 5th priority evaluation:
-            // - If there are no ERROR, CANCEL or UNSET results, but there is a FAIL result, UUT result is FAIL.
+            // - If there are no ERROR, CANCEL or UNSET results, but there are FAIL result(s), UUT result is FAIL.
 
             // Else, we're really in the Twilight Zone...
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
             foreach (KeyValuePair<String, Test> test in configTest.Tests) if (!validEvents.Contains(test.Value.Result)) invalidTests += $"ID: '{test.Key}' Result: '{test.Value.Result}'.{Environment.NewLine}";
-            LogTasks.UnexpectedErrorHandler($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
+            Logger.UnexpectedErrorHandler($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
             return EventCodes.ERROR;
         }
 

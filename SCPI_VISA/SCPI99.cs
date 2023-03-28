@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
+using static TestLibrary.SCPI_VISA.Instrument;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -20,17 +21,28 @@ namespace TestLibrary.SCPI_VISA {
             SCPI99.SCPI.RST.Command();
         }
 
+        public static void Reset(Dictionary<IDs, Instrument> instruments) {
+            foreach (KeyValuePair<IDs, Instrument> i in instruments) Reset(i.Value.Address);
+        }
+
         public static void Clear(String address) {
             AgSCPI99 SCPI99 = new AgSCPI99(address);
             SCPI99.SCPI.CLS.Command();
         }
 
-        public static Int32 SelfTest(String address) {
+        public static void Clear(Dictionary<IDs, Instrument> instruments) {
+            foreach (KeyValuePair<IDs, Instrument> i in instruments) Clear(i.Value.Address);
+        }
+
+        public static void SelfTest(String address) {
             AgSCPI99 SCPI99 = new AgSCPI99(address);
             SCPI99.SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) throw new InvalidOperationException($"VISA address '{address}' failed it's Self-Test with result '{selfTestResult}'.");
             // SCPI99 command *TST issues a Factory Reset (*RST) command after *TST completes.
-            return selfTestResult;
+        }
+
+        public static void SelfTest(Dictionary<IDs, Instrument> instruments) {
+            foreach (KeyValuePair<IDs, Instrument> i in instruments) SelfTest(i.Value.Address);
         }
 
         public static Int32 QuestionCondition(String address) {
