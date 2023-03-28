@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using TestLibrary.TestSupport;
+using TestLibrary.Utility;
 
 namespace TestLibrary.AppConfig {
     public class Logger {

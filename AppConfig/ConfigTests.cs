@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
-using TestLibrary.TestSupport;
+using TestLibrary.Utility;
 
 namespace TestLibrary.AppConfig {
     public class TestElement : ConfigurationElement {

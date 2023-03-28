@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using TestLibrary.AppConfig;
-using TestLibrary.VISA;
+using TestLibrary.SCPI_VISA;
 
 namespace TestLibrary.ISP {
-    public static class Utility {
+    public static class Generic {
         public static void ISP_Connect(String Description, String Connector, Dictionary<Instrument.IDs, Instrument> instruments) {
             Instrument.SCPI99_Reset(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +

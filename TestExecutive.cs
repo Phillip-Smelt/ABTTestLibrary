@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using TestLibrary.AppConfig;
-using TestLibrary.VISA;
+using TestLibrary.SCPI_VISA;
 using TestLibrary.Logging;
-using TestLibrary.TestSupport;
+using TestLibrary.Utility;
 using TestLibrary.Switching;
 
 // TODO: Replace RichTextBox in this TestExecutive with a DataGridView, change Logging output from current discrete records to DataGrid rows.

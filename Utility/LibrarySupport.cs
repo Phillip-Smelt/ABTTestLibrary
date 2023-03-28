@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using TestLibrary.AppConfig;
 
-namespace TestLibrary.TestSupport {
+namespace TestLibrary.Utility {
     public class TestCancellationException : Exception {
         // NOTE: Only ever throw TestCancellationException from TestPrograms, never from TestLibrary.
         public TestCancellationException(String message = "") : base(message) { }

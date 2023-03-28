@@ -5,9 +5,9 @@ using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 // https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
 //
-// Recommend using Command Expert to generate SCPI & IVI drivers commands, which are directly exportable as .Net statements.
+// Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
-namespace TestLibrary.VISA {
+namespace TestLibrary.SCPI_VISA {
     public static class EL_34143A {
         public static void Local(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
 
@@ -15,7 +15,9 @@ namespace TestLibrary.VISA {
 
         public static void RemoteLock(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void ModelSpecificInitialization(Instrument instrument) {
+        public static void SpecificInitialization(Instrument instrument) {
+            SCPI99.SelfTest(instrument.Address); // SCPI99.SelfTest() issues a Factory Reset (*RST) command after its *TST completes.
+            SCPI99.Clear(instrument.Address);    // SCPI99.Clear() issues SCPI *CLS.
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command();
             ((AgEL30000)instrument.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
         }
