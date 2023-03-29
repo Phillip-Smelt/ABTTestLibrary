@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
-using static TestLibrary.SCPI_VISA.Instrument;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -16,33 +15,33 @@ namespace TestLibrary.SCPI_VISA {
 
         public static void Clear(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.CLS.Command(); }
 
-        public static void ClearAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Clear(i.Value); }
+        public static void ClearAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Clear(i.Value); }
 
         public static void Local(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
 
-        public static void LocalAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Local(i.Value); }
+        public static void LocalAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Local(i.Value); }
 
         public static void Remote(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.REMote.Command(); }
 
-        public static void RemoteAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Remote(i.Value); }
+        public static void RemoteAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Remote(i.Value); }
 
         public static void RemoteLock(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void RemoteLockAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) RemoteLock(i.Value); }
+        public static void RemoteLockAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) RemoteLock(i.Value); }
 
         public static void Reset(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Reset(i.Value); }
+        public static void ResetAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Reset(i.Value); }
 
         public static void SelfTest(Instrument instrument) {
             ((AgEL30000)instrument.Instance).SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) {
                 ((AgEL30000)instrument.Instance).SCPI.SYSTem.ERRor.NEXT.Query(out Int32 errorNumber, out String errorMessage);
-                throw new InvalidOperationException(GetSCPI_VISA_ErrorMessage(instrument, errorMessage, errorNumber));
+                throw new InvalidOperationException(SCPI99.GetErrorMessage(instrument, errorMessage, errorNumber));
             }
         }
 
-        public static void SelfTestAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) SelfTest(i.Value); }
+        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) SelfTest(i.Value); }
 
         public static void Initialize(Instrument instrument) {
             Reset(instrument); // Reset instrument to default power-on states.
@@ -53,13 +52,13 @@ namespace TestLibrary.SCPI_VISA {
             RemoteLock(instrument);
         }
 
-        public static void InitializeAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Initialize(i.Value); }
+        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Initialize(i.Value); }
 
         public static Boolean IsOff(Instrument instrument) { return !IsOn(instrument); }
 
-        public static Boolean AreOnAll(Dictionary<IDs, Instrument> instruments) {
+        public static Boolean AreOnAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) {
             Boolean AreOn = true;
-            foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) AreOn = AreOn && IsOn(i.Value);
+            foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) AreOn = AreOn && IsOn(i.Value);
             return AreOn;
         }
 
@@ -68,7 +67,7 @@ namespace TestLibrary.SCPI_VISA {
             return State;
         }
 
-        public static Boolean AreOffAll(Dictionary<IDs, Instrument> instruments) { return !AreOnAll(instruments); }
+        public static Boolean AreOffAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { return !AreOnAll(instruments); }
 
         public static String Mode(Instrument instrument) {
             ((AgEL30000)instrument.Instance).SCPI.SOURce.MODE.Query(null, out String Mode);
@@ -77,7 +76,7 @@ namespace TestLibrary.SCPI_VISA {
 
         public static void Off(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(false, null); }
 
-        public static void OffAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Off(i.Value); }
+        public static void OffAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Off(i.Value); }
 
         public static void OnConstantCurrent(Instrument instrument, Double amps) {
             ((AgEL30000)instrument.Instance).SCPI.SOURce.MODE.Command("CURRent", null);
@@ -89,7 +88,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Current={min} A.{Environment.NewLine}"
                     + $" - Programmed:  Current={amps} A.{Environment.NewLine}"
                     + $" - MAXimum   :  Current={max} A.";
-                throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
+                throw new InvalidOperationException(SCPI99.GetMessage(instrument, s));
             }
             // TODO: ((AgEL30000)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(false, null);
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
@@ -106,7 +105,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Voltage={min[0]} V.{Environment.NewLine}"
                     + $" - Programmed:  Voltage={volts} V.{Environment.NewLine}"
                     + $" - MAXimum   :  Voltage={max[1]} V.";
-                throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
+                throw new InvalidOperationException(SCPI99.GetMessage(instrument, s));
             }
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);
@@ -122,7 +121,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Wattage={min[0]} W.{Environment.NewLine}"
                     + $" - Programmed:  Wattage={watts} W.{Environment.NewLine}"
                     + $" - MAXimum   :  Wattage={max[1]} W.";
-                throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
+                throw new InvalidOperationException(SCPI99.GetMessage(instrument, s));
             }
             ((AgEL30000)instrument.Instance).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
@@ -139,7 +138,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Resistance={min[0]} Ω.{Environment.NewLine}"
                     + $" - Programmed:  Resistance={ohms} Ω.{Environment.NewLine}"
                     + $" - MAXimum   :  Resistance={max[0]} Ω.";
-                throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
+                throw new InvalidOperationException(SCPI99.GetMessage(instrument, s));
             }
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);

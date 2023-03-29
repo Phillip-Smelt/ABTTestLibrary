@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Reflection;
 using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
 using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
@@ -28,120 +27,83 @@ using TestLibrary.Logging;
 namespace TestLibrary.SCPI_VISA {
     // TODO: Refactor class Instrument to class SCPI_VISA_Instrument.
     // TODO: Refactor class SCPI_VISA_Instrument into file ConfigSCPI_VISA_Instruments.
+
     public class Instrument {
-        public static String CHANNEL_1 = "(@1)";
-        public static String CHANNEL_2 = "(@2)";
-        public static String CHANNEL_1_2 = "(@1:2)";
-        private const Int32 WIDTH = -16;
-
-        public enum CATEGORIES {// Abbreviations:
-            CounterTimer,       // CT
-            ElectronicLoad,     // EL
-            LogicAnalyzer,      // LA
-            MultiMeter,         // MM
-            OscilloScope,       // OS
-            PowerSupply,        // PS
-            SCPI,               // Unidentified SCPI Instrument
-            WaveformGenerator   // WG
-        }
-
-        public enum IDs {
-            // NOTE: Not all SCPI VISA Instrument IDs are necessarily present/installed; actual configuration defined in file App.config.
-            //  - IDs has *vastly* more capacity than needed, but doing so costs little.
-            CT1, CT2, CT3, CT4, CT5, CT6, CT7, CT8, CT9,    // Counter Timers 1 - 9.
-            EL1, EL2, EL3, EL4, EL5, EL6, EL7, EL8, EL9,    // Electronic Loads 1 - 9.
-            LA1, LA2, LA3, LA4, LA5, LA6, LA7, LA8, LA9,    // Logic Analyzers 1 - 9.
-            MM1, MM2, MM3, MM4, MM5, MM6, MM7, MM8, MM9,    // Multi-Meters 1 - 9.
-            OS1, OS2, OS3, OS4, OS5, OS6, OS7, OS8, OS9,    // OscilloScopes 1 - 9.
-            PS1, PS2, PS3, PS4, PS5, PS6, PS7, PS8, PS9,    // Power Supplies 1 - 9.
-            WG1, WG2, WG3, WG4, WG5, WG6, WG7, WG8, WG9     // Waveform Generators 1 - 9.
-        }
-
-        public String Address { get; private set; }
-        public Instrument.CATEGORIES Category { get; private set; }
+        public String ID { get; private set; }
         public String Description { get; private set; }
+        public String Address { get; private set; }
+        public SCPI_VISA_CATEGORIES Category { get; private set; }
         public object Instance { get; private set; }
 
-        private Instrument(String address,  String description) {
-            this.Address = address;
+        private Instrument(String id, String description, String address) {
+            this.ID = id;
             this.Description = description;
+            this.Address= address;
 
             try {
                 String instrumentModel = SCPI99.GetModel(this.Address);
                 switch (instrumentModel) {
                     case "EL34143A":
-                        this.Category = CATEGORIES.ElectronicLoad;
+                        this.Category = SCPI_VISA_CATEGORIES.ElectronicLoad;
                         this.Instance = new AgEL30000(this.Address);
                         EL_34143A.Initialize(this);
                         break;
                     case "34461A":
-                        this.Category = CATEGORIES.MultiMeter;
+                        this.Category = SCPI_VISA_CATEGORIES.MultiMeter;
                         this.Instance = new Ag3466x(this.Address);
                         MM_34661A.Initialize(this);
                         break;
                     case "E36103B":
                     case "E36105B":
-                        this.Category = CATEGORIES.PowerSupply;
+                        this.Category = SCPI_VISA_CATEGORIES.PowerSupply;
                         this.Instance = new AgE3610XB(this.Address);
                         PS_E3610xB.Initialize(this);
                         break;
                     case "E36234A":
-                        this.Category = CATEGORIES.PowerSupply;
+                        this.Category = SCPI_VISA_CATEGORIES.PowerSupply;
                         this.Instance = new AgE36200(this.Address);
                         PS_E36234A.Initialize(this);
                         break;
                     case "33509B":
-                        this.Category = CATEGORIES.WaveformGenerator;
+                        this.Category = SCPI_VISA_CATEGORIES.WaveformGenerator;
                         this.Instance = new Ag33500B_33600A(this.Address);
                         WG_33509B.Initialize(this);
                         break;
                     default:
-                        this.Category = CATEGORIES.SCPI;
+                        this.Category = SCPI_VISA_CATEGORIES.SCPI;
                         this.Instance = new AgSCPI99(this.Address);
                         SCPI99.Initialize(this);
-                        Logger.UnexpectedErrorHandler(GetSCPI_VISA_Message(this, $"Unrecognized SCPI VISA Instrument!  Update Class TestLibrary.SCPI_VISA.Instrument, adding '{instrumentModel}'"));
+                        Logger.UnexpectedErrorHandler(SCPI99.GetMessage(this, $"Unrecognized SCPI VISA Instrument!  Update Class TestLibrary.SCPI_VISA.Instrument, adding '{instrumentModel}'"));
                         break;
                 }
             } catch (Exception e) {
                 String[] a = address.Split(':');
-                throw new InvalidOperationException(GetSCPI_VISA_Message(this, $"Check to see if SCPI VISA Instrument is powered and it's {a[0]} bus is communicating."), e);
+                throw new InvalidOperationException(SCPI99.GetMessage(this, $"Check to see if SCPI VISA Instrument is powered and it's {a[0]} bus is communicating."), e);
             }
         }
 
-        public static Dictionary<IDs, Instrument> Get() {
-            Dictionary<IDs, (String address, String description)> visaInstrumentElements = GetVISA_InstrumentElements();
-            Dictionary<IDs, Instrument> instruments = new Dictionary<IDs, Instrument>();
-            foreach (KeyValuePair<IDs, (String address, String description)> kvp in visaInstrumentElements) instruments.Add(kvp.Key, new Instrument(kvp.Value.address, kvp.Value.description));
+        public static Dictionary<SCPI_VISA_IDs, Instrument> Get() {
+            Dictionary<SCPI_VISA_IDs, (String id, String description, String address)> visaInstrumentElements = GetVISA_InstrumentElements();
+            Dictionary<SCPI_VISA_IDs, Instrument> instruments = new Dictionary<SCPI_VISA_IDs, Instrument>();
+            foreach (KeyValuePair<SCPI_VISA_IDs, (String id, String description, String address)> kvp in visaInstrumentElements) instruments.Add(kvp.Key, new Instrument(kvp.Value.id ,kvp.Value.description, kvp.Value.address));
             return instruments;
         }
 
-        private static Dictionary<IDs, (String address, String description)> GetVISA_InstrumentElements() {
+        private static Dictionary<SCPI_VISA_IDs, (String id, String description, String address)> GetVISA_InstrumentElements() {
             SCPI_VISA_InstrumentsSection viSection = (SCPI_VISA_InstrumentsSection)ConfigurationManager.GetSection("SCPI_VISA_InstrumentsSection");
             SCPI_VISA_InstrumentElements viElements = viSection.SCPI_VISA_InstrumentElements;
-            Dictionary<IDs, (String address, String description)> visaInstrumentElements = new Dictionary<IDs, (String address, String description)>();
-            IDs id;
+            Dictionary<SCPI_VISA_IDs, (String id, String description, String address)> visaInstrumentElements = new Dictionary<SCPI_VISA_IDs, (String id, String description, String address)> ();
+            SCPI_VISA_IDs ids;
             String addresses = String.Empty;
             foreach (SCPI_VISA_InstrumentElement viElement in viElements) {
-                id = (IDs)Enum.Parse(typeof(IDs), viElement.ID);
-                if (!Enum.IsDefined(typeof(IDs), id)) throw new ArgumentException($"App.config's ID '{viElement.ID}' not present in SCPI_VISA.IDs enum.");
-                if (visaInstrumentElements.ContainsKey(id)) throw new ArgumentException($"App.config's ID '{viElement.ID}' duplicated; must be unique.");
+                ids = (SCPI_VISA_IDs)Enum.Parse(typeof(SCPI_VISA_IDs), viElement.ID);
+                if (!Enum.IsDefined(typeof(SCPI_VISA_IDs), ids)) throw new ArgumentException($"App.config's ID '{viElement.ID}' not present in SCPI_VISA_IDs enum.  ID's Description is '{viElement.Description}.'");
+                if (visaInstrumentElements.ContainsKey(ids)) throw new ArgumentException($"App.config's ID '{viElement.ID}' duplicated; must be unique.  ID's Description is '{viElement.Description}.'");
                 if (addresses.Contains(viElement.Address)) throw new ArgumentException($"App.config's Address '{viElement.Address}' duplicated; must be unique.  Address' ID is '{viElement.ID}'.");
                 addresses += viElement.Address;
-                visaInstrumentElements.Add(id, (viElement.Address, viElement.Description));
+                visaInstrumentElements.Add(ids, (viElement.ID, viElement.Description, viElement.Address));
             }
             return visaInstrumentElements;
         }
-
-        public static String GetSCPI_VISA_Message(Instrument instrument, String optionalHeader = "") {
-            String SCPI_VISA_Message = (optionalHeader == "") ? "" : optionalHeader += Environment.NewLine;
-            foreach (PropertyInfo pi in instrument.GetType().GetProperties()) SCPI_VISA_Message += $"{pi.Name, WIDTH}: '{pi.GetValue(instrument)}'{Environment.NewLine}";
-            return SCPI_VISA_Message;
-        }
-
-        internal static String GetSCPI_VISA_ErrorMessage(Instrument instrument) { return GetSCPI_VISA_Message(instrument, $"SCPI-VISA Instrument failed self-test:"); }
-
-        internal static String GetSCPI_VISA_ErrorMessage(Instrument instrument, String errorMessage) { return $"{GetSCPI_VISA_ErrorMessage(instrument)}{"Error Message", WIDTH}: '{errorMessage}'.{Environment.NewLine}"; }
-
-        internal static String GetSCPI_VISA_ErrorMessage(Instrument instrument, String errorMessage, Int32 errorNumber) { return $"{GetSCPI_VISA_ErrorMessage(instrument, errorMessage)}{"Error Number", WIDTH}: '{errorNumber}'.{Environment.NewLine}"; }
     }
 }

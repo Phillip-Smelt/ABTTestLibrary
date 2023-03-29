@@ -17,25 +17,25 @@ namespace TestLibrary.SCPI_VISA {
 
         public static void Clear(Instrument instrument) { ((Ag3466x)instrument.Instance).SCPI.CLS.Command(); }
 
-        public static void ClearAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsMM_34661A(i.Value)) Clear(i.Value); }
+        public static void ClearAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsMM_34661A(i.Value)) Clear(i.Value); }
 
         public static void Local(Instrument instrument) { ((Ag3466x)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
 
-        public static void LocalAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsMM_34661A(i.Value)) Local(i.Value); }
+        public static void LocalAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsMM_34661A(i.Value)) Local(i.Value); }
 
         public static void Reset(Instrument instrument) { ((Ag3466x)instrument.Instance).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsMM_34661A(i.Value)) Reset(i.Value); }
+        public static void ResetAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsMM_34661A(i.Value)) Reset(i.Value); }
 
         public static void SelfTest(Instrument instrument) {
             ((Ag3466x)instrument.Instance).SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) {
                 ((Ag3466x)instrument.Instance).SCPI.SYSTem.ERRor.NEXT.Query(out Int32 errorNumber, out String errorMessage);
-                throw new InvalidOperationException(GetSCPI_VISA_ErrorMessage(instrument, errorMessage, errorNumber));
+                throw new InvalidOperationException(SCPI99.GetErrorMessage(instrument, errorMessage, errorNumber));
             }
         }
 
-        public static void SelfTestAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsMM_34661A(i.Value)) SelfTest(i.Value); }
+        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsMM_34661A(i.Value)) SelfTest(i.Value); }
 
         public static void Initialize(Instrument instrument) {
             Reset(instrument); // Reset instrument to default power-on states.
@@ -43,7 +43,7 @@ namespace TestLibrary.SCPI_VISA {
             SelfTest(instrument);
         }
 
-        public static void InitializeAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsMM_34661A(i.Value)) Initialize(i.Value); }
+        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsMM_34661A(i.Value)) Initialize(i.Value); }
 
         public static Double MeasureVDC(Instrument instrument) {
             ((Ag3466x)instrument.Instance).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone("AUTO", "MAXimum", out Double voltsDC);

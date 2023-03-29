@@ -13,59 +13,59 @@ using static TestLibrary.SCPI_VISA.Instrument;
 namespace TestLibrary.SCPI_VISA {
     public static class PS_E36234A {
         private static Int32 ConvertChannel(Instrument instrument, String sChannel) {
-            if (String.Equals(sChannel, Instrument.CHANNEL_1)) return 0;
-            else if (String.Equals(sChannel, Instrument.CHANNEL_2)) return 1;
-            else throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, $"Invalid Channel '{sChannel}'"));
+            if (String.Equals(sChannel, SCPI99.CHANNEL_1)) return 0;
+            else if (String.Equals(sChannel, SCPI99.CHANNEL_2)) return 1;
+            else throw new InvalidOperationException(SCPI99.GetMessage(instrument, $"Invalid Channel '{sChannel}'"));
         }
 
         public static Boolean IsPS_E36234A(Instrument instrument) { return (instrument.Instance.GetType() == typeof(AgE36200)); }
 
         public static void Clear(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.CLS.Command(); }
 
-        public static void ClearAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Clear(i.Value); }
+        public static void ClearAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Clear(i.Value); }
 
         public static void Local(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
 
-        public static void LocalAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Local(i.Value); }
+        public static void LocalAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Local(i.Value); }
 
         public static void Remote(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.REMote.Command(); }
 
-        public static void RemoteAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Remote(i.Value); }
+        public static void RemoteAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Remote(i.Value); }
 
         public static void RemoteLock(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void RemoteLockAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) RemoteLock(i.Value); }
+        public static void RemoteLockAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) RemoteLock(i.Value); }
 
         public static void Reset(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Reset(i.Value); }
+        public static void ResetAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Reset(i.Value); }
 
         public static void SelfTest(Instrument instrument) {
             ((AgE36200)instrument.Instance).SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) {
                 ((AgE36200)instrument.Instance).SCPI.SYSTem.ERRor.NEXT.Query(out String nextError);
-                throw new InvalidOperationException(GetSCPI_VISA_ErrorMessage(instrument, nextError));
+                throw new InvalidOperationException(SCPI99.GetErrorMessage(instrument, nextError));
             }
         }
 
-        public static void SelfTestAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) SelfTest(i.Value); }
+        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) SelfTest(i.Value); }
 
         public static void Initialize(Instrument instrument) {
             Reset(instrument); // Reset instrument to default power-on states.
             Clear(instrument); // Clear all event registers & the Status Byte register.
             SelfTest(instrument);
-            ((AgE36200)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command(CHANNEL_1_2);
+            ((AgE36200)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command(SCPI99.CHANNEL_1_2);
             ((AgE36200)instrument.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
             RemoteLock(instrument);
         }
 
-        public static void InitializeAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Initialize(i.Value); }
+        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Initialize(i.Value); }
 
         public static Boolean IsOff(Instrument instrument, String sChannel) { return !IsOn(instrument, sChannel); }
 
-        public static Boolean AreOnAll(Dictionary<IDs, Instrument> instruments) {
+        public static Boolean AreOnAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) {
             Boolean AreOn = true;
-            foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) AreOn = AreOn && IsOn(i.Value, CHANNEL_1) && IsOn(i.Value, CHANNEL_2);
+            foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) AreOn = AreOn && IsOn(i.Value, SCPI99.CHANNEL_1) && IsOn(i.Value, SCPI99.CHANNEL_2);
             return AreOn;
         }
 
@@ -74,11 +74,11 @@ namespace TestLibrary.SCPI_VISA {
             return States[ConvertChannel(instrument, sChannel)];
         }
 
-        public static Boolean AreOffAll(Dictionary<IDs, Instrument> instruments) { return !AreOnAll(instruments); }
+        public static Boolean AreOffAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { return !AreOnAll(instruments); }
 
         public static void Off(Instrument instrument, String sChannel) { ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(false, sChannel); }
 
-        public static void OffAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Off(i.Value, CHANNEL_1_2); }
+        public static void OffAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Off(i.Value, SCPI99.CHANNEL_1_2); }
 
         public static void On(Instrument instrument, Double voltsDC, Double ampsDC, String sChannel, Double secondsDelayCurrentProtection = 0, Double secondsDelayMeasurement = 0) {
             Int32 iChannel = ConvertChannel(instrument, sChannel);
@@ -91,7 +91,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Voltage={min[iChannel]} VDC.{Environment.NewLine}"
                     + $" - Programmed:  Voltage={voltsDC} VDC.{Environment.NewLine}"
                     + $" - MAXimum   :  Voltage={max[iChannel]} VDC.";
-                    throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
+                    throw new InvalidOperationException(SCPI99.GetMessage(instrument, s));
                 }
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", sChannel, out min);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", sChannel, out max);
@@ -100,7 +100,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Current={min[iChannel]} ADC.{Environment.NewLine}"
                     + $" - Programmed:  Current={ampsDC} ADC.{Environment.NewLine}"
                     + $" - MAXimum   :  Current={max[iChannel]} ADC.";
-                    throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
+                    throw new InvalidOperationException(SCPI99.GetMessage(instrument, s));
                 }
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MINimum", sChannel, out min);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MAXimum", sChannel, out max);
@@ -109,7 +109,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Delay={min[iChannel]} seconds.{Environment.NewLine}"
                     + $" - Programmed:  Delay={secondsDelayCurrentProtection} seconds.{Environment.NewLine}"
                     + $" - MAXimum   :  Delay={max[iChannel]} seconds.";
-                    throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
+                    throw new InvalidOperationException(SCPI99.GetMessage(instrument, s));
                 }
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal", sChannel);
                 ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(voltsDC, sChannel);
@@ -122,7 +122,7 @@ namespace TestLibrary.SCPI_VISA {
             } catch (InvalidOperationException) {
                 throw;
             } catch (Exception e) {
-                throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument), e);
+                throw new InvalidOperationException(SCPI99.GetMessage(instrument), e);
             }
         }
 

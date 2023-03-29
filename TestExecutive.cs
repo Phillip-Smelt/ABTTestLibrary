@@ -32,8 +32,8 @@ namespace TestLibrary {
         public ConfigTest ConfigTest;
         public ConfigUUT ConfigUUT;
         public ConfigLogger ConfigLogger;
-        // TODO: Refactor Dictionary<Instrument.IDs, Instrument> Instruments to Dictionary<SCPI_VISA_Instrument.IDs, SCPI_VISA_Instrument> SCPI_VISA_Instruments 
-        public Dictionary<Instrument.IDs, Instrument> Instruments;
+        // TODO: Refactor Dictionary<SCPI_VISA_IDs, Instrument> Instruments to Dictionary<SCPI_VISA_Instrument.IDs, SCPI_VISA_Instrument> SCPI_VISA_Instruments 
+        public Dictionary<SCPI_VISA_IDs, Instrument> Instruments;
         public CancellationTokenSource CancelTokenSource;
         private readonly String _appAssemblyVersion;
         private readonly String _libraryAssemblyVersion;
