@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="AppConfig\ConfigLogger.cs" />
     <Compile Include="AppConfig\ConfigUUT.cs" />
-    <Compile Include="ISP\Generic.cs" />
+    <Compile Include="InterfaceAdapters\ISP.cs" />
     <Compile Include="AppConfig\ConfigSCPI_VISA_Instruments.cs" />
     <Compile Include="InterfaceAdapters\USB-TO-GPIO.cs" />
     <Compile Include="Switching\USB_ERB24.cs" />
