@@ -39,6 +39,16 @@ namespace TestLibrary.AppConfig {
         public IEnumerable<SCPI_VISA_InstrumentElement> SCPI_VISA_InstrumentElement { get { foreach (SCPI_VISA_InstrumentElement svie in this.SCPI_VISA_InstrumentElements) if (svie != null) yield return svie; } }
     }
 
+    internal class PI_SCPI99_Instrument  {
+        internal PI_SCPI99_Instrument(String address) {
+            this.ID = "Temporary SCPI";
+            this.Address = Address;
+            this.Description = "TBD";
+            this.Category = SCPI_VISA_CATEGORIES.ProgrammableInstrument;
+            this.Instance = new AgSCPI99(address);
+        }
+    }
+
     public class SCPI_VISA_Instrument {
         public String ID { get; private set; }
         public String Description { get; private set; }

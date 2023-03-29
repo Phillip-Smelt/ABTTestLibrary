@@ -12,7 +12,7 @@ using TestLibrary.AppConfig;
 //
 namespace TestLibrary.SCPI_VISA {
     public enum SCPI_VISA_CATEGORIES {
-        CounterTimer,               // CT
+        CounterTimer,           // CT
         ElectronicLoad,         // EL
         LogicAnalyzer,          // LA
         MultiMeter,             // MM
@@ -30,7 +30,7 @@ namespace TestLibrary.SCPI_VISA {
         LA1, LA2, LA3, LA4, LA5, LA6, LA7, LA8, LA9,    // Logic Analyzers 1 - 9.
         MM1, MM2, MM3, MM4, MM5, MM6, MM7, MM8, MM9,    // Multi-Meters 1 - 9.
         OS1, OS2, OS3, OS4, OS5, OS6, OS7, OS8, OS9,    // OscilloScopes 1 - 9.
-        PI1, PI2, PI3, PI4, PI5, PI6, PI7, PI8, PI9,    // Programmable Instruments 1 - 9.  For generic PI_SCPI99 instruments.
+        PI1, PI2, PI3, PI4, PI5, PI6, PI7, PI8, PI9,    // Programmable Instruments 1 - 9.  For generic programmable SCPI99 instruments.
         PS1, PS2, PS3, PS4, PS5, PS6, PS7, PS8, PS9,    // Power Supplies 1 - 9.
         WG1, WG2, WG3, WG4, WG5, WG6, WG7, WG8, WG9     // Waveform Generators 1 - 9.
     }
@@ -45,24 +45,17 @@ namespace TestLibrary.SCPI_VISA {
         private const Int32 WIDTH = -16;
         private const Char IDNSepChar = ',';
 
-        public static void Reset(SCPI_VISA_Instrument SVI) {
-            AgSCPI99 PI_SCPI99 = new AgSCPI99(SVI.Address);
-            PI_SCPI99.SCPI.RST.Command();
-        }
+        public static void Reset(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instance).SCPI.RST.Command(); }
 
         public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) Reset(SVI.Value); }
 
-        public static void Clear(SCPI_VISA_Instrument SVI) {
-            AgSCPI99 PI_SCPI99 = new AgSCPI99(SVI.Address);
-            PI_SCPI99.SCPI.CLS.Command();
-        }
+        public static void Clear(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instance).SCPI.CLS.Command(); }
 
         public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) Clear(SVI.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             Clear(SVI);
-            AgSCPI99 PI_SCPI99 = new AgSCPI99(SVI.Address);
-            PI_SCPI99.SCPI.TST.Query(out Int32 selfTestResult);
+            ((AgSCPI99)SVI.Instance).SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) throw new InvalidOperationException(GetErrorMessage(SVI));
         }
 
@@ -76,34 +69,44 @@ namespace TestLibrary.SCPI_VISA {
 
         public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) Initialize(SVI.Value); }
 
-        public static Int32 QuestionCondition(String address) {
-            AgSCPI99 PI_SCPI99 = new AgSCPI99(address);
-            PI_SCPI99.SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
+        public static Int32 QuestionCondition(SCPI_VISA_Instrument SVI) {
+            ((AgSCPI99)SVI.Instance).SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
             return ConditionRegister;
         }
 
-        public static String GetManufacturer(String address) {
-            AgSCPI99 PI_SCPI99 = new AgSCPI99(address);
-            PI_SCPI99.SCPI.IDN.Query(out String Identity);
+        public static String GetManufacturer(SCPI_VISA_Instrument SVI) {
+           ((AgSCPI99)SVI.Instance).SCPI.IDN.Query(out String Identity);
             String[] s = Identity.Split(IDNSepChar);
             return s[0] ?? "Unknown";
         }
 
-        public static String GetModel(String address) {
-            AgSCPI99 PI_SCPI99 = new AgSCPI99(address);
-            PI_SCPI99.SCPI.IDN.Query(out String Identity);
+        public static String GetModel(SCPI_VISA_Instrument SVI) {
+            ((AgSCPI99)SVI.Instance).SCPI.IDN.Query(out String Identity);
             String[] s = Identity.Split(IDNSepChar);
             return s[1] ?? "Unknown";
         }
 
-        public static void Command(String command, String address) {
-            AgSCPI99 PI_SCPI99 = new AgSCPI99(address);
-            PI_SCPI99.Transport.Command.Invoke(command);
+        public static String GetModel(String address) {
+            PI_SCPI99_Instrument PI_SCPI99 = new PI_SCPI99_Instrument(address);
+            return GetModel((SCPI_VISA_Instrument)PI_SCPI99);
+            // TODO: Anonymous class instead of PI_SCPI99_Instrument.
+            // TODO: Apply technique to all 
         }
 
-        public static String Query(String query, String address) {
-            AgSCPI99 PI_SCPI99 = new AgSCPI99(address);
-            PI_SCPI99.Transport.Query.Invoke(query, out String ReturnString);
+        private class PI_SCPI99_Instrument : SCPI_VISA_Instrument {
+            private PI_SCPI99_Instrument(String address) {
+                this.ID = "Temporary SCPI";
+                this.Address = Address;
+                this.Description = "TBD";
+                this.Category = SCPI_VISA_CATEGORIES.ProgrammableInstrument;
+                this.Instance = new AgSCPI99(address);
+            }
+        }
+
+        public static void Command(String command, SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instance).Transport.Command.Invoke(command); }
+
+        public static String Query(String query, SCPI_VISA_Instrument SVI) {
+            ((AgSCPI99)SVI.Instance).Transport.Query.Invoke(query, out String ReturnString);
             return ReturnString;
         }
 
@@ -113,10 +116,10 @@ namespace TestLibrary.SCPI_VISA {
             foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) {
                 if (kvp.Value.Category == SCPI_VISA_CATEGORIES.PowerSupply) {
                     if (PS_E36234A.IsPS_E36234A(kvp.Value)) {
-                        returnString = Query(":OUTPut:STATe? (@1:2)", kvp.Value.Address);
+                        returnString = Query($":OUTPut:STATe? {CHANNEL_1_2}", kvp.Value);
                         powerSuppliesAreOff = powerSuppliesAreOff && (String.Equals(returnString, "0,0")); // "0,0" = both channels 1 & 2 are off.
                     } else {
-                        returnString = Query(":OUTPut:STATe?", kvp.Value.Address);
+                        returnString = Query(":OUTPut:STATe?", kvp.Value);
                         powerSuppliesAreOff = powerSuppliesAreOff && (String.Equals(returnString, "0")); // "0" = off.
                     }
                 }
@@ -135,6 +138,5 @@ namespace TestLibrary.SCPI_VISA {
         internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage) { return $"{GetErrorMessage(SVI)}{"Error Message",WIDTH}: '{errorMessage}'.{Environment.NewLine}"; }
 
         internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage, Int32 errorNumber) { return $"{GetErrorMessage(SVI, errorMessage)}{"Error Number",WIDTH}: '{errorNumber}'.{Environment.NewLine}"; }
-
     }
 }
