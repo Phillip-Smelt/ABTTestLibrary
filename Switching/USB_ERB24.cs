@@ -64,6 +64,8 @@ namespace TestLibrary.Switching {
             }
         }
 
+        public static void ResetAll() { Reset(ERB24s); }
+
         public static void Off((Int32 board, Int32 relay) br) {
             MccBoard erb24;
             ErrorInfo ei;
