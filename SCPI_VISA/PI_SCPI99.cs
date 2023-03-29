@@ -11,15 +11,15 @@ using TestLibrary.AppConfig;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 namespace TestLibrary.SCPI_VISA {
-    public enum SCPI_VISA_CATEGORIES {// Abbreviations:
-        CounterTimer,       // CT
-        ElectronicLoad,     // EL
-        LogicAnalyzer,      // LA
-        MultiMeter,         // MM
-        OscilloScope,       // OS
-        PowerSupply,        // PS
-        SCPI,               // Unidentified SCPI SCPI_VISA_Instrument
-        WaveformGenerator   // WG
+    public enum SCPI_VISA_CATEGORIES {
+        CounterTimer,               // CT
+        ElectronicLoad,         // EL
+        LogicAnalyzer,          // LA
+        MultiMeter,             // MM
+        OscilloScope,           // OS
+        PowerSupply,            // PS
+        ProgrammableInstrument, // PI
+        WaveformGenerator       // WG
     }
 
     public enum SCPI_VISA_IDs {
@@ -30,11 +30,12 @@ namespace TestLibrary.SCPI_VISA {
         LA1, LA2, LA3, LA4, LA5, LA6, LA7, LA8, LA9,    // Logic Analyzers 1 - 9.
         MM1, MM2, MM3, MM4, MM5, MM6, MM7, MM8, MM9,    // Multi-Meters 1 - 9.
         OS1, OS2, OS3, OS4, OS5, OS6, OS7, OS8, OS9,    // OscilloScopes 1 - 9.
+        PI1, PI2, PI3, PI4, PI5, PI6, PI7, PI8, PI9,    // Programmable Instruments 1 - 9.  For generic PI_SCPI99 instruments.
         PS1, PS2, PS3, PS4, PS5, PS6, PS7, PS8, PS9,    // Power Supplies 1 - 9.
         WG1, WG2, WG3, WG4, WG5, WG6, WG7, WG8, WG9     // Waveform Generators 1 - 9.
     }
 
-    public static class SCPI99 {
+    public static class PI_SCPI99 {
         // SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 SVIs, which allows shared functionality.
         // Can Reset, Self-Test, Question Condition, issue Commands & Queries to all SCPI-99 conforming SVIs with below methods.
         // TODO: Add wrapper methods for remaining SCPI-99 commands.  Definitely want to fully implement these core commands.
@@ -45,23 +46,23 @@ namespace TestLibrary.SCPI_VISA {
         private const Char IDNSepChar = ',';
 
         public static void Reset(SCPI_VISA_Instrument SVI) {
-            AgSCPI99 SCPI99 = new AgSCPI99(SVI.Address);
-            SCPI99.SCPI.RST.Command();
+            AgSCPI99 PI_SCPI99 = new AgSCPI99(SVI.Address);
+            PI_SCPI99.SCPI.RST.Command();
         }
 
         public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) Reset(SVI.Value); }
 
         public static void Clear(SCPI_VISA_Instrument SVI) {
-            AgSCPI99 SCPI99 = new AgSCPI99(SVI.Address);
-            SCPI99.SCPI.CLS.Command();
+            AgSCPI99 PI_SCPI99 = new AgSCPI99(SVI.Address);
+            PI_SCPI99.SCPI.CLS.Command();
         }
 
         public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) Clear(SVI.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             Clear(SVI);
-            AgSCPI99 SCPI99 = new AgSCPI99(SVI.Address);
-            SCPI99.SCPI.TST.Query(out Int32 selfTestResult);
+            AgSCPI99 PI_SCPI99 = new AgSCPI99(SVI.Address);
+            PI_SCPI99.SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) throw new InvalidOperationException(GetErrorMessage(SVI));
         }
 
@@ -76,33 +77,33 @@ namespace TestLibrary.SCPI_VISA {
         public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) Initialize(SVI.Value); }
 
         public static Int32 QuestionCondition(String address) {
-            AgSCPI99 SCPI99 = new AgSCPI99(address);
-            SCPI99.SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
+            AgSCPI99 PI_SCPI99 = new AgSCPI99(address);
+            PI_SCPI99.SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
             return ConditionRegister;
         }
 
         public static String GetManufacturer(String address) {
-            AgSCPI99 SCPI99 = new AgSCPI99(address);
-            SCPI99.SCPI.IDN.Query(out String Identity);
+            AgSCPI99 PI_SCPI99 = new AgSCPI99(address);
+            PI_SCPI99.SCPI.IDN.Query(out String Identity);
             String[] s = Identity.Split(IDNSepChar);
             return s[0] ?? "Unknown";
         }
 
         public static String GetModel(String address) {
-            AgSCPI99 SCPI99 = new AgSCPI99(address);
-            SCPI99.SCPI.IDN.Query(out String Identity);
+            AgSCPI99 PI_SCPI99 = new AgSCPI99(address);
+            PI_SCPI99.SCPI.IDN.Query(out String Identity);
             String[] s = Identity.Split(IDNSepChar);
             return s[1] ?? "Unknown";
         }
 
         public static void Command(String command, String address) {
-            AgSCPI99 SCPI99 = new AgSCPI99(address);
-            SCPI99.Transport.Command.Invoke(command);
+            AgSCPI99 PI_SCPI99 = new AgSCPI99(address);
+            PI_SCPI99.Transport.Command.Invoke(command);
         }
 
         public static String Query(String query, String address) {
-            AgSCPI99 SCPI99 = new AgSCPI99(address);
-            SCPI99.Transport.Query.Invoke(query, out String ReturnString);
+            AgSCPI99 PI_SCPI99 = new AgSCPI99(address);
+            PI_SCPI99.Transport.Query.Invoke(query, out String ReturnString);
             return ReturnString;
         }
 

@@ -52,7 +52,7 @@ namespace TestLibrary.AppConfig {
             this.Address = address;
 
             try {
-                String instrumentModel = SCPI99.GetModel(this.Address);
+                String instrumentModel = PI_SCPI99.GetModel(this.Address);
                 switch (instrumentModel) {
                     case "EL34143A":
                         this.Category = SCPI_VISA_CATEGORIES.ElectronicLoad;
@@ -81,15 +81,15 @@ namespace TestLibrary.AppConfig {
                         WG_33509B.Initialize(this);
                         break;
                     default:
-                        this.Category = SCPI_VISA_CATEGORIES.SCPI;
+                        this.Category = SCPI_VISA_CATEGORIES.ProgrammableInstrument;
                         this.Instance = new AgSCPI99(this.Address);
-                        SCPI99.Initialize(this);
-                        Logger.UnexpectedErrorHandler(SCPI99.GetMessage(this, $"Unrecognized SCPI VISA Instrument!  Update Class SCPI_VISA_Instrument, adding '{instrumentModel}'"));
+                        PI_SCPI99.Initialize(this);
+                        Logger.UnexpectedErrorHandler(PI_SCPI99.GetMessage(this, $"Unrecognized SCPI VISA Instrument, if possible, udate Class SCPI_VISA_Instrument, adding '{instrumentModel}'"));
                         break;
                 }
             } catch (Exception e) {
                 String[] a = address.Split(':');
-                throw new InvalidOperationException(SCPI99.GetMessage(this, $"Check to see if SCPI VISA Instrument is powered and it's {a[0]} bus is communicating."), e);
+                throw new InvalidOperationException(PI_SCPI99.GetMessage(this, $"Check to see if SCPI VISA Instrument is powered and it's {a[0]} bus is communicating."), e);
             }
         }
 
