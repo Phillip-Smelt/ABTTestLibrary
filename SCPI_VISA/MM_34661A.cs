@@ -31,7 +31,7 @@ namespace TestLibrary.SCPI_VISA {
             ((Ag3466x)instrument.Instance).SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) {
                 ((Ag3466x)instrument.Instance).SCPI.SYSTem.ERRor.NEXT.Query(out Int32 errorNumber, out String errorMessage);
-                throw new InvalidOperationException(GetErrorMessage(instrument, errorNumber, errorMessage));
+                throw new InvalidOperationException(GetErrorMessage(instrument, errorMessage, errorNumber));
             }
         }
 

@@ -80,12 +80,12 @@ namespace TestLibrary.SCPI_VISA {
                     case "E36105B":
                         this.Category = Instrument.CATEGORIES.PowerSupply;
                         this.Instance = new AgE3610XB(this.Address);
-                        PS_E3610xB.SpecificInitialization(this);
+                        PS_E3610xB.Initialize(this);
                         break;
                     case "E36234A":
                         this.Category = Instrument.CATEGORIES.PowerSupply;
                         this.Instance = new AgE36200(this.Address);
-                        PS_E36234A.SpecificInitialization(this);
+                        PS_E36234A.Initialize(this);
                         break;
                     case "33509B":
                         this.Category = Instrument.CATEGORIES.WaveformGenerator;
@@ -143,10 +143,16 @@ namespace TestLibrary.SCPI_VISA {
             return s;
         }
 
-        public static String GetErrorMessage(Instrument instrument, Int32 errorNumber, String errorMessage) {
+
+        public static String GetErrorMessage(Instrument instrument, String errorMessage) {
             String s = GetErrorMessage(instrument) + Environment.NewLine +
-                $"   Error Number  : '{errorNumber}'.{Environment.NewLine}" +
                 $"   Error Message : '{errorMessage}'.";
+            return s;
+        }
+
+        public static String GetErrorMessage(Instrument instrument, String errorMessage, Int32 errorNumber) {
+            String s = GetErrorMessage(instrument, errorMessage) + Environment.NewLine +
+                $"   Error Number  : '{errorNumber}'.{Environment.NewLine}";
             return s;
         }
     }
