@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
-using static TestLibrary.SCPI_VISA.Instrument;
+using TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -11,17 +11,17 @@ using static TestLibrary.SCPI_VISA.Instrument;
 //
 namespace TestLibrary.SCPI_VISA {
     public static class WG_33509B {
-        public static Boolean IsWG_33509(Instrument instrument) { return (instrument.Instance.GetType() == typeof(Ag33500B_33600A)); }
+        public static Boolean IsWG_33509(SCPI_VISA_Instrument instrument) { return (instrument.Instance.GetType() == typeof(Ag33500B_33600A)); }
 
-        public static void Clear(Instrument instrument) { ((Ag33500B_33600A)instrument.Instance).SCPI.CLS.Command(); }
+        public static void Clear(SCPI_VISA_Instrument instrument) { ((Ag33500B_33600A)instrument.Instance).SCPI.CLS.Command(); }
 
-        public static void ClearAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsWG_33509(i.Value)) Clear(i.Value); }
+        public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsWG_33509(i.Value)) Clear(i.Value); }
 
-        public static void Reset(Instrument instrument) { ((Ag33500B_33600A)instrument.Instance).SCPI.RST.Command(); }
+        public static void Reset(SCPI_VISA_Instrument instrument) { ((Ag33500B_33600A)instrument.Instance).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsWG_33509(i.Value)) Reset(i.Value); }
+        public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsWG_33509(i.Value)) Reset(i.Value); }
 
-        public static void SelfTest(Instrument instrument) {
+        public static void SelfTest(SCPI_VISA_Instrument instrument) {
             ((Ag33500B_33600A)instrument.Instance).SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) {
                 ((Ag33500B_33600A)instrument.Instance).SCPI.SYSTem.ERRor.Query(out Int32 errorNumber, out String errorMessage);
@@ -29,15 +29,15 @@ namespace TestLibrary.SCPI_VISA {
             }
         }
 
-        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsWG_33509(i.Value)) SelfTest(i.Value); }
+        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsWG_33509(i.Value)) SelfTest(i.Value); }
 
-        public static void Initialize(Instrument instrument) {
+        public static void Initialize(SCPI_VISA_Instrument instrument) {
             Reset(instrument); // Reset instrument to default power-on states.
             Clear(instrument); // Clear all event registers & the Status Byte register.
             SelfTest(instrument);
             ((Ag33500B_33600A)instrument.Instance).SCPI.DISPlay.TEXT.CLEar.Command();
         }
 
-        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsWG_33509(i.Value)) Initialize(i.Value); }
+        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsWG_33509(i.Value)) Initialize(i.Value); }
     }
 }

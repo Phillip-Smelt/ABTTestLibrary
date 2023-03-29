@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
-using static TestLibrary.SCPI_VISA.Instrument;
+using TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -12,35 +12,35 @@ using static TestLibrary.SCPI_VISA.Instrument;
 //
 namespace TestLibrary.SCPI_VISA {
     public static class PS_E36234A {
-        private static Int32 ConvertChannel(Instrument instrument, String sChannel) {
+        private static Int32 ConvertChannel(SCPI_VISA_Instrument instrument, String sChannel) {
             if (String.Equals(sChannel, SCPI99.CHANNEL_1)) return 0;
             else if (String.Equals(sChannel, SCPI99.CHANNEL_2)) return 1;
             else throw new InvalidOperationException(SCPI99.GetMessage(instrument, $"Invalid Channel '{sChannel}'"));
         }
 
-        public static Boolean IsPS_E36234A(Instrument instrument) { return (instrument.Instance.GetType() == typeof(AgE36200)); }
+        public static Boolean IsPS_E36234A(SCPI_VISA_Instrument instrument) { return (instrument.Instance.GetType() == typeof(AgE36200)); }
 
-        public static void Clear(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.CLS.Command(); }
+        public static void Clear(SCPI_VISA_Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.CLS.Command(); }
 
-        public static void ClearAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Clear(i.Value); }
+        public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Clear(i.Value); }
 
-        public static void Local(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
+        public static void Local(SCPI_VISA_Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
 
-        public static void LocalAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Local(i.Value); }
+        public static void LocalAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Local(i.Value); }
 
-        public static void Remote(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.REMote.Command(); }
+        public static void Remote(SCPI_VISA_Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.REMote.Command(); }
 
-        public static void RemoteAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Remote(i.Value); }
+        public static void RemoteAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Remote(i.Value); }
 
-        public static void RemoteLock(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
+        public static void RemoteLock(SCPI_VISA_Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void RemoteLockAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) RemoteLock(i.Value); }
+        public static void RemoteLockAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsPS_E36234A(i.Value)) RemoteLock(i.Value); }
 
-        public static void Reset(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.RST.Command(); }
+        public static void Reset(SCPI_VISA_Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Reset(i.Value); }
+        public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Reset(i.Value); }
 
-        public static void SelfTest(Instrument instrument) {
+        public static void SelfTest(SCPI_VISA_Instrument instrument) {
             ((AgE36200)instrument.Instance).SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) {
                 ((AgE36200)instrument.Instance).SCPI.SYSTem.ERRor.NEXT.Query(out String nextError);
@@ -48,9 +48,9 @@ namespace TestLibrary.SCPI_VISA {
             }
         }
 
-        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) SelfTest(i.Value); }
+        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsPS_E36234A(i.Value)) SelfTest(i.Value); }
 
-        public static void Initialize(Instrument instrument) {
+        public static void Initialize(SCPI_VISA_Instrument instrument) {
             Reset(instrument); // Reset instrument to default power-on states.
             Clear(instrument); // Clear all event registers & the Status Byte register.
             SelfTest(instrument);
@@ -59,28 +59,28 @@ namespace TestLibrary.SCPI_VISA {
             RemoteLock(instrument);
         }
 
-        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Initialize(i.Value); }
+        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Initialize(i.Value); }
 
-        public static Boolean IsOff(Instrument instrument, String sChannel) { return !IsOn(instrument, sChannel); }
+        public static Boolean IsOff(SCPI_VISA_Instrument instrument, String sChannel) { return !IsOn(instrument, sChannel); }
 
-        public static Boolean AreOnAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) {
+        public static Boolean AreOnAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) {
             Boolean AreOn = true;
-            foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) AreOn = AreOn && IsOn(i.Value, SCPI99.CHANNEL_1) && IsOn(i.Value, SCPI99.CHANNEL_2);
+            foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsPS_E36234A(i.Value)) AreOn = AreOn && IsOn(i.Value, SCPI99.CHANNEL_1) && IsOn(i.Value, SCPI99.CHANNEL_2);
             return AreOn;
         }
 
-        public static Boolean IsOn(Instrument instrument, String sChannel) {
+        public static Boolean IsOn(SCPI_VISA_Instrument instrument, String sChannel) {
             ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Query(sChannel, out Boolean[] States);
             return States[ConvertChannel(instrument, sChannel)];
         }
 
-        public static Boolean AreOffAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { return !AreOnAll(instruments); }
+        public static Boolean AreOffAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { return !AreOnAll(instruments); }
 
-        public static void Off(Instrument instrument, String sChannel) { ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(false, sChannel); }
+        public static void Off(SCPI_VISA_Instrument instrument, String sChannel) { ((AgE36200)instrument.Instance).SCPI.OUTPut.STATe.Command(false, sChannel); }
 
-        public static void OffAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Off(i.Value, SCPI99.CHANNEL_1_2); }
+        public static void OffAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) if (IsPS_E36234A(i.Value)) Off(i.Value, SCPI99.CHANNEL_1_2); }
 
-        public static void On(Instrument instrument, Double voltsDC, Double ampsDC, String sChannel, Double secondsDelayCurrentProtection = 0, Double secondsDelayMeasurement = 0) {
+        public static void On(SCPI_VISA_Instrument instrument, Double voltsDC, Double ampsDC, String sChannel, Double secondsDelayCurrentProtection = 0, Double secondsDelayMeasurement = 0) {
             Int32 iChannel = ConvertChannel(instrument, sChannel);
             try {
                 String s;
@@ -126,7 +126,7 @@ namespace TestLibrary.SCPI_VISA {
             }
         }
 
-        public static (Double VoltsDC, Double AmpsDC) MeasureVA(Instrument instrument, String sChannel) {
+        public static (Double VoltsDC, Double AmpsDC) MeasureVA(SCPI_VISA_Instrument instrument, String sChannel) {
             Int32 iChannel = ConvertChannel(instrument, sChannel);
             ((AgE36200)instrument.Instance).SCPI.MEASure.SCALar.VOLTage.DC.Query(sChannel, out Double[] voltsDC);
             ((AgE36200)instrument.Instance).SCPI.MEASure.SCALar.CURRent.DC.Query(sChannel, out Double[] ampsDC);

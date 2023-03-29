@@ -32,8 +32,8 @@ namespace TestLibrary {
         public ConfigTest ConfigTest;
         public ConfigUUT ConfigUUT;
         public ConfigLogger ConfigLogger;
-        // TODO: Refactor Dictionary<SCPI_VISA_IDs, Instrument> Instruments to Dictionary<SCPI_VISA_Instrument.IDs, SCPI_VISA_Instrument> SCPI_VISA_Instruments 
-        public Dictionary<SCPI_VISA_IDs, Instrument> Instruments;
+        // TODO: Refactor Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> Instruments to Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SCPI_VISA_Instruments 
+        public Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> Instruments;
         public CancellationTokenSource CancelTokenSource;
         private readonly String _appAssemblyVersion;
         private readonly String _libraryAssemblyVersion;
@@ -52,7 +52,7 @@ namespace TestLibrary {
         private void Form_Load(Object sender, EventArgs e) {
             this.ConfigUUT = ConfigUUT.Get();
             this.ConfigLogger = ConfigLogger.Get();
-            this.Instruments = Instrument.Get();
+            this.Instruments = SCPI_VISA_Instrument.Get();
             USB_ERB24.ResetAll();
             this.CancelTokenSource = new CancellationTokenSource();
         }

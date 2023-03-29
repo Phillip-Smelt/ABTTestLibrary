@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
-using static TestLibrary.SCPI_VISA.Instrument;
+using TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -18,7 +18,7 @@ namespace TestLibrary.SCPI_VISA {
         MultiMeter,         // MM
         OscilloScope,       // OS
         PowerSupply,        // PS
-        SCPI,               // Unidentified SCPI Instrument
+        SCPI,               // Unidentified SCPI SCPI_VISA_Instrument
         WaveformGenerator   // WG
     }
 
@@ -44,36 +44,36 @@ namespace TestLibrary.SCPI_VISA {
         private const Int32 WIDTH = -16;
         private const Char IDNSepChar = ',';
 
-        public static void Reset(Instrument instrument) {
+        public static void Reset(SCPI_VISA_Instrument instrument) {
             AgSCPI99 SCPI99 = new AgSCPI99(instrument.Address);
             SCPI99.SCPI.RST.Command();
         }
 
-        public static void ResetAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) Reset(i.Value); }
+        public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) Reset(i.Value); }
 
-        public static void Clear(Instrument instrument) {
+        public static void Clear(SCPI_VISA_Instrument instrument) {
             AgSCPI99 SCPI99 = new AgSCPI99(instrument.Address);
             SCPI99.SCPI.CLS.Command();
         }
 
-        public static void ClearAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) Clear(i.Value); }
+        public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) Clear(i.Value); }
 
-        public static void SelfTest(Instrument instrument) {
+        public static void SelfTest(SCPI_VISA_Instrument instrument) {
             Clear(instrument);
             AgSCPI99 SCPI99 = new AgSCPI99(instrument.Address);
             SCPI99.SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) throw new InvalidOperationException(GetErrorMessage(instrument));
         }
 
-        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) SelfTest(i.Value); }
+        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) SelfTest(i.Value); }
 
-        public static void Initialize(Instrument instrument) {
+        public static void Initialize(SCPI_VISA_Instrument instrument) {
             Reset(instrument); // Reset instrument to default power-on states.
             Clear(instrument); // Clear all event registers & the Status Byte register.
             SelfTest(instrument);
         }
 
-        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> i in instruments) Initialize(i.Value); }
+        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> i in instruments) Initialize(i.Value); }
 
         public static Int32 QuestionCondition(String address) {
             AgSCPI99 SCPI99 = new AgSCPI99(address);
@@ -106,10 +106,10 @@ namespace TestLibrary.SCPI_VISA {
             return ReturnString;
         }
 
-        public static Boolean PowerSuppliesAreOff(Dictionary<SCPI_VISA_IDs, Instrument> instruments) {
+        public static Boolean PowerSuppliesAreOff(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) {
             Boolean powerSuppliesAreOff = true;
             String returnString;
-            foreach (KeyValuePair<SCPI_VISA_IDs, Instrument> kvp in instruments) {
+            foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in instruments) {
                 if (kvp.Value.Category == SCPI_VISA_CATEGORIES.PowerSupply) {
                     if (PS_E36234A.IsPS_E36234A(kvp.Value)) {
                         returnString = Query(":OUTPut:STATe? (@1:2)", kvp.Value.Address);
@@ -123,17 +123,17 @@ namespace TestLibrary.SCPI_VISA {
             return powerSuppliesAreOff;
         }
 
-        public static String GetMessage(Instrument instrument, String optionalHeader = "") {
+        public static String GetMessage(SCPI_VISA_Instrument instrument, String optionalHeader = "") {
             String SCPI_VISA_Message = (optionalHeader == "") ? "" : optionalHeader += Environment.NewLine;
             foreach (PropertyInfo pi in instrument.GetType().GetProperties()) SCPI_VISA_Message += $"{pi.Name,WIDTH}: '{pi.GetValue(instrument)}'{Environment.NewLine}";
             return SCPI_VISA_Message;
         }
 
-        internal static String GetErrorMessage(Instrument instrument) { return GetMessage(instrument, $"SCPI-VISA Instrument failed self-test:"); }
+        internal static String GetErrorMessage(SCPI_VISA_Instrument instrument) { return GetMessage(instrument, $"SCPI-VISA SCPI_VISA_Instrument failed self-test:"); }
 
-        internal static String GetErrorMessage(Instrument instrument, String errorMessage) { return $"{GetErrorMessage(instrument)}{"Error Message",WIDTH}: '{errorMessage}'.{Environment.NewLine}"; }
+        internal static String GetErrorMessage(SCPI_VISA_Instrument instrument, String errorMessage) { return $"{GetErrorMessage(instrument)}{"Error Message",WIDTH}: '{errorMessage}'.{Environment.NewLine}"; }
 
-        internal static String GetErrorMessage(Instrument instrument, String errorMessage, Int32 errorNumber) { return $"{GetErrorMessage(instrument, errorMessage)}{"Error Number",WIDTH}: '{errorNumber}'.{Environment.NewLine}"; }
+        internal static String GetErrorMessage(SCPI_VISA_Instrument instrument, String errorMessage, Int32 errorNumber) { return $"{GetErrorMessage(instrument, errorMessage)}{"Error Number",WIDTH}: '{errorNumber}'.{Environment.NewLine}"; }
 
     }
 }

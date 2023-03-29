@@ -65,7 +65,6 @@
     <Compile Include="AppConfig\GroupSelection.Designer.cs">
       <DependentUpon>GroupSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="SCPI_VISA\Instrument.cs" />
     <Compile Include="AppConfig\ConfigTests.cs" />
     <Compile Include="SCPI_VISA\PS_E36234A.cs" />
     <Compile Include="SCPI_VISA\PS_E3610xB.cs" />

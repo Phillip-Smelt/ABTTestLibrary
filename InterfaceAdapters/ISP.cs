@@ -8,7 +8,7 @@ using TestLibrary.SCPI_VISA;
 
 namespace TestLibrary.InterfaceAdapters {
     public static class ISP {
-        public static void Connect(String Description, String Connector, Dictionary<SCPI_VISA_IDs, Instrument> instruments) {
+        public static void Connect(String Description, String Connector, Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) {
             SCPI99.ResetAll(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
@@ -16,7 +16,7 @@ namespace TestLibrary.InterfaceAdapters {
                     $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public static void DisConnect(String Description, String Connector, Dictionary<SCPI_VISA_IDs, Instrument> instruments) {
+        public static void DisConnect(String Description, String Connector, Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) {
             SCPI99.ResetAll(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Disconnect '{Description}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
@@ -71,7 +71,7 @@ namespace TestLibrary.InterfaceAdapters {
         }
 
         public static String ExitCode(String Description, String Connector, Test test,
-            Dictionary<SCPI_VISA_IDs, Instrument> instruments, Action powerOnMethod) {
+            Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments, Action powerOnMethod) {
             Connect(Description, Connector, instruments);
             powerOnMethod();
             TestISP testISP = (TestISP)test.ClassObject;
@@ -81,7 +81,7 @@ namespace TestLibrary.InterfaceAdapters {
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(String Description, String Connector, Test test,
-            Dictionary<SCPI_VISA_IDs, Instrument> instruments, Action powerOnMethod) {
+            Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments, Action powerOnMethod) {
             Connect(Description, Connector, instruments);
             powerOnMethod();
             TestISP testISP = (TestISP)test.ClassObject;
