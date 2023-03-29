@@ -8,16 +8,16 @@ using TestLibrary.SCPI_VISA;
 
 namespace TestLibrary.InterfaceAdapters {
     public static class ISP {
-        public static void Connect(String Description, String Connector, Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) {
-            SCPI99.ResetAll(instruments);
+        public static void Connect(String Description, String Connector, Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) {
+            SCPI99.ResetAll(SVIs);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER connecting, click OK to continue.",
                     $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public static void DisConnect(String Description, String Connector, Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments) {
-            SCPI99.ResetAll(instruments);
+        public static void DisConnect(String Description, String Connector, Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) {
+            SCPI99.ResetAll(SVIs);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Disconnect '{Description}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER disconnecting, click OK to continue.",
@@ -71,22 +71,22 @@ namespace TestLibrary.InterfaceAdapters {
         }
 
         public static String ExitCode(String Description, String Connector, Test test,
-            Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments, Action powerOnMethod) {
-            Connect(Description, Connector, instruments);
+            Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs, Action powerOnMethod) {
+            Connect(Description, Connector, SVIs);
             powerOnMethod();
             TestISP testISP = (TestISP)test.ClassObject;
             String exitCode = ProcessExitCode(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder);
-            DisConnect(Description, Connector, instruments);
+            DisConnect(Description, Connector, SVIs);
             return exitCode;
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(String Description, String Connector, Test test,
-            Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> instruments, Action powerOnMethod) {
-            Connect(Description, Connector, instruments);
+            Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs, Action powerOnMethod) {
+            Connect(Description, Connector, SVIs);
             powerOnMethod();
             TestISP testISP = (TestISP)test.ClassObject;
             (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder, testISP.ISPResult);
-            DisConnect(Description, Connector, instruments);
+            DisConnect(Description, Connector, SVIs);
             return (StandardError, StandardOutput, ExitCode);
         }
     }

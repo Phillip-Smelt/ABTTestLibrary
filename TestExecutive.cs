@@ -32,8 +32,7 @@ namespace TestLibrary {
         public ConfigTest ConfigTest;
         public ConfigUUT ConfigUUT;
         public ConfigLogger ConfigLogger;
-        // TODO: Refactor Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> Instruments to Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SCPI_VISA_Instruments 
-        public Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> Instruments;
+        public Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs;
         public CancellationTokenSource CancelTokenSource;
         private readonly String _appAssemblyVersion;
         private readonly String _libraryAssemblyVersion;
@@ -52,7 +51,7 @@ namespace TestLibrary {
         private void Form_Load(Object sender, EventArgs e) {
             this.ConfigUUT = ConfigUUT.Get();
             this.ConfigLogger = ConfigLogger.Get();
-            this.Instruments = SCPI_VISA_Instrument.Get();
+            this.SVIs = SCPI_VISA_Instrument.Get();
             USB_ERB24.ResetAll();
             this.CancelTokenSource = new CancellationTokenSource();
         }
@@ -182,7 +181,7 @@ namespace TestLibrary {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            SCPI99.ResetAll(this.Instruments);
+            SCPI99.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
             if (this.ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
@@ -215,7 +214,7 @@ namespace TestLibrary {
                 test.Value.Result = EventCodes.UNSET;
             }
             this.ConfigUUT.EventCode = EventCodes.UNSET;
-            SCPI99.ResetAll(this.Instruments);
+            SCPI99.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
             Logger.Start(this.ConfigUUT, this.ConfigLogger, this.ConfigTest, this._appAssemblyVersion, this._libraryAssemblyVersion, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
@@ -248,14 +247,14 @@ namespace TestLibrary {
         }
 
         private void StopRun(KeyValuePair<String, Test> test, String exceptionString) {
-            SCPI99.ResetAll(this.Instruments);
+            SCPI99.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
             test.Value.Result = EventCodes.ERROR;
             Logger.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
         private void PostRun() {
-            SCPI99.ResetAll(this.Instruments);
+            SCPI99.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(enabled: true);
