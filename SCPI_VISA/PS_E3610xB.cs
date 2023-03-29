@@ -38,7 +38,7 @@ namespace TestLibrary.SCPI_VISA {
             ((AgE3610XB)instrument.Instance).SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) {
                 ((AgE3610XB)instrument.Instance).SCPI.SYSTem.ERRor.NEXT.Query(out Double errorNumber, out String errorMessage);
-                throw new InvalidOperationException(GetErrorMessage(instrument, errorMessage, Convert.ToInt32(errorNumber)));
+                throw new InvalidOperationException(GetSCPI_VISA_ErrorMessage(instrument, errorMessage, Convert.ToInt32(errorNumber)));
             }
         }
 
@@ -84,7 +84,7 @@ namespace TestLibrary.SCPI_VISA {
                     +   $" - MINimum   :  Voltage={min} VDC.{Environment.NewLine}"
                     +   $" - Programmed:  Voltage={voltsDC} VDC.{Environment.NewLine}"
                     +   $" - MAXimum   :  Voltage={max} VDC.";
-                    throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
+                    throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
                 }
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", out min);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", out max);
@@ -93,7 +93,7 @@ namespace TestLibrary.SCPI_VISA {
                     +   $" - MINimum   :  Current={min} ADC.{Environment.NewLine}"
                     +   $" - Programmed:  Current={ampsDC} ADC.{Environment.NewLine}"
                     +   $" - MAXimum   :  Current={max} ADC.";
-                    throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
+                    throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
                 }
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MINimum", out min);
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MAXimum", out max);
@@ -112,7 +112,7 @@ namespace TestLibrary.SCPI_VISA {
                     +   $" - MINimum   :  Delay={min} seconds.{Environment.NewLine}"
                     +   $" - Programmed:  Delay={secondsDelayCurrentProtection} seconds.{Environment.NewLine}"
                     +   $" - MAXimum   :  Delay={max} seconds.";
-                    throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
+                    throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
                 }
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
                 ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(voltsDC);
@@ -125,7 +125,7 @@ namespace TestLibrary.SCPI_VISA {
             } catch (InvalidOperationException) {
                 throw;
             } catch (Exception e) {
-                throw new InvalidOperationException(Instrument.GetMessage(instrument), e);
+                throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument), e);
             }
         }
 

@@ -34,9 +34,7 @@ namespace TestLibrary.SCPI_VISA {
             Clear(instrument);
             AgSCPI99 SCPI99 = new AgSCPI99(instrument.Address);
             SCPI99.SCPI.TST.Query(out Int32 selfTestResult);
-            if (selfTestResult != 0) {
-                throw new InvalidOperationException(GetErrorMessage(instrument));
-            }
+            if (selfTestResult != 0) throw new InvalidOperationException(GetSCPI_VISA_ErrorMessage(instrument));
         }
 
         public static void SelfTestAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) SelfTest(i.Value); }

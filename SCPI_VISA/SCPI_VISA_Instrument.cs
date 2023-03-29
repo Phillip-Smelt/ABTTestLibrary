@@ -7,6 +7,7 @@ using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
+using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 using TestLibrary.AppConfig;
 using TestLibrary.Logging;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
@@ -31,6 +32,7 @@ namespace TestLibrary.SCPI_VISA {
         public static String CHANNEL_1 = "(@1)";
         public static String CHANNEL_2 = "(@2)";
         public static String CHANNEL_1_2 = "(@1:2)";
+        private const Int32 WIDTH = -16;
 
         public enum CATEGORIES {// Abbreviations:
             CounterTimer,       // CT
@@ -39,6 +41,7 @@ namespace TestLibrary.SCPI_VISA {
             MultiMeter,         // MM
             OscilloScope,       // OS
             PowerSupply,        // PS
+            SCPI,               // Unidentified SCPI Instrument
             WaveformGenerator   // WG
         }
 
@@ -55,8 +58,8 @@ namespace TestLibrary.SCPI_VISA {
         }
 
         public String Address { get; private set; }
-        public String Description { get; private set; }
         public Instrument.CATEGORIES Category { get; private set; }
+        public String Description { get; private set; }
         public object Instance { get; private set; }
 
         private Instrument(String address,  String description) {
@@ -67,42 +70,41 @@ namespace TestLibrary.SCPI_VISA {
                 String instrumentModel = SCPI99.GetModel(this.Address);
                 switch (instrumentModel) {
                     case "EL34143A":
-                        this.Category = Instrument.CATEGORIES.ElectronicLoad;
+                        this.Category = CATEGORIES.ElectronicLoad;
                         this.Instance = new AgEL30000(this.Address);
                         EL_34143A.Initialize(this);
                         break;
                     case "34461A":
-                        this.Category = Instrument.CATEGORIES.MultiMeter;
+                        this.Category = CATEGORIES.MultiMeter;
                         this.Instance = new Ag3466x(this.Address);
                         MM_34661A.Initialize(this);
                         break;
                     case "E36103B":
                     case "E36105B":
-                        this.Category = Instrument.CATEGORIES.PowerSupply;
+                        this.Category = CATEGORIES.PowerSupply;
                         this.Instance = new AgE3610XB(this.Address);
                         PS_E3610xB.Initialize(this);
                         break;
                     case "E36234A":
-                        this.Category = Instrument.CATEGORIES.PowerSupply;
+                        this.Category = CATEGORIES.PowerSupply;
                         this.Instance = new AgE36200(this.Address);
                         PS_E36234A.Initialize(this);
                         break;
                     case "33509B":
-                        this.Category = Instrument.CATEGORIES.WaveformGenerator;
+                        this.Category = CATEGORIES.WaveformGenerator;
                         this.Instance = new Ag33500B_33600A(this.Address);
-                        WG_33509B.SpecificInitialization(this);
+                        WG_33509B.Initialize(this);
                         break;
                     default:
-                        SCPI99.Initialize(this); // Generic SCPI99 compliant initilizaiton.
-                        Logger.UnexpectedErrorHandler($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
-                            $"Description : {this.Description}{Environment.NewLine}{Environment.NewLine}" +
-                            $"Address     : {this.Address}{Environment.NewLine}{Environment.NewLine}" +
-                            $"Update Class TestLibrary.SCPI_VISA.Instrument, adding '{instrumentModel}'.");
+                        this.Category = CATEGORIES.SCPI;
+                        this.Instance = new AgSCPI99(this.Address);
+                        SCPI99.Initialize(this);
+                        Logger.UnexpectedErrorHandler(GetSCPI_VISA_Message(this, $"Unrecognized SCPI VISA Instrument!  Update Class TestLibrary.SCPI_VISA.Instrument, adding '{instrumentModel}'"));
                         break;
                 }
             } catch (Exception e) {
                 String[] a = address.Split(':');
-                throw new InvalidOperationException($"Check to see if SCPI Instrument with Description '{this.Description}' & VISA Address '{address}' is powered and it's {a[0]} bus is communicating.", e);
+                throw new InvalidOperationException(GetSCPI_VISA_Message(this, $"Check to see if SCPI VISA Instrument is powered and it's {a[0]} bus is communicating."), e);
             }
         }
 
@@ -130,30 +132,16 @@ namespace TestLibrary.SCPI_VISA {
             return visaInstrumentElements;
         }
 
-        public static String GetMessage(Instrument instrument, String optionalHeader = "") {
-            String Message = (optionalHeader == "") ? "" : optionalHeader += Environment.NewLine;
-            foreach (PropertyInfo pi in instrument.GetType().GetProperties()) Message += $"{pi.Name,-14}: {pi.GetValue(instrument)}{Environment.NewLine}";
-            return Message;
+        public static String GetSCPI_VISA_Message(Instrument instrument, String optionalHeader = "") {
+            String SCPI_VISA_Message = (optionalHeader == "") ? "" : optionalHeader += Environment.NewLine;
+            foreach (PropertyInfo pi in instrument.GetType().GetProperties()) SCPI_VISA_Message += $"{pi.Name, WIDTH}: '{pi.GetValue(instrument)}'{Environment.NewLine}";
+            return SCPI_VISA_Message;
         }
 
-        public static String GetErrorMessage(Instrument instrument) {
-            String s = $"SCPI-VISA Instrument '{instrument.Description}' failed self-test:{Environment.NewLine}" +
-            $"   Category      : '{instrument.Category}'.{Environment.NewLine}" +
-            $"   Address       : '{instrument.Address}'.";
-            return s;
-        }
+        internal static String GetSCPI_VISA_ErrorMessage(Instrument instrument) { return GetSCPI_VISA_Message(instrument, $"SCPI-VISA Instrument failed self-test:"); }
 
+        internal static String GetSCPI_VISA_ErrorMessage(Instrument instrument, String errorMessage) { return $"{GetSCPI_VISA_ErrorMessage(instrument)}{"Error Message", WIDTH}: '{errorMessage}'.{Environment.NewLine}"; }
 
-        public static String GetErrorMessage(Instrument instrument, String errorMessage) {
-            String s = GetErrorMessage(instrument) + Environment.NewLine +
-                $"   Error Message : '{errorMessage}'.";
-            return s;
-        }
-
-        public static String GetErrorMessage(Instrument instrument, String errorMessage, Int32 errorNumber) {
-            String s = GetErrorMessage(instrument, errorMessage) + Environment.NewLine +
-                $"   Error Number  : '{errorNumber}'.{Environment.NewLine}";
-            return s;
-        }
+        internal static String GetSCPI_VISA_ErrorMessage(Instrument instrument, String errorMessage, Int32 errorNumber) { return $"{GetSCPI_VISA_ErrorMessage(instrument, errorMessage)}{"Error Number", WIDTH}: '{errorNumber}'.{Environment.NewLine}"; }
     }
 }

@@ -38,7 +38,7 @@ namespace TestLibrary.SCPI_VISA {
             ((AgEL30000)instrument.Instance).SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) {
                 ((AgEL30000)instrument.Instance).SCPI.SYSTem.ERRor.NEXT.Query(out Int32 errorNumber, out String errorMessage);
-                throw new InvalidOperationException(GetErrorMessage(instrument, errorMessage, errorNumber));
+                throw new InvalidOperationException(GetSCPI_VISA_ErrorMessage(instrument, errorMessage, errorNumber));
             }
         }
 
@@ -89,7 +89,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Current={min} A.{Environment.NewLine}"
                     + $" - Programmed:  Current={amps} A.{Environment.NewLine}"
                     + $" - MAXimum   :  Current={max} A.";
-                throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
+                throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
             }
             // TODO: ((AgEL30000)instrument.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(false, null);
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
@@ -106,7 +106,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Voltage={min[0]} V.{Environment.NewLine}"
                     + $" - Programmed:  Voltage={volts} V.{Environment.NewLine}"
                     + $" - MAXimum   :  Voltage={max[1]} V.";
-                throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
+                throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
             }
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);
@@ -122,7 +122,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Wattage={min[0]} W.{Environment.NewLine}"
                     + $" - Programmed:  Wattage={watts} W.{Environment.NewLine}"
                     + $" - MAXimum   :  Wattage={max[1]} W.";
-                throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
+                throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
             }
             ((AgEL30000)instrument.Instance).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
@@ -139,7 +139,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Resistance={min[0]} Ω.{Environment.NewLine}"
                     + $" - Programmed:  Resistance={ohms} Ω.{Environment.NewLine}"
                     + $" - MAXimum   :  Resistance={max[0]} Ω.";
-                throw new InvalidOperationException(Instrument.GetMessage(instrument, s));
+                throw new InvalidOperationException(Instrument.GetSCPI_VISA_Message(instrument, s));
             }
             ((AgEL30000)instrument.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(true, null);
