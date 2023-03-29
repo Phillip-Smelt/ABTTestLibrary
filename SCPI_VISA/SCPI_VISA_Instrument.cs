@@ -69,12 +69,12 @@ namespace TestLibrary.SCPI_VISA {
                     case "EL34143A":
                         this.Category = Instrument.CATEGORIES.ElectronicLoad;
                         this.Instance = new AgEL30000(this.Address);
-                        EL_34143A.SpecificInitialization(this);
+                        EL_34143A.Initialize(this);
                         break;
                     case "34461A":
                         this.Category = Instrument.CATEGORIES.MultiMeter;
                         this.Instance = new Ag3466x(this.Address);
-                        MM_34661A.SpecificInitialization(this);
+                        MM_34661A.Initialize(this);
                         break;
                     case "E36103B":
                     case "E36105B":
@@ -93,10 +93,7 @@ namespace TestLibrary.SCPI_VISA {
                         WG_33509B.SpecificInitialization(this);
                         break;
                     default:
-                        // *TST, *RST & *CLS are generic Instrument Initializations that work universly on all SCPI VISA Instruments.
-                        // This switch adds specific Initializations via .SpecificInitialzation() methods for recognized Instruments.
-                        SCPI99.SelfTest(this.Address); // SCPI99.SelfTest() issues a Factory Reset (*RST) command after its *TST completes.
-                        SCPI99.Clear(this.Address);    // SCPI99.Clear() issues SCPI *CLS.
+                        SCPI99.Initialize(this); // Generic SCPI99 compliant initilizaiton.
                         Logger.UnexpectedErrorHandler($"Unrecognized Instrument!{Environment.NewLine}{Environment.NewLine}" +
                             $"Description : {this.Description}{Environment.NewLine}{Environment.NewLine}" +
                             $"Address     : {this.Address}{Environment.NewLine}{Environment.NewLine}" +
@@ -137,6 +134,20 @@ namespace TestLibrary.SCPI_VISA {
             String Message = (optionalHeader == "") ? "" : optionalHeader += Environment.NewLine;
             foreach (PropertyInfo pi in instrument.GetType().GetProperties()) Message += $"{pi.Name,-14}: {pi.GetValue(instrument)}{Environment.NewLine}";
             return Message;
+        }
+
+        public static String GetErrorMessage(Instrument instrument) {
+            String s = $"SCPI-VISA Instrument '{instrument.Description}' failed self-test:{Environment.NewLine}" +
+            $"   Category      : '{instrument.Category}'.{Environment.NewLine}" +
+            $"   Address       : '{instrument.Address}'.";
+            return s;
+        }
+
+        public static String GetErrorMessage(Instrument instrument, Int32 errorNumber, String errorMessage) {
+            String s = GetErrorMessage(instrument) + Environment.NewLine +
+                $"   Error Number  : '{errorNumber}'.{Environment.NewLine}" +
+                $"   Error Message : '{errorMessage}'.";
+            return s;
         }
     }
 }

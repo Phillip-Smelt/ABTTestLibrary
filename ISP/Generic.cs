@@ -9,7 +9,7 @@ using TestLibrary.SCPI_VISA;
 namespace TestLibrary.ISP {
     public static class Generic {
         public static void ISP_Connect(String Description, String Connector, Dictionary<Instrument.IDs, Instrument> instruments) {
-            SCPI99.Reset(instruments);
+            SCPI99.ResetAll(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER connecting, click OK to continue.",
@@ -17,7 +17,7 @@ namespace TestLibrary.ISP {
         }
 
         public static void ISP_DisConnect(String Description, String Connector, Dictionary<Instrument.IDs, Instrument> instruments) {
-            SCPI99.Reset(instruments);
+            SCPI99.ResetAll(instruments);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Disconnect '{Description}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER disconnecting, click OK to continue.",

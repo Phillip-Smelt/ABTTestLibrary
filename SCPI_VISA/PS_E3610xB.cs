@@ -17,8 +17,8 @@ namespace TestLibrary.SCPI_VISA {
         public static void RemoteLock(Instrument instrument) { ((AgE3610XB)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
 
         public static void SpecificInitialization(Instrument instrument) {
-            SCPI99.SelfTest(instrument.Address); // SCPI99.SelfTest() issues a Factory Reset (*RST) command after its *TST completes.
-            SCPI99.Clear(instrument.Address);    // SCPI99.Clear() issues SCPI *CLS.
+            SCPI99.SelfTest(instrument); // SCPI99.SelfTest() issues a Factory Reset (*RST) command after its *TST completes.
+            SCPI99.Clear(instrument);    // SCPI99.Clear() issues SCPI *CLS.
             ((AgE3610XB)instrument.Instance).SCPI.SOURce.CURRent.PROTection.CLEar.Command();
             ((AgE3610XB)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.CLEar.Command();
             ((AgE3610XB)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command();

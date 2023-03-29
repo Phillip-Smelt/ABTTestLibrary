@@ -10,6 +10,8 @@ using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 //
 namespace TestLibrary.SCPI_VISA {
     public static class PS_E36234A {
+        public static Boolean IsPS_E36234A(Instrument instrument) { return (instrument.Instance.GetType() == typeof(AgE36200)); }
+
         private static Int32 ConvertChannel(Instrument instrument, String sChannel) {
             if (String.Equals(sChannel, Instrument.CHANNEL_1)) return 0;
             else if (String.Equals(sChannel, Instrument.CHANNEL_2)) return 1;
@@ -23,8 +25,8 @@ namespace TestLibrary.SCPI_VISA {
         public static void RemoteLock(Instrument instrument) { ((AgE36200)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
 
         public static void SpecificInitialization(Instrument instrument) {
-            SCPI99.SelfTest(instrument.Address); // SCPI99.SelfTest() issues a Factory Reset (*RST) command after its *TST completes.
-            SCPI99.Clear(instrument.Address);    // SCPI99.Clear() issues SCPI *CLS.
+            SCPI99.SelfTest(instrument); // SCPI99.SelfTest() issues a Factory Reset (*RST) command after its *TST completes.
+            SCPI99.Clear(instrument);    // SCPI99.Clear() issues SCPI *CLS.
             ((AgE36200)instrument.Instance).SCPI.SOURce.CURRent.PROTection.CLEar.Command(Instrument.CHANNEL_1_2);
             ((AgE36200)instrument.Instance).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(Instrument.CHANNEL_1_2);
             ((AgE36200)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command(Instrument.CHANNEL_1_2);

@@ -64,7 +64,7 @@ namespace TestLibrary {
                 if (Directory.Exists(this.ConfigUUT.DocumentationFolder)) {
                     ProcessStartInfo psi = new ProcessStartInfo {
                         FileName = "explorer.exe",
-                        WindowStyle= ProcessWindowStyle.Minimized,
+                        WindowStyle = ProcessWindowStyle.Minimized,
                         Arguments = $"\"{this.ConfigUUT.DocumentationFolder}\""
                     };
                     Process.Start(psi);
@@ -91,11 +91,7 @@ namespace TestLibrary {
         }
 
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            this.CancelTokenSource.Cancel();
-            this._cancelled = true;
-            this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
-            this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = Color.Red;
-            #region Long Comment
+            #region Long Test Cancellation Comment
             // NOTE: Two types of TestLibrary/Operator initiated cancellations possible, proactive & reactive:
             //  1)  Proactive:
             //      - Microsoft's recommended CancellationTokenSource technique, which can proactively
@@ -133,8 +129,13 @@ namespace TestLibrary {
             //        - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestProgram/blob/master/TestProgram.T-Shared.cs
             //        - Test Developer must set TestCancellationException's message to the Measured
             //          value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
+        #endregion Long Test Cancellation Comment
+            this.CancelTokenSource.Cancel();
+            this._cancelled = true;
+            this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
+            this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = Color.Red;
         }
-        #endregion Long Comment
+
         private void ButtonStartReset(Boolean enabled) {
             if (enabled) {
                 this.ButtonStart.UseVisualStyleBackColor = false;
@@ -181,7 +182,7 @@ namespace TestLibrary {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            SCPI99.Reset(this.Instruments);
+            SCPI99.ResetAll(this.Instruments);
             USB_ERB24.Reset(USB_ERB24.ERB24s);
             if (this.ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
@@ -214,7 +215,7 @@ namespace TestLibrary {
                 test.Value.Result = EventCodes.UNSET;
             }
             this.ConfigUUT.EventCode = EventCodes.UNSET;
-            SCPI99.Reset(this.Instruments);
+            SCPI99.ResetAll(this.Instruments);
             USB_ERB24.Reset(USB_ERB24.ERB24s);
             Logger.Start(this.ConfigUUT, this.ConfigLogger, this.ConfigTest, this._appAssemblyVersion, this._libraryAssemblyVersion, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
@@ -247,14 +248,14 @@ namespace TestLibrary {
         }
 
         private void StopRun(KeyValuePair<String, Test> test, String exceptionString) {
-            SCPI99.Reset(this.Instruments);
+            SCPI99.ResetAll(this.Instruments);
             USB_ERB24.Reset(USB_ERB24.ERB24s);
             test.Value.Result = EventCodes.ERROR;
             Logger.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
         private void PostRun() {
-            SCPI99.Reset(this.Instruments);
+            SCPI99.ResetAll(this.Instruments);
             USB_ERB24.Reset(USB_ERB24.ERB24s);
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(enabled: true);
@@ -311,7 +312,6 @@ namespace TestLibrary {
             if (GetResultCount(configTest.Tests, EventCodes.FAIL) != 0) return EventCodes.FAIL;
             // 5th priority evaluation:
             // - If there are no ERROR, CANCEL or UNSET results, but there are FAIL result(s), UUT result is FAIL.
-
             // Else, we're really in the Twilight Zone...
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);

@@ -10,8 +10,8 @@ using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
 namespace TestLibrary.SCPI_VISA {
     public static class WG_33509B {
         public static void SpecificInitialization(Instrument instrument) {
-            SCPI99.SelfTest(instrument.Address); // SCPI99.SelfTest() issues a Factory Reset (*RST) command after its *TST completes.
-            SCPI99.Clear(instrument.Address);    // SCPI99.Clear() issues SCPI *CLS.
+            SCPI99.SelfTest(instrument); // SCPI99.SelfTest() issues a Factory Reset (*RST) command after its *TST completes.
+            SCPI99.Clear(instrument);    // SCPI99.Clear() issues SCPI *CLS.
             ((Ag33500B_33600A)instrument.Instance).SCPI.DISPlay.TEXT.CLEar.Command();
         }
     }

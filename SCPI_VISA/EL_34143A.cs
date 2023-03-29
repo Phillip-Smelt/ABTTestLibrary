@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
+using static TestLibrary.SCPI_VISA.Instrument;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -9,34 +11,73 @@ using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 //
 namespace TestLibrary.SCPI_VISA {
     public static class EL_34143A {
+
+        public static Boolean IsEL_34143A(Instrument instrument) { return (instrument.Instance.GetType() == typeof(AgEL30000)); }
+
+        public static void Clear(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.CLS.Command(); }
+
+        public static void ClearAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Clear(i.Value); }
+
         public static void Local(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.LOCal.Command(); }
+
+        public static void LocalAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Local(i.Value); }
 
         public static void Remote(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.REMote.Command(); }
 
+        public static void RemoteAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Remote(i.Value); }
+
         public static void RemoteLock(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void SpecificInitialization(Instrument instrument) {
-            SCPI99.SelfTest(instrument.Address); // SCPI99.SelfTest() issues a Factory Reset (*RST) command after its *TST completes.
-            SCPI99.Clear(instrument.Address);    // SCPI99.Clear() issues SCPI *CLS.
-            ((AgEL30000)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command();
-            ((AgEL30000)instrument.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
+        public static void RemoteLockAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) RemoteLock(i.Value); }
+
+        public static void Reset(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.RST.Command(); }
+
+        public static void ResetAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Reset(i.Value); }
+
+        public static void SelfTest(Instrument instrument) {
+            ((AgEL30000)instrument.Instance).SCPI.TST.Query(out Int32 selfTestResult);
+            if (selfTestResult != 0) {
+                ((AgEL30000)instrument.Instance).SCPI.SYSTem.ERRor.NEXT.Query(out Int32 errorNumber, out String errorMessage);
+                throw new InvalidOperationException(GetErrorMessage(instrument, errorNumber, errorMessage));
+            }
         }
 
+        public static void SelfTestAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) SelfTest(i.Value); }
+
+        public static void Initialize(Instrument instrument) {
+            Reset(instrument); // Reset instrument to default power-on states.
+            Clear(instrument); // Clear all event registers & the Status Byte register.
+            SelfTest(instrument);
+            ((AgEL30000)instrument.Instance).SCPI.OUTPut.PROTection.CLEar.Command();
+            ((AgEL30000)instrument.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
+            RemoteLock(instrument);
+        }
+
+        public static void InitializeAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Initialize(i.Value); }
+
         public static Boolean IsOff(Instrument instrument) { return !IsOn(instrument); }
+
+        public static Boolean AreOnAll(Dictionary<IDs, Instrument> instruments) {
+            Boolean AreOn = true;
+            foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) AreOn = AreOn && IsOn(i.Value);
+            return AreOn;
+        }
 
         public static Boolean IsOn(Instrument instrument) {
             ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Query(out Boolean State);
             return State;
         }
 
+        public static Boolean AreOffAll(Dictionary<IDs, Instrument> instruments) { return !AreOnAll(instruments); }
+
         public static String Mode(Instrument instrument) {
             ((AgEL30000)instrument.Instance).SCPI.SOURce.MODE.Query(null, out String Mode);
             return Mode;
         }
 
-        public static void Off(Instrument instrument) {
-            ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(false, null);
-        }
+        public static void Off(Instrument instrument) { ((AgEL30000)instrument.Instance).SCPI.OUTPut.STATe.Command(false, null); }
+
+        public static void OffAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) if (IsEL_34143A(i.Value)) Off(i.Value); }
 
         public static void OnConstantCurrent(Instrument instrument, Double amps) {
             ((AgEL30000)instrument.Instance).SCPI.SOURce.MODE.Command("CURRent", null);

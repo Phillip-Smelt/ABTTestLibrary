@@ -16,34 +16,38 @@ namespace TestLibrary.SCPI_VISA {
         // TODO: Add wrapper methods for remaining SCPI-99 commands.  Definitely want to fully implement these core commands.
         private const Char IDNSepChar = ',';
 
-        public static void Reset(String address) {
-            AgSCPI99 SCPI99 = new AgSCPI99(address);
+        public static void Reset(Instrument instrument) {
+            AgSCPI99 SCPI99 = new AgSCPI99(instrument.Address);
             SCPI99.SCPI.RST.Command();
         }
 
-        public static void Reset(Dictionary<IDs, Instrument> instruments) {
-            foreach (KeyValuePair<IDs, Instrument> i in instruments) Reset(i.Value.Address);
-        }
+        public static void ResetAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) Reset(i.Value); }
 
-        public static void Clear(String address) {
-            AgSCPI99 SCPI99 = new AgSCPI99(address);
+        public static void Clear(Instrument instrument) {
+            AgSCPI99 SCPI99 = new AgSCPI99(instrument.Address);
             SCPI99.SCPI.CLS.Command();
         }
 
-        public static void Clear(Dictionary<IDs, Instrument> instruments) {
-            foreach (KeyValuePair<IDs, Instrument> i in instruments) Clear(i.Value.Address);
-        }
+        public static void ClearAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) Clear(i.Value); }
 
-        public static void SelfTest(String address) {
-            AgSCPI99 SCPI99 = new AgSCPI99(address);
+        public static void SelfTest(Instrument instrument) {
+            Clear(instrument);
+            AgSCPI99 SCPI99 = new AgSCPI99(instrument.Address);
             SCPI99.SCPI.TST.Query(out Int32 selfTestResult);
-            if (selfTestResult != 0) throw new InvalidOperationException($"VISA address '{address}' failed it's Self-Test with result '{selfTestResult}'.");
-            // SCPI99 command *TST issues a Factory Reset (*RST) command after *TST completes.
+            if (selfTestResult != 0) {
+                throw new InvalidOperationException(GetErrorMessage(instrument));
+            }
         }
 
-        public static void SelfTest(Dictionary<IDs, Instrument> instruments) {
-            foreach (KeyValuePair<IDs, Instrument> i in instruments) SelfTest(i.Value.Address);
+        public static void SelfTestAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) SelfTest(i.Value); }
+
+        public static void Initialize(Instrument instrument) {
+            Reset(instrument); // Reset instrument to default power-on states.
+            Clear(instrument); // Clear all event registers & the Status Byte register.
+            SelfTest(instrument);
         }
+
+        public static void InitializeAll(Dictionary<IDs, Instrument> instruments) { foreach (KeyValuePair<IDs, Instrument> i in instruments) Initialize(i.Value); }
 
         public static Int32 QuestionCondition(String address) {
             AgSCPI99 SCPI99 = new AgSCPI99(address);
@@ -77,21 +81,20 @@ namespace TestLibrary.SCPI_VISA {
         }
 
         public static Boolean PowerSuppliesAreOff(Dictionary<Instrument.IDs, Instrument> instruments) {
-            Boolean arePowerSuppliesOff = true;
+            Boolean powerSuppliesAreOff = true;
             String returnString;
             foreach (KeyValuePair<Instrument.IDs, Instrument> kvp in instruments) {
                 if (kvp.Value.Category == Instrument.CATEGORIES.PowerSupply) {
-
-                    if (kvp.Key == Instrument.IDs.PS3) {
-                        returnString = SCPI99.Query(":OUTPut:STATe? (@1:2)", kvp.Value.Address);
-                        arePowerSuppliesOff = arePowerSuppliesOff && (String.Equals(returnString, "0,0")); // "0,0" = both channels 1 & 2 are off.
+                    if (PS_E36234A.IsPS_E36234A(kvp.Value)) {
+                        returnString = Query(":OUTPut:STATe? (@1:2)", kvp.Value.Address);
+                        powerSuppliesAreOff = powerSuppliesAreOff && (String.Equals(returnString, "0,0")); // "0,0" = both channels 1 & 2 are off.
                     } else {
-                        returnString = SCPI99.Query(":OUTPut:STATe?", kvp.Value.Address);
-                        arePowerSuppliesOff = arePowerSuppliesOff && (String.Equals(returnString, "0")); // "0" = off.
+                        returnString = Query(":OUTPut:STATe?", kvp.Value.Address);
+                        powerSuppliesAreOff = powerSuppliesAreOff && (String.Equals(returnString, "0")); // "0" = off.
                     }
                 }
             }
-            return arePowerSuppliesOff;
+            return powerSuppliesAreOff;
         }
     }
 }
