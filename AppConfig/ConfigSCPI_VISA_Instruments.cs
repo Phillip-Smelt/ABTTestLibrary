@@ -54,12 +54,10 @@ namespace TestLibrary.AppConfig {
             this.Address = address;
 
             try {
-                AgSCPI99 agSCPI99 = new AgSCPI99(this.Address);
-                agSCPI99.SCPI.IDN.Query(out String Identity);
-                this.Identity = Identity;
-                String[] identity = this.Identity.Split(SCPI_VISA.IDENTITY_SEPARATOR);
+                this.Identity = SCPI_VISA.GetIdentity(address);
+                String model = this.Identity.Split(SCPI_VISA.IDENTITY_SEPARATOR)[(Int32)SCPI_IDENTITY.Model];
 
-                switch (identity[(Int32)SCPI_IDENTITY.Model]) {
+                switch (model) {
                     case EL_34143A.MODEL:
                         this.Category = SCPI_VISA_CATEGORIES.ElectronicLoad;
                         this.Instrument = new AgEL30000(this.Address);
@@ -90,7 +88,7 @@ namespace TestLibrary.AppConfig {
                         this.Category = SCPI_VISA_CATEGORIES.ProgrammableInstrument;
                         this.Instrument = new AgSCPI99(this.Address);
                         PI_SCPI99.Initialize(this);
-                        Logger.UnexpectedErrorHandler(SCPI_VISA.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument, if possible, update Class SCPI_VISA_Instrument, adding '{identity[(Int32)SCPI_IDENTITY.Model]}'"));
+                        Logger.UnexpectedErrorHandler(SCPI_VISA.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument, if possible, update Class SCPI_VISA_Instrument, adding '{model}'"));
                         break;
                 }
             } catch (Exception e) {
@@ -109,15 +107,15 @@ namespace TestLibrary.AppConfig {
             SCPI_VISA_InstrumentsSection viSection = (SCPI_VISA_InstrumentsSection)ConfigurationManager.GetSection("SCPI_VISA_InstrumentsSection");
             SCPI_VISA_InstrumentElements viElements = viSection.SCPI_VISA_InstrumentElements;
             Dictionary<SCPI_VISA_IDs, (String id, String description, String address)> visaInstrumentElements = new Dictionary<SCPI_VISA_IDs, (String id, String description, String address)>();
-            SCPI_VISA_IDs ids;
+            SCPI_VISA_IDs svid;
             String addresses = String.Empty;
             foreach (SCPI_VISA_InstrumentElement viElement in viElements) {
-                ids = (SCPI_VISA_IDs)Enum.Parse(typeof(SCPI_VISA_IDs), viElement.ID);
-                if (!Enum.IsDefined(typeof(SCPI_VISA_IDs), ids)) throw new ArgumentException($"App.config's ID '{viElement.ID}' not present in SCPI_VISA_IDs enum.  ID's Description is '{viElement.Description}.'");
-                if (visaInstrumentElements.ContainsKey(ids)) throw new ArgumentException($"App.config's ID '{viElement.ID}' duplicated; must be unique.  ID's Description is '{viElement.Description}.'");
+                svid = (SCPI_VISA_IDs)Enum.Parse(typeof(SCPI_VISA_IDs), viElement.ID);
+                if (!Enum.IsDefined(typeof(SCPI_VISA_IDs), svid)) throw new ArgumentException($"App.config's ID '{viElement.ID}' not present in SCPI_VISA_IDs enum.  ID's Description is '{viElement.Description}.'");
+                if (visaInstrumentElements.ContainsKey(svid)) throw new ArgumentException($"App.config's ID '{viElement.ID}' duplicated; must be unique.  ID's Description is '{viElement.Description}.'");
                 if (addresses.Contains(viElement.Address)) throw new ArgumentException($"App.config's Address '{viElement.Address}' duplicated; must be unique.  Address' ID is '{viElement.ID}'.");
                 addresses += viElement.Address;
-                visaInstrumentElements.Add(ids, (viElement.ID, viElement.Description, viElement.Address));
+                visaInstrumentElements.Add(svid, (viElement.ID, viElement.Description, viElement.Address));
             }
             return visaInstrumentElements;
         }

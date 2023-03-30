@@ -11,7 +11,7 @@ using TestLibrary.AppConfig;
 //
 namespace TestLibrary.SCPI_VISA_Instruments {
     public static class PI_SCPI99 {
-        // SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows shared functionality.
+        // SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows common functionality.
         // TODO: Add wrapper methods for remaining SCPI-99 commands.  Definitely want to fully implement SCPI99's commands.
         public static Boolean IsPI_SCPI99B(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgSCPI99)); }
 
@@ -26,7 +26,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             Clear(SVI);
             ((AgSCPI99)SVI.Instrument).SCPI.TST.Query(out Int32 selfTestResult);
-            if (selfTestResult != 0) throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI));
+            if (selfTestResult != 0) throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, String.Format(SCPI_VISA.SELF_TEST_ERROR_MESSAGE, SVI.Address)));
         }
 
         public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) SelfTest(kvp.Value); }
@@ -49,15 +49,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             return Identity;
         }
 
-        private static String[] SplitIdentity(SCPI_VISA_Instrument SVI) { return GetIdentity(SVI).Split(SCPI_VISA.IDENTITY_SEPARATOR); }
-
-        public static String GetManufacturer(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.Manufacturer]; }
-
-        public static String GetModel(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.Model]; }
-
-        public static String GetSerialNumber(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.SerialNumber]; }
-
-        public static String GetFirmwareRevision(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.FirmwareRevision]; }
+        public static String GetIdentity(SCPI_VISA_Instrument SVI, SCPI_IDENTITY property) { return GetIdentity(SVI).Split(SCPI_VISA.IDENTITY_SEPARATOR)[(Int32)property]; }
 
         public static void Command(String command, SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instrument).Transport.Command.Invoke(command); }
 

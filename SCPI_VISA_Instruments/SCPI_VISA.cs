@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Reflection;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 using TestLibrary.AppConfig;
@@ -45,80 +46,75 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static String CHANNEL_1 = "(@1)";
         public static String CHANNEL_2 = "(@2)";
         public static String CHANNEL_1_2 = "(@1:2)";
-        public const String UNKNOWN = "Unknown.";
+        public static String SELF_TEST_ERROR_MESSAGE = $"SCPI VISA Instrument Address '{0}' failed SelfTest.";
         public const Char IDENTITY_SEPARATOR = ',';
         public const Int32 WIDTH = -16;
 
-        public static void Reset(SCPI_VISA_Instrument SVI) {
-            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
-            agSCPI99.SCPI.RST.Command();
-        }
+        public static void Reset(SCPI_VISA_Instrument SVI) { Reset(SVI.Address); }
+        public static void Reset(String address) { new AgSCPI99(address).SCPI.RST.Command(); }
 
         public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) Reset(kvp.Value); }
+        public static void ResetAll(List<String> addresses) { foreach (String address in addresses) Reset(address); }
 
-        public static void Clear(SCPI_VISA_Instrument SVI) {
-            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
-            agSCPI99.SCPI.CLS.Command();
-        }
-
+        public static void Clear(SCPI_VISA_Instrument SVI) { Clear(SVI.Address); }
+        public static void Clear(String address) { new AgSCPI99(address).SCPI.CLS.Command(); }
+        
         public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value); }
+        public static void ClearAll(List<String> addresses) { foreach (String address in addresses) Clear(address); }
 
-        public static void SelfTest(SCPI_VISA_Instrument SVI) {
-            Clear(SVI);
-            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
-            agSCPI99.SCPI.TST.Query(out Int32 selfTestResult);
-            if (selfTestResult != 0) throw new InvalidOperationException(GetErrorMessage(SVI));
+        public static void SelfTest(SCPI_VISA_Instrument SVI) { try { SelfTest(SVI.Address); } catch (InvalidOperationException) { throw new InvalidOperationException(GetErrorMessage(SVI, String.Format(SELF_TEST_ERROR_MESSAGE, SVI.Address))); } }
+        public static void SelfTest(String address) {
+            Clear(address);
+            new AgSCPI99(address).SCPI.TST.Query(out Int32 selfTestResult);
+            if (selfTestResult != 0) throw new InvalidOperationException(String.Format(SELF_TEST_ERROR_MESSAGE, address));
         }
 
         public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value); }
+        public static void SelfTestAll(List<String> addresses) { foreach (String address in addresses) SelfTest(address); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             Reset(SVI); // Reset SVI to default power-on states.
             SelfTest(SVI);
         }
+        public static void Initialize(String address) {
+            Reset(address);
+            SelfTest(address);
+        }
 
         public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) Initialize(kvp.Value); }
+        public static void InitializeAll(List<String> addresses) { foreach (String address in addresses) Initialize(address); }
 
-        public static Int32 QuestionCondition(SCPI_VISA_Instrument SVI) {
-            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
-            agSCPI99.SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
+        public static Int32 QuestionCondition(SCPI_VISA_Instrument SVI) { return QuestionCondition(SVI.Address); }
+        public static Int32 QuestionCondition(String address) {
+            new AgSCPI99(address).SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
             return ConditionRegister;
         }
 
-        public static String GetIdentity(SCPI_VISA_Instrument SVI) {
-            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
-            agSCPI99.SCPI.IDN.Query(out String Identity);
+        public static String GetIdentity(SCPI_VISA_Instrument SVI) { return GetIdentity(SVI.Address); }
+        public static String GetIdentity(String address) {
+            new AgSCPI99(address).SCPI.IDN.Query(out String Identity);
             return Identity;
         }
 
-        private static String[] SplitIdentity(SCPI_VISA_Instrument SVI) { return GetIdentity(SVI).Split(SCPI_VISA.IDENTITY_SEPARATOR); }
+        public static String GetIdentity(SCPI_VISA_Instrument SVI, SCPI_IDENTITY property) { return GetIdentity(SVI.Address, property); }
+        public static String GetIdentity(String address, SCPI_IDENTITY property) { return GetIdentity(address).Split(SCPI_VISA.IDENTITY_SEPARATOR)[(Int32)property]; }
 
-        public static String GetManufacturer(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.Manufacturer]; }
+        public static void Command(String command, SCPI_VISA_Instrument SVI) { Command(command, SVI.Address); }
+        public static void Command(String command, String address) { new AgSCPI99(address).Transport.Command.Invoke(command); }
 
-        public static String GetModel(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.Model]; }
-
-        public static String GetSerialNumber(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.SerialNumber]; }
-
-        public static String GetFirmwareRevision(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.FirmwareRevision]; }
-
-        public static void Command(String command, SCPI_VISA_Instrument SVI) {
-            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
-            agSCPI99.Transport.Command.Invoke(command);
-        }
-
-        public static String Query(String query, SCPI_VISA_Instrument SVI) {
-            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
-            agSCPI99.Transport.Query.Invoke(query, out String ReturnString);
+        public static String Query(String query, SCPI_VISA_Instrument SVI) { return Query(query, SVI.Address); }
+        public static String Query(String query, String address) {
+            new AgSCPI99(address).Transport.Query.Invoke(query, out String ReturnString);
             return ReturnString;
         }
 
-        public static String GetMessage(SCPI_VISA_Instrument SVI, String optionalHeader = "") {
+        public static String GetSCPI_VISA_IntrumentInfo(SCPI_VISA_Instrument SVI, String optionalHeader = "") {
             String SCPI_VISA_Message = (optionalHeader == "") ? "" : optionalHeader += Environment.NewLine;
             foreach (PropertyInfo pi in SVI.GetType().GetProperties()) SCPI_VISA_Message += $"{pi.Name,WIDTH}: '{pi.GetValue(SVI)}'{Environment.NewLine}";
             return SCPI_VISA_Message;
         }
 
-        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI) { return GetMessage(SVI, $"SCPI-VISA SCPI_VISA_Instrument failed self-test:"); }
+        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI) { return GetSCPI_VISA_IntrumentInfo(SVI, "SCPI-VISA SCPI_VISA_Instrument failed:"); }
 
         internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage) { return $"{GetErrorMessage(SVI)}{"Error Message",WIDTH}: '{errorMessage}'.{Environment.NewLine}"; }
 
