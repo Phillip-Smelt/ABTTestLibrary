@@ -181,7 +181,7 @@ namespace TestLibrary {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            PI_SCPI99.ResetAll(this.SVIs);
+            SCPI_VISA.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
             if (this.ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
@@ -214,7 +214,7 @@ namespace TestLibrary {
                 kvp.Value.Result = EventCodes.UNSET;
             }
             this.ConfigUUT.EventCode = EventCodes.UNSET;
-            PI_SCPI99.ResetAll(this.SVIs);
+            SCPI_VISA.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
             Logger.Start(this.ConfigUUT, this.ConfigLogger, this.ConfigTest, this._appAssemblyVersion, this._libraryAssemblyVersion, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
@@ -247,14 +247,14 @@ namespace TestLibrary {
         }
 
         private void StopRun(KeyValuePair<String, Test> kvp, String exceptionString) {
-            PI_SCPI99.ResetAll(this.SVIs);
+            SCPI_VISA.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
             kvp.Value.Result = EventCodes.ERROR;
             Logger.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
         private void PostRun() {
-            PI_SCPI99.ResetAll(this.SVIs);
+            SCPI_VISA.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(enabled: true);

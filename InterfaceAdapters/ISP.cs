@@ -9,7 +9,7 @@ using TestLibrary.SCPI_VISA_Instruments;
 namespace TestLibrary.InterfaceAdapters {
     public static class ISP {
         public static void Connect(String Description, String Connector, Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) {
-            PI_SCPI99.ResetAll(SVIs);
+            SCPI_VISA.ResetAll(SVIs);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER connecting, click OK to continue.",
@@ -17,7 +17,7 @@ namespace TestLibrary.InterfaceAdapters {
         }
 
         public static void DisConnect(String Description, String Connector, Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) {
-            PI_SCPI99.ResetAll(SVIs);
+            SCPI_VISA.ResetAll(SVIs);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Disconnect '{Description}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER disconnecting, click OK to continue.",
