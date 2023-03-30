@@ -89,7 +89,7 @@ namespace TestLibrary.AppConfig {
                         this.Category = SCPI_VISA_CATEGORIES.ProgrammableInstrument;
                         this.Instrument = new AgSCPI99(this.Address);
                         PI_SCPI99.Initialize(this);
-                        Logger.UnexpectedErrorHandler(SCPI_VISA.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument, if possible, udate Class SCPI_VISA_Instrument, adding '{i[1]}'"));
+                        Logger.UnexpectedErrorHandler(SCPI_VISA.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument, if possible, update Class SCPI_VISA_Instrument, adding '{i[1]}'"));
                         break;
                 }
             } catch (Exception e) {

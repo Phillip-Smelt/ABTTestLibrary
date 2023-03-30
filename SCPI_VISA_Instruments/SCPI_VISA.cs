@@ -109,23 +109,6 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             return ReturnString;
         }
 
-        public static Boolean PowerSuppliesAreOff(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) {
-            Boolean powerSuppliesAreOff = true;
-            String returnString;
-            foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) {
-                if (kvp.Value.Category == SCPI_VISA_CATEGORIES.PowerSupply) {
-                    if (PS_E36234A.IsPS_E36234A(kvp.Value)) {
-                        returnString = Query($":OUTPut:STATe? {CHANNEL_1_2}", kvp.Value);
-                        powerSuppliesAreOff = powerSuppliesAreOff && (String.Equals(returnString, "0,0")); // "0,0" = both channels 1 & 2 are off.
-                    } else {
-                        returnString = Query(":OUTPut:STATe?", kvp.Value);
-                        powerSuppliesAreOff = powerSuppliesAreOff && (String.Equals(returnString, "0")); // "0" = off.
-                    }
-                }
-            }
-            return powerSuppliesAreOff;
-        }
-
         public static String GetMessage(SCPI_VISA_Instrument SVI, String optionalHeader = "") {
             String SCPI_VISA_Message = (optionalHeader == "") ? "" : optionalHeader += Environment.NewLine;
             foreach (PropertyInfo pi in SVI.GetType().GetProperties()) SCPI_VISA_Message += $"{pi.Name,WIDTH}: '{pi.GetValue(SVI)}'{Environment.NewLine}";
