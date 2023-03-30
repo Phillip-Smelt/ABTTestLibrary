@@ -45,6 +45,7 @@
     <Compile Include="InterfaceAdapters\ISP.cs" />
     <Compile Include="AppConfig\ConfigSCPI_VISA_Instruments.cs" />
     <Compile Include="InterfaceAdapters\USB-TO-GPIO.cs" />
+    <Compile Include="SCPI_VISA_Instruments\SCPI_VISA.cs" />
     <Compile Include="Switching\USB_ERB24.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -66,14 +67,14 @@
       <DependentUpon>GroupSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="AppConfig\ConfigTests.cs" />
-    <Compile Include="SCPI_VISA\PS_E36234A.cs" />
-    <Compile Include="SCPI_VISA\PS_E3610xB.cs" />
-    <Compile Include="SCPI_VISA\EL_34143A.cs" />
-    <Compile Include="SCPI_VISA\WG_33509B.cs" />
-    <Compile Include="SCPI_VISA\MM_34661A.cs" />
+    <Compile Include="SCPI_VISA_Instruments\PS_E36234A.cs" />
+    <Compile Include="SCPI_VISA_Instruments\PS_E3610xB.cs" />
+    <Compile Include="SCPI_VISA_Instruments\EL_34143A.cs" />
+    <Compile Include="SCPI_VISA_Instruments\WG_33509B.cs" />
+    <Compile Include="SCPI_VISA_Instruments\MM_34661A.cs" />
     <Compile Include="Logging\RTFSink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SCPI_VISA\PI_SCPI99.cs" />
+    <Compile Include="SCPI_VISA_Instruments\PI_SCPI99.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

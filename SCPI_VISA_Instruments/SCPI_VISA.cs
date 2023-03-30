@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Reflection;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 using TestLibrary.AppConfig;
-// All Agilent.CommandExpert.ScpiNet drivers are created by adding new SVIs in Keysight's Command Expert app software.
+// All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 // https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
 //
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
-namespace TestLibrary.SCPI_VISA {
+namespace TestLibrary.SCPI_VISA_Instruments {
     public enum SCPI_VISA_CATEGORIES {
         CounterTimer,           // CT
         ElectronicLoad,         // EL
@@ -18,7 +18,7 @@ namespace TestLibrary.SCPI_VISA {
         MultiMeter,             // MM
         OscilloScope,           // OS
         PowerSupply,            // PS
-        ProgrammableInstrument, // PI
+        ProgrammableInstrument, // PI (For SCPI99 compliant instruments without model specific device drivers.)
         WaveformGenerator       // WG
     }
 
@@ -30,28 +30,26 @@ namespace TestLibrary.SCPI_VISA {
         LA1, LA2, LA3, LA4, LA5, LA6, LA7, LA8, LA9,    // Logic Analyzers 1 - 9.
         MM1, MM2, MM3, MM4, MM5, MM6, MM7, MM8, MM9,    // Multi-Meters 1 - 9.
         OS1, OS2, OS3, OS4, OS5, OS6, OS7, OS8, OS9,    // OscilloScopes 1 - 9.
-        PI1, PI2, PI3, PI4, PI5, PI6, PI7, PI8, PI9,    // Programmable Instruments 1 - 9.  For generic programmable SCPI99 instruments.
+        PI1, PI2, PI3, PI4, PI5, PI6, PI7, PI8, PI9,    // Programmable Instruments 1 - 9.  For SCPI99 compliant instruments without model specific device drivers.
         PS1, PS2, PS3, PS4, PS5, PS6, PS7, PS8, PS9,    // Power Supplies 1 - 9.
         WG1, WG2, WG3, WG4, WG5, WG6, WG7, WG8, WG9     // Waveform Generators 1 - 9.
     }
 
-    public static class PI_SCPI99 {
-        // SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 SVIs, which allows shared functionality.
-        // Can Reset, Self-Test, Question Condition, issue Commands & Queries to all SCPI-99 conforming SVIs with below methods.
-        // TODO: Add wrapper methods for remaining SCPI-99 commands.  Definitely want to fully implement these core commands.
+    public static class SCPI_VISA {
         public static String CHANNEL_1 = "(@1)";
         public static String CHANNEL_2 = "(@2)";
         public static String CHANNEL_1_2 = "(@1:2)";
-        private const Int32 WIDTH = -16;
-        private const Char IDNSepChar = ',';
+        public const String UNKNOWN = "Unknown.";
+        public const Char IDENTITY_SEPERATOR = ',';
+        public const Int32 WIDTH = -16;
 
         public static void Reset(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instance).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) Reset(SVI.Value); }
+        public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) Reset(kvp.Value); }
 
         public static void Clear(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instance).SCPI.CLS.Command(); }
 
-        public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) Clear(SVI.Value); }
+        public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             Clear(SVI);
@@ -59,7 +57,7 @@ namespace TestLibrary.SCPI_VISA {
             if (selfTestResult != 0) throw new InvalidOperationException(GetErrorMessage(SVI));
         }
 
-        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) SelfTest(SVI.Value); }
+        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             Reset(SVI); // Reset SVI to default power-on states.
@@ -67,7 +65,7 @@ namespace TestLibrary.SCPI_VISA {
             SelfTest(SVI);
         }
 
-        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) Initialize(SVI.Value); }
+        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) Initialize(kvp.Value); }
 
         public static Int32 QuestionCondition(SCPI_VISA_Instrument SVI) {
             ((AgSCPI99)SVI.Instance).SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
@@ -76,31 +74,14 @@ namespace TestLibrary.SCPI_VISA {
 
         public static String GetManufacturer(SCPI_VISA_Instrument SVI) {
            ((AgSCPI99)SVI.Instance).SCPI.IDN.Query(out String Identity);
-            String[] s = Identity.Split(IDNSepChar);
-            return s[0] ?? "Unknown";
+            String[] s = Identity.Split(IDENTITY_SEPERATOR);
+            return s[0] ?? UNKNOWN;
         }
 
         public static String GetModel(SCPI_VISA_Instrument SVI) {
             ((AgSCPI99)SVI.Instance).SCPI.IDN.Query(out String Identity);
-            String[] s = Identity.Split(IDNSepChar);
-            return s[1] ?? "Unknown";
-        }
-
-        public static String GetModel(String address) {
-            PI_SCPI99_Instrument PI_SCPI99 = new PI_SCPI99_Instrument(address);
-            return GetModel((SCPI_VISA_Instrument)PI_SCPI99);
-            // TODO: Anonymous class instead of PI_SCPI99_Instrument.
-            // TODO: Apply technique to all 
-        }
-
-        private class PI_SCPI99_Instrument : SCPI_VISA_Instrument {
-            private PI_SCPI99_Instrument(String address) {
-                this.ID = "Temporary SCPI";
-                this.Address = Address;
-                this.Description = "TBD";
-                this.Category = SCPI_VISA_CATEGORIES.ProgrammableInstrument;
-                this.Instance = new AgSCPI99(address);
-            }
+            String[] s = Identity.Split(IDENTITY_SEPERATOR);
+            return s[1] ?? UNKNOWN;
         }
 
         public static void Command(String command, SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instance).Transport.Command.Invoke(command); }

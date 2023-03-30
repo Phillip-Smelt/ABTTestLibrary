@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using TestLibrary.AppConfig;
-using TestLibrary.SCPI_VISA;
+using TestLibrary.SCPI_VISA_Instruments;
 
 namespace TestLibrary.InterfaceAdapters {
     public static class ISP {

@@ -66,7 +66,7 @@ namespace TestLibrary.Logging {
             Log.Information($"UUT Group Revision     : {configTest.Group.Revision}");
             Log.Information($"UUT Group Description  : \n{configTest.Group.Description}\n");
             StringBuilder s = new StringBuilder();
-            foreach (KeyValuePair<String, Test> test in configTest.Tests) s.Append(String.Format("\t{0:" + configTest.LogFormattingLength + "} : {1}\n", test.Value.ID, test.Value.Description));
+            foreach (KeyValuePair<String, Test> kvp in configTest.Tests) s.Append(String.Format("\t{0:" + configTest.LogFormattingLength + "} : {1}\n", kvp.Value.ID, kvp.Value.Description));
             Log.Information($"UUT Group Tests        : \n{s}");
             Log.Information($"Test Operator          : {UserPrincipal.Current.DisplayName}");
             // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.

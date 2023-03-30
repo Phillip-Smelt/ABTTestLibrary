@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using TestLibrary.AppConfig;
-using TestLibrary.SCPI_VISA;
+using TestLibrary.SCPI_VISA_Instruments;
 using TestLibrary.Logging;
 using TestLibrary.Switching;
 
@@ -208,10 +208,10 @@ namespace TestLibrary {
 
         private void PreRun() {
             this.FormReset();
-            foreach (KeyValuePair<String, Test> test in this.ConfigTest.Tests) {
-                if (String.Equals(test.Value.ClassName, TestNumerical.ClassName)) test.Value.Measurement = Double.NaN.ToString();
-                else test.Value.Measurement = String.Empty;
-                test.Value.Result = EventCodes.UNSET;
+            foreach (KeyValuePair<String, Test> kvp in this.ConfigTest.Tests) {
+                if (String.Equals(kvp.Value.ClassName, TestNumerical.ClassName)) kvp.Value.Measurement = Double.NaN.ToString();
+                else kvp.Value.Measurement = String.Empty;
+                kvp.Value.Result = EventCodes.UNSET;
             }
             this.ConfigUUT.EventCode = EventCodes.UNSET;
             PI_SCPI99.ResetAll(this.SVIs);
@@ -222,34 +222,34 @@ namespace TestLibrary {
 
         private async Task RunAsync() {
             PreRun();
-            foreach (KeyValuePair<String, Test> test in this.ConfigTest.Tests) {
+            foreach (KeyValuePair<String, Test> kvp in this.ConfigTest.Tests) {
                 try {
-                    test.Value.Measurement = await Task.Run(() => RunTestAsync(test.Value.ID));
-                    test.Value.Result = EvaluateTestResult(test.Value);
+                    kvp.Value.Measurement = await Task.Run(() => RunTestAsync(kvp.Value.ID));
+                    kvp.Value.Result = EvaluateTestResult(kvp.Value);
                 } catch (Exception e) {
                     if (e.ToString().Contains(TestCancellationException.ClassName)) {
-                        test.Value.Result = EventCodes.CANCEL;
+                        kvp.Value.Result = EventCodes.CANCEL;
                         while (!(e is TestCancellationException) && (e.InnerException != null)) e = e.InnerException;
-                        if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) test.Value.Measurement = e.Message;
+                        if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) kvp.Value.Measurement = e.Message;
                     } else {
-                        StopRun(test, e.ToString());
+                        StopRun(kvp, e.ToString());
                     }
                     break;
                 } finally {
-                    Logger.LogTest(test.Value);
+                    Logger.LogTest(kvp.Value);
                 }
                 if (this._cancelled) {
-                    test.Value.Result = EventCodes.CANCEL;
+                    kvp.Value.Result = EventCodes.CANCEL;
                     break;
                 }
             }
             PostRun();
         }
 
-        private void StopRun(KeyValuePair<String, Test> test, String exceptionString) {
+        private void StopRun(KeyValuePair<String, Test> kvp, String exceptionString) {
             PI_SCPI99.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
-            test.Value.Result = EventCodes.ERROR;
+            kvp.Value.Result = EventCodes.ERROR;
             Logger.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
@@ -304,7 +304,7 @@ namespace TestLibrary {
                 // - If any test result is UNSET, and there are no explicit ERROR or CANCEL results, it implies Test(s) didn't complete
                 //   without erroring or cancelling, which shouldn't occur, but...
                 String s = String.Empty;
-                foreach (KeyValuePair<String, Test> test in configTest.Tests) s += $"ID: '{test.Key}' Result: '{test.Value.Result}'.{Environment.NewLine}";
+                foreach (KeyValuePair<String, Test> kvp in configTest.Tests) s += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
                 Logger.UnexpectedErrorHandler($"Encountered Test(s) with EventCodes.UNSET:{Environment.NewLine}{Environment.NewLine}{s}");
                 return EventCodes.ERROR;
             }
@@ -314,7 +314,7 @@ namespace TestLibrary {
             // Else, we're really in the Twilight Zone...
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
-            foreach (KeyValuePair<String, Test> test in configTest.Tests) if (!validEvents.Contains(test.Value.Result)) invalidTests += $"ID: '{test.Key}' Result: '{test.Value.Result}'.{Environment.NewLine}";
+            foreach (KeyValuePair<String, Test> kvp in configTest.Tests) if (!validEvents.Contains(kvp.Value.Result)) invalidTests += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
             Logger.UnexpectedErrorHandler($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
             return EventCodes.ERROR;
         }

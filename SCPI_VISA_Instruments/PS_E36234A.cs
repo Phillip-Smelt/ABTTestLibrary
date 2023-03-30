@@ -3,69 +3,69 @@ using System.Collections.Generic;
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using TestLibrary.AppConfig;
-// All Agilent.CommandExpert.ScpiNet drivers are created by adding new SVIs in Keysight's Command Expert app software.
+// All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 // https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
 //
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
-namespace TestLibrary.SCPI_VISA {
+namespace TestLibrary.SCPI_VISA_Instruments {
     public static class PS_E36234A {
         private static Int32 ConvertChannel(SCPI_VISA_Instrument SVI, String sChannel) {
-            if (String.Equals(sChannel, PI_SCPI99.CHANNEL_1)) return 0;
-            else if (String.Equals(sChannel, PI_SCPI99.CHANNEL_2)) return 1;
-            else throw new InvalidOperationException(PI_SCPI99.GetMessage(SVI, $"Invalid Channel '{sChannel}'"));
+            if (String.Equals(sChannel, SCPI_VISA.CHANNEL_1)) return 0;
+            else if (String.Equals(sChannel, SCPI_VISA.CHANNEL_2)) return 1;
+            else throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, $"Invalid Channel '{sChannel}'"));
         }
 
         public static Boolean IsPS_E36234A(SCPI_VISA_Instrument SVI) { return (SVI.Instance.GetType() == typeof(AgE36200)); }
 
         public static void Clear(SCPI_VISA_Instrument SVI) { ((AgE36200)SVI.Instance).SCPI.CLS.Command(); }
 
-        public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) if (IsPS_E36234A(SVI.Value)) Clear(SVI.Value); }
+        public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E36234A(kvp.Value)) Clear(kvp.Value); }
 
         public static void Local(SCPI_VISA_Instrument SVI) { ((AgE36200)SVI.Instance).SCPI.SYSTem.LOCal.Command(); }
 
-        public static void LocalAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) if (IsPS_E36234A(SVI.Value)) Local(SVI.Value); }
+        public static void LocalAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E36234A(kvp.Value)) Local(kvp.Value); }
 
         public static void Remote(SCPI_VISA_Instrument SVI) { ((AgE36200)SVI.Instance).SCPI.SYSTem.REMote.Command(); }
 
-        public static void RemoteAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) if (IsPS_E36234A(SVI.Value)) Remote(SVI.Value); }
+        public static void RemoteAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E36234A(kvp.Value)) Remote(kvp.Value); }
 
         public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgE36200)SVI.Instance).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void RemoteLockAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) if (IsPS_E36234A(SVI.Value)) RemoteLock(SVI.Value); }
+        public static void RemoteLockAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E36234A(kvp.Value)) RemoteLock(kvp.Value); }
 
         public static void Reset(SCPI_VISA_Instrument SVI) { ((AgE36200)SVI.Instance).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) if (IsPS_E36234A(SVI.Value)) Reset(SVI.Value); }
+        public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E36234A(kvp.Value)) Reset(kvp.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             ((AgE36200)SVI.Instance).SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) {
                 ((AgE36200)SVI.Instance).SCPI.SYSTem.ERRor.NEXT.Query(out String nextError);
-                throw new InvalidOperationException(PI_SCPI99.GetErrorMessage(SVI, nextError));
+                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, nextError));
             }
         }
 
-        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) if (IsPS_E36234A(SVI.Value)) SelfTest(SVI.Value); }
+        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E36234A(kvp.Value)) SelfTest(kvp.Value); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             Reset(SVI); // Reset SVI to default power-on states.
             Clear(SVI); // Clear all event registers & the Status Byte register.
             SelfTest(SVI);
-            ((AgE36200)SVI.Instance).SCPI.OUTPut.PROTection.CLEar.Command(PI_SCPI99.CHANNEL_1_2);
+            ((AgE36200)SVI.Instance).SCPI.OUTPut.PROTection.CLEar.Command(SCPI_VISA.CHANNEL_1_2);
             ((AgE36200)SVI.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
             RemoteLock(SVI);
         }
 
-        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) if (IsPS_E36234A(SVI.Value)) Initialize(SVI.Value); }
+        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E36234A(kvp.Value)) Initialize(kvp.Value); }
 
         public static Boolean IsOff(SCPI_VISA_Instrument SVI, String sChannel) { return !IsOn(SVI, sChannel); }
 
         public static Boolean AreOnAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) {
             Boolean AreOn = true;
-            foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) if (IsPS_E36234A(SVI.Value)) AreOn = AreOn && IsOn(SVI.Value, PI_SCPI99.CHANNEL_1) && IsOn(SVI.Value, PI_SCPI99.CHANNEL_2);
+            foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E36234A(kvp.Value)) AreOn = AreOn && IsOn(kvp.Value, SCPI_VISA.CHANNEL_1) && IsOn(kvp.Value, SCPI_VISA.CHANNEL_2);
             return AreOn;
         }
 
@@ -78,7 +78,7 @@ namespace TestLibrary.SCPI_VISA {
 
         public static void Off(SCPI_VISA_Instrument SVI, String sChannel) { ((AgE36200)SVI.Instance).SCPI.OUTPut.STATe.Command(false, sChannel); }
 
-        public static void OffAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVI in SVIs) if (IsPS_E36234A(SVI.Value)) Off(SVI.Value, PI_SCPI99.CHANNEL_1_2); }
+        public static void OffAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E36234A(kvp.Value)) Off(kvp.Value, SCPI_VISA.CHANNEL_1_2); }
 
         public static void On(SCPI_VISA_Instrument SVI, Double voltsDC, Double ampsDC, String sChannel, Double secondsDelayCurrentProtection = 0, Double secondsDelayMeasurement = 0) {
             Int32 iChannel = ConvertChannel(SVI, sChannel);
@@ -91,7 +91,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Voltage={min[iChannel]} VDC.{Environment.NewLine}"
                     + $" - Programmed:  Voltage={voltsDC} VDC.{Environment.NewLine}"
                     + $" - MAXimum   :  Voltage={max[iChannel]} VDC.";
-                    throw new InvalidOperationException(PI_SCPI99.GetMessage(SVI, s));
+                    throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, s));
                 }
                 ((AgE36200)SVI.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", sChannel, out min);
                 ((AgE36200)SVI.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", sChannel, out max);
@@ -100,7 +100,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Current={min[iChannel]} ADC.{Environment.NewLine}"
                     + $" - Programmed:  Current={ampsDC} ADC.{Environment.NewLine}"
                     + $" - MAXimum   :  Current={max[iChannel]} ADC.";
-                    throw new InvalidOperationException(PI_SCPI99.GetMessage(SVI, s));
+                    throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, s));
                 }
                 ((AgE36200)SVI.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MINimum", sChannel, out min);
                 ((AgE36200)SVI.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MAXimum", sChannel, out max);
@@ -109,7 +109,7 @@ namespace TestLibrary.SCPI_VISA {
                     + $" - MINimum   :  Delay={min[iChannel]} seconds.{Environment.NewLine}"
                     + $" - Programmed:  Delay={secondsDelayCurrentProtection} seconds.{Environment.NewLine}"
                     + $" - MAXimum   :  Delay={max[iChannel]} seconds.";
-                    throw new InvalidOperationException(PI_SCPI99.GetMessage(SVI, s));
+                    throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, s));
                 }
                 ((AgE36200)SVI.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal", sChannel);
                 ((AgE36200)SVI.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(voltsDC, sChannel);
@@ -122,7 +122,7 @@ namespace TestLibrary.SCPI_VISA {
             } catch (InvalidOperationException) {
                 throw;
             } catch (Exception e) {
-                throw new InvalidOperationException(PI_SCPI99.GetMessage(SVI), e);
+                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI), e);
             }
         }
 

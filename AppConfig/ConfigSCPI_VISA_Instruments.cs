@@ -7,7 +7,7 @@ using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
-using TestLibrary.SCPI_VISA;
+using TestLibrary.SCPI_VISA_Instruments;
 using TestLibrary.Logging;
 
 namespace TestLibrary.AppConfig {
@@ -39,16 +39,6 @@ namespace TestLibrary.AppConfig {
         public IEnumerable<SCPI_VISA_InstrumentElement> SCPI_VISA_InstrumentElement { get { foreach (SCPI_VISA_InstrumentElement svie in this.SCPI_VISA_InstrumentElements) if (svie != null) yield return svie; } }
     }
 
-    internal class PI_SCPI99_Instrument  {
-        internal PI_SCPI99_Instrument(String address) {
-            this.ID = "Temporary SCPI";
-            this.Address = Address;
-            this.Description = "TBD";
-            this.Category = SCPI_VISA_CATEGORIES.ProgrammableInstrument;
-            this.Instance = new AgSCPI99(address);
-        }
-    }
-
     public class SCPI_VISA_Instrument {
         public String ID { get; private set; }
         public String Description { get; private set; }
@@ -62,7 +52,7 @@ namespace TestLibrary.AppConfig {
             this.Address = address;
 
             try {
-                String instrumentModel = PI_SCPI99.GetModel(this.Address);
+                String instrumentModel = SCPI_VISA.GetModel(this.Address);
                 switch (instrumentModel) {
                     case "EL34143A":
                         this.Category = SCPI_VISA_CATEGORIES.ElectronicLoad;
@@ -94,12 +84,12 @@ namespace TestLibrary.AppConfig {
                         this.Category = SCPI_VISA_CATEGORIES.ProgrammableInstrument;
                         this.Instance = new AgSCPI99(this.Address);
                         PI_SCPI99.Initialize(this);
-                        Logger.UnexpectedErrorHandler(PI_SCPI99.GetMessage(this, $"Unrecognized SCPI VISA Instrument, if possible, udate Class SCPI_VISA_Instrument, adding '{instrumentModel}'"));
+                        Logger.UnexpectedErrorHandler(SCPI_VISA.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument, if possible, udate Class SCPI_VISA_Instrument, adding '{instrumentModel}'"));
                         break;
                 }
             } catch (Exception e) {
                 String[] a = address.Split(':');
-                throw new InvalidOperationException(PI_SCPI99.GetMessage(this, $"Check to see if SCPI VISA Instrument is powered and it's {a[0]} bus is communicating."), e);
+                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(this, $"Check to see if SCPI VISA Instrument is powered and it's {a[0]} bus is communicating."), e);
             }
         }
 
