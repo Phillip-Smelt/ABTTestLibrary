@@ -11,33 +11,39 @@ using TestLibrary.AppConfig;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 namespace TestLibrary.SCPI_VISA_Instruments {
-    public static class PS_E3610xB {
-        public static Boolean IsPS_E3610xB(SCPI_VISA_Instrument SVI) { return (SVI.Instance.GetType() == typeof(AgE3610XB)); }
+    // NOTE: SCPI99's IDN Identity Query won't return "E3610xB" in it's Identity string.  It only returns "E36103B", "E36105B" etc.
+    internal static class PS_E36103B { public const String MODEL = "E36103B"; } // PS_E36103B needed only in class TestLibrary.AppConfig.SCPI_VISA_Instrument.
 
-        public static void Clear(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instance).SCPI.CLS.Command(); }
+    internal static class PS_E36105B { public const String MODEL = "E36105B"; } // PS_E36105B needed only in class TestLibrary.AppConfig.SCPI_VISA_Instrument.
+
+    public static class PS_E3610xB {
+
+        public static Boolean IsPS_E3610xB(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgE3610XB)); }
+
+        public static void Clear(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.CLS.Command(); }
 
         public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Clear(kvp.Value); }
 
-        public static void Local(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instance).SCPI.SYSTem.LOCal.Command(); }
+        public static void Local(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
 
         public static void LocalAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Local(kvp.Value); }
 
-        public static void Remote(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instance).SCPI.SYSTem.REMote.Command(); }
+        public static void Remote(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
 
         public static void RemoteAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Remote(kvp.Value); }
 
-        public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instance).SCPI.SYSTem.RWLock.Command(); }
+        public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
 
         public static void RemoteLockAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) RemoteLock(kvp.Value); }
 
-        public static void Reset(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instance).SCPI.RST.Command(); }
+        public static void Reset(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.RST.Command(); }
 
         public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Reset(kvp.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
-            ((AgE3610XB)SVI.Instance).SCPI.TST.Query(out Int32 selfTestResult);
+            ((AgE3610XB)SVI.Instrument).SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) {
-                ((AgE3610XB)SVI.Instance).SCPI.SYSTem.ERRor.NEXT.Query(out Double errorNumber, out String errorMessage);
+                ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.ERRor.NEXT.Query(out Double errorNumber, out String errorMessage);
                 throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, errorMessage, Convert.ToInt32(errorNumber)));
             }
         }
@@ -48,8 +54,8 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             Reset(SVI); // Reset SVI to default power-on states.
             Clear(SVI); // Clear all event registers & the Status Byte register.
             SelfTest(SVI);
-            ((AgE3610XB)SVI.Instance).SCPI.OUTPut.PROTection.CLEar.Command();
-            ((AgE3610XB)SVI.Instance).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
+            ((AgE3610XB)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command();
+            ((AgE3610XB)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
             RemoteLock(SVI);
         }
 
@@ -64,21 +70,21 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         }
 
         public static Boolean IsOn(SCPI_VISA_Instrument SVI) {
-            ((AgE3610XB)SVI.Instance).SCPI.OUTPut.STATe.Query(out Boolean State);
+            ((AgE3610XB)SVI.Instrument).SCPI.OUTPut.STATe.Query(out Boolean State);
             return State;
         }
 
         public static Boolean AreOffAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { return !AreOnAll(SVIs); }
 
-        public static void Off(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instance).SCPI.OUTPut.STATe.Command(false); }
+        public static void Off(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.OUTPut.STATe.Command(false); }
 
         public static void OffAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Off(kvp.Value); }
 
         public static void On(SCPI_VISA_Instrument SVI, Double voltsDC, Double ampsDC, Double secondsDelayCurrentProtection = 0, Double secondsDelayMeasurement = 0) {
             try {
                 String s;
-                ((AgE3610XB)SVI.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", out Double min);
-                ((AgE3610XB)SVI.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MAXimum", out Double max);
+                ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", out Double min);
+                ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MAXimum", out Double max);
                 if ((voltsDC < min) || (voltsDC > max)) {
                     s = $"< MINimum/MAXimum Voltage.{Environment.NewLine}"
                     +   $" - MINimum   :  Voltage={min} VDC.{Environment.NewLine}"
@@ -86,8 +92,8 @@ namespace TestLibrary.SCPI_VISA_Instruments {
                     +   $" - MAXimum   :  Voltage={max} VDC.";
                     throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, s));
                 }
-                ((AgE3610XB)SVI.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", out min);
-                ((AgE3610XB)SVI.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", out max);
+                ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", out min);
+                ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", out max);
                 if ((ampsDC < min) || (ampsDC > max)) {
                     s = $"> MINimum/MAXimum Current.{Environment.NewLine}"
                     +   $" - MINimum   :  Current={min} ADC.{Environment.NewLine}"
@@ -95,8 +101,8 @@ namespace TestLibrary.SCPI_VISA_Instruments {
                     +   $" - MAXimum   :  Current={max} ADC.";
                     throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, s));
                 }
-                ((AgE3610XB)SVI.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MINimum", out min);
-                ((AgE3610XB)SVI.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MAXimum", out max);
+                ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MINimum", out min);
+                ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MAXimum", out max);
                 // NOTE: Keysight Command Expert's AgE3610XB driver documentation states:
                 //  - [SOURce:]CURRent:PROTection:DELay[:TIME] <time> | MINimum | MAXimum
                 //  - [SOURce:] CURRent: PROTection: DELay[:TIME]?[MINimum | MAXimum]
@@ -114,13 +120,13 @@ namespace TestLibrary.SCPI_VISA_Instruments {
                     +   $" - MAXimum   :  Delay={max} seconds.";
                     throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, s));
                 }
-                ((AgE3610XB)SVI.Instance).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
-                ((AgE3610XB)SVI.Instance).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(voltsDC);
-                ((AgE3610XB)SVI.Instance).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(ampsDC);
-                ((AgE3610XB)SVI.Instance).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(secondsDelayCurrentProtection);
-                ((AgE3610XB)SVI.Instance).SCPI.SOURce.CURRent.PROTection.STATe.Command(true);
-                ((AgE3610XB)SVI.Instance).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false);
-                ((AgE3610XB)SVI.Instance).SCPI.OUTPut.STATe.Command(true);
+                ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
+                ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(voltsDC);
+                ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(ampsDC);
+                ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(secondsDelayCurrentProtection);
+                ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command(true);
+                ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false);
+                ((AgE3610XB)SVI.Instrument).SCPI.OUTPut.STATe.Command(true);
                 if (secondsDelayMeasurement > 0) Thread.Sleep((Int32)(secondsDelayMeasurement * 1000));
             } catch (InvalidOperationException) {
                 throw;
@@ -130,8 +136,8 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         }
 
         public static (Double VoltsDC, Double AmpsDC) MeasureVA(SCPI_VISA_Instrument SVI) {
-            ((AgE3610XB)SVI.Instance).SCPI.MEASure.VOLTage.DC.Query(out Double voltsDC);
-            ((AgE3610XB)SVI.Instance).SCPI.MEASure.CURRent.DC.Query(out Double ampsDC);
+            ((AgE3610XB)SVI.Instrument).SCPI.MEASure.VOLTage.DC.Query(out Double voltsDC);
+            ((AgE3610XB)SVI.Instrument).SCPI.MEASure.CURRent.DC.Query(out Double ampsDC);
             return (voltsDC, ampsDC);
         }
     }

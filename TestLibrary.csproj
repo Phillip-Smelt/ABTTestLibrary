@@ -45,6 +45,7 @@
     <Compile Include="InterfaceAdapters\ISP.cs" />
     <Compile Include="AppConfig\ConfigSCPI_VISA_Instruments.cs" />
     <Compile Include="InterfaceAdapters\USB-TO-GPIO.cs" />
+    <Compile Include="SCPI_VISA_Instruments\PS_E3610xB.cs" />
     <Compile Include="SCPI_VISA_Instruments\SCPI_VISA.cs" />
     <Compile Include="Switching\USB_ERB24.cs" />
     <Compile Include="Logging\Logger.cs" />
@@ -68,7 +69,6 @@
     </Compile>
     <Compile Include="AppConfig\ConfigTests.cs" />
     <Compile Include="SCPI_VISA_Instruments\PS_E36234A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\PS_E3610xB.cs" />
     <Compile Include="SCPI_VISA_Instruments\EL_34143A.cs" />
     <Compile Include="SCPI_VISA_Instruments\WG_33509B.cs" />
     <Compile Include="SCPI_VISA_Instruments\MM_34661A.cs" />

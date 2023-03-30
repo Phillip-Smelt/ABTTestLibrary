@@ -26,7 +26,7 @@ namespace TestLibrary.AppConfig {
         protected override bool IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
         public override bool IsReadOnly() { return false; }
         protected override ConfigurationElement CreateNewElement() { return new SCPI_VISA_InstrumentElement(); }
-        protected override object GetElementKey(ConfigurationElement element) { return ((SCPI_VISA_InstrumentElement)(element)).ID; }
+        protected override Object GetElementKey(ConfigurationElement element) { return ((SCPI_VISA_InstrumentElement)(element)).ID; }
     }
 
     public class SCPI_VISA_InstrumentsSection : ConfigurationSection {
@@ -43,8 +43,9 @@ namespace TestLibrary.AppConfig {
         public String ID { get; private set; }
         public String Description { get; private set; }
         public String Address { get; private set; }
+        public String Identity { get; private set; }
         public SCPI_VISA_CATEGORIES Category { get; private set; }
-        public object Instance { get; private set; }
+        public Object Instrument { get; private set; }
 
         private SCPI_VISA_Instrument(String id, String description, String address) {
             this.ID = id;
@@ -52,44 +53,48 @@ namespace TestLibrary.AppConfig {
             this.Address = address;
 
             try {
-                String instrumentModel = SCPI_VISA.GetModel(this.Address);
-                switch (instrumentModel) {
-                    case "EL34143A":
+                AgSCPI99 agSCPI99 = new AgSCPI99(this.Address);
+                agSCPI99.SCPI.IDN.Query(out String Identity);
+                this.Identity = Identity;
+                String[] i = this.Identity.Split(SCPI_VISA.IDENTITY_SEPARATOR); // Example "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".
+
+                switch (i[1]) { // i[1] is the model.
+                    case EL_34143A.MODEL:
                         this.Category = SCPI_VISA_CATEGORIES.ElectronicLoad;
-                        this.Instance = new AgEL30000(this.Address);
+                        this.Instrument = new AgEL30000(this.Address);
                         EL_34143A.Initialize(this);
                         break;
-                    case "34461A":
+                    case MM_34661A.MODEL:
                         this.Category = SCPI_VISA_CATEGORIES.MultiMeter;
-                        this.Instance = new Ag3466x(this.Address);
+                        this.Instrument = new Ag3466x(this.Address);
                         MM_34661A.Initialize(this);
                         break;
-                    case "E36103B":
-                    case "E36105B":
+                    case PS_E36103B.MODEL:
+                    case PS_E36105B.MODEL:
                         this.Category = SCPI_VISA_CATEGORIES.PowerSupply;
-                        this.Instance = new AgE3610XB(this.Address);
+                        this.Instrument = new AgE3610XB(this.Address);
                         PS_E3610xB.Initialize(this);
                         break;
-                    case "E36234A":
+                    case PS_E36234A.MODEL:
                         this.Category = SCPI_VISA_CATEGORIES.PowerSupply;
-                        this.Instance = new AgE36200(this.Address);
+                        this.Instrument = new AgE36200(this.Address);
                         PS_E36234A.Initialize(this);
                         break;
-                    case "33509B":
+                    case WG_33509B.MODEL:
                         this.Category = SCPI_VISA_CATEGORIES.WaveformGenerator;
-                        this.Instance = new Ag33500B_33600A(this.Address);
+                        this.Instrument = new Ag33500B_33600A(this.Address);
                         WG_33509B.Initialize(this);
                         break;
                     default:
                         this.Category = SCPI_VISA_CATEGORIES.ProgrammableInstrument;
-                        this.Instance = new AgSCPI99(this.Address);
+                        this.Instrument = new AgSCPI99(this.Address);
                         PI_SCPI99.Initialize(this);
-                        Logger.UnexpectedErrorHandler(SCPI_VISA.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument, if possible, udate Class SCPI_VISA_Instrument, adding '{instrumentModel}'"));
+                        Logger.UnexpectedErrorHandler(SCPI_VISA.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument, if possible, udate Class SCPI_VISA_Instrument, adding '{i[1]}'"));
                         break;
                 }
             } catch (Exception e) {
-                String[] a = address.Split(':');
-                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(this, $"Check to see if SCPI VISA Instrument is powered and it's {a[0]} bus is communicating."), e);
+                String[] a = this.Address.Split(SCPI_VISA.ADDRESS_SEPARATOR); // Example: "USB0::0x2A8D::0x1602::MY61001983::0::INSTR".
+                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(this, $"Check to see if SCPI VISA Instrument is powered and it's {a[0]} bus is communicating."), e); // a[0] is the bus.
             }
         }
 

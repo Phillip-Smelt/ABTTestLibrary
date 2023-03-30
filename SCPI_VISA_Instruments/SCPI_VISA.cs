@@ -36,24 +36,34 @@ namespace TestLibrary.SCPI_VISA_Instruments {
     }
 
     public static class SCPI_VISA {
+        // NOTE: Unlike all other classes in TestLibrary.SCPI_VISA_Instruments, SCPI_VISA utilizes only VISA addresses, not Instrument objects contained in their SCPI_VISA_Instrument objects.
+        //  - Thus SCPI_VISA has to inefficiently create temporary AgSCPI99 objects for each method, disposed immediately after use.
         public static String CHANNEL_1 = "(@1)";
         public static String CHANNEL_2 = "(@2)";
         public static String CHANNEL_1_2 = "(@1:2)";
         public const String UNKNOWN = "Unknown.";
-        public const Char IDENTITY_SEPERATOR = ',';
+        public const Char IDENTITY_SEPARATOR = ',';
+        public const Char ADDRESS_SEPARATOR = ',';
         public const Int32 WIDTH = -16;
 
-        public static void Reset(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instance).SCPI.RST.Command(); }
+        public static void Reset(SCPI_VISA_Instrument SVI) {
+            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
+            agSCPI99.SCPI.RST.Command();
+        }
 
         public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) Reset(kvp.Value); }
 
-        public static void Clear(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instance).SCPI.CLS.Command(); }
+        public static void Clear(SCPI_VISA_Instrument SVI) {
+            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
+            agSCPI99.SCPI.CLS.Command();
+        }
 
         public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             Clear(SVI);
-            ((AgSCPI99)SVI.Instance).SCPI.TST.Query(out Int32 selfTestResult);
+            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
+            agSCPI99.SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) throw new InvalidOperationException(GetErrorMessage(SVI));
         }
 
@@ -61,33 +71,41 @@ namespace TestLibrary.SCPI_VISA_Instruments {
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             Reset(SVI); // Reset SVI to default power-on states.
-            Clear(SVI); // Clear all event registers & the Status Byte register.
             SelfTest(SVI);
         }
 
         public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) Initialize(kvp.Value); }
 
         public static Int32 QuestionCondition(SCPI_VISA_Instrument SVI) {
-            ((AgSCPI99)SVI.Instance).SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
+            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
+            agSCPI99.SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
             return ConditionRegister;
         }
 
+        public static String GetIdentity(SCPI_VISA_Instrument SVI) {
+            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
+            agSCPI99.SCPI.IDN.Query(out String Identity);
+            return Identity;
+        }
+
         public static String GetManufacturer(SCPI_VISA_Instrument SVI) {
-           ((AgSCPI99)SVI.Instance).SCPI.IDN.Query(out String Identity);
-            String[] s = Identity.Split(IDENTITY_SEPERATOR);
+            String[] s = GetIdentity(SVI).Split(IDENTITY_SEPARATOR);
             return s[0] ?? UNKNOWN;
         }
 
         public static String GetModel(SCPI_VISA_Instrument SVI) {
-            ((AgSCPI99)SVI.Instance).SCPI.IDN.Query(out String Identity);
-            String[] s = Identity.Split(IDENTITY_SEPERATOR);
+            String[] s = GetIdentity(SVI).Split(IDENTITY_SEPARATOR);
             return s[1] ?? UNKNOWN;
         }
 
-        public static void Command(String command, SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instance).Transport.Command.Invoke(command); }
+        public static void Command(String command, SCPI_VISA_Instrument SVI) {
+            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
+            agSCPI99.Transport.Command.Invoke(command);
+        }
 
         public static String Query(String query, SCPI_VISA_Instrument SVI) {
-            ((AgSCPI99)SVI.Instance).Transport.Query.Invoke(query, out String ReturnString);
+            AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);
+            agSCPI99.Transport.Query.Invoke(query, out String ReturnString);
             return ReturnString;
         }
 

@@ -13,19 +13,19 @@ namespace TestLibrary.SCPI_VISA_Instruments {
     public static class PI_SCPI99 {
         // SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows shared functionality.
         // TODO: Add wrapper methods for remaining SCPI-99 commands.  Definitely want to fully implement SCPI99's commands.
-        public static Boolean IsPI_SCPI99B(SCPI_VISA_Instrument SVI) { return (SVI.Instance.GetType() == typeof(AgSCPI99)); }
+        public static Boolean IsPI_SCPI99B(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgSCPI99)); }
 
-        public static void Reset(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instance).SCPI.RST.Command(); }
+        public static void Reset(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instrument).SCPI.RST.Command(); }
 
         public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) Reset(kvp.Value); }
 
-        public static void Clear(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instance).SCPI.CLS.Command(); }
+        public static void Clear(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instrument).SCPI.CLS.Command(); }
 
         public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) Clear(kvp.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             Clear(SVI);
-            ((AgSCPI99)SVI.Instance).SCPI.TST.Query(out Int32 selfTestResult);
+            ((AgSCPI99)SVI.Instrument).SCPI.TST.Query(out Int32 selfTestResult);
             if (selfTestResult != 0) throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI));
         }
 
@@ -40,29 +40,29 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) Initialize(kvp.Value); }
 
         public static Int32 QuestionCondition(SCPI_VISA_Instrument SVI) {
-            ((AgSCPI99)SVI.Instance).SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
+            ((AgSCPI99)SVI.Instrument).SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
             return ConditionRegister;
         }
 
         public static String GetIdentity(SCPI_VISA_Instrument SVI) {
-            ((AgSCPI99)SVI.Instance).SCPI.IDN.Query(out String Identity);
+            ((AgSCPI99)SVI.Instrument).SCPI.IDN.Query(out String Identity);
             return Identity;
         }
 
         public static String GetManufacturer(SCPI_VISA_Instrument SVI) {
-            String[] s = GetIdentity(SVI).Split(SCPI_VISA.IDENTITY_SEPERATOR);
+            String[] s = GetIdentity(SVI).Split(SCPI_VISA.IDENTITY_SEPARATOR);
             return s[0] ?? SCPI_VISA.UNKNOWN;
         }
 
         public static String GetModel(SCPI_VISA_Instrument SVI) {
-            String[] s = GetIdentity(SVI).Split(SCPI_VISA.IDENTITY_SEPERATOR);
+            String[] s = GetIdentity(SVI).Split(SCPI_VISA.IDENTITY_SEPARATOR);
             return s[1] ?? SCPI_VISA.UNKNOWN;
         }
 
-        public static void Command(String command, SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instance).Transport.Command.Invoke(command); }
+        public static void Command(String command, SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instrument).Transport.Command.Invoke(command); }
 
         public static String Query(String query, SCPI_VISA_Instrument SVI) {
-            ((AgSCPI99)SVI.Instance).Transport.Query.Invoke(query, out String ReturnString);
+            ((AgSCPI99)SVI.Instrument).Transport.Query.Invoke(query, out String ReturnString);
             return ReturnString;
         }
     }
