@@ -9,6 +9,7 @@ using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 using TestLibrary.SCPI_VISA_Instruments;
 using TestLibrary.Logging;
+using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00.SCPI.SYSTem.PERSona.MODel;
 
 namespace TestLibrary.AppConfig {
     public class SCPI_VISA_InstrumentElement : ConfigurationElement {
@@ -56,9 +57,9 @@ namespace TestLibrary.AppConfig {
                 AgSCPI99 agSCPI99 = new AgSCPI99(this.Address);
                 agSCPI99.SCPI.IDN.Query(out String Identity);
                 this.Identity = Identity;
-                String[] i = this.Identity.Split(SCPI_VISA.IDENTITY_SEPARATOR); // Example "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".
+                String[] identity = this.Identity.Split(SCPI_VISA.IDENTITY_SEPARATOR);
 
-                switch (i[1]) { // i[1] is the model.
+                switch (identity[(Int32)SCPI_IDENTITY.Model]) {
                     case EL_34143A.MODEL:
                         this.Category = SCPI_VISA_CATEGORIES.ElectronicLoad;
                         this.Instrument = new AgEL30000(this.Address);
@@ -89,12 +90,11 @@ namespace TestLibrary.AppConfig {
                         this.Category = SCPI_VISA_CATEGORIES.ProgrammableInstrument;
                         this.Instrument = new AgSCPI99(this.Address);
                         PI_SCPI99.Initialize(this);
-                        Logger.UnexpectedErrorHandler(SCPI_VISA.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument, if possible, update Class SCPI_VISA_Instrument, adding '{i[1]}'"));
+                        Logger.UnexpectedErrorHandler(SCPI_VISA.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument, if possible, update Class SCPI_VISA_Instrument, adding '{identity[(Int32)SCPI_IDENTITY.Model]}'"));
                         break;
                 }
             } catch (Exception e) {
-                String[] a = this.Address.Split(SCPI_VISA.ADDRESS_SEPARATOR); // Example: "USB0::0x2A8D::0x1602::MY61001983::0::INSTR".
-                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(this, $"Check to see if SCPI VISA Instrument is powered and it's {a[0]} bus is communicating."), e); // a[0] is the bus.
+                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(this, $"Check to see if SCPI VISA Instrument is powered and its interface communicating."), e);
             }
         }
 

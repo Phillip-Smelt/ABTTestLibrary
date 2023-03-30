@@ -11,6 +11,7 @@ using TestLibrary.AppConfig;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 namespace TestLibrary.SCPI_VISA_Instruments {
+    // NOTE: https://forums.ni.com/t5/Instrument-Control-GPIB-Serial/IVI-Drivers-Pros-and-Cons/td-p/4165671.
     public enum SCPI_VISA_CATEGORIES {
         CounterTimer,           // CT
         ElectronicLoad,         // EL
@@ -18,7 +19,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         MultiMeter,             // MM
         OscilloScope,           // OS
         PowerSupply,            // PS
-        ProgrammableInstrument, // PI (For SCPI99 compliant instruments without model specific device drivers.)
+        ProgrammableInstrument, // PI (For SCPI99 compliant VISA instruments without model specific SCPI drivers.)
         WaveformGenerator       // WG
     }
 
@@ -30,20 +31,22 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         LA1, LA2, LA3, LA4, LA5, LA6, LA7, LA8, LA9,    // Logic Analyzers 1 - 9.
         MM1, MM2, MM3, MM4, MM5, MM6, MM7, MM8, MM9,    // Multi-Meters 1 - 9.
         OS1, OS2, OS3, OS4, OS5, OS6, OS7, OS8, OS9,    // OscilloScopes 1 - 9.
-        PI1, PI2, PI3, PI4, PI5, PI6, PI7, PI8, PI9,    // Programmable Instruments 1 - 9.  For SCPI99 compliant instruments without model specific device drivers.
+        PI1, PI2, PI3, PI4, PI5, PI6, PI7, PI8, PI9,    // Programmable Instruments 1 - 9.  For SCPI99 compliant VISA instruments without model specific SCPI drivers.
         PS1, PS2, PS3, PS4, PS5, PS6, PS7, PS8, PS9,    // Power Supplies 1 - 9.
         WG1, WG2, WG3, WG4, WG5, WG6, WG7, WG8, WG9     // Waveform Generators 1 - 9.
     }
 
+    public enum SCPI_IDENTITY { Manufacturer, Model, SerialNumber, FirmwareRevision }
+    // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".
+    
     public static class SCPI_VISA {
-        // NOTE: Unlike all other classes in TestLibrary.SCPI_VISA_Instruments, SCPI_VISA utilizes only VISA addresses, not Instrument objects contained in their SCPI_VISA_Instrument objects.
+        // NOTE: Unlike all other classes in namespace TestLibrary.SCPI_VISA_Instruments, SCPI_VISA utilizes only VISA addresses, not Instrument objects contained in their SCPI_VISA_Instrument objects.
         //  - Thus SCPI_VISA has to inefficiently create temporary AgSCPI99 objects for each method, disposed immediately after use.
         public static String CHANNEL_1 = "(@1)";
         public static String CHANNEL_2 = "(@2)";
         public static String CHANNEL_1_2 = "(@1:2)";
         public const String UNKNOWN = "Unknown.";
         public const Char IDENTITY_SEPARATOR = ',';
-        public const Char ADDRESS_SEPARATOR = ',';
         public const Int32 WIDTH = -16;
 
         public static void Reset(SCPI_VISA_Instrument SVI) {
@@ -88,15 +91,15 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             return Identity;
         }
 
-        public static String GetManufacturer(SCPI_VISA_Instrument SVI) {
-            String[] s = GetIdentity(SVI).Split(IDENTITY_SEPARATOR);
-            return s[0] ?? UNKNOWN;
-        }
+        private static String[] SplitIdentity(SCPI_VISA_Instrument SVI) { return GetIdentity(SVI).Split(SCPI_VISA.IDENTITY_SEPARATOR); }
 
-        public static String GetModel(SCPI_VISA_Instrument SVI) {
-            String[] s = GetIdentity(SVI).Split(IDENTITY_SEPARATOR);
-            return s[1] ?? UNKNOWN;
-        }
+        public static String GetManufacturer(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.Manufacturer]; }
+
+        public static String GetModel(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.Model]; }
+
+        public static String GetSerialNumber(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.SerialNumber]; }
+
+        public static String GetFirmwareRevision(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.FirmwareRevision]; }
 
         public static void Command(String command, SCPI_VISA_Instrument SVI) {
             AgSCPI99 agSCPI99 = new AgSCPI99(SVI.Address);

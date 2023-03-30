@@ -49,15 +49,15 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             return Identity;
         }
 
-        public static String GetManufacturer(SCPI_VISA_Instrument SVI) {
-            String[] s = GetIdentity(SVI).Split(SCPI_VISA.IDENTITY_SEPARATOR);
-            return s[0] ?? SCPI_VISA.UNKNOWN;
-        }
+        private static String[] SplitIdentity(SCPI_VISA_Instrument SVI) { return GetIdentity(SVI).Split(SCPI_VISA.IDENTITY_SEPARATOR); }
 
-        public static String GetModel(SCPI_VISA_Instrument SVI) {
-            String[] s = GetIdentity(SVI).Split(SCPI_VISA.IDENTITY_SEPARATOR);
-            return s[1] ?? SCPI_VISA.UNKNOWN;
-        }
+        public static String GetManufacturer(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.Manufacturer]; }
+
+        public static String GetModel(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.Model]; }
+
+        public static String GetSerialNumber(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.SerialNumber]; }
+
+        public static String GetFirmwareRevision(SCPI_VISA_Instrument SVI) { return SplitIdentity(SVI)[(Int32)SCPI_IDENTITY.FirmwareRevision]; }
 
         public static void Command(String command, SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instrument).Transport.Command.Invoke(command); }
 
