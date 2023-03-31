@@ -14,25 +14,25 @@ using System.Reflection;
 namespace TestLibrary.AppConfig {
     // NOTE: https://forums.ni.com/t5/Instrument-Control-GPIB-Serial/IVI-Drivers-Pros-and-Cons/td-p/4165671.
     public enum SCPI_VISA_CATEGORIES {
-        CounterTimer,           // CT
-        ElectronicLoad,         // EL
-        LogicAnalyzer,          // LA
-        MultiMeter,             // MM
-        OscilloScope,           // OS
-        PowerSupply,            // PS
-        WaveformGenerator       // WG
+        CounterTimer,     // CT
+        ElectronicLoad,   // EL
+        LogicAnalyzer,    // LA
+        MultiMeter,       // MM
+        OscilloScope,     // OS
+        PowerSupply,      // PS
+        WaveformGenerator // WG
     }
 
     public enum SCPI_VISA_IDs {
         // NOTE: Not all SCPI_VISA_IDs are necessarily present/installed; actual configuration defined in file App.config.
-        //  - SCPI_VISA_IDs has *vastly* more capacity than needed, but doing so costs little.
-        CT1, CT2, CT3, CT4, CT5, CT6, CT7, CT8, CT9,    // Counter Timers 1 - 9.
-        EL1, EL2, EL3, EL4, EL5, EL6, EL7, EL8, EL9,    // Electronic Loads 1 - 9.
-        LA1, LA2, LA3, LA4, LA5, LA6, LA7, LA8, LA9,    // Logic Analyzers 1 - 9.
-        MM1, MM2, MM3, MM4, MM5, MM6, MM7, MM8, MM9,    // Multi-Meters 1 - 9.
-        OS1, OS2, OS3, OS4, OS5, OS6, OS7, OS8, OS9,    // OscilloScopes 1 - 9.
-        PS1, PS2, PS3, PS4, PS5, PS6, PS7, PS8, PS9,    // Power Supplies 1 - 9.
-        WG1, WG2, WG3, WG4, WG5, WG6, WG7, WG8, WG9     // Waveform Generators 1 - 9.
+        //  - SCPI_VISA_IDs has vastly more capacity than needed, but excess capacity costs little.
+        CT1, CT2, CT3, CT4, CT5, CT6, CT7, CT8, CT9, // Counter Timers 1 - 9.
+        EL1, EL2, EL3, EL4, EL5, EL6, EL7, EL8, EL9, // Electronic Loads 1 - 9.
+        LA1, LA2, LA3, LA4, LA5, LA6, LA7, LA8, LA9, // Logic Analyzers 1 - 9.
+        MM1, MM2, MM3, MM4, MM5, MM6, MM7, MM8, MM9, // Multi-Meters 1 - 9.
+        OS1, OS2, OS3, OS4, OS5, OS6, OS7, OS8, OS9, // OscilloScopes 1 - 9.
+        PS1, PS2, PS3, PS4, PS5, PS6, PS7, PS8, PS9, // Power Supplies 1 - 9.
+        WG1, WG2, WG3, WG4, WG5, WG6, WG7, WG8, WG9  // Waveform Generators 1 - 9.
     }
 
     public enum SCPI_IDENTITY { Manufacturer, Model, SerialNumber, FirmwareRevision }
