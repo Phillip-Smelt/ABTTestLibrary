@@ -35,6 +35,21 @@ namespace TestLibrary.AppConfig {
         WG1, WG2, WG3, WG4, WG5, WG6, WG7, WG8, WG9  // Waveform Generators 1 - 9.
     }
 
+    // TODO? enum SCPI_VISA_IDs_RENAMED { PRI_BIAS, SEC_BIAS, PRE_BIAS, MAIN, MM_34461A, EL_34143A, WG_33509B }
+    //
+    //  Dictionary<SCPI_VISA_IDs_RENAMED, SCPI_VISA_Ids> Instruments = new Dictionary<SCPI_VISA_IDs_RENAMED, SCPI_VISA_Ids>() {
+    //  SCPI_VISA_IDs_RENAMED.PRI_BIAS,  SCPI_VISA_IDs.PS1;
+    //  SCPI_VISA_IDs_RENAMED.SEC_BIAS,  SCPI_VISA_IDs.PS2;
+    //  SCPI_VISA_IDs_RENAMED.PRE_BIAS,  SCPI_VISA_IDs.PS3;
+    //  SCPI_VISA_IDs_RENAMED.MAIN,      SCPI_VISA_IDs.PS4;
+    //  SCPI_VISA_IDs_RENAMED.MM_34461A, SCPI_VISA_IDs.MM1;
+    //  SCPI_VISA_IDs_RENAMED.EL_34143A, SCPI_VISA_IDs.EL1;
+    //  SCPI_VISA_IDs_RENAMED.WG_33509B, SCPI_VISA_IDs.WG1; }
+    //
+    //  Thus, TestProgram's SVIs[Instruments[PRI_BIAS]] == TestLibrary's SVIs[SCPI_VISA_IDs.PS1]
+    //  
+    //  Or, could override class SCPI_VISA_Instrument, copying SVIs into a new Dictionary with renamed Keys from SCPI_VISA_IDs_RENAMED instead of SCPI_VISA_IDs.
+    //  
     public enum SCPI_IDENTITY { Manufacturer, Model, SerialNumber, FirmwareRevision }
     // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".
 
