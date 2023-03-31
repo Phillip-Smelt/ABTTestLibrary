@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace TestLibrary.AppConfig {
     public class TestElement : ConfigurationElement {
@@ -182,21 +183,15 @@ namespace TestLibrary.AppConfig {
             // Operator selects the Group they want to test, from the Dictionary of all Groups.
             // GroupSelected is Dictionary Groups' Key.
 
-            Dictionary<String, Test> tests = Test.Get();
+            Dictionary<String, Test> allTests = Test.Get();
             this.Tests = new Dictionary<String, Test>();
-            String[] g = this.Group.TestIDs.Split(Test.SPLIT_ARGUMENTS_CHAR);
-            String sTrim;
-            this.LogFormattingLength = 0;
-            foreach (String s in g) {
-                sTrim = s.Trim();
-                if (sTrim.Length > this.LogFormattingLength) this.LogFormattingLength = sTrim.Length;
-                if (!tests.ContainsKey(sTrim)) throw new InvalidOperationException($"Group '{Group.ID}' includes IDTest '{sTrim}', which isn't present in TestElements in App.config.");
-                this.Tests.Add(sTrim, tests[sTrim]);
-                // Add only Tests correlated to the Group previously selected by operator.
+            String[] groupTestIDs = this.Group.TestIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(testID => testID.Trim()).ToArray();
+            this.LogFormattingLength = groupTestIDs.OrderByDescending(testID => testID.Length).First().Length + 1;
+            foreach (String testID in groupTestIDs) {
+                if (!allTests.ContainsKey(testID)) throw new InvalidOperationException($"Group '{Group.ID}' includes Test ID '{testID}', which isn't present in TestElements in App.config.");
+                this.Tests.Add(testID, allTests[testID]); // Add only Tests correlated to the Group previously selected by operator.
             }
-            this.LogFormattingLength += 1; // Leave room for a space.
         }
-
         public static ConfigTest Get() { return new ConfigTest(); }
     }
 }

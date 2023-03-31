@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Reflection;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 using TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
@@ -12,34 +10,6 @@ using TestLibrary.AppConfig;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 namespace TestLibrary.SCPI_VISA_Instruments {
-    // NOTE: https://forums.ni.com/t5/Instrument-Control-GPIB-Serial/IVI-Drivers-Pros-and-Cons/td-p/4165671.
-    public enum SCPI_VISA_CATEGORIES {
-        CounterTimer,           // CT
-        ElectronicLoad,         // EL
-        LogicAnalyzer,          // LA
-        MultiMeter,             // MM
-        OscilloScope,           // OS
-        PowerSupply,            // PS
-        ProgrammableInstrument, // PI (For SCPI99 compliant VISA instruments without model specific SCPI drivers.)
-        WaveformGenerator       // WG
-    }
-
-    public enum SCPI_VISA_IDs {
-        // NOTE: Not all SCPI_VISA_IDs are necessarily present/installed; actual configuration defined in file App.config.
-        //  - SCPI_VISA_IDs has *vastly* more capacity than needed, but doing so costs little.
-        CT1, CT2, CT3, CT4, CT5, CT6, CT7, CT8, CT9,    // Counter Timers 1 - 9.
-        EL1, EL2, EL3, EL4, EL5, EL6, EL7, EL8, EL9,    // Electronic Loads 1 - 9.
-        LA1, LA2, LA3, LA4, LA5, LA6, LA7, LA8, LA9,    // Logic Analyzers 1 - 9.
-        MM1, MM2, MM3, MM4, MM5, MM6, MM7, MM8, MM9,    // Multi-Meters 1 - 9.
-        OS1, OS2, OS3, OS4, OS5, OS6, OS7, OS8, OS9,    // OscilloScopes 1 - 9.
-        PI1, PI2, PI3, PI4, PI5, PI6, PI7, PI8, PI9,    // Programmable Instruments 1 - 9.  For SCPI99 compliant VISA instruments without model specific SCPI drivers.
-        PS1, PS2, PS3, PS4, PS5, PS6, PS7, PS8, PS9,    // Power Supplies 1 - 9.
-        WG1, WG2, WG3, WG4, WG5, WG6, WG7, WG8, WG9     // Waveform Generators 1 - 9.
-    }
-
-    public enum SCPI_IDENTITY { Manufacturer, Model, SerialNumber, FirmwareRevision }
-    // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".
-    
     public static class SCPI_VISA {
         // NOTE: Unlike all other classes in namespace TestLibrary.SCPI_VISA_Instruments, SCPI_VISA utilizes only VISA addresses, not Instrument objects contained in their SCPI_VISA_Instrument objects.
         //  - Thus SCPI_VISA has to inefficiently create temporary AgSCPI99 objects for each method, disposed immediately after use.
@@ -48,7 +18,6 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static String CHANNEL_1_2 = "(@1:2)";
         public static String SELF_TEST_ERROR_MESSAGE = $"SCPI VISA Instrument Address '{0}' failed SelfTest.";
         public const Char IDENTITY_SEPARATOR = ',';
-        public const Int32 WIDTH = -16;
 
         public static void Reset(SCPI_VISA_Instrument SVI) { Reset(SVI.Address); }
         public static void Reset(String address) { new AgSCPI99(address).SCPI.RST.Command(); }
@@ -108,16 +77,10 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             return ReturnString;
         }
 
-        public static String GetSCPI_VISA_IntrumentInfo(SCPI_VISA_Instrument SVI, String optionalHeader = "") {
-            String SCPI_VISA_Message = (optionalHeader == "") ? "" : optionalHeader += Environment.NewLine;
-            foreach (PropertyInfo pi in SVI.GetType().GetProperties()) SCPI_VISA_Message += $"{pi.Name,WIDTH}: '{pi.GetValue(SVI)}'{Environment.NewLine}";
-            return SCPI_VISA_Message;
-        }
+        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI) { return SCPI_VISA_Instrument.GetInfo(SVI, "SCPI-VISA SCPI_VISA_Instrument failed:"); }
 
-        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI) { return GetSCPI_VISA_IntrumentInfo(SVI, "SCPI-VISA SCPI_VISA_Instrument failed:"); }
+        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage) { return $"{GetErrorMessage(SVI)}{"Error Message",SCPI_VISA_Instrument.FORMAT_WIDTH}: '{errorMessage}'.{Environment.NewLine}"; }
 
-        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage) { return $"{GetErrorMessage(SVI)}{"Error Message",WIDTH}: '{errorMessage}'.{Environment.NewLine}"; }
-
-        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage, Int32 errorNumber) { return $"{GetErrorMessage(SVI, errorMessage)}{"Error Number",WIDTH}: '{errorNumber}'.{Environment.NewLine}"; }
+        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage, Int32 errorNumber) { return $"{GetErrorMessage(SVI, errorMessage)}{"Error Number",SCPI_VISA_Instrument.FORMAT_WIDTH}: '{errorNumber}'.{Environment.NewLine}"; }
     }
 }
