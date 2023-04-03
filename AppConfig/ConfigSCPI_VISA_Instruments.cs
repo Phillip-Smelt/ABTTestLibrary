@@ -95,7 +95,7 @@ namespace TestLibrary.AppConfig {
         }
 
         public static Dictionary<String, SCPI_VISA_Instrument> Get() {
-            Dictionary<String, (String, String description, String address)> visaInstrumentElements = GetVISA_InstrumentElements();
+            Dictionary<String, (String id, String description, String address)> visaInstrumentElements = GetVISA_InstrumentElements();
             Dictionary<String, SCPI_VISA_Instrument> SVIs = new Dictionary<String, SCPI_VISA_Instrument>();
             foreach (KeyValuePair<String, (String id, String description, String address)> kvp in visaInstrumentElements) SVIs.Add(kvp.Key, new SCPI_VISA_Instrument(kvp.Value.id, kvp.Value.description, kvp.Value.address));
             return SVIs;
