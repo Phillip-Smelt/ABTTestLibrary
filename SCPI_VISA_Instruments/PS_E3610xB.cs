@@ -135,10 +135,15 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             }
         }
 
-        public static (Double VoltsDC, Double AmpsDC) MeasureVA(SCPI_VISA_Instrument SVI) {
+        public static Double MeasureV(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.MEASure.VOLTage.DC.Query(out Double voltsDC);
+            return voltsDC;
+        }
+
+
+        public static Double MeasureA(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.MEASure.CURRent.DC.Query(out Double ampsDC);
-            return (voltsDC, ampsDC);
+            return ampsDC;
         }
     }
 }

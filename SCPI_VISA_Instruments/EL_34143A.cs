@@ -145,5 +145,15 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
             ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(true, null);
         }
+
+        public static Double MeasureV(SCPI_VISA_Instrument SVI) {
+            ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.VOLTage.DC.Query(null, out Double[] voltsDC);
+            return voltsDC[0];
+        }
+
+        public static Double MeasureA(SCPI_VISA_Instrument SVI) {
+            ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(null, out Double[] ampsDC);
+            return ampsDC[0];
+        }
     }
 }
