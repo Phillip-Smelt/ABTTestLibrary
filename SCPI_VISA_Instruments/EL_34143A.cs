@@ -10,6 +10,8 @@ using TestLibrary.AppConfig;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 namespace TestLibrary.SCPI_VISA_Instruments {
+    public enum LOAD_MODE { CC, CP, CR, CV }
+
     public static class EL_34143A {
         public const String MODEL = "EL34143A";
 
@@ -75,6 +77,8 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Query(null, out String Mode);
             return Mode;
         }
+
+        public static Boolean IsMode(SCPI_VISA_Instrument SVI, LOAD_MODE loadMode) { return String.Equals(Enum.GetName(typeof(LOAD_MODE), loadMode), Mode(SVI)); }
 
         public static void Off(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(false, null); }
 

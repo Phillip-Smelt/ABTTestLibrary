@@ -60,6 +60,11 @@ namespace TestLibrary.SCPI_VISA_Instruments {
 
         public static Boolean IsOff(SCPI_VISA_Instrument SVI, String sChannel) { return !IsOn(SVI, sChannel); }
 
+        public static Boolean IsState(SCPI_VISA_Instrument SVI, BINARY State, String sChannel) {
+            if (State is BINARY.On) return IsOn(SVI, sChannel);
+            else return IsOff(SVI, sChannel);
+        }
+
         public static Boolean AreOnAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) {
             Boolean AreOn = true;
             foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E36234A(kvp.Value)) AreOn = AreOn && IsOn(kvp.Value, SCPI_VISA.CHANNEL_1) && IsOn(kvp.Value, SCPI_VISA.CHANNEL_2);
