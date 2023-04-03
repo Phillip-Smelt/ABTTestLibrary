@@ -18,15 +18,15 @@ namespace TestLibrary.SCPI_VISA_Instruments {
 
         public static void Clear(SCPI_VISA_Instrument SVI) { ((Ag3466x)SVI.Instrument).SCPI.CLS.Command(); }
 
-        public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) Clear(kvp.Value); }
+        public static void ClearAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) Clear(kvp.Value); }
 
         public static void Local(SCPI_VISA_Instrument SVI) { ((Ag3466x)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
 
-        public static void LocalAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) Local(kvp.Value); }
+        public static void LocalAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) Local(kvp.Value); }
 
         public static void Reset(SCPI_VISA_Instrument SVI) { ((Ag3466x)SVI.Instrument).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) Reset(kvp.Value); }
+        public static void ResetAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) Reset(kvp.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             ((Ag3466x)SVI.Instrument).SCPI.TST.Query(out Int32 selfTestResult);
@@ -36,7 +36,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             }
         }
 
-        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) SelfTest(kvp.Value); }
+        public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) SelfTest(kvp.Value); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             Reset(SVI); // Reset SVI to default power-on states.
@@ -44,7 +44,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             SelfTest(SVI);
         }
 
-        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) Initialize(kvp.Value); }
+        public static void InitializeAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) Initialize(kvp.Value); }
 
         public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
             ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone("AUTO", "MAXimum", out Double voltsDC);
