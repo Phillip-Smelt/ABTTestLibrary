@@ -22,13 +22,13 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static void Reset(SCPI_VISA_Instrument SVI) { Reset(SVI.Address); }
         public static void Reset(String address) { new AgSCPI99(address).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) Reset(kvp.Value); }
+        public static void ResetAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) Reset(kvp.Value); }
         public static void ResetAll(List<String> addresses) { foreach (String address in addresses) Reset(address); }
 
         public static void Clear(SCPI_VISA_Instrument SVI) { Clear(SVI.Address); }
         public static void Clear(String address) { new AgSCPI99(address).SCPI.CLS.Command(); }
         
-        public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value); }
+        public static void ClearAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value); }
         public static void ClearAll(List<String> addresses) { foreach (String address in addresses) Clear(address); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) { try { SelfTest(SVI.Address); } catch (InvalidOperationException) { throw new InvalidOperationException(GetErrorMessage(SVI, String.Format(SELF_TEST_ERROR_MESSAGE, SVI.Address))); } }
@@ -38,7 +38,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             if (selfTestResult != 0) throw new InvalidOperationException(String.Format(SELF_TEST_ERROR_MESSAGE, address));
         }
 
-        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value); }
+        public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value); }
         public static void SelfTestAll(List<String> addresses) { foreach (String address in addresses) SelfTest(address); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
@@ -50,7 +50,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             SelfTest(address);
         }
 
-        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) Initialize(kvp.Value); }
+        public static void InitializeAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) Initialize(kvp.Value); }
         public static void InitializeAll(List<String> addresses) { foreach (String address in addresses) Initialize(address); }
 
         public static Int32 QuestionCondition(SCPI_VISA_Instrument SVI) { return QuestionCondition(SVI.Address); }

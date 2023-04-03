@@ -32,7 +32,7 @@ namespace TestLibrary {
         public ConfigTest ConfigTest;
         public ConfigUUT ConfigUUT;
         public ConfigLogger ConfigLogger;
-        public Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs;
+        public Dictionary<String, SCPI_VISA_Instrument> SVIs;
         public CancellationTokenSource CancelTokenSource;
         private readonly String _appAssemblyVersion;
         private readonly String _libraryAssemblyVersion;
@@ -348,4 +348,6 @@ namespace TestLibrary {
             return codesToColors[eventCode];
         }
     }
+
+    public abstract class SCPI_VISA_IDs { }
 }

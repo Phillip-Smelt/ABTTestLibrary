@@ -28,11 +28,11 @@ namespace TestLibrary.SCPI_VISA_Instruments {
 
         public static void Reset(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instrument).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) Reset(kvp.Value); }
+        public static void ResetAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) Reset(kvp.Value); }
 
         public static void Clear(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instrument).SCPI.CLS.Command(); }
 
-        public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) Clear(kvp.Value); }
+        public static void ClearAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) Clear(kvp.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             Clear(SVI);
@@ -40,7 +40,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             if (selfTestResult != 0) throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, String.Format(SCPI_VISA.SELF_TEST_ERROR_MESSAGE, SVI.Address)));
         }
 
-        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) SelfTest(kvp.Value); }
+        public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) SelfTest(kvp.Value); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             Reset(SVI); // Reset SVI to default power-on states.
@@ -48,7 +48,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             SelfTest(SVI);
         }
 
-        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) Initialize(kvp.Value); }
+        public static void InitializeAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) Initialize(kvp.Value); }
 
         public static Int32 QuestionCondition(SCPI_VISA_Instrument SVI) {
             ((AgSCPI99)SVI.Instrument).SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);

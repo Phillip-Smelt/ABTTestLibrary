@@ -12,9 +12,9 @@ using TestLibrary.AppConfig;
 //
 namespace TestLibrary.SCPI_VISA_Instruments {
     // NOTE: SCPI99's IDN Identity Query won't return "E3610xB" in it's Identity string.  It only returns "E36103B", "E36105B" etc.
-    internal static class PS_E36103B { public const String MODEL = "E36103B"; } // PS_E36103B needed only in class TestLibrary.AppConfig.SCPI_VISA_Instrument.
+    public static class PS_E36103B { public const String MODEL = "E36103B"; } // PS_E36103B needed only in class TestLibrary.AppConfig.SCPI_VISA_Instrument.
 
-    internal static class PS_E36105B { public const String MODEL = "E36105B"; } // PS_E36105B needed only in class TestLibrary.AppConfig.SCPI_VISA_Instrument.
+    public static class PS_E36105B { public const String MODEL = "E36105B"; } // PS_E36105B needed only in class TestLibrary.AppConfig.SCPI_VISA_Instrument.
 
     public static class PS_E3610xB {
 
@@ -22,23 +22,23 @@ namespace TestLibrary.SCPI_VISA_Instruments {
 
         public static void Clear(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.CLS.Command(); }
 
-        public static void ClearAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Clear(kvp.Value); }
+        public static void ClearAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Clear(kvp.Value); }
 
         public static void Local(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
 
-        public static void LocalAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Local(kvp.Value); }
+        public static void LocalAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Local(kvp.Value); }
 
         public static void Remote(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
 
-        public static void RemoteAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Remote(kvp.Value); }
+        public static void RemoteAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Remote(kvp.Value); }
 
         public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void RemoteLockAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) RemoteLock(kvp.Value); }
+        public static void RemoteLockAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) RemoteLock(kvp.Value); }
 
         public static void Reset(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Reset(kvp.Value); }
+        public static void ResetAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Reset(kvp.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.TST.Query(out Int32 selfTestResult);
@@ -48,7 +48,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             }
         }
 
-        public static void SelfTestAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) SelfTest(kvp.Value); }
+        public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) SelfTest(kvp.Value); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             Reset(SVI); // Reset SVI to default power-on states.
@@ -59,13 +59,13 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             RemoteLock(SVI);
         }
 
-        public static void InitializeAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Initialize(kvp.Value); }
+        public static void InitializeAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Initialize(kvp.Value); }
 
         public static Boolean IsOff(SCPI_VISA_Instrument SVI) { return !IsOn(SVI); }
 
-        public static Boolean AreOnAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) {
+        public static Boolean AreOnAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) {
             Boolean AreOn = true;
-            foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) AreOn = AreOn && IsOn(kvp.Value);
+            foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) AreOn = AreOn && IsOn(kvp.Value);
             return AreOn;
         }
 
@@ -74,11 +74,11 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             return State;
         }
 
-        public static Boolean AreOffAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { return !AreOnAll(SVIs); }
+        public static Boolean AreOffAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { return !AreOnAll(SVIs); }
 
         public static void Off(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.OUTPut.STATe.Command(false); }
 
-        public static void OffAll(Dictionary<SCPI_VISA_IDs, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_IDs, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Off(kvp.Value); }
+        public static void OffAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E3610xB(kvp.Value)) Off(kvp.Value); }
 
         public static void On(SCPI_VISA_Instrument SVI, Double voltsDC, Double ampsDC, Double secondsDelayCurrentProtection = 0, Double secondsDelayMeasurement = 0) {
             try {
