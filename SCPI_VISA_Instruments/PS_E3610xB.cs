@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
+using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
@@ -65,6 +66,10 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             if (State is BINARY.On) return IsOn(SVI);
             else return IsOff(SVI);
         }
+
+        public static Boolean IsProgrammedToVDC(SCPI_VISA_Instrument SVI, Double VoltsDC, Double Delta) { return SCPI_VISA.IsCloseEnough(GetProgrammedVDC(SVI), VoltsDC, Delta); }
+
+        public static Boolean IsProgrammedToADC(SCPI_VISA_Instrument SVI, Double AmpsDC, Double Delta) { return SCPI_VISA.IsCloseEnough(GetProgrammedADC(SVI), AmpsDC, Delta); }
 
         public static Boolean IsOff(SCPI_VISA_Instrument SVI) { return !IsOn(SVI); }
 
@@ -143,9 +148,18 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             return voltsDC;
         }
 
-
         public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.MEASure.CURRent.DC.Query(out Double ampsDC);
+            return ampsDC;
+        }
+
+        public static Double GetProgrammedVDC(SCPI_VISA_Instrument SVI) {
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, out Double voltsDC);
+            return voltsDC;
+        }
+
+        public static Double GetProgrammedADC(SCPI_VISA_Instrument SVI) {
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(null, out Double ampsDC);
             return ampsDC;
         }
     }

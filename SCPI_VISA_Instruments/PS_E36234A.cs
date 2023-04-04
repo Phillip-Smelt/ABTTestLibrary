@@ -58,12 +58,16 @@ namespace TestLibrary.SCPI_VISA_Instruments {
 
         public static void InitializeAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPS_E36234A(kvp.Value)) Initialize(kvp.Value); }
 
-        public static Boolean IsOff(SCPI_VISA_Instrument SVI, String sChannel) { return !IsOn(SVI, sChannel); }
-
         public static Boolean IsState(SCPI_VISA_Instrument SVI, BINARY State, String sChannel) {
             if (State is BINARY.On) return IsOn(SVI, sChannel);
             else return IsOff(SVI, sChannel);
         }
+
+        public static Boolean IsProgrammedToVDC(SCPI_VISA_Instrument SVI, Double VoltsDC, String sChannel, Double Delta) { return SCPI_VISA.IsCloseEnough(GetProgrammedVDC(SVI, sChannel), VoltsDC, Delta); }
+
+        public static Boolean IsProgrammedToADC(SCPI_VISA_Instrument SVI, Double AmpsDC, String sChannel, Double Delta) { return SCPI_VISA.IsCloseEnough(GetProgrammedADC(SVI, sChannel), AmpsDC, Delta); }
+        
+        public static Boolean IsOff(SCPI_VISA_Instrument SVI, String sChannel) { return !IsOn(SVI, sChannel); }
 
         public static Boolean AreOnAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) {
             Boolean AreOn = true;
@@ -135,6 +139,18 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static Double MeasureADC(SCPI_VISA_Instrument SVI, String sChannel) {
             Int32 iChannel = ConvertChannel(SVI, sChannel);
             ((AgE36200)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(sChannel, out Double[] ampsDC);
+            return ampsDC[iChannel];
+        }
+
+        public static Double GetProgrammedVDC(SCPI_VISA_Instrument SVI, String sChannel) {
+            Int32 iChannel = ConvertChannel(SVI, sChannel);
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, sChannel, out Double[] voltsDC);
+            return voltsDC[iChannel];
+        }
+
+        public static Double GetProgrammedADC(SCPI_VISA_Instrument SVI, String sChannel) {
+            Int32 iChannel = ConvertChannel(SVI, sChannel);
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(null, sChannel, out Double[] ampsDC);
             return ampsDC[iChannel];
         }
 

@@ -84,5 +84,8 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage) { return $"{GetErrorMessage(SVI)}{"Error Message",SCPI_VISA_Instrument.FORMAT_WIDTH}: '{errorMessage}'.{Environment.NewLine}"; }
 
         internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage, Int32 errorNumber) { return $"{GetErrorMessage(SVI, errorMessage)}{"Error Number",SCPI_VISA_Instrument.FORMAT_WIDTH}: '{errorNumber}'.{Environment.NewLine}"; }
+
+        internal static Boolean IsCloseEnough(Double D1, Double D2, Double Delta) { return Math.Abs(D1 - D2) <= Delta; }
+        // Close is good enough for horseshoes, hand grenades, nuclear weapons, and Doubles!
     }
 }
