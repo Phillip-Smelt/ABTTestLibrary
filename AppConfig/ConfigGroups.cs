@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 
 namespace TestLibrary.AppConfig {
-    // NOTE: If TestLibrary transitions from current C# 7.3 to ≥ C# 8.0,add 'readonly'
-    // modifier to all { get; private set; } fields in namespace TestLibrary.AppConfig.
+    // NOTE: If TestLibrary transitions from current C# 7.3 to ≥ C# 8.0,add 'readonly' modifier to all { get; private set; } fields in namespace TestLibrary.AppConfig.
     public class GroupElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
         [ConfigurationProperty("Required", IsKey = false, IsRequired = true)] public Boolean Required { get { return (Boolean)base["Required"]; } }

@@ -108,7 +108,7 @@ namespace TestLibrary.AppConfig {
         }
 
         private static Dictionary<String, (String id, String description, String address)> GetVISA_InstrumentElements() {
-            SCPI_VISA_InstrumentsSection viSection = (SCPI_VISA_InstrumentsSection)ConfigurationManager.GetSection("SCPI_VISA_InstrumentsSection");
+            SCPI_VISA_InstrumentsSection viSection = (SCPI_VISA_InstrumentsSection)ConfigurationManager.GetSection("SCPI_VISA_InstrumentsSection"); 
             SCPI_VISA_InstrumentElements viElements = viSection.SCPI_VISA_InstrumentElements;
             Dictionary<String, (String id, String description, String address)> visaInstrumentElements = new Dictionary<String, (String id, String description, String address)>();
             String addresses = String.Empty;

@@ -57,6 +57,11 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         }
 
         public static void InitializeAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsEL_34143A(kvp.Value)) Initialize(kvp.Value); }
+        
+        public static Boolean IsState(SCPI_VISA_Instrument SVI, BINARY State) {
+            if (State is BINARY.On) return IsOn(SVI);
+            else return IsOff(SVI);
+        }
 
         public static Boolean IsOff(SCPI_VISA_Instrument SVI) { return !IsOn(SVI); }
 
