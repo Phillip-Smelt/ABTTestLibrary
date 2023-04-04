@@ -128,13 +128,13 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             }
         }
 
-        public static Double MeasureV(SCPI_VISA_Instrument SVI, String sChannel) {
+        public static Double MeasureVDC(SCPI_VISA_Instrument SVI, String sChannel) {
             Int32 iChannel = ConvertChannel(SVI, sChannel);
             ((AgE36200)SVI.Instrument).SCPI.MEASure.SCALar.VOLTage.DC.Query(sChannel, out Double[] voltsDC);
             return voltsDC[iChannel];
         }
 
-        public static Double MeasureA(SCPI_VISA_Instrument SVI, String sChannel) {
+        public static Double MeasureADC(SCPI_VISA_Instrument SVI, String sChannel) {
             Int32 iChannel = ConvertChannel(SVI, sChannel);
             ((AgE36200)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(sChannel, out Double[] ampsDC);
             return ampsDC[iChannel];

@@ -10,7 +10,7 @@ using TestLibrary.AppConfig;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 namespace TestLibrary.SCPI_VISA_Instruments {
-    public enum LOAD_MODE { CC, CP, CR, CV }
+    public enum LOAD_MODE { CURR, POW, RES, VOLT }
 
     public static class EL_34143A {
         public const String MODEL = "EL34143A";
@@ -79,6 +79,10 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         }
 
         public static Boolean IsMode(SCPI_VISA_Instrument SVI, LOAD_MODE loadMode) { return String.Equals(Enum.GetName(typeof(LOAD_MODE), loadMode), Mode(SVI)); }
+
+        public static Boolean IsModeOff(SCPI_VISA_Instrument SVI, LOAD_MODE loadMode) { return IsOff(SVI) && IsMode(SVI, loadMode); }
+
+        public static Boolean IsModeOn(SCPI_VISA_Instrument SVI, LOAD_MODE loadMode) { return IsOn(SVI) && IsMode(SVI, loadMode); }
 
         public static void Off(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(false, null); }
 
@@ -150,12 +154,12 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(true, null);
         }
 
-        public static Double MeasureV(SCPI_VISA_Instrument SVI) {
+        public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
             ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.VOLTage.DC.Query(null, out Double[] voltsDC);
             return voltsDC[0];
         }
 
-        public static Double MeasureA(SCPI_VISA_Instrument SVI) {
+        public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
             ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(null, out Double[] ampsDC);
             return ampsDC[0];
         }
