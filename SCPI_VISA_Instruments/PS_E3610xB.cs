@@ -133,8 +133,6 @@ namespace TestLibrary.SCPI_VISA_Instruments {
                 ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false);
                 ((AgE3610XB)SVI.Instrument).SCPI.OUTPut.STATe.Command(true);
                 if (secondsDelayMeasurement > 0) Thread.Sleep((Int32)(secondsDelayMeasurement * 1000));
-            } catch (InvalidOperationException) {
-                throw;
             } catch (Exception e) {
                 throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI), e);
             }

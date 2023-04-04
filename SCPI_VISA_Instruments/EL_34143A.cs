@@ -88,7 +88,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
 
         public static void OffAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsEL_34143A(kvp.Value)) Off(kvp.Value); }
 
-        public static void OnConstantCurrent(SCPI_VISA_Instrument SVI, Double amps) {
+        public static void OnCURRent(SCPI_VISA_Instrument SVI, Double amps) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("CURRent", null);
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(amps, null);
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", null, out Double min);
@@ -105,7 +105,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(true, null);
         }
 
-        public static void OnConstantVoltage(SCPI_VISA_Instrument SVI, Double volts) {
+        public static void OnVOLtage(SCPI_VISA_Instrument SVI, Double volts) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("VOLTage", null);
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(volts, null);
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", null, out Double[] min);
@@ -121,7 +121,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(true, null);
         }
 
-        public static void OnConstantPower(SCPI_VISA_Instrument SVI, Double watts) {
+        public static void OnPOWer(SCPI_VISA_Instrument SVI, Double watts) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("POWer", null);
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Command(watts, null);
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Query("MINimum", null, out Double[] min);
@@ -138,7 +138,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(true, null);
         }
 
-        public static void OnConstantResistance(SCPI_VISA_Instrument SVI, Double ohms) {
+        public static void OnRESistance(SCPI_VISA_Instrument SVI, Double ohms) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("RESistance", null);
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Command(ohms, null);
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query("MINimum", null, out Double[] min);
