@@ -271,7 +271,7 @@ namespace TestLibrary {
                     return test.Result;
                 case TestISP.ClassName:
                     TestISP testISP = (TestISP)test.ClassObject;
-                    if (String.Equals(testISP.ISPResult, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
+                    if (String.Equals(testISP.ISPExpected, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestNumerical.ClassName:
                     if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");

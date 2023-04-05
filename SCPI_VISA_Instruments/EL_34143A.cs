@@ -10,9 +10,9 @@ using TestLibrary.AppConfig;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 namespace TestLibrary.SCPI_VISA_Instruments {
-    public enum MODE { CURR, POW, RES, VOLT }
+    public enum LOAD_MODE { CURR, POW, RES, VOLT }
 
-    public enum UNITS { AMPS_DC, WATTS, OHMS, VOLTS_DC }
+    public enum LOAD_UNITS { AMPS_DC, WATTS, OHMS, VOLTS_DC }
 
     public static class EL_34143A {
         public const String MODEL = "EL34143A";
@@ -85,30 +85,30 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             return Mode;
         }
 
-        public static Boolean IsMode(SCPI_VISA_Instrument SVI, MODE loadMode) { return String.Equals(Enum.GetName(typeof(MODE), loadMode), Mode(SVI)); }
+        public static Boolean IsMode(SCPI_VISA_Instrument SVI, LOAD_MODE loadMode) { return String.Equals(Enum.GetName(typeof(LOAD_MODE), loadMode), Mode(SVI)); }
 
-        public static Boolean IsValueAndUnits(SCPI_VISA_Instrument SVI, Double Value, UNITS Units) {
-            MODE mode = (MODE)(Int32)Units;
+        public static Boolean IsValueAndUnits(SCPI_VISA_Instrument SVI, Double Value, LOAD_UNITS LoadUnits) {
+            LOAD_MODE mode = (LOAD_MODE)(Int32)LoadUnits;
             Boolean stateIs = IsMode(SVI, mode);
             Double delta = 0.01;
             switch (mode) {
-                case MODE.CURR:
+                case LOAD_MODE.CURR:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(null, SCPI_VISA.CHANNEL_1, out Double ampsDC);
                     return stateIs && SCPI_VISA.IsCloseEnough(Value, ampsDC, delta);
-                case MODE.POW:
+                case LOAD_MODE.POW:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Query(null, SCPI_VISA.CHANNEL_1, out Double[] watts);
                     return stateIs && SCPI_VISA.IsCloseEnough(Value, watts[0], delta);
-                case MODE.RES:
+                case LOAD_MODE.RES:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query(null, SCPI_VISA.CHANNEL_1, out Double[] ohms);
                     return stateIs && SCPI_VISA.IsCloseEnough(Value, ohms[0], delta);
-                case MODE.VOLT:
+                case LOAD_MODE.VOLT:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, SCPI_VISA.CHANNEL_1, out Double[] voltsDC);
                     return stateIs && SCPI_VISA.IsCloseEnough(Value, voltsDC[0], delta);
                 default:
-                    String units = String.Empty;
-                    foreach (String s in Enum.GetNames(typeof(UNITS))) units += $"{s},";
-                    units.TrimEnd(',');
-                    throw new ArgumentException($"Invalid EL_34143A Unit, must be in set '{{{units}}}'.");
+                    String lu = String.Empty;
+                    foreach (String s in Enum.GetNames(typeof(LOAD_UNITS))) lu += $"{s},";
+                    lu.TrimEnd(',');
+                    throw new ArgumentException($"Invalid EL_34143A Load Unit, must be in set '{{{lu}}}'.");
             }
         }
 

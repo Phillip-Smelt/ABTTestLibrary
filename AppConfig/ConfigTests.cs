@@ -6,6 +6,9 @@ using System.IO;
 using System.Linq;
 
 namespace TestLibrary.AppConfig {
+    public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
+    public enum SI_UNITS_MODIFIERS { AC, DC, Peak, PP, NotApplicable, RMS }
+
     public class TestElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
         [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
@@ -71,7 +74,7 @@ namespace TestLibrary.AppConfig {
         public String ISPExecutableFolder;
         public String ISPExecutable;
         public String ISPExecutableArguments;
-        public String ISPResult;
+        public String ISPExpected;
 
         public TestISP(String id, String arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(arguments);
@@ -79,12 +82,12 @@ namespace TestLibrary.AppConfig {
                 $@"   Example: 'ISPExecutable=ipecmd.exe|
                                 ISPExecutableFolder=C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe|
                                 ISPExecutableArguments=C:\TBD\U1_Firmware.hex|
-                                ISPResult=0xAC0E'{Environment.NewLine}" +
+                                ISPExpected=0xAC0E'{Environment.NewLine}" +
                 $"   Actual : '{arguments}'");
             if (!argsDict.ContainsKey("ISPExecutableFolder")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'ISPExecutableFolder' key-value pair.");
             if (!argsDict.ContainsKey("ISPExecutable")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'ISPExecutable' key-value pair.");
             if (!argsDict.ContainsKey("ISPExecutableArguments")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'ISPExecutableArguments' key-value pair.");
-            if (!argsDict.ContainsKey("ISPResult")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'ISPResult' key-value pair.");
+            if (!argsDict.ContainsKey("ISPExpected")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'ISPExpected' key-value pair.");
             if (!argsDict["ISPExecutableFolder"].EndsWith(@"\")) argsDict["ISPExecutableFolder"] += @"\";
             if (!Directory.Exists(argsDict["ISPExecutableFolder"])) throw new ArgumentException($"TestElement ID '{id}' ISPExecutableFolder '{argsDict["ISPExecutableFolder"]}' does not exist.");
             if (!File.Exists(argsDict["ISPExecutableFolder"] + argsDict["ISPExecutable"])) throw new ArgumentException($"TestElement ID '{id}' ISPExecutable '{argsDict["ISPExecutableFolder"] + argsDict["ISPExecutable"]}' does not exist.");
@@ -92,7 +95,7 @@ namespace TestLibrary.AppConfig {
             this.ISPExecutableFolder = argsDict["ISPExecutableFolder"];
             this.ISPExecutable = argsDict["ISPExecutable"];
             this.ISPExecutableArguments = argsDict["ISPExecutableArguments"];
-            this.ISPResult = argsDict["ISPResult"];
+            this.ISPExpected = argsDict["ISPExpected"];
         }
     }
 
@@ -100,21 +103,21 @@ namespace TestLibrary.AppConfig {
         public new const String ClassName = nameof(TestNumerical);
         public Double High { get; private set; }
         public Double Low { get; private set; }
-        public String Unit { get; private set; }
-        public String UnitType { get; private set; }
+        public SI_UNITS SI_Units { get; private set; } = SI_UNITS.NotApplicable;
+        public SI_UNITS_MODIFIERS SI_Units_Modifier { get; private set; } = SI_UNITS_MODIFIERS.NotApplicable;
 
         public TestNumerical(String id, String arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(arguments);
             if (argsDict.Count != 4) throw new ArgumentException($"TestElement ID '{id}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $"   Example: 'High=0.004|" +
                 $"             Low=0.002|" +
-                $"             Unit=A|" +
-                $"             UnitType=DC'{Environment.NewLine}" +
+                $"             SI_Units=volts|" +
+                $"             SI_Units_Modifier=DC'{Environment.NewLine}" +
                 $"   Actual : '{arguments}'");
             if (!argsDict.ContainsKey("High")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'High' key-value pair.");
             if (!argsDict.ContainsKey("Low")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'Low' key-value pair.");
-            if (!argsDict.ContainsKey("Unit")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'Unit' key-value pair.");
-            if (!argsDict.ContainsKey("UnitType")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'UnitType' key-value pair.");
+            if (!argsDict.ContainsKey("SI_Units")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'SI_Units' key-value pair.");
+            if (!argsDict.ContainsKey("SI_Units_Modifier")) throw new ArgumentException($"TestElement ID '{id}' does not contain 'SI_Units_Modifier' key-value pair.");
 
             if (Double.TryParse(argsDict["High"], NumberStyles.Float, CultureInfo.CurrentCulture, out Double high)) this.High = high;
             else throw new ArgumentException($"TestElement ID '{id}' High '{argsDict["High"]}' ≠ System.Double.");
@@ -123,8 +126,13 @@ namespace TestLibrary.AppConfig {
             else throw new ArgumentException($"TestElement ID '{id}' Low '{argsDict["Low"]}' ≠ System.Double.");
 
             if (low > high) throw new ArgumentException($"TestElement ID '{id}' Low '{low}' > High '{high}'.");
-            this.Unit = argsDict["Unit"];
-            this.UnitType = argsDict["UnitType"];
+
+            if (Enum.GetNames(typeof(SI_UNITS)).Any(argsDict["SI_Units"].Contains)) this.SI_Units = (SI_UNITS)Enum.Parse(typeof(SI_UNITS), argsDict["SI_Units"]);
+            if (this.SI_Units is SI_UNITS.NotApplicable) {
+                this.SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;
+            } else if (Enum.GetNames(typeof(SI_UNITS_MODIFIERS)).Any(argsDict["SI_Units_Modifier"].Contains)) {
+                this.SI_Units_Modifier = (SI_UNITS_MODIFIERS)Enum.Parse(typeof(SI_UNITS_MODIFIERS), argsDict["SI_Units_Modifier"]);
+            }
         }
     }
 
@@ -148,18 +156,16 @@ namespace TestLibrary.AppConfig {
         public String Revision { get; private set; }
         public String ClassName { get; private set; }
         public object ClassObject { get; private set; }
-        public String Measurement { get; set; }
-        public String Result { get; set; }
+        public String Measurement { get; set; } = String.Empty; // Determined during test.
+        public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
 
         private Test(String id, String description, String revision, String className, String arguments) {
             this.ID = id;
             this.Description = description;
             this.Revision = revision;
             this.ClassName = className;
-            if (String.Equals(this.ClassName, TestNumerical.ClassName)) this.Measurement = Double.NaN.ToString();
-            else this.Measurement = String.Empty;
-            this.Result = EventCodes.UNSET;
             this.ClassObject = Activator.CreateInstance(Type.GetType(GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
+            if (String.Equals(this.ClassName, TestNumerical.ClassName)) this.Measurement = Double.NaN.ToString();
         }
 
         public static Dictionary<String, Test> Get() {

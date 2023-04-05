@@ -85,7 +85,7 @@ namespace TestLibrary.InterfaceAdapters {
             Connect(Description, Connector, SVIs);
             powerOnMethod();
             TestISP testISP = (TestISP)test.ClassObject;
-            (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder, testISP.ISPResult);
+            (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder, testISP.ISPExpected);
             DisConnect(Description, Connector, SVIs);
             return (StandardError, StandardOutput, ExitCode);
         }

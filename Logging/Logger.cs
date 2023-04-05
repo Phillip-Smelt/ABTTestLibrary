@@ -94,7 +94,7 @@ namespace TestLibrary.Logging {
                     break;
                 case TestISP.ClassName:
                     TestISP testISP = (TestISP)test.ClassObject;
-                    message += $"  Expected    : {testISP.ISPResult}\n";
+                    message += $"  Expected    : {testISP.ISPExpected}\n";
                     message += $"  Actual      : {test.Measurement}\n";
                     break;
                 case TestNumerical.ClassName:
@@ -102,7 +102,9 @@ namespace TestLibrary.Logging {
                     message += $"  High Limit  : {testNumerical.High:G}\n";
                     message += $"  Measurement : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}\n";
                     message += $"  Low Limit   : {testNumerical.Low:G}\n";
-                    message += $"  Units       : {testNumerical.Unit}{testNumerical.UnitType}\n";
+                    message += $"  SI Units    : {Enum.GetName(typeof(SI_UNITS), testNumerical.SI_Units)}";
+                    if (testNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message += $" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), testNumerical.SI_Units_Modifier)}";
+                    message += "\n";
                     break;
                 case TestTextual.ClassName:
                     TestTextual testTextual = (TestTextual)test.ClassObject;
