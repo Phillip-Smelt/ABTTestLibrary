@@ -12,6 +12,13 @@ using TestLibrary.AppConfig;
 // TODO: SQL Server Express: Persist test data into Microsoft SQL Server Express.
 // TODO: SQL Server Express: Create a Microsoft C# front-end exporting/report app for persisted SQL Server Express test data.  Export in CSV, report in RTF.
 // TODO: SQL Server Express: Use Logger & RTFSinks to write SQL Server Express' data to RTF then File/Save As RTF.
+//
+// NOTE: Below hopefully "value-added" wrapper methods for some commonly used Serilog commands are conveniences, not necessities.
+// NOTE: Will never fully implement wrapper methods for the complete set of Serilog commands, just some of the most commonly used ones.
+// - In general, TestLibrary's InterfaceAdapters, Logging, SCPI_VISA_Instruments & Switching namespaces exist partly to eliminate
+//   the need to reference TestLibrary's various DLLs directly from TestProgram client apps.
+// - As long as suitable wrapper methods exists in Logger, needn't directly reference Serilog from TestProgram client apps,
+//   as referencing TestLibrary suffices.
 namespace TestLibrary.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";

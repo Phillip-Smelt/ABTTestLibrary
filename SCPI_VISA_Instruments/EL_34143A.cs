@@ -9,6 +9,12 @@ using TestLibrary.AppConfig;
 //
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
+// NOTE: Below hopefully "value-added" wrapper methods for some commonly used AgEL30000 commands are conveniences, not necessities.
+// NOTE: Will never fully implement wrapper methods for the complete set of AgEL30000 commands, just some of the most commonly used ones.
+// - In general, TestLibrary's InterfaceAdapters, Logging, SCPI_VISA_Instruments & Switching namespaces exist partly to eliminate
+//   the need to reference TestLibrary's various DLLs directly from TestProgram client apps.
+// - As long as suitable wrapper methods exists in EL_34143A, needn't directly reference AgEL30000_1_2_5_1_0_6_17_114
+//   from TestProgram client apps, as referencing TestLibrary suffices.
 namespace TestLibrary.SCPI_VISA_Instruments {
     public enum LOAD_MODE { CURR, POW, RES, VOLT }
 

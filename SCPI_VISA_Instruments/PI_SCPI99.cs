@@ -9,6 +9,12 @@ using TestLibrary.AppConfig;
 //
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
+// NOTE: Below hopefully "value-added" wrapper methods for some commonly used AgSCPI99 commands are conveniences, not necessities.
+// NOTE: Will never fully implement wrapper methods for the complete set of AgSCPI99 commands, just some of the most commonly used ones.
+// - In general, TestLibrary's InterfaceAdapters, Logging, SCPI_VISA_Instruments & Switching namespaces exist partly to eliminate
+//   the need to reference TestLibrary's various DLLs directly from TestProgram client apps.
+// - As long as suitable wrapper methods exists in PI_SCPI99, needn't directly reference AgSCPI99_1_0
+//   from TestProgram client apps, as referencing TestLibrary suffices.
 namespace TestLibrary.SCPI_VISA_Instruments {
     public static class PI_SCPI99 {
         // TODO: Add wrapper methods for remaining SCPI-99 commands.  Definitely want to fully implement SCPI99's commands.

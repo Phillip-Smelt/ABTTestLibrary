@@ -24,7 +24,13 @@ namespace TestLibrary.Switching {
         //  - Dynamically discover them programmatically: https://www.mccdaq.com/pdfs/manuals/Mcculw_WebHelp/ULStart.htm.
         //  - Read them from TestLibrary's forthcoming app.config XML configuration file, then configure them dynamically/programmatically.
         //  - Pass them in from TestProgram during instantiation of TestExecutive form.
-
+        //
+        // NOTE: Below hopefully "value-added" wrapper methods for some commonly used MccDaq commands are conveniences, not necessities.
+        // NOTE: Will never fully implement wrapper methods for the complete set of MccDaq commands, just some of the most commonly used ones.
+        // - In general, TestLibrary's InterfaceAdapters, Logging, SCPI_VISA_Instruments & Switching namespaces exist partly to eliminate
+        //   the need to reference TestLibrary's various DLLs directly from TestProgram client apps.
+        // - As long as suitable wrapper methods exists in USB_ERB24, needn't directly reference MccDaq from TestProgram client apps,
+        //   as referencing TestLibrary suffices.
         public static Boolean AreReset() {
             MccBoard erb24;
             ErrorInfo ei;
