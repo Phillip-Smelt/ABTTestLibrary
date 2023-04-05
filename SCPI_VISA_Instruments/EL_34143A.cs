@@ -105,10 +105,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, SCPI_VISA.CHANNEL_1, out Double[] voltsDC);
                     return stateIs && SCPI_VISA.IsCloseEnough(Value, voltsDC[0], delta);
                 default:
-                    String lu = String.Empty;
-                    foreach (String s in Enum.GetNames(typeof(LOAD_UNITS))) lu += $"{s},";
-                    lu.TrimEnd(',');
-                    throw new ArgumentException($"Invalid EL_34143A Load Unit, must be in set '{{{lu}}}'.");
+                    throw new ArgumentException($"Invalid EL_34143A Load Unit, must be in enum '{{CURR, POW, RES, VOLT }}'.");
             }
         }
 

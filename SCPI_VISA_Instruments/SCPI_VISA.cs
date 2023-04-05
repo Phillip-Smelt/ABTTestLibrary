@@ -33,7 +33,9 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static void ClearAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value); }
         public static void ClearAll(List<String> addresses) { foreach (String address in addresses) Clear(address); }
 
-        public static void SelfTest(SCPI_VISA_Instrument SVI) { try { SelfTest(SVI.Address); } catch (InvalidOperationException) { throw new InvalidOperationException(GetErrorMessage(SVI, String.Format(SELF_TEST_ERROR_MESSAGE, SVI.Address))); } }
+        public static void SelfTest(SCPI_VISA_Instrument SVI) {
+            try { SelfTest(SVI.Address); } 
+            catch (InvalidOperationException) { throw new InvalidOperationException(GetErrorMessage(SVI, String.Format(SELF_TEST_ERROR_MESSAGE, SVI.Address))); } }
         public static void SelfTest(String address) {
             Clear(address);
             new AgSCPI99(address).SCPI.TST.Query(out Int32 selfTestResult);
