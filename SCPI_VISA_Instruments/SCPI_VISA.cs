@@ -10,7 +10,7 @@ using TestLibrary.AppConfig;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 namespace TestLibrary.SCPI_VISA_Instruments {
-    public enum BINARY { On, Off }
+    public enum STATE { ON, off }
 
     public static class SCPI_VISA {
         // NOTE: Unlike all other classes in namespace TestLibrary.SCPI_VISA_Instruments, SCPI_VISA utilizes only VISA Addresses, not Instrument objects contained in their SCPI_VISA_Instrument objects.

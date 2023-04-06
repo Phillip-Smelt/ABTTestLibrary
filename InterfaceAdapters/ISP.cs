@@ -71,9 +71,9 @@ namespace TestLibrary.InterfaceAdapters {
         }
 
         public static String ExitCode(String Description, String Connector, Test test,
-            Dictionary<String, SCPI_VISA_Instrument> SVIs, Action powerOnMethod) {
+            Dictionary<String, SCPI_VISA_Instrument> SVIs, Action<STATE> PowerOnMethod) {
             Connect(Description, Connector, SVIs);
-            powerOnMethod();
+            PowerOnMethod(STATE.ON);
             TestISP testISP = (TestISP)test.ClassObject;
             String exitCode = ProcessExitCode(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder);
             DisConnect(Description, Connector, SVIs);
@@ -81,9 +81,9 @@ namespace TestLibrary.InterfaceAdapters {
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(String Description, String Connector, Test test,
-            Dictionary<String, SCPI_VISA_Instrument> SVIs, Action powerOnMethod) {
+            Dictionary<String, SCPI_VISA_Instrument> SVIs, Action<STATE> PowerOnMethod) {
             Connect(Description, Connector, SVIs);
-            powerOnMethod();
+            PowerOnMethod(STATE.ON);
             TestISP testISP = (TestISP)test.ClassObject;
             (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder, testISP.ISPExpected);
             DisConnect(Description, Connector, SVIs);

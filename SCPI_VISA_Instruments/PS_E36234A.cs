@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using TestLibrary.AppConfig;
@@ -35,16 +34,6 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             RemoteLock(SVI);
         }
 
-        public static void On(SCPI_VISA_Instrument SVI, Double VoltsDC, Double AmpsDC, String Channel, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
-            SetVDC(SVI, VoltsDC, Channel);
-            SetADC(SVI, AmpsDC, Channel);
-            SetCurrentProtectionDelay(SVI, DelayCurrentProtectionSeconds, Channel);
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal", Channel);
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false, Channel);
-            ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command(true, Channel);
-            Thread.Sleep((Int32)(DelayMeasurementSeconds * 1000));
-        }
-
         public static Double MeasureVDC(SCPI_VISA_Instrument SVI, String Channel) {
             Int32 iChannel = ConvertChannel(SVI, Channel);
             ((AgE36200)SVI.Instrument).SCPI.MEASure.SCALar.VOLTage.DC.Query(Channel, out Double[] voltsDC);
@@ -57,15 +46,27 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             return ampsDC[iChannel];
         }
 
-        public static BINARY GetOutputState(SCPI_VISA_Instrument SVI, String Channel) {
+        public static STATE GetOutputState(SCPI_VISA_Instrument SVI, String Channel) {
             ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Query(Channel, out Boolean[] States);
-            if (States[ConvertChannel(SVI, Channel)]) return BINARY.On;
-            else return BINARY.Off;
+            if (States[ConvertChannel(SVI, Channel)]) return STATE.ON;
+            else return STATE.off;
         }
 
-        public static void SetOutputState(SCPI_VISA_Instrument SVI, BINARY State, String Channel) { ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command((State is BINARY.On), Channel); }
+        // TODO:
+        public static void SetOutputState(SCPI_VISA_Instrument SVI, STATE State, Double VoltsDC, Double AmpsDC, String Channel, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
+            SetVDC(SVI, VoltsDC, Channel);
+            SetADC(SVI, AmpsDC, Channel);
+            SetCurrentProtectionDelay(SVI, DelayCurrentProtectionSeconds, Channel);
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal", Channel);
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false, Channel);
+            ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command(true, Channel);
+            SetOutputState(SVI, State, Channel);
+            Thread.Sleep((Int32)(DelayMeasurementSeconds * 1000));
+        }
 
-        public static Boolean IsOutputState(SCPI_VISA_Instrument SVI, BINARY State, String Channel) { return (State == GetOutputState(SVI, Channel)); }
+        public static void SetOutputState(SCPI_VISA_Instrument SVI, STATE State, String Channel) { ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command((State is STATE.ON), Channel); }
+
+        public static Boolean IsOutputState(SCPI_VISA_Instrument SVI, STATE State, String Channel) { return (State == GetOutputState(SVI, Channel)); }
 
         public static Double GetVDC(SCPI_VISA_Instrument SVI, String Channel) {
             Int32 iChannel = ConvertChannel(SVI, Channel);
@@ -78,8 +79,8 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             String s;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MINimum", Channel, out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query("MAXimum", Channel, out Double[] max);
-            if ((VoltsDC < min[iChannel]) || (VoltsDC > max[iChannel])) {
-                s = $"< MINimum/MAXimum Voltage.{Environment.NewLine}"
+            if ((VoltsDC < min[iChannel]) || (max[iChannel] < VoltsDC)) {
+                s=$"MINimum/MAXimum Voltage.{Environment.NewLine}"
                 + $" - MINimum   :  Voltage={min[iChannel]} VDC.{Environment.NewLine}"
                 + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
                 + $" - MAXimum   :  Voltage={max[iChannel]} VDC.";
@@ -101,8 +102,8 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             String s;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MINimum", Channel, out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query("MAXimum", Channel, out Double[] max);
-            if ((AmpsDC < min[iChannel]) || (AmpsDC > max[iChannel])) {
-                s = $"> MINimum/MAXimum Current.{Environment.NewLine}"
+            if ((AmpsDC < min[iChannel]) || (max[iChannel] < AmpsDC)) {
+                s=$"MINimum/MAXimum Current.{Environment.NewLine}"
                 + $" - MINimum   :  Current={min[iChannel]} ADC.{Environment.NewLine}"
                 + $" - Programmed:  Current={AmpsDC} ADC.{Environment.NewLine}"
                 + $" - MAXimum   :  Current={max[iChannel]} ADC.";
@@ -124,8 +125,8 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             String s;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MINimum", Channel, out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query("MAXimum", Channel, out Double[] max);
-            if ((DelaySeconds < min[iChannel]) || (DelaySeconds > max[iChannel])) {
-                s = $"> MINimum/MAXimum Current Protection Delay.{Environment.NewLine}"
+            if ((DelaySeconds < min[iChannel]) || (max[iChannel] < DelaySeconds)) {
+                s=$"MINimum/MAXimum Current Protection Delay.{Environment.NewLine}"
                 + $" - MINimum   :  Delay={min[iChannel]} seconds.{Environment.NewLine}"
                 + $" - Programmed:  Delay={DelaySeconds} seconds.{Environment.NewLine}"
                 + $" - MAXimum   :  Delay={max[iChannel]} seconds.";
@@ -140,7 +141,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             return state[iChannel];
         }
 
-        public static void SetCurrentProtectionState(SCPI_VISA_Instrument SVI, BINARY State, String Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is BINARY.On), Channel); }
+        public static void SetCurrentProtectionState(SCPI_VISA_Instrument SVI, STATE State, String Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is STATE.ON), Channel); }
 
         private static Int32 ConvertChannel(SCPI_VISA_Instrument SVI, String Channel) {
             if (String.Equals(Channel, SCPI_VISA.CHANNEL_1)) return 0;

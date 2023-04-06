@@ -40,8 +40,8 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             RemoteLock(SVI);
         }
 
-        public static Boolean IsState(SCPI_VISA_Instrument SVI, BINARY State) {
-            if (State is BINARY.On) return IsOn(SVI);
+        public static Boolean IsState(SCPI_VISA_Instrument SVI, STATE State) {
+            if (State is STATE.ON) return IsOn(SVI);
             else return IsOff(SVI);
         }
 
