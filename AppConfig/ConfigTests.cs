@@ -127,11 +127,11 @@ namespace TestLibrary.AppConfig {
 
             if (low > high) throw new ArgumentException($"TestElement ID '{id}' Low '{low}' > High '{high}'.");
 
-            if (Enum.GetNames(typeof(SI_UNITS)).Any(argsDict["SI_Units"].Contains)) this.SI_Units = (SI_UNITS)Enum.Parse(typeof(SI_UNITS), argsDict["SI_Units"]);
+            if (Enum.GetNames(typeof(SI_UNITS)).Any(argsDict["SI_Units"].ToLower().Contains)) this.SI_Units = (SI_UNITS)Enum.Parse(typeof(SI_UNITS), argsDict["SI_Units"], ignoreCase: true);
             if (this.SI_Units is SI_UNITS.NotApplicable) {
                 this.SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;
-            } else if (Enum.GetNames(typeof(SI_UNITS_MODIFIERS)).Any(argsDict["SI_Units_Modifier"].Contains)) {
-                this.SI_Units_Modifier = (SI_UNITS_MODIFIERS)Enum.Parse(typeof(SI_UNITS_MODIFIERS), argsDict["SI_Units_Modifier"]);
+            } else if (Enum.GetNames(typeof(SI_UNITS_MODIFIERS)).Any(argsDict["SI_Units_Modifier"].ToUpper().Contains)) {
+                this.SI_Units_Modifier = (SI_UNITS_MODIFIERS)Enum.Parse(typeof(SI_UNITS_MODIFIERS), argsDict["SI_Units_Modifier"], ignoreCase: true);
             }
         }
     }
