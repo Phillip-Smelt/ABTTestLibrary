@@ -22,35 +22,11 @@ namespace TestLibrary.SCPI_VISA_Instruments {
 
         public static Boolean IsMM_34661A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(Ag3466x)); }
 
-        public static void Clear(SCPI_VISA_Instrument SVI) { ((Ag3466x)SVI.Instrument).SCPI.CLS.Command(); }
-
-        public static void ClearAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) Clear(kvp.Value); }
-
         public static void Local(SCPI_VISA_Instrument SVI) { ((Ag3466x)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
 
-        public static void LocalAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) Local(kvp.Value); }
-
-        public static void Reset(SCPI_VISA_Instrument SVI) { ((Ag3466x)SVI.Instrument).SCPI.RST.Command(); }
-
-        public static void ResetAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) Reset(kvp.Value); }
-
-        public static void SelfTest(SCPI_VISA_Instrument SVI) {
-            ((Ag3466x)SVI.Instrument).SCPI.TST.Query(out Int32 selfTestResult);
-            if (selfTestResult != 0) {
-                ((Ag3466x)SVI.Instrument).SCPI.SYSTem.ERRor.NEXT.Query(out Int32 errorNumber, out String errorMessage);
-                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, errorMessage, errorNumber));
-            }
-        }
-
-        public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) SelfTest(kvp.Value); }
-
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            Reset(SVI); // Reset SVI to default power-on states.
-            Clear(SVI); // Clear all event registers & the Status Byte register.
-            SelfTest(SVI);
+            SCPI_VISA.Initialize(SVI);
         }
-
-        public static void InitializeAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsMM_34661A(kvp.Value)) Initialize(kvp.Value); }
 
         public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
             ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone("AUTO", "MAXimum", out Double voltsDC);

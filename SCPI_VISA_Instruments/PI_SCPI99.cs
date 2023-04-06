@@ -32,29 +32,9 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         //  - Then SCPI VISA instruments utilizing this PI_SCPI99 class should work, albeit inconveniently.
         public static Boolean IsPI_SCPI99B(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgSCPI99)); }
 
-        public static void Reset(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instrument).SCPI.RST.Command(); }
-
-        public static void ResetAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) Reset(kvp.Value); }
-
-        public static void Clear(SCPI_VISA_Instrument SVI) { ((AgSCPI99)SVI.Instrument).SCPI.CLS.Command(); }
-
-        public static void ClearAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) Clear(kvp.Value); }
-
-        public static void SelfTest(SCPI_VISA_Instrument SVI) {
-            Clear(SVI);
-            ((AgSCPI99)SVI.Instrument).SCPI.TST.Query(out Int32 selfTestResult);
-            if (selfTestResult != 0) throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, String.Format(SCPI_VISA.SELF_TEST_ERROR_MESSAGE, SVI.Address)));
-        }
-
-        public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) SelfTest(kvp.Value); }
-
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            Reset(SVI); // Reset SVI to default power-on states.
-            Clear(SVI); // Clear all event registers & the Status Byte register.
-            SelfTest(SVI);
+            SCPI_VISA.Initialize(SVI);
         }
-
-        public static void InitializeAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsPI_SCPI99B(kvp.Value)) Initialize(kvp.Value); }
 
         public static Int32 QuestionCondition(SCPI_VISA_Instrument SVI) {
             ((AgSCPI99)SVI.Instrument).SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);

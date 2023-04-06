@@ -27,47 +27,19 @@ namespace TestLibrary.SCPI_VISA_Instruments {
 
         public static Boolean IsEL_34143A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgEL30000)); }
 
-        public static void Clear(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.CLS.Command(); }
-
-        public static void ClearAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsEL_34143A(kvp.Value)) Clear(kvp.Value); }
-
         public static void Local(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
-
-        public static void LocalAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsEL_34143A(kvp.Value)) Local(kvp.Value); }
 
         public static void Remote(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
 
-        public static void RemoteAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsEL_34143A(kvp.Value)) Remote(kvp.Value); }
-
         public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void RemoteLockAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsEL_34143A(kvp.Value)) RemoteLock(kvp.Value); }
-
-        public static void Reset(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.RST.Command(); }
-
-        public static void ResetAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsEL_34143A(kvp.Value)) Reset(kvp.Value); }
-
-        public static void SelfTest(SCPI_VISA_Instrument SVI) {
-            ((AgEL30000)SVI.Instrument).SCPI.TST.Query(out Int32 selfTestResult);
-            if (selfTestResult != 0) {
-                ((AgEL30000)SVI.Instrument).SCPI.SYSTem.ERRor.NEXT.Query(out Int32 errorNumber, out String errorMessage);
-                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, errorMessage, errorNumber));
-            }
-        }
-
-        public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsEL_34143A(kvp.Value)) SelfTest(kvp.Value); }
-
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            Reset(SVI); // Reset SVI to default power-on states.
-            Clear(SVI); // Clear all event registers & the Status Byte register.
-            SelfTest(SVI);
+            SCPI_VISA.Initialize(SVI);
             ((AgEL30000)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command();
             ((AgEL30000)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
             RemoteLock(SVI);
         }
 
-        public static void InitializeAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsEL_34143A(kvp.Value)) Initialize(kvp.Value); }
-        
         public static Boolean IsState(SCPI_VISA_Instrument SVI, BINARY State) {
             if (State is BINARY.On) return IsOn(SVI);
             else return IsOff(SVI);
@@ -75,18 +47,10 @@ namespace TestLibrary.SCPI_VISA_Instruments {
 
         public static Boolean IsOff(SCPI_VISA_Instrument SVI) { return !IsOn(SVI); }
 
-        public static Boolean AreOnAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) {
-            Boolean AreOn = true;
-            foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsEL_34143A(kvp.Value)) AreOn = AreOn && IsOn(kvp.Value);
-            return AreOn;
-        }
-
         public static Boolean IsOn(SCPI_VISA_Instrument SVI) {
             ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Query(out Boolean State);
             return State;
         }
-
-        public static Boolean AreOffAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { return !AreOnAll(SVIs); }
 
         public static LOAD_MODE GetLoadMode(SCPI_VISA_Instrument SVI) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Query(SCPI_VISA.CHANNEL_1, out String LoadMode);
@@ -123,8 +87,6 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static Boolean IsValueAndUnits(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_UNITS LoadUnits) { return IsValueAndMode(SVI, LoadValue, (LOAD_MODE)(Int32)LoadUnits); }
 
         public static void Off(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(false, SCPI_VISA.CHANNEL_1); }
-
-        public static void OffAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) if (IsEL_34143A(kvp.Value)) Off(kvp.Value); }
 
         public static void On(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode) {
             switch (LoadMode) {
