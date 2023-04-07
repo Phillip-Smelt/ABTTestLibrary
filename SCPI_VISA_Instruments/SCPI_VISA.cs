@@ -87,7 +87,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         //  - This would permit invoking any applicable SCPI command directly on a SCPI_VISA_Instrument.Instrument property.
         //      - Given: public dynamic Instrument { get; private set; }
         //      - Then:  Instrument.SCPI.OUTPut.STATe.Query(out Boolean state); should work for E3610xB & E36234A Power Supplies & EL34143A Electronic Load.
-        // - May ultimately implement this, obviating below methods.
+        // - May ultimately implement this, obviating below methods and need to cast public Object Instrument to specific instrument, ala ((AgE3610XB)SVI.Instrument).
 
         public static readonly String CHANNEL_1 = "(@1)";
         public static readonly String CHANNEL_2 = "(@2)";
