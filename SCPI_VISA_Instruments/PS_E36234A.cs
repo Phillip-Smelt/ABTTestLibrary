@@ -23,8 +23,8 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgE36200)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            SCPI_VISA.Initialize(SVI);
-            ((AgE36200)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command(SCPI_VISA.CHANNEL_1ε2);
+            SCPI99.Initialize(SVI);
+            ((AgE36200)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command(SCPI.CHANNEL_1ε2);
             ((AgE36200)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
             RemoteLock(SVI);
         }
@@ -47,8 +47,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             else return STATE.off;
         }
 
-        // TODO:
-        public static void SetOutputState(SCPI_VISA_Instrument SVI, STATE State, Double VoltsDC, Double AmpsDC, String Channel, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
+        public static void Set(SCPI_VISA_Instrument SVI, STATE State, Double VoltsDC, Double AmpsDC, String Channel, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
             SetVDC(SVI, VoltsDC, Channel);
             SetADC(SVI, AmpsDC, Channel);
             SetCurrentProtectionDelay(SVI, DelayCurrentProtectionSeconds, Channel);
@@ -79,12 +78,12 @@ namespace TestLibrary.SCPI_VISA_Instruments {
                 + $" - MINimum   :  Voltage={min[iChannel]} VDC.{Environment.NewLine}"
                 + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
                 + $" - MAXimum   :  Voltage={max[iChannel]} VDC.";
-                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, s));
+                throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, s));
             }
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC, Channel);
         }
 
-        public static Boolean IsVDC(SCPI_VISA_Instrument SVI, Double VoltsDC, String Channel, Double Delta) { return SCPI_VISA.IsCloseEnough(GetVDC(SVI, Channel), VoltsDC, Delta); }
+        public static Boolean IsVDC(SCPI_VISA_Instrument SVI, Double VoltsDC, String Channel, Double Delta) { return SCPI.IsCloseEnough(GetVDC(SVI, Channel), VoltsDC, Delta); }
 
         public static Double GetADC(SCPI_VISA_Instrument SVI, String Channel) {
             Int32 iChannel = ConvertChannel(SVI, Channel);
@@ -102,12 +101,12 @@ namespace TestLibrary.SCPI_VISA_Instruments {
                 + $" - MINimum   :  Current={min[iChannel]} ADC.{Environment.NewLine}"
                 + $" - Programmed:  Current={AmpsDC} ADC.{Environment.NewLine}"
                 + $" - MAXimum   :  Current={max[iChannel]} ADC.";
-                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, s));
+                throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, s));
             }
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC, Channel);
         }
 
-        public static Boolean IsADC(SCPI_VISA_Instrument SVI, Double AmpsDC, String Channel, Double Delta) { return SCPI_VISA.IsCloseEnough(GetADC(SVI, Channel), AmpsDC, Delta); }
+        public static Boolean IsADC(SCPI_VISA_Instrument SVI, Double AmpsDC, String Channel, Double Delta) { return SCPI.IsCloseEnough(GetADC(SVI, Channel), AmpsDC, Delta); }
 
         public static Double GetCurrentProtectionDelay(SCPI_VISA_Instrument SVI, String Channel) {
             Int32 iChannel = ConvertChannel(SVI, Channel);
@@ -125,7 +124,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
                 + $" - MINimum   :  Delay={min[iChannel]} seconds.{Environment.NewLine}"
                 + $" - Programmed:  Delay={DelaySeconds} seconds.{Environment.NewLine}"
                 + $" - MAXimum   :  Delay={max[iChannel]} seconds.";
-                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, s));
+                throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, s));
             }
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds, Channel);
         }
@@ -139,9 +138,9 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static void SetCurrentProtectionState(SCPI_VISA_Instrument SVI, STATE State, String Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is STATE.ON), Channel); }
 
         private static Int32 ConvertChannel(SCPI_VISA_Instrument SVI, String Channel) {
-            if (String.Equals(Channel, SCPI_VISA.CHANNEL_1)) return 0;
-            else if (String.Equals(Channel, SCPI_VISA.CHANNEL_2)) return 1;
-            else throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(SVI, $"Invalid Channel '{Channel}'"));
+            if (String.Equals(Channel, SCPI.CHANNEL_1)) return 0;
+            else if (String.Equals(Channel, SCPI.CHANNEL_2)) return 1;
+            else throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, $"Invalid Channel '{Channel}'"));
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 using TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
@@ -12,7 +11,6 @@ using TestLibrary.AppConfig;
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace TestLibrary.SCPI_VISA_Instruments {
     public static class MM_34661A {
-        // TODO: Could generics eliminate all these similar local methods, replacing with a universal set, into which are passed in the specific SCPI_VISA class?
         public const String MODEL = "34461A";
 
         public static Boolean IsMM_34661A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(Ag3466x)); }
@@ -20,7 +18,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static void Local(SCPI_VISA_Instrument SVI) { ((Ag3466x)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            SCPI_VISA.Initialize(SVI);
+            SCPI99.Initialize(SVI);
         }
 
         public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {

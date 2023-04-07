@@ -28,7 +28,7 @@ using TestLibrary.Switching;
 //  - https://github.com/Amphenol-Borisch-Technologies/TestProgram
 //  - https://github.com/Amphenol-Borisch-Technologies/TestLibraryTests
 namespace TestLibrary {
-    public abstract partial class TestExecutive : Form {
+    public abstract partial class TestExecutive : Form { 
         public ConfigTest ConfigTest;
         public ConfigUUT ConfigUUT;
         public ConfigLogger ConfigLogger;
@@ -181,7 +181,7 @@ namespace TestLibrary {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            SCPI_VISA.ResetAll(this.SVIs);
+            SCPI99.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
             if (this.ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
@@ -214,7 +214,7 @@ namespace TestLibrary {
                 kvp.Value.Result = EventCodes.UNSET;
             }
             this.ConfigUUT.EventCode = EventCodes.UNSET;
-            SCPI_VISA.ResetAll(this.SVIs);
+            SCPI99.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
             Logger.Start(this.ConfigUUT, this.ConfigLogger, this.ConfigTest, this._appAssemblyVersion, this._libraryAssemblyVersion, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
@@ -247,14 +247,14 @@ namespace TestLibrary {
         }
 
         private void StopRun(KeyValuePair<String, Test> kvp, String exceptionString) {
-            SCPI_VISA.ResetAll(this.SVIs);
+            SCPI99.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
             kvp.Value.Result = EventCodes.ERROR;
             Logger.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
         private void PostRun() {
-            SCPI_VISA.ResetAll(this.SVIs);
+            SCPI99.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(enabled: true);
@@ -349,5 +349,5 @@ namespace TestLibrary {
         }
     }
 
-    public abstract class SCPI_VISA_IDs { }
+    public abstract class SCPI_VISA_InstrumentElement_IDs { }
 }

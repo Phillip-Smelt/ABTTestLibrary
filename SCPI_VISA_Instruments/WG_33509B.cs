@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
 using TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
@@ -17,7 +16,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static Boolean IsWG_33509(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(Ag33500B_33600A)); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            SCPI_VISA.Initialize(SVI);
+            SCPI99.Initialize(SVI);
             ((Ag33500B_33600A)SVI.Instrument).SCPI.DISPlay.TEXT.CLEar.Command();
         }
     }

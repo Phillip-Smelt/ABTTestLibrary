@@ -9,7 +9,7 @@ using TestLibrary.SCPI_VISA_Instruments;
 namespace TestLibrary.InterfaceAdapters {
     public static class ISP {
         public static void Connect(String Description, String Connector, Dictionary<String, SCPI_VISA_Instrument> SVIs) {
-            SCPI_VISA.ResetAll(SVIs);
+            SCPI99.ResetAll(SVIs);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER connecting, click OK to continue.",
@@ -17,7 +17,7 @@ namespace TestLibrary.InterfaceAdapters {
         }
 
         public static void DisConnect(String Description, String Connector, Dictionary<String, SCPI_VISA_Instrument> SVIs) {
-            SCPI_VISA.ResetAll(SVIs);
+            SCPI99.ResetAll(SVIs);
             _ = MessageBox.Show($"UUT now unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Disconnect '{Description}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER disconnecting, click OK to continue.",
@@ -71,9 +71,9 @@ namespace TestLibrary.InterfaceAdapters {
         }
 
         public static String ExitCode(String Description, String Connector, Test test,
-            Dictionary<String, SCPI_VISA_Instrument> SVIs, Action<STATE> PowerOnMethod) {
+            Dictionary<String, SCPI_VISA_Instrument> SVIs, Action PowerOnMethod) {
             Connect(Description, Connector, SVIs);
-            PowerOnMethod(STATE.ON);
+            PowerOnMethod();
             TestISP testISP = (TestISP)test.ClassObject;
             String exitCode = ProcessExitCode(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder);
             DisConnect(Description, Connector, SVIs);
@@ -81,9 +81,9 @@ namespace TestLibrary.InterfaceAdapters {
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(String Description, String Connector, Test test,
-            Dictionary<String, SCPI_VISA_Instrument> SVIs, Action<STATE> PowerOnMethod) {
+            Dictionary<String, SCPI_VISA_Instrument> SVIs, Action PowerOnMethod) {
             Connect(Description, Connector, SVIs);
-            PowerOnMethod(STATE.ON);
+            PowerOnMethod();
             TestISP testISP = (TestISP)test.ClassObject;
             (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder, testISP.ISPExpected);
             DisConnect(Description, Connector, SVIs);

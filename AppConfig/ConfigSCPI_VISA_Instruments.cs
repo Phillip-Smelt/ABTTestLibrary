@@ -59,7 +59,7 @@ namespace TestLibrary.AppConfig {
             this.Address = address;
 
             try {
-                this.Identity = SCPI_VISA.GetIdentity(address, SCPI_IDENTITY.Model);
+                this.Identity = SCPI99.GetIdentity(address, SCPI_IDENTITY.Model);
 
                 switch (this.Identity) {
                     case EL_34143A.MODEL:
@@ -85,12 +85,12 @@ namespace TestLibrary.AppConfig {
                         break;
                     default:
                         this.Instrument = new AgSCPI99(this.Address);
-                        SCPI_VISA.Initialize(this);
-                        Logger.UnexpectedErrorHandler(SCPI_VISA.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument.  Functionality limited to SCPI99 commands only."));
+                        SCPI99.Initialize(this);
+                        Logger.UnexpectedErrorHandler(SCPI.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument.  Functionality limited to SCPI99 commands only."));
                         break;
                 }
             } catch (Exception e) {
-                throw new InvalidOperationException(SCPI_VISA.GetErrorMessage(this, "Check to see if SCPI VISA Instrument is powered and its interface communicating."), e);
+                throw new InvalidOperationException(SCPI.GetErrorMessage(this, "Check to see if SCPI VISA Instrument is powered and its interface communicating."), e);
             }
         }
 
