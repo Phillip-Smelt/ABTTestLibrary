@@ -4,17 +4,12 @@ using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
-//  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
+//  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 // https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
 //
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
-// NOTE: Below hopefully "value-added" wrapper methods for some commonly used AgE3610XB commands are conveniences, not necessities.
-// NOTE: Will never fully implement wrapper methods for the complete set of AgE3610XB commands, just some of the most commonly used ones.
-// - In general, TestLibrary's InterfaceAdapters, Logging, SCPI_VISA_Instruments & Switching namespaces exist partly to eliminate
-//   the need to reference TestLibrary's various DLLs directly from TestProgram client apps.
-// - As long as suitable wrapper methods exists in PS_E3610xB, needn't directly reference AgE3610XB_1_0_0_1_00
-//   from TestProgram client apps, as referencing TestLibrary suffices.
+// NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace TestLibrary.SCPI_VISA_Instruments {
     // NOTE: SCPI99's IDN Identity Query won't return "E3610xB" in it's Identity string.  It only returns "E36103B", "E36105B" etc.
     public static class PS_E36103B { public const String MODEL = "E36103B"; } // PS_E36103B needed only in class TestLibrary.AppConfig.SCPI_VISA_Instrument.

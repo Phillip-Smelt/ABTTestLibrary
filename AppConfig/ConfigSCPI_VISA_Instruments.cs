@@ -85,7 +85,7 @@ namespace TestLibrary.AppConfig {
                         break;
                     default:
                         this.Instrument = new AgSCPI99(this.Address);
-                        PI_SCPI99.Initialize(this);
+                        SCPI_VISA.Initialize(this);
                         Logger.UnexpectedErrorHandler(SCPI_VISA.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument.  Functionality limited to SCPI99 commands only."));
                         break;
                 }

@@ -4,22 +4,33 @@ using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 using TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
-//  - The Agilent.CommandExpert.ScpiNet dirvers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
+//  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 // https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
 //
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
+// NOTE: SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows common functionality.
+// NOTE: Using this SCPI_VISA class is sub-optimal when a compatible .Net VISA instrument driver is available:
+//  - The SCPI99 standard is a *small* subset of any modern SCPI VISA instrument's functionality:
+//	- In order to easily access full modern instrument capabilities, an instrument specific driver is optimal.
+//	- SCPI99 supports Command & Query statements, so any valid SCPI statements can be executed, but not as conveniently as with instrument specific drivers.
+//		- SCPI Command strings must be perfectly phrased, without syntax errors, as C#'s compiler simply passes then into the SCPI instrument's interpreter.
+//		- SCPI Query return strings must be painstakingly parsed & interpreted to extract results.
+//  - Also, the SCPI99 standard isn't always implemented consistently by instrument manufacturers:
+//	    - Assuming the SCPI99 VISA driver utilized by TestLibrary is perfectly SCPI99 compliant & bug-free.
+//	    - Assuming all manufacturer SCPI99 VISA instruments utilized by TestLibrary are perfectly SCPI99 compliant & their interpreters bug-free.
+//  - Then SCPI VISA instruments utilizing this SCPI_VISA class should work, albeit inconveniently.
 namespace TestLibrary.SCPI_VISA_Instruments {
     public enum STATE { ON, off }
 
     public static class SCPI_VISA {
         // NOTE: Unlike all other classes in namespace TestLibrary.SCPI_VISA_Instruments, SCPI_VISA utilizes only VISA Addresses, not Instrument objects contained in their SCPI_VISA_Instrument objects.
         //  - Thus SCPI_VISA has to inefficiently create temporary AgSCPI99 objects for each method, disposed immediately after use.
-        public static String CHANNEL_1 = "(@1)";
-        public static String CHANNEL_2 = "(@2)";
-        public static String CHANNEL_1_2 = "(@1:2)";
-        public static String SELF_TEST_ERROR_MESSAGE = $"SCPI VISA Instrument Address '{0}' failed SelfTest.";
+        public const String CHANNEL_1 = "(@1)";
+        public const String CHANNEL_2 = "(@2)";
+        public const String CHANNEL_1ε2 = "(@1:2)";
         public const Char IDENTITY_SEPARATOR = ',';
+        public static String SELF_TEST_ERROR_MESSAGE = $"SCPI VISA Instrument Address '{0}' failed SelfTest.";
 
         public static void Reset(SCPI_VISA_Instrument SVI) { Reset(SVI.Address); }
         public static void Reset(String Address) { new AgSCPI99(Address).SCPI.RST.Command(); }
