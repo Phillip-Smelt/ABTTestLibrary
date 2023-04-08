@@ -43,7 +43,7 @@
     <Compile Include="AppConfig\AppConfigLogger.cs" />
     <Compile Include="AppConfig\AppConfigUUT.cs" />
     <Compile Include="InterfaceAdapters\ISP.cs" />
-    <Compile Include="AppConfig\ConfigSCPI_VISA_Instruments.cs" />
+    <Compile Include="AppConfig\AppConfigSCPI_VISA_Instruments.cs" />
     <Compile Include="InterfaceAdapters\USB-TO-GPIO.cs" />
     <Compile Include="SCPI_VISA_Instruments\PS_E3610xB.cs" />
     <Compile Include="SCPI_VISA_Instruments\SCPI_VISA.cs" />

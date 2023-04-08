@@ -30,15 +30,15 @@ using TestLibrary.Switching;
 namespace TestLibrary {
     public abstract partial class TestExecutive : Form {
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
-        public readonly Dictionary<String, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get(); // TODO: May havw to revert to { get; private set; } if Keysight's SCPI classes contain state, thus must be writeable.
+        public readonly Dictionary<String, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get(); // TODO: May have to revert to { get; private set; } if Keysight's SCPI classes contain state, thus must be writeable.
         public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
-        public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by form button click event method.
+        public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by button_click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
         private readonly String _appAssemblyVersion;
         private readonly String _libraryAssemblyVersion;
         private Boolean _cancelled = false;
 
-        protected abstract Task<String> RunTestAsync(String testID);
+        protected abstract Task<String> RunTestAsync(String TestID);
 
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();

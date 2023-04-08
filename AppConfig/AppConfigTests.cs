@@ -194,11 +194,11 @@ namespace TestLibrary.AppConfig {
 
             Dictionary<String, Test> allTests = Test.Get();
             this.Tests = new Dictionary<String, Test>();
-            String[] groupTestIDs = this.Group.TestIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(testID => testID.Trim()).ToArray();
-            this.LogFormattingLength = groupTestIDs.OrderByDescending(testID => testID.Length).First().Length + 1;
-            foreach (String testID in groupTestIDs) {
-                if (!allTests.ContainsKey(testID)) throw new InvalidOperationException($"Group '{Group.ID}' includes Test ID '{testID}', which isn't present in TestElements in App.config.");
-                this.Tests.Add(testID, allTests[testID]); // Add only Tests correlated to the Group previously selected by operator.
+            String[] groupTestIDs = this.Group.TestIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToArray();
+            this.LogFormattingLength = groupTestIDs.OrderByDescending(TestID => TestID.Length).First().Length + 1;
+            foreach (String TestID in groupTestIDs) {
+                if (!allTests.ContainsKey(TestID)) throw new InvalidOperationException($"Group '{Group.ID}' includes Test ID '{TestID}', which isn't present in TestElements in App.config.");
+                this.Tests.Add(TestID, allTests[TestID]); // Add only Tests correlated to the Group previously selected by operator.
             }
         }
         public static AppConfigTest Get() { return new AppConfigTest(); }

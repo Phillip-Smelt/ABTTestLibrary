@@ -50,7 +50,7 @@ namespace TestLibrary.AppConfig {
         public readonly String Description;
         public readonly String Address;
         public readonly String Identity;
-        public readonly Object Instrument; // TODO: May havw to revert to { get; private set; } if Keysight's SCPI classes contain state, thus must be writeable.
+        public readonly Object Instrument; // TODO: May have to revert to { get; private set; } if Keysight's SCPI classes contain state, thus must be writeable.
         public const Int32 FORMAT_WIDTH = -16;
 
         private SCPI_VISA_Instrument(String id, String description, String address) {

@@ -26,7 +26,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         //	    - Assuming the SCPI99 VISA driver utilized by TestLibrary is perfectly SCPI99 compliant & bug-free.
         //	    - Assuming all manufacturer SCPI99 VISA instruments utilized by TestLibrary are perfectly SCPI99 compliant & their interpreters bug-free.
         //  - Then SCPI VISA instruments utilizing this SCPI99 class should work, albeit inconveniently.
-        private static readonly Char IDENTITY_SEPARATOR = ',';
+        private const Char IDENTITY_SEPARATOR = ',';
 
         public static void Reset(SCPI_VISA_Instrument SVI) { new AgSCPI99(SVI.Address).SCPI.RST.Command(); }
 
@@ -88,9 +88,9 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         //      - Then:  Instrument.SCPI.OUTPut.STATe.Query(out Boolean state); should work for E3610xB & E36234A Power Supplies & EL34143A Electronic Load.
         // - May ultimately implement this, obviating below methods and need to cast public Object Instrument to specific instrument, ala ((AgE3610XB)SVI.Instrument).
 
-        public static readonly String CHANNEL_1 = "(@1)";
-        public static readonly String CHANNEL_2 = "(@2)";
-        public static readonly String CHANNEL_1ε2 = "(@1:2)";
+        public const String CHANNEL_1 = "(@1)";
+        public const String CHANNEL_2 = "(@2)";
+        public const String CHANNEL_1ε2 = "(@1:2)";
         public static readonly String SELF_TEST_ERROR_MESSAGE = $"SCPI VISA Instrument Address '{0}' failed SelfTest.";
 
         public static STATE GetOutputState(SCPI_VISA_Instrument SVI) {

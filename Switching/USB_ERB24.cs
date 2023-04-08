@@ -1,23 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
 
 namespace TestLibrary.Switching {
     public static class USB_ERB24 {
-        // NOTE: This class assumes all USB-erb24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
-        // NOTE: USB-erb24 Relays are divided into 4 configurable groups, for hardware DIP switches S1 & S2.
-        //  - A :  relays 1 - 8.
-        //  - B :  relays 9 - 16.
-        //  - CL:  relays 17 - 20.
-        //  - CH:  relays 21 - 24.
-        // NOTE: USB-erb24 groups are configurable for either Non-Inverting or Inverting Iogic, via hardware DIP switch S1.
+        // NOTE: This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
+        // NOTE: USB-ERB24 Relays are divided into 4 configurable groups, for hardware DIP switches S1 & S2.
+        //  - A :  Relays 1 - 8.
+        //  - B :  Relays 9 - 16.
+        //  - CL:  Relays 17 - 20.
+        //  - CH:  Relays 21 - 24.
+        // NOTE: USB-ERB24 groups are configurable for either Non-Inverting or Inverting Iogic, via hardware DIP switch S1.
         //  - Non-Inverting:  Logic low de-energizes the relays, logic high energizes them.
         //  - Inverting:      Logic low energizes the relays, logic high de-energizes them.  
-        // NOTE: USB-erb24 groups are configurable with default power-up states, via hardware DIP switch S2.
+        // NOTE: USB-ERB24 groups are configurable with default power-up states, via hardware DIP switch S2.
         //  - Pull-Up:        Relays are energized at power-up.
         //  - Pull-Down:      Relays are de-energized at power-up.
         //  - https://www.mccdaq.com/PDFs/Manuals/usb-erb24.pdf.
-        public static readonly List<Int32> ERB24s = new List<Int32>() { 0 };
+        public enum ERB24_BOARDS : Int32 { ERB24_0, ERB24_1 }
+        public enum ERB24_RELAYS : Int32 {
+            RELAY_0, RELAY_1, RELAY_2, RELAY_3, RELAY_4, RELAY_5, RELAY_6, RELAY_7,
+            RELAY_8, RELAY_9, RELAY_10, RELAY_11, RELAY_12, RELAY_13, RELAY_14, RELAY_15,
+            RELAY_16, RELAY_17, RELAY_18, RELAY_19, RELAY_20, RELAY_21, RELAY_22, RELAY_23
+        }
         // TODO: Add 2nd USB-ERB24 board.  Use InstaCal to configure as Board Number 1.
         // NOTE: Above member ERB24s is a simple approach to defining the Test System's MCC USB-ERB24s.  Better ways:
         //  - Read them from InstaCal's cb.cfg file.
@@ -32,83 +36,75 @@ namespace TestLibrary.Switching {
         // - As long as suitable wrapper methods exists in USB_ERB24, needn't directly reference MccDaq from TestProgram client apps,
         //   as referencing TestLibrary suffices.
         public static Boolean AreReset() {
-            MccBoard erb24;
-            ErrorInfo ei;
+            ErrorInfo errorInfo;
+            MccBoard mccBoard;
             Boolean relaysAreReset = true;
             UInt16 dataValue;
-            foreach (Int32 boardNumber in ERB24s) {
-                erb24 = new MccBoard(boardNumber);
-                ei = erb24.DIn(DigitalPortType.FirstPortA, out dataValue);
-                if (ei.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(erb24, ei);
+            foreach (ERB24_BOARDS erb24_board in Enum.GetValues(typeof(ERB24_BOARDS))) {
+                mccBoard = new MccBoard((Int32)erb24_board);
+                errorInfo = mccBoard.DIn(DigitalPortType.FirstPortA, out dataValue);
+                if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
                 relaysAreReset = relaysAreReset && dataValue == 0;
-                ei = erb24.DIn(DigitalPortType.FirstPortB, out dataValue);
-                if (ei.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(erb24, ei);
+                errorInfo = mccBoard.DIn(DigitalPortType.FirstPortB, out dataValue);
+                if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
                 relaysAreReset = relaysAreReset && dataValue == 0;
-                ei = erb24.DIn(DigitalPortType.FirstPortCL, out dataValue);
-                if (ei.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(erb24, ei);
+                errorInfo = mccBoard.DIn(DigitalPortType.FirstPortCL, out dataValue);
+                if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
                 relaysAreReset = relaysAreReset && dataValue == 0;
-                ei = erb24.DIn(DigitalPortType.FirstPortCH, out dataValue);
-                if (ei.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(erb24, ei);
+                errorInfo = mccBoard.DIn(DigitalPortType.FirstPortCH, out dataValue);
+                if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
                 relaysAreReset = relaysAreReset && dataValue == 0;
             }
             return relaysAreReset;
         }
 
-        public static void Reset(List<Int32> boardNumbers) {
-            MccBoard erb24;
-            ErrorInfo ei;
-            foreach (Int32 boardNumber in boardNumbers) {
-                erb24 = new MccBoard(boardNumber);
-                ei = erb24.DOut(DigitalPortType.FirstPortA, 0);
-                if (ei.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(erb24, ei);
-                ei = erb24.DOut(DigitalPortType.FirstPortB, 0);
-                if (ei.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(erb24, ei);
-                ei = erb24.DOut(DigitalPortType.FirstPortCL, 0);
-                if (ei.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(erb24, ei);
-                ei = erb24.DOut(DigitalPortType.FirstPortCH, 0);
-                if (ei.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(erb24, ei);
-            }
+        public static void Reset(ERB24_BOARDS erb24_board) {
+            ErrorInfo errorInfo;
+            MccBoard mccBoard = new MccBoard((Int32)erb24_board);
+            errorInfo = mccBoard.DOut(DigitalPortType.FirstPortA, 0);
+            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
+            errorInfo = mccBoard.DOut(DigitalPortType.FirstPortB, 0);
+            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
+            errorInfo = mccBoard.DOut(DigitalPortType.FirstPortCL, 0);
+            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
+            errorInfo = mccBoard.DOut(DigitalPortType.FirstPortCH, 0);
+            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
         }
 
-        public static void ResetAll() { Reset(ERB24s); }
+        public static void ResetAll() { foreach (ERB24_BOARDS erb24_board in Enum.GetValues(typeof(ERB24_BOARDS))) Reset(erb24_board); }
 
-        public static void Off((Int32 board, Int32 relay) br) {
-            MccBoard erb24;
-            ErrorInfo ei;
-            erb24 = new MccBoard(br.board);
-            ei = erb24.DBitOut(DigitalPortType.FirstPortA, br.relay, DigitalLogicState.Low);
-            if (ei.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(erb24, ei);
+        public static void Off((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24) {
+            ErrorInfo errorInfo;
+            MccBoard mccBoard = new MccBoard((Int32)ERB24.Board);
+            errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA, (Int32)ERB24.Relay, DigitalLogicState.Low);
+            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
         }
 
-        public static void On((Int32 board, Int32 relay) br) {
-            MccBoard erb24;
-            ErrorInfo ei;
-            erb24 = new MccBoard(br.board);
-            ei = erb24.DBitOut(DigitalPortType.FirstPortA, br.relay, DigitalLogicState.High);
-            ei = erb24.DBitIn(DigitalPortType.FirstPortA, br.relay, out DigitalLogicState bitValue);
-            if (ei.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(erb24, ei);
+        public static void On((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24) {
+            ErrorInfo errorInfo;
+            MccBoard mccBoard = new MccBoard((Int32)ERB24.Board);
+            errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA,(Int32)ERB24.Relay, DigitalLogicState.High);
+            errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)ERB24.Relay, out DigitalLogicState bitValue);
+            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
         }
 
-        public static Boolean IsOff((Int32 board, Int32 relay) br) {
-            return !(IsOn(br));
-        }
+        public static Boolean IsOff((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24) { return !(IsOn(ERB24)); }
 
-        public static Boolean IsOn((Int32 board, Int32 relay) br) {
-            MccBoard erb24;
-            ErrorInfo ei;
-            erb24 = new MccBoard(br.board);
-            ei = erb24.DBitIn(DigitalPortType.FirstPortA, br.relay, out DigitalLogicState bitValue);
-            if (ei.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(erb24, ei);
+        public static Boolean IsOn((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24) {
+            ErrorInfo errorInfo;
+            MccBoard mccBoard = new MccBoard((Int32)ERB24.Board);
+            errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)ERB24.Relay, out DigitalLogicState bitValue);
+            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
             return (bitValue == DigitalLogicState.High);
         }
 
-        private static void MccBoardErrorHandler(MccBoard mccb, ErrorInfo ei) {
+        private static void MccBoardErrorHandler(MccBoard mccBoard, ErrorInfo errorInfo) {
             throw new InvalidOperationException(
-                $"MccBoard BoardNum   : {mccb.BoardNum}.{Environment.NewLine}" +
-                $"MccBoard BoardName  : {mccb.BoardName}.{Environment.NewLine}" +
-                $"MccBoard Descriptor : {mccb.Descriptor}.{Environment.NewLine}" +
-                $"ErrorInfo Value     : {ei.Value}.{Environment.NewLine}" +
-                $"ErrorInfo Message   : {ei.Message}.{Environment.NewLine}");
+                $"MccBoard BoardNum   : {mccBoard.BoardNum}.{Environment.NewLine}" +
+                $"MccBoard BoardName  : {mccBoard.BoardName}.{Environment.NewLine}" +
+                $"MccBoard Descriptor : {mccBoard.Descriptor}.{Environment.NewLine}" +
+                $"ErrorInfo Value     : {errorInfo.Value}.{Environment.NewLine}" +
+                $"ErrorInfo Message   : {errorInfo.Message}.{Environment.NewLine}");
         }
     }
 }
