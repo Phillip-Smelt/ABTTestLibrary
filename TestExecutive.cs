@@ -98,12 +98,12 @@ namespace TestLibrary {
             //        prior to the next Test's execution.
             //      - Note: This doesn't proactively cancel the *currently* executing Test, which runs to completion.
             //  Summary:
-            //      - If it's necessary to deterministically cancel a specific Test's execution, Microsoft's
+            //      - If necessary to deterministically cancel a specific Test's execution, Microsoft's
             //        CancellationTokenSource technique *must* be implemented by the Test Developer.
-            //      - If it's only necessary to deterministically cancel overall Test Program execution,
+            //      - If only necessary to deterministically cancel overall Test Program execution,
             //        TestLibrary's basic "Cancel before next Test" technique is already available without
             //        any Test Developer implementation needed.
-            //      - Note: Some Tests may not be safely cancellable mid-execution.
+            //      - Note that some Tests may not be safely cancellable mid-execution.
             //          - For such, simply don't implement Microsoft's CancellationTokenSource technique.
             //  https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
             //  https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
@@ -125,7 +125,9 @@ namespace TestLibrary {
             this.CancelTokenSource.Cancel();
             this._cancelled = true;
             this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
-            this.ButtonCancel.Enabled = false;  this.ButtonCancel.UseVisualStyleBackColor = false; this.ButtonCancel.BackColor = Color.Red;
+            this.ButtonCancel.Enabled = false;
+            this.ButtonCancel.UseVisualStyleBackColor = false;
+            this.ButtonCancel.BackColor = Color.Red;
         }
 
         private void ButtonStartReset(Boolean enabled) {
