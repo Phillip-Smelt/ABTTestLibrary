@@ -31,7 +31,7 @@ namespace TestLibrary.InterfaceAdapters {
         // - https://e2e.ti.com/support/power-management-group/power-management/f/power-management-forum/1132257/usb-to-gpio-the-difference-between-usb-to-gpio-and-usb-to-gpio2
         public readonly SMBusAdapter Adapter;
         public static readonly String Description = "Texas Instruments © 2006 USB Interface Adapter";
-        private static readonly USB_TO_GPIO _instance = new USB_TO_GPIO();
+        private static readonly USB_TO_GPIO _only = new USB_TO_GPIO();
         private static SAAStatus _saaStatus;
         private static BlockEncodedResult _blockEncodedResult;
         static USB_TO_GPIO() { }
@@ -47,10 +47,10 @@ namespace TestLibrary.InterfaceAdapters {
             Adapter.Set_Parallel_Mode(false);
         }
         
-        public static USB_TO_GPIO Instance { get { return _instance; } }
+        public static USB_TO_GPIO Only { get { return _only; } }
 
         public static BlockEncodedResult BlockWriteBlockReadProcessCall(Byte Address, Byte CommandCode, Byte[] WriteBlock) {
-            _blockEncodedResult = USB_TO_GPIO.Instance.Adapter.Block_Write_Block_Read_Process_Call(Address, CommandCode, WriteBlock);
+            _blockEncodedResult = USB_TO_GPIO.Only.Adapter.Block_Write_Block_Read_Process_Call(Address, CommandCode, WriteBlock);
             if (!_blockEncodedResult.Success) throw new InvalidOperationException(_blockEncodedResult.ToString());
             return _blockEncodedResult;
         }
@@ -62,7 +62,7 @@ namespace TestLibrary.InterfaceAdapters {
         }
 
         public static BlockEncodedResult ReadBlock(Byte Address, Byte CommandCode) {
-            _blockEncodedResult = USB_TO_GPIO.Instance.Adapter.Read_Block(Address, CommandCode);
+            _blockEncodedResult = USB_TO_GPIO.Only.Adapter.Read_Block(Address, CommandCode);
             if (!_blockEncodedResult.Success) throw new InvalidOperationException(_blockEncodedResult.ToString());
             return _blockEncodedResult;
         }
@@ -78,7 +78,7 @@ namespace TestLibrary.InterfaceAdapters {
         }
 
         public static SAAStatus WriteBlock(Byte Address, Byte CommandCode, Byte[] Data) {
-            _saaStatus = USB_TO_GPIO.Instance.Adapter.Write_Block(Address, CommandCode, Data);
+            _saaStatus = USB_TO_GPIO.Only.Adapter.Write_Block(Address, CommandCode, Data);
             if (_saaStatus != SAAStatus.Success) throw new InvalidOperationException(_saaStatus.ToString());
             return _saaStatus;
         }
@@ -87,7 +87,7 @@ namespace TestLibrary.InterfaceAdapters {
         // NOTE: the void WriteBlock/Byte/WordStripStatus methods exist solely to eliminate referencing TI's TIDP.SAA.dll library from TestLibrary client TestPrograms.
 
         public static SAAStatus WriteByte(Byte Address, Byte CommandCode, Byte Data) {
-            _saaStatus = USB_TO_GPIO.Instance.Adapter.Write_Byte(Address, CommandCode, Data);
+            _saaStatus = USB_TO_GPIO.Only.Adapter.Write_Byte(Address, CommandCode, Data);
             if (_saaStatus != SAAStatus.Success) throw new InvalidOperationException(_saaStatus.ToString());
             return _saaStatus;
         }
@@ -95,7 +95,7 @@ namespace TestLibrary.InterfaceAdapters {
         public static void WriteByteStripStatus(Byte Address, Byte CommandCode, Byte Data) { WriteByte(Address, CommandCode, Data); }
 
         public static SAAStatus WriteWord(Byte Address, Byte CommandCode, Byte ByteHigh, Byte ByteLow) {
-            _saaStatus = USB_TO_GPIO.Instance.Adapter.Write_Word(Address, CommandCode, ByteHigh, ByteLow);
+            _saaStatus = USB_TO_GPIO.Only.Adapter.Write_Word(Address, CommandCode, ByteHigh, ByteLow);
             if (_saaStatus != SAAStatus.Success) throw new InvalidOperationException(_saaStatus.ToString());
             return _saaStatus;
         }

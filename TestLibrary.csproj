@@ -40,8 +40,8 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AppConfig\ConfigLogger.cs" />
-    <Compile Include="AppConfig\ConfigUUT.cs" />
+    <Compile Include="AppConfig\AppConfigLogger.cs" />
+    <Compile Include="AppConfig\AppConfigUUT.cs" />
     <Compile Include="InterfaceAdapters\ISP.cs" />
     <Compile Include="AppConfig\ConfigSCPI_VISA_Instruments.cs" />
     <Compile Include="InterfaceAdapters\USB-TO-GPIO.cs" />

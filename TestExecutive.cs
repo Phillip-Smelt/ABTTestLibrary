@@ -28,32 +28,23 @@ using TestLibrary.Switching;
 //  - https://github.com/Amphenol-Borisch-Technologies/TestProgram
 //  - https://github.com/Amphenol-Borisch-Technologies/TestLibraryTests
 namespace TestLibrary {
-    public abstract partial class TestExecutive : Form { 
-        public ConfigTest ConfigTest;
-        public ConfigUUT ConfigUUT;
-        public ConfigLogger ConfigLogger;
-        public Dictionary<String, SCPI_VISA_Instrument> SVIs;
-        public CancellationTokenSource CancelTokenSource;
-        private readonly String _appAssemblyVersion;
-        private readonly String _libraryAssemblyVersion;
-        private Boolean _cancelled;
+    public abstract partial class TestExecutive : Form {
+        public AppConfigLogger ConfigLogger { get; private set; } = new AppConfigLogger();
+        public AppConfigUUT ConfigUUT { get; private set; } = new AppConfigUUT();
+        public ConfigTest ConfigTest { get; private set; } // Instantiated via user interaction; form button click event method.
+        public Dictionary<String, SCPI_VISA_Instrument> SVIs { get; private set; } = SCPI_VISA_Instrument.Get();
+        public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
+        private readonly String _appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
+        private readonly String _libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        private Boolean _cancelled = false;
 
         protected abstract Task<String> RunTestAsync(String testID);
 
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();
-            this._appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
-            this._libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             this.Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-        }
-
-        private void Form_Load(Object sender, EventArgs e) {
-            this.ConfigUUT = ConfigUUT.Get();
-            this.ConfigLogger = ConfigLogger.Get();
-            this.SVIs = SCPI_VISA_Instrument.Get();
             USB_ERB24.ResetAll();
-            this.CancelTokenSource = new CancellationTokenSource();
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
@@ -203,7 +194,7 @@ namespace TestLibrary {
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
             ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.ConfigLogger.FilePath}\"" };
             Process.Start(psi);
-            // Will fail if this.ConfigLogger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
+            // Will fail if this.Logger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
         }
 
         private void PreRun() {
@@ -214,8 +205,8 @@ namespace TestLibrary {
                 kvp.Value.Result = EventCodes.UNSET;
             }
             this.ConfigUUT.EventCode = EventCodes.UNSET;
-            SCPI99.ResetAll(this.SVIs);
             USB_ERB24.ResetAll();
+            SCPI99.ResetAll(this.SVIs);
             Logger.Start(this.ConfigUUT, this.ConfigLogger, this.ConfigTest, this._appAssemblyVersion, this._libraryAssemblyVersion, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
         }

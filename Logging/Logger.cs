@@ -23,7 +23,7 @@ namespace TestLibrary.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
 
-        public static void Start(ConfigUUT configUUT, ConfigLogger configLogger, ConfigTest configTest, String _appAssemblyVersion, String _libraryAssemblyVersion, ref RichTextBox rtfResults) {
+        public static void Start(AppConfigUUT configUUT, AppConfigLogger configLogger, ConfigTest configTest, String _appAssemblyVersion, String _libraryAssemblyVersion, ref RichTextBox rtfResults) {
             if (!configTest.Group.Required) {
                 // When non-Required Groups are executed, test data is never saved to configLogger.FilePath as Rich Text.  Never.
                 // RichTextBox only. 
@@ -125,7 +125,7 @@ namespace TestLibrary.Logging {
             Log.Information(message);
         }
 
-        public static void Stop(ConfigUUT configUUT, ConfigLogger configLogger, Group group, ref RichTextBox rtfResults) {
+        public static void Stop(AppConfigUUT configUUT, AppConfigLogger configLogger, Group group, ref RichTextBox rtfResults) {
             if (!group.Required) Log.CloseAndFlush();
             // Log Trailer isn't written when Group isn't Required, futher emphasizing test results
             // aren't valid for pass verdict/$hip disposition, only troubleshooting failures.
@@ -139,12 +139,12 @@ namespace TestLibrary.Logging {
             }
         }
 
-        private static void FileStop(ConfigUUT configUUT, ConfigLogger configLogger, Group group, ref RichTextBox rtfResults) {
+        private static void FileStop(AppConfigUUT configUUT, AppConfigLogger configLogger, Group group, ref RichTextBox rtfResults) {
             String fileName = $"{configUUT.Number}_{configUUT.SerialNumber}_{group.ID}";
             String[] files = Directory.GetFiles(configLogger.FilePath, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
-            // Will fail if invalid this.ConfigLogger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
+            // Will fail if invalid this.Logger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
             // Otherwise, files is the set of all files in config.Logger.FilePath like
-            // config.UUT.Number_Config.UUT.SerialNumber_Config.Group.ID_*.rtf.
+            // config.configUUT.Number_Config.configUUT.SerialNumber_Config.Group.ID_*.rtf.
             Int32 maxNumber = 0; String s;
             foreach (String f in files) {
                 s = f;
@@ -166,11 +166,11 @@ namespace TestLibrary.Logging {
             rtfResults.SaveFile($"{configLogger.FilePath}{fileName}");
         }
 
-        private static void SQLStart(ConfigUUT configUUT, Group group) {
+        private static void SQLStart(AppConfigUUT UUT, Group group) {
             // TODO: SQL Server Express: SQLStart.
         }
 
-        private static void SQLStop(ConfigUUT configUUT, Group group) {
+        private static void SQLStop(AppConfigUUT UUT, Group group) {
             // TODO: SQL Server Express: SQLStop.
         }
 
@@ -180,7 +180,7 @@ namespace TestLibrary.Logging {
                             $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        public static void TestEvents(ConfigUUT uut) {
+        public static void TestEvents(AppConfigUUT uut) {
             String eventCode = String.Empty;
             switch (uut.EventCode) {
                 case EventCodes.CANCEL:

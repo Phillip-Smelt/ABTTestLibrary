@@ -26,7 +26,6 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         //	    - Assuming the SCPI99 VISA driver utilized by TestLibrary is perfectly SCPI99 compliant & bug-free.
         //	    - Assuming all manufacturer SCPI99 VISA instruments utilized by TestLibrary are perfectly SCPI99 compliant & their interpreters bug-free.
         //  - Then SCPI VISA instruments utilizing this SCPI99 class should work, albeit inconveniently.
-        // TODO: Complete wrappers for all SCPI-99 commands/queries.
         private static readonly Char IDENTITY_SEPARATOR = ',';
 
         public static void Reset(SCPI_VISA_Instrument SVI) { new AgSCPI99(SVI.Address).SCPI.RST.Command(); }
