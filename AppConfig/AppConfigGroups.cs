@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 
 namespace TestLibrary.AppConfig {
-    // NOTE: If TestLibrary transitions from current C# 7.3 to ≥ C# 8.0,add 'readonly' modifier to all { get; private set; } fields in namespace TestLibrary.AppConfig.
     public class GroupElement : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
         [ConfigurationProperty("Required", IsKey = false, IsRequired = true)] public Boolean Required { get { return (Boolean)base["Required"]; } }
@@ -28,11 +27,11 @@ namespace TestLibrary.AppConfig {
         [ConfigurationProperty("GroupElements")] public GroupElements GroupElements { get { return ((GroupElements)(base["GroupElements"])); } }
     }
 
-    public class ConfigGroups {
-        public GroupsSection GroupsSection { get { return (GroupsSection)ConfigurationManager.GetSection("GroupsSection"); } }
-        public GroupElements GroupElements { get { return this.GroupsSection.GroupElements; } }
-        public IEnumerable<GroupElement> GroupElement { get { foreach (GroupElement ge in this.GroupElements) if (ge != null) yield return ge; } }
-    }
+    //public class AppConfigGroups {
+    //    public GroupsSection GroupsSection { get { return (GroupsSection)ConfigurationManager.GetSection("GroupsSection"); } }
+    //    public GroupElements GroupElements { get { return this.GroupsSection.GroupElements; } }
+    //    public IEnumerable<GroupElement> GroupElement { get { foreach (GroupElement ge in this.GroupElements) if (ge != null) yield return ge; } }
+    //}
 
     // NOTE: Possibly desirable to implement a 3rd tier of ConfigurationCollections:
     //  - Currently is Groups to Tests.
@@ -46,11 +45,11 @@ namespace TestLibrary.AppConfig {
     //      return dictionary;
     //  - Possibly desirable if there are numerous Tests, too many to easily keep track of, and organizing into SubGroups would help.
     public class Group {
-        public String ID { get; private set; }
-        public Boolean Required { get; private set; }
-        public String Revision { get; private set; }
-        public String Description { get; private set; }
-        public String TestIDs { get; private set; }
+        public readonly String ID;
+        public readonly Boolean Required;
+        public readonly String Revision;    
+        public readonly String Description;
+        public readonly String TestIDs;
 
         private Group(String id, Boolean required, String revision, String description, String testIDs) {
             this.ID = id;

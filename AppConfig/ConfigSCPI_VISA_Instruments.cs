@@ -46,11 +46,11 @@ namespace TestLibrary.AppConfig {
     //}
 
     public class SCPI_VISA_Instrument {
-        public String ID { get; private set; }
-        public String Description { get; private set; }
-        public String Address { get; private set; }
-        public String Identity { get; private set; }
-        public Object Instrument { get; private set; }
+        public readonly String ID;
+        public readonly String Description;
+        public readonly String Address;
+        public readonly String Identity;
+        public readonly Object Instrument; // TODO: May havw to revert to { get; private set; } if Keysight's SCPI classes contain state, thus must be writeable.
         public const Int32 FORMAT_WIDTH = -16;
 
         private SCPI_VISA_Instrument(String id, String description, String address) {

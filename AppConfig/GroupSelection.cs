@@ -5,8 +5,8 @@ using System.Windows.Forms;
 
 namespace TestLibrary.AppConfig {
     public partial class GroupSelect : Form {
-        public String GroupSelected;
-        internal Dictionary<String, Group> Groups { get; private set; }
+        public String GroupSelected { get; private set; }
+        internal readonly Dictionary<String, Group> Groups;
         private readonly List<String> _keysRequired;
         private readonly List<String> _keysOptional;
 

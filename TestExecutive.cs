@@ -29,19 +29,21 @@ using TestLibrary.Switching;
 //  - https://github.com/Amphenol-Borisch-Technologies/TestLibraryTests
 namespace TestLibrary {
     public abstract partial class TestExecutive : Form {
-        public AppConfigLogger ConfigLogger { get; private set; } = new AppConfigLogger();
-        public AppConfigUUT ConfigUUT { get; private set; } = new AppConfigUUT();
-        public ConfigTest ConfigTest { get; private set; } // Instantiated via user interaction; form button click event method.
-        public Dictionary<String, SCPI_VISA_Instrument> SVIs { get; private set; } = SCPI_VISA_Instrument.Get();
+        public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
+        public readonly Dictionary<String, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get(); // TODO: May havw to revert to { get; private set; } if Keysight's SCPI classes contain state, thus must be writeable.
+        public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
+        public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by form button click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
-        private readonly String _appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
-        private readonly String _libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        private readonly String _appAssemblyVersion;
+        private readonly String _libraryAssemblyVersion;
         private Boolean _cancelled = false;
 
         protected abstract Task<String> RunTestAsync(String testID);
 
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();
+            this._appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
+            this._libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             this.Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             USB_ERB24.ResetAll();
@@ -67,7 +69,7 @@ namespace TestLibrary {
         }
 
         private void ButtonSelectGroup_Click(Object sender, EventArgs e) {
-            this.ConfigTest = ConfigTest.Get();
+            this.ConfigTest = AppConfigTest.Get();
             this.Text = $"{this.ConfigUUT.Number}, {this.ConfigUUT.Description}, {this.ConfigTest.Group.ID}";
             this.FormReset();
             this.ButtonSelectGroup.Enabled = true;
@@ -194,7 +196,7 @@ namespace TestLibrary {
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
             ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.ConfigLogger.FilePath}\"" };
             Process.Start(psi);
-            // Will fail if this.Logger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
+            // Will fail if this.ConfigLogger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
         }
 
         private void PreRun() {
@@ -278,7 +280,7 @@ namespace TestLibrary {
             }
         }
 
-        private String EvaluateUUTResult(ConfigTest configTest) {
+        private String EvaluateUUTResult(AppConfigTest configTest) {
             if (!configTest.Group.Required) return EventCodes.UNSET;
             // 0th priority evaluation that precedes all others.
             if (GetResultCount(configTest.Tests, EventCodes.PASS) == configTest.Tests.Count) return EventCodes.PASS;

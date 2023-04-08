@@ -60,14 +60,14 @@
     <Compile Include="TestExecutive.Designer.cs">
       <DependentUpon>TestExecutive.cs</DependentUpon>
     </Compile>
-    <Compile Include="AppConfig\ConfigGroups.cs" />
+    <Compile Include="AppConfig\AppConfigGroups.cs" />
     <Compile Include="AppConfig\GroupSelection.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AppConfig\GroupSelection.Designer.cs">
       <DependentUpon>GroupSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="AppConfig\ConfigTests.cs" />
+    <Compile Include="AppConfig\AppConfigTests.cs" />
     <Compile Include="SCPI_VISA_Instruments\PS_E36234A.cs" />
     <Compile Include="SCPI_VISA_Instruments\EL_34143A.cs" />
     <Compile Include="SCPI_VISA_Instruments\WG_33509B.cs" />

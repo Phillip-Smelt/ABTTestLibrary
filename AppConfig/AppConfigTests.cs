@@ -57,7 +57,7 @@ namespace TestLibrary.AppConfig {
 
     public class TestCustomizable : TestAbstract {
         public new const String ClassName = nameof(TestCustomizable);
-        public Dictionary<String, String> Arguments;
+        public readonly Dictionary<String, String> Arguments;
 
         public TestCustomizable(String id, String arguments) {
             this.Arguments = TestAbstract.SplitArguments(arguments);
@@ -71,10 +71,10 @@ namespace TestLibrary.AppConfig {
 
     public class TestISP : TestAbstract {
         public new const String ClassName = nameof(TestISP);
-        public String ISPExecutableFolder;
-        public String ISPExecutable;
-        public String ISPExecutableArguments;
-        public String ISPExpected;
+        public readonly String ISPExecutableFolder;
+        public readonly String ISPExecutable;
+        public readonly String ISPExecutableArguments;
+        public readonly String ISPExpected;
 
         public TestISP(String id, String arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(arguments);
@@ -101,10 +101,10 @@ namespace TestLibrary.AppConfig {
 
     public class TestNumerical : TestAbstract {
         public new const String ClassName = nameof(TestNumerical);
-        public Double High { get; private set; }
-        public Double Low { get; private set; }
-        public SI_UNITS SI_Units { get; private set; } = SI_UNITS.NotApplicable;
-        public SI_UNITS_MODIFIERS SI_Units_Modifier { get; private set; } = SI_UNITS_MODIFIERS.NotApplicable;
+        public readonly Double High;
+        public readonly Double Low;
+        public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;
+        public readonly SI_UNITS_MODIFIERS SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;
 
         public TestNumerical(String id, String arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(arguments);
@@ -140,7 +140,8 @@ namespace TestLibrary.AppConfig {
 
     public class TestTextual : TestAbstract {
         public new const String ClassName = nameof(TestTextual);
-        public String Text { get; private set; }
+        public readonly String Text;
+
         public TestTextual(String id, String arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(arguments);
             if (argsDict.Count != 1) throw new ArgumentException($"TestElement ID '{id}' with ClassName '{ClassName}' requires 1 case-sensitive argument:{Environment.NewLine}" +
@@ -153,11 +154,11 @@ namespace TestLibrary.AppConfig {
 
     public class Test {
         internal const Char SPLIT_ARGUMENTS_CHAR = '|';
-        public String ID { get; private set; }
-        public String Description { get; private set; }
-        public String Revision { get; private set; }
-        public String ClassName { get; private set; }
-        public object ClassObject { get; private set; }
+        public readonly String ID;
+        public readonly String Description;
+        public readonly String Revision;
+        public readonly String ClassName;
+        public readonly object ClassObject;
         public String Measurement { get; set; } = String.Empty; // Determined during test.
         public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
 
@@ -179,12 +180,12 @@ namespace TestLibrary.AppConfig {
         }
     }
 
-    public class ConfigTest {
-        public Group Group { get; private set; }
-        public Dictionary<String, Test> Tests { get; private set; }
-        public Int32 LogFormattingLength { get; private set; }
+    public class AppConfigTest {
+        public readonly Group Group;
+        public readonly Dictionary<String, Test> Tests;
+        public readonly Int32 LogFormattingLength;
 
-        private ConfigTest() {
+        private AppConfigTest() {
             Dictionary<String, Group> Groups = Group.Get();
             String GroupSelected = GroupSelect.Get(Groups);
             this.Group = Groups[GroupSelected];
@@ -200,6 +201,6 @@ namespace TestLibrary.AppConfig {
                 this.Tests.Add(testID, allTests[testID]); // Add only Tests correlated to the Group previously selected by operator.
             }
         }
-        public static ConfigTest Get() { return new ConfigTest(); }
+        public static AppConfigTest Get() { return new AppConfigTest(); }
     }
 }
