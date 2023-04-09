@@ -12,7 +12,6 @@ using TestLibrary.AppConfig;
 // NOTE: Unlike all other classes in namespace TestLibrary.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
 namespace TestLibrary.SCPI_VISA_Instruments {
-    public enum STATE { ON, off }
 
     public static class SCPI99 {
         // NOTE: SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows common functionality.

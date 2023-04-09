@@ -28,6 +28,8 @@ using TestLibrary.Switching;
 //  - https://github.com/Amphenol-Borisch-Technologies/TestProgram
 //  - https://github.com/Amphenol-Borisch-Technologies/TestLibraryTests
 namespace TestLibrary {
+    public enum STATE { ON, off }
+
     public abstract partial class TestExecutive : Form {
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<String, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get(); // TODO: May have to revert to { get; private set; } if Keysight's SCPI classes contain state, thus must be writeable.
