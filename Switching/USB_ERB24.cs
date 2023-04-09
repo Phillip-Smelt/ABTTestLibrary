@@ -22,10 +22,10 @@ namespace TestLibrary.Switching {
             RELAY_8, RELAY_9, RELAY_10, RELAY_11, RELAY_12, RELAY_13, RELAY_14, RELAY_15,
             RELAY_16, RELAY_17, RELAY_18, RELAY_19, RELAY_20, RELAY_21, RELAY_22, RELAY_23
         }
-        // NOTE: Above member ERB24s is a simple approach to defining the Test System's MCC USB-ERB24s.  Other ways:
+        // NOTE: Above enums ERB24_BOARDS & ERB24_RELAYS are a simple approach to defining the Test System's MCC USB-ERB24s.  Other ways:
         //  - Read them from InstaCal's cb.cfg file.
         //  - Dynamically discover them programmatically: https://www.mccdaq.com/pdfs/manuals/Mcculw_WebHelp/ULStart.htm.
-        //
+        // NOTE: Might be useful to specify MCC Relay Boards in App.config, then check they're available during TestLibrary initialization, semi-similar to AppConfigSCPI_VISA_Instruments.
         // NOTE: Below hopefully "value-added" wrapper methods for some commonly used MccDaq commands are conveniences, not necessities.
         public static Boolean BoardsAreReset() {
             Boolean boardsAreReset = true;
