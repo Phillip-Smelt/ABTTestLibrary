@@ -13,6 +13,10 @@ using TestLibrary.AppConfig;
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
 namespace TestLibrary.SCPI_VISA_Instruments {
 
+    public enum OUTPUT { off, ON }
+    public enum LOGIC { low, HIGH }
+    public enum BINARY { zero, ONE }
+
     public static class SCPI99 {
         // NOTE: SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows common functionality.
         // NOTE: Using this SCPI99 class is sub-optimal when a compatible .Net VISA instrument driver is available:
@@ -92,14 +96,14 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public const String CHANNEL_1ε2 = "(@1:2)";
         public static readonly String SELF_TEST_ERROR_MESSAGE = $"SCPI VISA Instrument Address '{0}' failed SelfTest.";
 
-        public static STATE GetOutputState(SCPI_VISA_Instrument SVI) {
-            if (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) return STATE.off;
-            else return STATE.ON;
+        public static OUTPUT GetOutputState(SCPI_VISA_Instrument SVI) {
+            if (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) return OUTPUT.off;
+            else return OUTPUT.ON;
         }
 
-        public static void SetOutputState(SCPI_VISA_Instrument SVI, STATE OutputState) { SCPI99.Command(SVI, (OutputState is STATE.off) ? ":OUTPUT 0" : ":OUTPUT 1"); }
+        public static void SetOutputState(SCPI_VISA_Instrument SVI, OUTPUT State) { SCPI99.Command(SVI, (State is OUTPUT.off) ? ":OUTPUT 0" : ":OUTPUT 1"); }
 
-        public static Boolean IsOutputState(SCPI_VISA_Instrument SVI, STATE State) {
+        public static Boolean IsOutputState(SCPI_VISA_Instrument SVI, OUTPUT State) {
             if (GetOutputState(SVI) == State) return true;
             else return false;
         }

@@ -35,11 +35,11 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             RemoteLock(SVI);
         }
 
-        public static void SetOutputState(SCPI_VISA_Instrument SVI, STATE State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is STATE.ON, SCPI.CHANNEL_1); }
+        public static void SetOutputState(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, SCPI.CHANNEL_1); }
 
-        public static void Set(SCPI_VISA_Instrument SVI, STATE OutputState, Double LoadValue, LOAD_UNITS LoadUnits) { Set(SVI, OutputState, LoadValue, (LOAD_MODE)(Int32)LoadUnits); }
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double LoadValue, LOAD_UNITS LoadUnits) { Set(SVI, State, LoadValue, (LOAD_MODE)(Int32)LoadUnits); }
 
-        public static void Set(SCPI_VISA_Instrument SVI, STATE OutputState, Double LoadValue, LOAD_MODE LoadMode) {
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double LoadValue, LOAD_MODE LoadMode) {
             switch (LoadMode) {
                 case LOAD_MODE.CURR:
                     SetCURRent(SVI, LoadValue);
@@ -57,7 +57,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
                     throw new ArgumentException(INVALID_MODE);
             }
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
-            SetOutputState(SVI, OutputState);
+            SetOutputState(SVI, State);
         }
 
         public static LOAD_MODE GetLoadMode(SCPI_VISA_Instrument SVI) {

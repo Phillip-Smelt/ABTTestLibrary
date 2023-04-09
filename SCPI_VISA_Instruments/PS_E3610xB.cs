@@ -42,7 +42,7 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             return ampsDC;
         }
 
-        public static void Set(SCPI_VISA_Instrument SVI, STATE State, Double VoltsDC, Double AmpsDC, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
             SetVDC(SVI, VoltsDC);
             SetADC(SVI, AmpsDC);
             SetCurrentProtectionDelay(SVI, DelayCurrentProtectionSeconds);
@@ -119,6 +119,6 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             return state;
         }
 
-        public static void SetCurrentProtectionState(SCPI_VISA_Instrument SVI, STATE State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is STATE.ON)); }
+        public static void SetCurrentProtectionState(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is OUTPUT.ON)); }
     }
 }

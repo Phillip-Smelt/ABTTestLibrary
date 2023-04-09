@@ -2,6 +2,20 @@
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
 
 namespace TestLibrary.Switching {
+    // https://forum.digikey.com/t/understanding-form-a-form-b-form-c-contact-configuration/811
+    public enum RELAY { denergized, ENERGIZED }
+    // deenergized is 1st state in enum, lower-cased & normal state.  Or if preferred, non-actuated/non-activated state.
+    // ENERGIZED is 2nd state in enum, UPPER-CASED & abnormal state.  Or if preferred, ACTUATED/ACTIVATED state.
+    public enum FORM_A { no, AC }
+    // FORM_A.no; relay is deenergized and in non-activated, normally opened state.
+    // FORM_A.AC; relay is ENERGIZED in ACTIVATED, ABNORMALLY CLOSED state.
+    public enum FORM_B { nc, AO }
+    // FORM_B.nc; relay is deenergized in non-activated, normally closed state.
+    // FORM_B.AO; relay is ENERGIZED in ACTIVATED, ABNORMALLY OPENED state.
+    public enum FORM_C { noεnc, ACεAO }
+    // FORM_C.noεnc; relay is deenergized in non-activated, normally opened ε normally closed state.
+    // FORM_C.ACεAO; relay is ENERGIZED in ACTIVATED, ABNORMALLY CLOSED ε ABNORMALLY OPENED state.
+
     public static class USB_ERB24 {
         // NOTE: This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
         // NOTE: USB-ERB24 Relays are divided into 4 configurable groups, for hardware DIP switches S1 & S2.
@@ -62,18 +76,18 @@ namespace TestLibrary.Switching {
 
         public static void ResetAll() { foreach (ERB24_BOARDS erb24_board in Enum.GetValues(typeof(ERB24_BOARDS))) Reset(erb24_board); }
 
-        public static void SetState( (ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24, STATE State) {
+        public static void SetState( (ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24, FORM_C State) {
             MccBoard mccBoard = new MccBoard((Int32)ERB24.Board);
-            DigitalLogicState desiredState = (State is STATE.off) ? DigitalLogicState.Low : DigitalLogicState.High;
+            DigitalLogicState desiredState = (State is FORM_C.noεnc) ? DigitalLogicState.Low : DigitalLogicState.High;
             DBitOut(mccBoard, DigitalPortType.FirstPortA, ERB24.Relay, desiredState);
             DigitalLogicState outputState = DBitIn(mccBoard, DigitalPortType.FirstPortA, ERB24.Relay);
             if (outputState != desiredState) throw new InvalidOperationException($"MCC ERB24 '({ERB24.Board}, {ERB24.Relay})' failed to set to '{State}'.");
         }
 
-        public static STATE GetState((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24) {
+        public static FORM_C GetState((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24) {
             MccBoard mccBoard = new MccBoard((Int32)ERB24.Board);
             DigitalLogicState outputState = DBitIn(mccBoard, DigitalPortType.FirstPortA, ERB24.Relay);
-            return (outputState == DigitalLogicState.Low) ? STATE.off : STATE.ON;
+            return (outputState == DigitalLogicState.Low) ? FORM_C.noεnc : FORM_C.ACεAO;
         }
 
         private static void DBitOut(MccBoard mccBoard, DigitalPortType digitalPortType, ERB24_RELAYS erb24Relay, DigitalLogicState inputLogicState) {

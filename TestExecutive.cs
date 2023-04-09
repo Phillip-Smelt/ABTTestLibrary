@@ -319,8 +319,6 @@ namespace TestLibrary {
         }
     }
 
-    public enum STATE { ON, off }
-
     public class TestCancellationException : Exception {
         // NOTE: Only ever throw TestCancellationException from TestPrograms, never from TestLibrary.
         public TestCancellationException(String message = "") : base(message) { }
