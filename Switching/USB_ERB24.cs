@@ -12,13 +12,18 @@ namespace TestLibrary.Switching {
     // FORM_C.C_NC; relay is deenergized and in normally closed/normally open state, with common C terminal connected to NC terminal & disconnected from NO terminal.
     // FORM_C.C_NO; relay is energized and in abnormally opened/abnormally closed state, with common C terminal disconnected from NC terminal & connected to NO terminal.
     public enum FORM_C { C_NC, C_NO }
-    // NOTE: Below ERB24_BOARDS & ERB24_RELAYS enums are a simple approach to defining the Test System's MCC USB-ERB24s.
-    // Other ways:
-    //  - Read them from InstaCal's cb.cfg file.
+    // NOTE: Below ERB24_BOARDS enum is a static definition of TestLibrary's MCC USB-ERB24(s).
+    public enum ERB24_BOARDS { E01 }
+    // Dynamic definition methods for ERB24_BOARDS:
+    //  - Read them from MCC InstaCal's cb.cfg file.
     //  - Dynamically discover them programmatically: https://www.mccdaq.com/pdfs/manuals/Mcculw_WebHelp/ULStart.htm.
-    // NOTE: Might be useful to specify MCC Relay Boards in App.config, then confirm they're available during TestLibrary's initialization, semi-similar to AppConfigSCPI_VISA_Instruments.
-    public enum ERB24_BOARDS { E00 }
-
+    //  - Specify USB-ERB24s in App.config, then confirm existence during TestLibrary's initialization.
+    // NOTE: MCC's InstaCal USB_ERB24's board number indexing begins at 0, guessing because USB device indexing is likely also zero based.
+    // - So ERB24_BOARDS.E01 numerical value is 0, which is used when constructing a new MccBoard ERB24_BOARDS.E01 object:
+    //   - Instantiation 'new MccBoard((Int32)ERB24_BOARDS.E01)' is equivalent to 'new MccBoard(0)'.
+    //   - Wish MCC had zero-indexed their Relays as well; numbering from R0 to R23 instead of R1 to R24.
+    //     - Would've been optimal, as Relays 1 to 24 are controlled by digital port bits that are zero-indexed, from 0 to 23.
+    //     - Because MCC one-indexed their relays from 1 to 24, followed their convention by one-indexing enum ERB24_BOARDS; first USB-ERB24 assigned to E01, not E00.
     public enum ERB24_RELAYS {
         R01 = ERB24_BITS.B00, R02 = ERB24_BITS.B01, R03 = ERB24_BITS.B02, R04 = ERB24_BITS.B03, R05 = ERB24_BITS.B04, R06 = ERB24_BITS.B05, R07 = ERB24_BITS.B06, R08 = ERB24_BITS.B07,
         R09 = ERB24_BITS.B08, R10 = ERB24_BITS.B09, R11 = ERB24_BITS.B10, R12 = ERB24_BITS.B11, R13 = ERB24_BITS.B12, R14 = ERB24_BITS.B13, R15 = ERB24_BITS.B14, R16 = ERB24_BITS.B15,
