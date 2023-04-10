@@ -46,7 +46,7 @@ namespace TestLibrary {
             this._libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             this.Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            USB_ERB24.ResetAll();
+            USB_ERB24.DeEnergizeAll();
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
@@ -177,7 +177,7 @@ namespace TestLibrary {
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             SCPI99.ResetAll(this.SVIs);
-            USB_ERB24.ResetAll();
+            USB_ERB24.DeEnergizeAll();
             if (this.ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
 
@@ -209,7 +209,7 @@ namespace TestLibrary {
                 kvp.Value.Result = EventCodes.UNSET;
             }
             this.ConfigUUT.EventCode = EventCodes.UNSET;
-            USB_ERB24.ResetAll();
+            USB_ERB24.DeEnergizeAll();
             SCPI99.ResetAll(this.SVIs);
             Logger.Start(this.ConfigUUT, this.ConfigLogger, this.ConfigTest, this._appAssemblyVersion, this._libraryAssemblyVersion, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
@@ -243,14 +243,14 @@ namespace TestLibrary {
 
         private void StopRun(KeyValuePair<String, Test> kvp, String exceptionString) {
             SCPI99.ResetAll(this.SVIs);
-            USB_ERB24.ResetAll();
+            USB_ERB24.DeEnergizeAll();
             kvp.Value.Result = EventCodes.ERROR;
             Logger.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
         private void PostRun() {
             SCPI99.ResetAll(this.SVIs);
-            USB_ERB24.ResetAll();
+            USB_ERB24.DeEnergizeAll();
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);

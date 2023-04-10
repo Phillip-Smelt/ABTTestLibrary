@@ -3,63 +3,60 @@ using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Soft
 
 namespace TestLibrary.Switching {
     // https://forum.digikey.com/t/understanding-form-a-form-b-form-c-contact-configuration/811
-    public enum RELAY { denergized, ENERGIZED }
-    // deenergized is 1st state in enum, lower-cased & normal state.
-    // ENERGIZED is 2nd state in enum, UPPER-CASED & abnormal state.
-    public enum FORM_A { no, C }
-    // FORM_A.no; relay is deenergized and in normally opened state.
-    // FORM_A.C; relay is ENERGIZED and in CLOSED state.
-    public enum FORM_B { nc, O }
-    // FORM_B.nc; relay is deenergized in normally closed state.
-    // FORM_B.O; relay is ENERGIZED and in OPENED state.
-    public enum FORM_C { nc, NO }
-    // FORM_C.nc; relay is deenergized and in normally closed state.
-    // FORM_C.NO; relay is ENERGIZED and in NORMALLY OPENED state.
+    // FORM_A.NO; relay is deenergized and in normally opened state.
+    // FORM_A.C; relay is energized and in abnormally closed state.
+    public enum FORM_A { NO, C }
+    // FORM_B.NC; relay is deenergized and in normally closed state.
+    // FORM_B.O; relay is energized and in abnormally opened state.
+    public enum FORM_B { NC, O }
+    // FORM_C.C_NC; relay is deenergized and in normally closed/normally open state, with common C terminal connected to NC terminal & disconnected from NO terminal.
+    // FORM_C.C_NO; relay is energized and in abnormally opened/abnormally closed state, with common C terminal disconnected from NC terminal & connected to NO terminal.
+    public enum FORM_C { C_NC, C_NO }
+    // NOTE: Below ERB24_BOARDS & ERB24_RELAYS enums are a simple approach to defining the Test System's MCC USB-ERB24s.
+    // Other ways:
+    //  - Read them from InstaCal's cb.cfg file.
+    //  - Dynamically discover them programmatically: https://www.mccdaq.com/pdfs/manuals/Mcculw_WebHelp/ULStart.htm.
+    // NOTE: Might be useful to specify MCC Relay Boards in App.config, then confirm they're available during TestLibrary's initialization, semi-similar to AppConfigSCPI_VISA_Instruments.
+    public enum ERB24_BOARDS { E00 }
+
+    public enum ERB24_RELAYS {
+        R01 = ERB24_BITS.B00, R02 = ERB24_BITS.B01, R03 = ERB24_BITS.B02, R04 = ERB24_BITS.B03, R05 = ERB24_BITS.B04, R06 = ERB24_BITS.B05, R07 = ERB24_BITS.B06, R08 = ERB24_BITS.B07,
+        R09 = ERB24_BITS.B08, R10 = ERB24_BITS.B09, R11 = ERB24_BITS.B10, R12 = ERB24_BITS.B11, R13 = ERB24_BITS.B12, R14 = ERB24_BITS.B13, R15 = ERB24_BITS.B14, R16 = ERB24_BITS.B15,
+        R17 = ERB24_BITS.B16, R18 = ERB24_BITS.B17, R19 = ERB24_BITS.B18, R20 = ERB24_BITS.B19, R21 = ERB24_BITS.B20, R22 = ERB24_BITS.B21, R23 = ERB24_BITS.B22, R24 = ERB24_BITS.B23
+    }
+
+    public enum ERB24_BITS {
+        B00 = 00, B01 = 01, B02 = 02, B03 = 03, B04 = 04, B05 = 05, B06 = 06, B07 = 07,
+        B08 = 08, B09 = 09, B10 = 10, B11 = 11, B12 = 12, B13 = 13, B14 = 14, B15 = 15,
+        B16 = 16, B17 = 17, B18 = 18, B19 = 19, B20 = 20, B21 = 21, B22 = 22, B23 = 23
+    }
+    // NOTE: USB-ERB24 Relays are divided into 4 configurable groups, controllable via digital Ports A, B, CL & CH.
+    //  - Port A :  Relays 01 - 08.
+    //  - Port B :  Relays 09 - 16.
+    //  - Port CL:  Relays 17 - 20.  CL = Port C, Low bits.
+    //  - Port CH:  Relays 21 - 24.  CH = Port C, High bits.
+    [Flags]
+    public enum ERB24_FLAGS {
+        None = 0x0,
+        F00 = 0x1, F01 = 0x2, F02 = 0x4, F03 = 0x8, F04 = 0x10, F05 = 0x20, F06 = 0x40, F07 = 0x80,
+        F08 = 0x100, F09 = 0x200, F10 = 0x400, F11 = 0x800, F12 = 0x1000, F13 = 0x2000, F14 = 0x4000, F15 = 0x8000,
+        F16 = 0x10000, F17 = 0x20000, F18 = 0x40000, F19 = 0x80000, F20 = 0x100000, F21 = 0x200000, F22 = 0x400000, F23 = 0x800000
+    }
+    [Flags]
+    public enum ERB24_PORT_A { None = ERB24_FLAGS.None, R01 = ERB24_FLAGS.F00, R02 = ERB24_FLAGS.F01, R03 = ERB24_FLAGS.F02, R04 = ERB24_FLAGS.F03, R05 = ERB24_FLAGS.F04, R06 = ERB24_FLAGS.F05, R07 = ERB24_FLAGS.F06, R08 = ERB24_FLAGS.F07 }
+    [Flags]
+    public enum ERB24_PORT_B { None = ERB24_FLAGS.None, R09 = ERB24_FLAGS.F00, R10 = ERB24_FLAGS.F01, R11 = ERB24_FLAGS.F02, R12 = ERB24_FLAGS.F03, R13 = ERB24_FLAGS.F04, R14 = ERB24_FLAGS.F05, R15 = ERB24_FLAGS.F06, R16 = ERB24_FLAGS.F07 }
+    [Flags]
+    public enum ERB24_PORT_CL { None = ERB24_FLAGS.None, R17 = ERB24_FLAGS.F00, R18 = ERB24_FLAGS.F01, R19 = ERB24_FLAGS.F02, R20 = ERB24_FLAGS.F03 }
+    [Flags]
+    public enum ERB24_PORT_CH { None = ERB24_FLAGS.None, R21 = ERB24_FLAGS.F00, R22 = ERB24_FLAGS.F01, R23 = ERB24_FLAGS.F02, R24 = ERB24_FLAGS.F03 }
 
     public static class USB_ERB24 {
-        // NOTE: Below ERB24_BOARDS & ERB24_RELAYS enums are a simple approach to defining the Test System's MCC USB-ERB24s.
-        // Other ways:
-        //  - Read them from InstaCal's cb.cfg file.
-        //  - Dynamically discover them programmatically: https://www.mccdaq.com/pdfs/manuals/Mcculw_WebHelp/ULStart.htm.
-        // NOTE: Might be useful to specify MCC Relay Boards in App.config, then confirm they're available during TestLibrary's initialization, semi-similar to AppConfigSCPI_VISA_Instruments.
-        public enum ERB24_BOARDS { ERB24_0 }
-        public enum ERB24_BITS {
-            B00 = 00, B01 = 01, B02 = 02, B03 = 03, B04 = 04, B05 = 05, B06 = 06, B07 = 07,
-            B08 = 08, B09 = 09, B10 = 10, B11 = 11, B12 = 12, B13 = 13, B14 = 14, B15 = 15,
-            B16 = 16, B17 = 17, B18 = 18, B19 = 19, B20 = 20, B21 = 21, B22 = 22, B23 = 23
-        }
-
-        public enum ERB24_RELAYS {
-            Relay_01 = ERB24_BITS.B00, Relay_02 = ERB24_BITS.B01, Relay_03 = ERB24_BITS.B02, Relay_04 = ERB24_BITS.B03, Relay_05 = ERB24_BITS.B04, Relay_06 = ERB24_BITS.B05, Relay_07 = ERB24_BITS.B06, Relay_08 = ERB24_BITS.B07,
-            Relay_09 = ERB24_BITS.B08, Relay_10 = ERB24_BITS.B09, Relay_11 = ERB24_BITS.B10, Relay_12 = ERB24_BITS.B11, Relay_13 = ERB24_BITS.B12, Relay_14 = ERB24_BITS.B13, Relay_15 = ERB24_BITS.B14, Relay_16 = ERB24_BITS.B15,
-            Relay_17 = ERB24_BITS.B16, Relay_18 = ERB24_BITS.B17, Relay_19 = ERB24_BITS.B18, Relay_20 = ERB24_BITS.B19, Relay_21 = ERB24_BITS.B20, Relay_22 = ERB24_BITS.B21, Relay_23 = ERB24_BITS.B22, Relay_24 = ERB24_BITS.B23
-        }
-
-        // NOTE: USB-ERB24 Relays are divided into 4 configurable groups, controllable via digital Ports A, B, CL & CH.
-        //  - Port A :  Relays 01 - 08.
-        //  - Port B :  Relays 09 - 16.
-        //  - Port CL:  Relays 17 - 20.  CL = Port C, Low bits.
-        //  - Port CH:  Relays 21 - 24.  CH = Port C, High bits.
-        [Flags]
-        public enum ERB24_BIT_VALUES {
-            None = 0x0,
-            B00 = 0x1, B01 = 0x2, B02 = 0x4, B03 = 0x8, B04 = 0x10, B05 = 0x20, B06 = 0x40, B07 = 0x80,
-            B08 = 0x100, B09 = 0x200, B10 = 0x400, B11 = 0x800, B12 = 0x1000, B13 = 0x2000, B14 = 0x4000, B15 = 0x8000,
-            B16 = 0x10000, B17 = 0x20000, B18 = 0x40000, B19 = 0x80000, B20 = 0x100000, B21 = 0x200000, B22 = 0x400000, B23 = 0x800000
-        }
-        [Flags]
-        public enum ERB24_PORT_A { None = ERB24_BIT_VALUES.None, Relay_01 = ERB24_BIT_VALUES.B00, Relay_02 = ERB24_BIT_VALUES.B01, Relay_03 = ERB24_BIT_VALUES.B02, Relay_04 = ERB24_BIT_VALUES.B03, Relay_05 = ERB24_BIT_VALUES.B04, Relay_06 = ERB24_BIT_VALUES.B05, Relay_07 = ERB24_BIT_VALUES.B06, Relay_08 = ERB24_BIT_VALUES.B07 }
-        [Flags]
-        public enum ERB24_PORT_B { None = ERB24_BIT_VALUES.None, Relay_09 = ERB24_BIT_VALUES.B00, Relay_10 = ERB24_BIT_VALUES.B01, Relay_11 = ERB24_BIT_VALUES.B02, Relay_12 = ERB24_BIT_VALUES.B03, Relay_13 = ERB24_BIT_VALUES.B04, Relay_14 = ERB24_BIT_VALUES.B15, Relay_15 = ERB24_BIT_VALUES.B06, Relay_16 = ERB24_BIT_VALUES.B07 }
-        [Flags]
-        public enum ERB24_PORT_CL { None = ERB24_BIT_VALUES.None, Relay_17 = ERB24_BIT_VALUES.B00, Relay_18 = ERB24_BIT_VALUES.B01, Relay_19 = ERB24_BIT_VALUES.B02, Relay_20 = ERB24_BIT_VALUES.B03 }
-        [Flags]
-        public enum ERB24_PORT_CH { None = ERB24_BIT_VALUES.None, Relay_21 = ERB24_BIT_VALUES.B00, Relay_22 = ERB24_BIT_VALUES.B01, Relay_23 = ERB24_BIT_VALUES.B02, Relay_24 = ERB24_BIT_VALUES.B03 }
         // NOTE: This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
-        //  NOTE: USB-ERB24 relays are configurable for either Non-Inverting or Inverting Iogic, via hardware DIP switch S1.
+        // NOTE: USB-ERB24 relays are configurable for either Non-Inverting or Inverting Iogic, via hardware DIP switch S1.
         //  - Non-Inverting:  Logic low de-energizes the relays, logic high energizes them.
         //  - Inverting:      Logic low energizes the relays, logic high de-energizes them.  
-        //  NOTE: USB-ERB24 relays are configurable with default power-up states, via hardware DIP switch S2.
+        // NOTE: USB-ERB24 relays are configurable with default power-up states, via hardware DIP switch S2.
         //  - Pull-Up:        Relays are energized at power-up.
         //  - Pull-Down:      Relays are de-energized at power-up.
         //  - https://www.mccdaq.com/PDFs/Manuals/usb-erb24.pdf.
@@ -76,28 +73,28 @@ namespace TestLibrary.Switching {
             return areERB24BoardsReset;
         }
 
-        public static void Reset(ERB24_BOARDS erb24_board) {
+        public static void DeEnergize(ERB24_BOARDS erb24_board) {
             MccBoard mccBoard = new MccBoard((Int32)erb24_board);
-            DigitalPortWrite(mccBoard, DigitalPortType.FirstPortA, (Int16)ERB24_BIT_VALUES.None);
-            DigitalPortWrite(mccBoard, DigitalPortType.FirstPortB, (Int16)ERB24_BIT_VALUES.None);
-            DigitalPortWrite(mccBoard, DigitalPortType.FirstPortCL, (Int16)ERB24_BIT_VALUES.None);
-            DigitalPortWrite(mccBoard, DigitalPortType.FirstPortCH, (Int16)ERB24_BIT_VALUES.None);
+            DigitalPortWrite(mccBoard, DigitalPortType.FirstPortA, (Int16)ERB24_FLAGS.None);
+            DigitalPortWrite(mccBoard, DigitalPortType.FirstPortB, (Int16)ERB24_FLAGS.None);
+            DigitalPortWrite(mccBoard, DigitalPortType.FirstPortCL, (Int16)ERB24_FLAGS.None);
+            DigitalPortWrite(mccBoard, DigitalPortType.FirstPortCH, (Int16)ERB24_FLAGS.None);
         }
 
-        public static void ResetAll() { foreach (ERB24_BOARDS erb24_board in Enum.GetValues(typeof(ERB24_BOARDS))) Reset(erb24_board); }
+        public static void DeEnergizeAll() { foreach (ERB24_BOARDS erb24_board in Enum.GetValues(typeof(ERB24_BOARDS))) DeEnergize(erb24_board); }
 
-        public static void SetRelayState((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24, FORM_C State) {
+        public static void SetState((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24, FORM_C State) {
             MccBoard mccBoard = new MccBoard((Int32)ERB24.Board);
-            DigitalLogicState desiredState = (State is FORM_C.nc) ? DigitalLogicState.Low : DigitalLogicState.High;
+            DigitalLogicState desiredState = (State is FORM_C.C_NC) ? DigitalLogicState.Low : DigitalLogicState.High;
             DigitalBitWrite(mccBoard, DigitalPortType.FirstPortA, ERB24.Relay, desiredState);
             DigitalLogicState outputState = DigitalBitRead(mccBoard, DigitalPortType.FirstPortA, ERB24.Relay);
             if (outputState != desiredState) throw new InvalidOperationException($"MCC ERB24 '({ERB24.Board}, {ERB24.Relay})' failed to set to '{State}'.");
         }
 
-        public static FORM_C GetRelayState((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24) {
+        public static FORM_C GetState((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24) {
             MccBoard mccBoard = new MccBoard((Int32)ERB24.Board);
             DigitalLogicState outputState = DigitalBitRead(mccBoard, DigitalPortType.FirstPortA, ERB24.Relay);
-            return (outputState == DigitalLogicState.Low) ? FORM_C.nc : FORM_C.NO;
+            return (outputState == DigitalLogicState.Low) ? FORM_C.C_NC : FORM_C.C_NO;
         }
 
         private static DigitalLogicState DigitalBitRead(MccBoard mccBoard, DigitalPortType digitalPortType, ERB24_RELAYS erb24Relay) {
@@ -122,7 +119,7 @@ namespace TestLibrary.Switching {
             if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
         }
 
-        private static Boolean IsPortReset(MccBoard mccBoard, DigitalPortType digitalPortType) { return DigitalPortRead(mccBoard, digitalPortType) == (UInt16)ERB24_BIT_VALUES.None; }
+        private static Boolean IsPortReset(MccBoard mccBoard, DigitalPortType digitalPortType) { return DigitalPortRead(mccBoard, digitalPortType) == (UInt16)ERB24_FLAGS.None; }
 
         public static void SetPortAState(ERB24_BOARDS Board, ERB24_PORT_A PortA) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
