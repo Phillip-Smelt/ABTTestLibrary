@@ -1,21 +1,20 @@
 ﻿using System;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
-using static TestLibrary.Switching.USB_ERB24;
 
 namespace TestLibrary.Switching {
     // https://forum.digikey.com/t/understanding-form-a-form-b-form-c-contact-configuration/811
     public enum RELAY { denergized, ENERGIZED }
-    // deenergized is 1st state in enum, lower-cased & normal state.  Or if preferred, non-actuated/non-activated state.
-    // ENERGIZED is 2nd state in enum, UPPER-CASED & abnormal state.  Or if preferred, ACTUATED/ACTIVATED state.
-    public enum FORM_A { no, AC }
-    // FORM_A.no; relay is deenergized and in non-activated, normally opened state.
-    // FORM_A.AC; relay is ENERGIZED in ACTIVATED, ABNORMALLY CLOSED state.
-    public enum FORM_B { nc, AO }
-    // FORM_B.nc; relay is deenergized in non-activated, normally closed state.
-    // FORM_B.AO; relay is ENERGIZED in ACTIVATED, ABNORMALLY OPENED state.
-    public enum FORM_C { noεnc, ACεAO }
-    // FORM_C.noεnc; relay is deenergized in non-activated, normally opened ε normally closed state.
-    // FORM_C.ACεAO; relay is ENERGIZED in ACTIVATED, ABNORMALLY CLOSED ε ABNORMALLY OPENED state.
+    // deenergized is 1st state in enum, lower-cased & normal state.
+    // ENERGIZED is 2nd state in enum, UPPER-CASED & abnormal state.
+    public enum FORM_A { no, C }
+    // FORM_A.no; relay is deenergized and in normally opened state.
+    // FORM_A.C; relay is ENERGIZED and in CLOSED state.
+    public enum FORM_B { nc, O }
+    // FORM_B.nc; relay is deenergized in normally closed state.
+    // FORM_B.O; relay is ENERGIZED and in OPENED state.
+    public enum FORM_C { nc, NO }
+    // FORM_C.nc; relay is deenergized and in normally closed state.
+    // FORM_C.NO; relay is ENERGIZED and in NORMALLY OPENED state.
 
     public static class USB_ERB24 {
         // NOTE: Below ERB24_BOARDS & ERB24_RELAYS enums are a simple approach to defining the Test System's MCC USB-ERB24s.
@@ -89,7 +88,7 @@ namespace TestLibrary.Switching {
 
         public static void SetRelayState((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24, FORM_C State) {
             MccBoard mccBoard = new MccBoard((Int32)ERB24.Board);
-            DigitalLogicState desiredState = (State is FORM_C.noεnc) ? DigitalLogicState.Low : DigitalLogicState.High;
+            DigitalLogicState desiredState = (State is FORM_C.nc) ? DigitalLogicState.Low : DigitalLogicState.High;
             DigitalBitWrite(mccBoard, DigitalPortType.FirstPortA, ERB24.Relay, desiredState);
             DigitalLogicState outputState = DigitalBitRead(mccBoard, DigitalPortType.FirstPortA, ERB24.Relay);
             if (outputState != desiredState) throw new InvalidOperationException($"MCC ERB24 '({ERB24.Board}, {ERB24.Relay})' failed to set to '{State}'.");
@@ -98,7 +97,7 @@ namespace TestLibrary.Switching {
         public static FORM_C GetRelayState((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24) {
             MccBoard mccBoard = new MccBoard((Int32)ERB24.Board);
             DigitalLogicState outputState = DigitalBitRead(mccBoard, DigitalPortType.FirstPortA, ERB24.Relay);
-            return (outputState == DigitalLogicState.Low) ? FORM_C.noεnc : FORM_C.ACεAO;
+            return (outputState == DigitalLogicState.Low) ? FORM_C.nc : FORM_C.NO;
         }
 
         private static DigitalLogicState DigitalBitRead(MccBoard mccBoard, DigitalPortType digitalPortType, ERB24_RELAYS erb24Relay) {
