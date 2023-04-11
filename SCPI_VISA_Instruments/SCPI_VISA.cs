@@ -41,11 +41,25 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static void ClearAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
-            Reset(SVI);
-            Clear(SVI);
-            Int32 selfTestResult = -1;
-            new AgSCPI99(SVI.Address).SCPI.TST.Query(out selfTestResult);
-            if (selfTestResult != 0) throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, String.Format(SCPI.SELF_TEST_ERROR_MESSAGE, SVI.Address)));
+            try {
+                Reset(SVI);
+                Clear(SVI);
+                new AgSCPI99(SVI.Address).SCPI.TST.Query(out Int32 selfTestResult);
+                if (selfTestResult != 0) throw new InvalidOperationException($"Self Test returned result '{selfTestResult}'.");
+            } catch (Exception e) {
+                throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, String.Format(SCPI.SELF_TEST_ERROR_MESSAGE, SVI.Address)), e);
+                // If unpowered, throws below CommunicationException, which requires an apparently unavailable Keysight library to explicitly Assert for in MS Unit Test.
+                // Instead catch Exception and re-throw as InvalidOperationException, which MS Test can explicitly Assert for.
+                //      Keysight.CommandExpert.InstrumentAbstraction.CommunicationException: A VISA COM error occurred(HRESULT = 80040011)
+                //      at Keysight.CommandExpert.Scpi.Connections.VisaScpiConnection.a(COMException A_0)
+                //      at Keysight.CommandExpert.Scpi.Connections.VisaScpiConnection.OpenConnectionInternal()
+                //      at Keysight.CommandExpert.Scpi.Connections.BaseScpiConnection.OpenConnection(ScpiExecution parent)
+                //      at Keysight.CommandExpert.Scpi.ScpiExecution.Connect()
+                //      at Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0.AgSCPI99.Initialize(ISource rh)
+                //      at TestLibrary.SCPI_VISA_Instruments.SCPI99.Reset(SCPI_VISA_Instrument SVI)
+                //      at TestLibrary.SCPI_VISA_Instruments.SCPI99.SelfTest(SCPI_VISA_Instrument SVI)
+
+            }
         }
 
         public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value); }
