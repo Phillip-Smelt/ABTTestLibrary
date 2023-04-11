@@ -43,7 +43,8 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             Reset(SVI);
             Clear(SVI);
-            new AgSCPI99(SVI.Address).SCPI.TST.Query(out Int32 selfTestResult);
+            Int32 selfTestResult = -1;
+            new AgSCPI99(SVI.Address).SCPI.TST.Query(out selfTestResult);
             if (selfTestResult != 0) throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, String.Format(SCPI.SELF_TEST_ERROR_MESSAGE, SVI.Address)));
         }
 

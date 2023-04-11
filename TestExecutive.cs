@@ -261,7 +261,7 @@ namespace TestLibrary {
         }
 
         // TODO:
-        public static String EvaluateTestResult(Test test) {
+        internal static String EvaluateTestResult(Test test) {
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
                     return test.Result;
@@ -284,7 +284,7 @@ namespace TestLibrary {
         }
 
         // TODO:
-        public static String EvaluateUUTResult(AppConfigTest configTest) {
+        internal static String EvaluateUUTResult(AppConfigTest configTest) {
             if (!configTest.Group.Required) return EventCodes.UNSET;
             // 0th priority evaluation that precedes all others.
             if (GetResultCount(configTest.Tests, EventCodes.PASS) == configTest.Tests.Count) return EventCodes.PASS;
