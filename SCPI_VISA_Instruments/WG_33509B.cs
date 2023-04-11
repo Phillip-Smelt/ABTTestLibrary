@@ -10,6 +10,7 @@ using TestLibrary.AppConfig;
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace TestLibrary.SCPI_VISA_Instruments {
+    // TODO: Convert the WG_33509B class to a Singleton, like the USB_TO_GPIO class.  To handle multiple PS_E3610xBs, create copies of the Singleton class & number them?  PS_E3610xB_1, PS_E3610xB_2...
     public static class WG_33509B {
         public const String MODEL = "33509B";
 

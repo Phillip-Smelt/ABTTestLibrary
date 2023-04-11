@@ -10,6 +10,7 @@ using TestLibrary.AppConfig;
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace TestLibrary.SCPI_VISA_Instruments {
+    // TODO: Convert the MM_34661A class to a Singleton, like the USB_TO_GPIO class.
     public static class MM_34661A {
         public const String MODEL = "34461A";
 
