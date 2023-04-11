@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
-using static System.Windows.Forms.AxHost;
 
 namespace TestLibrary.Switching {
     // TODO: Convert the USB_ERB24 class to a Singleton, like the USB_TO_GPIO class.  If there are multiple USB_ERB24s, copy the USB_ERB24 class & append numbers?  USB_ERB24_1, USB_ERB24_2...
@@ -35,7 +33,7 @@ namespace TestLibrary.Switching {
     public enum ERB24_PORTS { A, B, CL, CH }
 
     [Flags]
-    public enum ERB24_BITS {
+    public enum ERB24_BITS : UInt32 {
         None = 0,
         B00 = 1 << 00, B01 = 1 << 01, B02 = 1 << 02, B03 = 1 << 03, B04 = 1 << 04, B05 = 1 << 05, B06 = 1 << 06, B07 = 1 << 07,
         B08 = 1 << 08, B09 = 1 << 09, B10 = 1 << 10, B11 = 1 << 11, B12 = 1 << 12, B13 = 1 << 13, B14 = 1 << 14, B15 = 1 << 15,

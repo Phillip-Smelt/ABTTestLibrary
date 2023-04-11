@@ -260,7 +260,8 @@ namespace TestLibrary {
             Logger.Stop(this.ConfigUUT, this.ConfigLogger, this.ConfigTest.Group, ref this.rtfResults);
         }
 
-        private String EvaluateTestResult(Test test) {
+        // TODO:
+        public static String EvaluateTestResult(Test test) {
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
                     return test.Result;
@@ -282,7 +283,8 @@ namespace TestLibrary {
             }
         }
 
-        private String EvaluateUUTResult(AppConfigTest configTest) {
+        // TODO:
+        public static String EvaluateUUTResult(AppConfigTest configTest) {
             if (!configTest.Group.Required) return EventCodes.UNSET;
             // 0th priority evaluation that precedes all others.
             if (GetResultCount(configTest.Tests, EventCodes.PASS) == configTest.Tests.Count) return EventCodes.PASS;
@@ -314,9 +316,7 @@ namespace TestLibrary {
             return EventCodes.ERROR;
         }
 
-        private Int32 GetResultCount(Dictionary<String, Test> tests, String eventCode) {
-            return (from test in tests where String.Equals(test.Value.Result, eventCode) select test).Count();
-        }
+        private static Int32 GetResultCount(Dictionary<String, Test> tests, String eventCode) { return (from test in tests where String.Equals(test.Value.Result, eventCode) select test).Count(); }
     }
 
     public class TestCancellationException : Exception {
