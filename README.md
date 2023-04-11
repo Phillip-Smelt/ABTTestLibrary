@@ -5,5 +5,4 @@
 
   References:
   - https://github.com/Amphenol-Borisch-Technologies/TestProgram
-  - https://github.com/Amphenol-Borisch-Technologies/TestLibraryTests
   - https://en.wikipedia.org/wiki/Test_execution_engine
