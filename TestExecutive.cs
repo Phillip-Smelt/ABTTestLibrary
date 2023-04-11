@@ -115,7 +115,7 @@ namespace TestLibrary {
             //        - Let's say we want to abort if specific conditions occur in a Test, for example if
             //          power application fails.
             //        - We don't want to continue testing if the UUT's applied power busses fail,
-            //          because any downstream failures are likely due to the UUT not being powered
+            //          because any subsequent failures are likely due to the UUT not being powered
             //          correctly.
             //        - So, simply throw a TestCancellationException if an applied power bus fails.
             //        - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestProgram/blob/master/TestProgram.T-Shared.cs
