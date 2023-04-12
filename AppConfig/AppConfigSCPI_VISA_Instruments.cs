@@ -50,7 +50,8 @@ namespace TestLibrary.AppConfig {
         public readonly String Description;
         public readonly String Address;
         public readonly String Identity;
-        public readonly Object Instrument; // TODO: May have to revert to { get; private set; } if Keysight's SCPI classes contain state, thus must be writeable.
+        public readonly Object Instrument; // NOTE: The assumption, thus far proven correct, is that Keysight's SCPI drivers don't contain state, thus can be readonly.
+        // This assumption may fail with other Keysight drivers, or other manufacturers SCPI drivers, so may need re-visiting.
         public const Int32 FORMAT_WIDTH = -16;
 
         private SCPI_VISA_Instrument(String id, String description, String address) {

@@ -47,18 +47,10 @@ namespace TestLibrary.SCPI_VISA_Instruments {
                 new AgSCPI99(SVI.Address).SCPI.TST.Query(out Int32 selfTestResult);
                 if (selfTestResult != 0) throw new InvalidOperationException($"Self Test returned result '{selfTestResult}'.");
             } catch (Exception e) {
-                throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, String.Format(SCPI.SELF_TEST_ERROR_MESSAGE, SVI.Address)), e);
-                // If unpowered, throws below CommunicationException, which requires an apparently unavailable Keysight library to explicitly Assert for in MS Unit Test.
+                throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, e.ToString()));
+                // If unpowered, throws a Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
+                // which requires a seemingly unavailable Keysight library to explicitly Assert for in MS Unit Test.
                 // Instead catch Exception and re-throw as InvalidOperationException, which MS Test can explicitly Assert for.
-                //      Keysight.CommandExpert.InstrumentAbstraction.CommunicationException: A VISA COM error occurred(HRESULT = 80040011)
-                //      at Keysight.CommandExpert.Scpi.Connections.VisaScpiConnection.a(COMException A_0)
-                //      at Keysight.CommandExpert.Scpi.Connections.VisaScpiConnection.OpenConnectionInternal()
-                //      at Keysight.CommandExpert.Scpi.Connections.BaseScpiConnection.OpenConnection(ScpiExecution parent)
-                //      at Keysight.CommandExpert.Scpi.ScpiExecution.Connect()
-                //      at Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0.AgSCPI99.Initialize(ISource rh)
-                //      at TestLibrary.SCPI_VISA_Instruments.SCPI99.Reset(SCPI_VISA_Instrument SVI)
-                //      at TestLibrary.SCPI_VISA_Instruments.SCPI99.SelfTest(SCPI_VISA_Instrument SVI)
-
             }
         }
 
@@ -110,7 +102,6 @@ namespace TestLibrary.SCPI_VISA_Instruments {
         public const String CHANNEL_1 = "(@1)";
         public const String CHANNEL_2 = "(@2)";
         public const String CHANNEL_1ε2 = "(@1:2)";
-        public static readonly String SELF_TEST_ERROR_MESSAGE = $"SCPI VISA Instrument Address '{0}' failed SelfTest.";
 
         public static OUTPUT GetOutputState(SCPI_VISA_Instrument SVI) {
             if (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) return OUTPUT.off;
@@ -124,9 +115,9 @@ namespace TestLibrary.SCPI_VISA_Instruments {
             else return false;
         }
 
-        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI) { return SCPI_VISA_Instrument.GetInfo(SVI, "SCPI-VISA SCPI_VISA_Instrument failed:"); }
+        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI) { return SCPI_VISA_Instrument.GetInfo(SVI, $"SCPI VISA Instrument Address '{0}' failed.{Environment.NewLine}"); }
 
-        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage) { return $"{GetErrorMessage(SVI)}{"Error Message",SCPI_VISA_Instrument.FORMAT_WIDTH}: '{errorMessage}'.{Environment.NewLine}"; }
+        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage) { return $"{GetErrorMessage(SVI)}{errorMessage}{Environment.NewLine}"; }
 
         internal static Boolean IsCloseEnough(Double D1, Double D2, Double Delta) { return Math.Abs(D1 - D2) <= Delta; }
         // Close is good enough for horseshoes, hand grenades, nuclear weapons, and Doubles!  Shamelessly plagiarized from the Internet!
