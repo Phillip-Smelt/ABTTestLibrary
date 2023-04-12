@@ -102,8 +102,8 @@ namespace TestLibrary.Switching {
             MccBoard mccBoard = new MccBoard((Int32)ERB24.Board);
             DigitalLogicState desiredState = (State is FORM_C.C_NC) ? DigitalLogicState.Low : DigitalLogicState.High;
             DigitalPortType digitalPortType = GetPortType(ERB24.Relay);
-            DigitalBitWrite(mccBoard, digitalPortType, ERB24.Relay, desiredState);
-            DigitalLogicState outputState = DigitalBitRead(mccBoard, digitalPortType, ERB24.Relay);
+            DigitalBitWrite(mccBoard, ERB24.Relay, desiredState);
+            DigitalLogicState outputState = DigitalBitRead(mccBoard, ERB24.Relay);
             if (outputState != desiredState) throw new InvalidOperationException($"MCC ERB24 '({ERB24.Board}, {ERB24.Relay})' failed to set to '{State}'.");
         }
 
@@ -127,7 +127,7 @@ namespace TestLibrary.Switching {
 
         public static FORM_C GetState((ERB24_BOARDS Board, ERB24_RELAYS Relay) ERB24) {
             MccBoard mccBoard = new MccBoard((Int32)ERB24.Board);
-            DigitalLogicState outputState = DigitalBitRead(mccBoard, DigitalPortType.FirstPortA, ERB24.Relay);
+            DigitalLogicState outputState = DigitalBitRead(mccBoard, ERB24.Relay);
             return (outputState == DigitalLogicState.Low) ? FORM_C.C_NC : FORM_C.C_NO;
         }
 
@@ -153,14 +153,14 @@ namespace TestLibrary.Switching {
             return relayStates;
         }
 
-        internal static DigitalLogicState DigitalBitRead(MccBoard mccBoard, DigitalPortType digitalPortType, ERB24_RELAYS erb24Relay) {
-            ErrorInfo errorInfo = mccBoard.DBitIn(digitalPortType, (Int32)erb24Relay, out DigitalLogicState bitValue);
+        internal static DigitalLogicState DigitalBitRead(MccBoard mccBoard, ERB24_RELAYS erb24Relay) {
+            ErrorInfo errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)erb24Relay, out DigitalLogicState bitValue);
             if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
             return bitValue;
         }
 
-        internal static void DigitalBitWrite(MccBoard mccBoard, DigitalPortType digitalPortType, ERB24_RELAYS erb24Relay, DigitalLogicState inputLogicState) {
-            ErrorInfo errorInfo = mccBoard.DBitOut(digitalPortType, (Int32)erb24Relay, inputLogicState);
+        internal static void DigitalBitWrite(MccBoard mccBoard, ERB24_RELAYS erb24Relay, DigitalLogicState inputLogicState) {
+            ErrorInfo errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA, (Int32)erb24Relay, inputLogicState);
             if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
         }
 
@@ -212,6 +212,7 @@ namespace TestLibrary.Switching {
 
         internal static void MccBoardErrorHandler(MccBoard mccBoard, ErrorInfo errorInfo) {
             throw new InvalidOperationException(
+                $"{Environment.NewLine}" +
                 $"MccBoard BoardNum   : {mccBoard.BoardNum}.{Environment.NewLine}" +
                 $"MccBoard BoardName  : {mccBoard.BoardName}.{Environment.NewLine}" +
                 $"MccBoard Descriptor : {mccBoard.Descriptor}.{Environment.NewLine}" +
