@@ -41,6 +41,7 @@ namespace TestLibrary.Switching {
         //  - Pull-Down:      Relays are de-energized at power-up.
         //  - https://www.mccdaq.com/PDFs/Manuals/usb-erb24.pdf.
         internal enum ERB24_PORTS { A, B, CL, CH }
+        private const Int32 TotalERB24_Ports = 4;
         [Flags]
         internal enum ERB24_BITS : UInt32 {
             None = 0,
@@ -55,14 +56,13 @@ namespace TestLibrary.Switching {
             All = B00 | B01 | B02 | B03 | B04 | B05 | B06 | B07
         }
         [Flags]
-        public enum ERB24_Port_4_Bits : UInt32 {
+        internal enum ERB24_Port_4_Bits : UInt32 {
             None = 0,
             B00 = ERB24_BITS.B00, B01 = ERB24_BITS.B01, B02 = ERB24_BITS.B02, B03 = ERB24_BITS.B03,
             All = B00 | B01 | B02 | B03
         }
-        private const Int32 TotalERB24_Ports = 4;
 
-        private static readonly Dictionary<ERB24_RELAYS, ERB24_BITS> ERB24_RelaysToBits = new Dictionary<ERB24_RELAYS, ERB24_BITS>() {
+        internal static readonly Dictionary<ERB24_RELAYS, ERB24_BITS> ERB24_RelaysToBits = new Dictionary<ERB24_RELAYS, ERB24_BITS>() {
             { ERB24_RELAYS.R01, ERB24_BITS.B00 }, { ERB24_RELAYS.R02, ERB24_BITS.B01 }, { ERB24_RELAYS.R03, ERB24_BITS.B02 }, { ERB24_RELAYS.R04, ERB24_BITS.B03 },
             { ERB24_RELAYS.R05, ERB24_BITS.B04 }, { ERB24_RELAYS.R06, ERB24_BITS.B05 }, { ERB24_RELAYS.R07, ERB24_BITS.B06 }, { ERB24_RELAYS.R08, ERB24_BITS.B07 },
             { ERB24_RELAYS.R09, ERB24_BITS.B08 }, { ERB24_RELAYS.R10, ERB24_BITS.B09 }, { ERB24_RELAYS.R11, ERB24_BITS.B10 }, { ERB24_RELAYS.R12, ERB24_BITS.B11 },
