@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
-using static TestLibrary.Switching.RelayForms;
 
 namespace TestLibrary.Switching {
     public static class USB_ERB24 {
@@ -90,18 +89,18 @@ namespace TestLibrary.Switching {
         public static void SetState((UE24_BOARDS Board, UE24 Relay) UE24, RelayForms.C State) {
             MccBoard mccBoard = new MccBoard((Int32)UE24.Board);
             DigitalLogicState desiredState = (State is RelayForms.C.NC) ? DigitalLogicState.Low : DigitalLogicState.High;
-            DigitalPortType digitalPortType = GetPortType(UE24.Relay);
+            _ = GetPortType(UE24.Relay);
             DigitalBitWrite(mccBoard, UE24.Relay, desiredState);
             DigitalLogicState outputState = DigitalBitRead(mccBoard, UE24.Relay);
             if (outputState != desiredState) throw new InvalidOperationException($"USB-ERB24 '({UE24.Board}, {UE24.Relay})' failed to set to '{State}'.");
         }
 
-        public static void SetStates(UE24_BOARDS Board, Dictionary<UE24, C> relayStates) {
+        public static void SetStates(UE24_BOARDS Board, Dictionary<UE24, RelayForms.C> relayStates) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
             UInt32 relayBits = 0x0000;
             UE24_BITS ue24bit;
-            foreach (KeyValuePair<UE24, C> kvp in relayStates) {
-                ue24bit = ((RelayForms.C)UE24_RεB[kvp.Key] is C.NC) ? UE24_BITS.None : (UE24_BITS)Enum.ToObject(typeof(UE24_BITS), (Int32)kvp.Key);
+            foreach (KeyValuePair<UE24, RelayForms.C> kvp in relayStates) {
+                ue24bit = ((RelayForms.C)UE24_RεB[kvp.Key] is RelayForms.C.NC) ? UE24_BITS.None : (UE24_BITS)Enum.ToObject(typeof(UE24_BITS), (Int32)kvp.Key);
                 relayBits |= (UInt32)ue24bit; // Sets a 1 in each bit corresponding to relay state in relayStates.
             }
             Byte[] bits = BitConverter.GetBytes(relayBits);
@@ -117,7 +116,7 @@ namespace TestLibrary.Switching {
         public static RelayForms.C GetState((UE24_BOARDS Board, UE24 Relay) UE24) {
             MccBoard mccBoard = new MccBoard((Int32)UE24.Board);
             DigitalLogicState outputState = DigitalBitRead(mccBoard, UE24.Relay);
-            return (outputState == DigitalLogicState.Low) ? C.NC : C.NO;
+            return (outputState == DigitalLogicState.Low) ? RelayForms.C.NC : RelayForms.C.NO;
         }
 
         public static Dictionary<UE24, RelayForms.C> GetStates(UE24_BOARDS ue24Board) {
@@ -130,13 +129,13 @@ namespace TestLibrary.Switching {
             relayBits |= biggerBits[(Int32)UE24_PORTS.CL] << 12;
             relayBits |= biggerBits[(Int32)UE24_PORTS.CH] << 16;
             BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
-            Dictionary<UE24, C> relayStates = new Dictionary<UE24, C>();
+            Dictionary<UE24, RelayForms.C> relayStates = new Dictionary<UE24, RelayForms.C>();
 
             UE24 ue24relay;
-            C cState;
+            RelayForms.C cState;
             for (Int32 i=0; i < 32; i++) {
                 ue24relay = (UE24)Enum.ToObject(typeof(UE24), bitVector32[i]);
-                cState = bitVector32[i] ? C.NO : C.NC;
+                cState = bitVector32[i] ? RelayForms.C.NO : RelayForms.C.NC;
                 relayStates.Add(ue24relay, cState);
             }
             return relayStates;
