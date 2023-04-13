@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
 using static TestLibrary.Switching.RelayForms;
-using static TestLibrary.Switching.USB_ERB24;
 
 namespace TestLibrary.Switching {
     public static class USB_ERB24 {
