@@ -47,6 +47,7 @@
     <Compile Include="InterfaceAdapters\USB-TO-GPIO.cs" />
     <Compile Include="SCPI_VISA_Instruments\PS_E3610xB.cs" />
     <Compile Include="SCPI_VISA_Instruments\SCPI_VISA.cs" />
+    <Compile Include="Switching\RelayForms.cs" />
     <Compile Include="Switching\USB_ERB24.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
