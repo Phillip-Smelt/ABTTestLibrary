@@ -31,6 +31,18 @@ namespace TestLibrary.Switching {
             R09, R10, R11, R12, R13, R14, R15, R16,
             R17, R18, R19, R20, R21, R22, R23, R24
         }
+
+        #region USB-ERB24 relay constants.
+        public const String R01 = "R01";    public const String R02 = "R02";    public const String R03 = "R03";
+        public const String R04 = "R04";    public const String R05 = "R05";    public const String R06 = "R06";
+        public const String R07 = "R07";    public const String R08 = "R08";    public const String R09 = "R09";
+        public const String R10 = "R10";    public const String R11 = "R11";    public const String R12 = "R12";
+        public const String R13 = "R13";    public const String R14 = "R14";    public const String R15 = "R15";
+        public const String R16 = "R16";    public const String R17 = "R17";    public const String R18 = "R18";
+        public const String R19 = "R19";    public const String R20 = "R20";    public const String R21 = "R21";
+        public const String R22 = "R22";    public const String R23 = "R23";    public const String R24 = "R24";
+        #endregion USB-ERB24 relay constants.
+
         internal enum UE24_PORTS { A, B, CL, CH }
         internal const Int32 UE24_PORT_COUNT = 4;
         const String UE24_PORT_INVALID = "Invalid USB-ERB24 DigitalPortType, must be in set '{ FirstPortA, FirstPortB, FirstPortCL, FirstPortCH }'.";
@@ -116,9 +128,11 @@ namespace TestLibrary.Switching {
             DigitalPortsWrite(mccBoard, ports);
         }
 
-        public static FORM_C GetState((UE24_BOARDS Board, UE24_RELAYS Relay) ue24_Relays) {
-            MccBoard mccBoard = new MccBoard((Int32)ue24_Relays.Board);
-            DigitalLogicState outputState = DigitalBitRead(mccBoard, ue24_Relays.Relay);
+        public static FORM_C GetState(UE24_BOARDS Board, String Relay) {
+            String[] relays = Enum.GetNames(typeof(UE24_RELAYS));
+            if (!Array.Exists(relays, r => r.Equals(Relay))) throw new ArgumentException($"Invalid relay '{Relay}', must be in set '{relays}'.");
+            MccBoard mccBoard = new MccBoard((Int32)Board);
+            DigitalLogicState outputState = DigitalBitRead(mccBoard, (UE24_RELAYS)Enum.Parse(typeof(UE24_RELAYS), Relay));
             return (outputState == DigitalLogicState.Low) ? FORM_C.NC : FORM_C.NO;
         }
 
