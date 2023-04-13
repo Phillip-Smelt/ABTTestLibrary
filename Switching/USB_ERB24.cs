@@ -87,9 +87,9 @@ namespace TestLibrary.Switching {
 
         public static void EnergizeUE24_All() { foreach (UE24_BOARDS ue24Board in Enum.GetValues(typeof(UE24_BOARDS))) EnergizeUE24(ue24Board); }
 
-        public static void SetState((UE24_BOARDS Board, UE24 Relay) UE24, C State) {
+        public static void SetState((UE24_BOARDS Board, UE24 Relay) UE24, RelayForms.C State) {
             MccBoard mccBoard = new MccBoard((Int32)UE24.Board);
-            DigitalLogicState desiredState = (State is C.NC) ? DigitalLogicState.Low : DigitalLogicState.High;
+            DigitalLogicState desiredState = (State is RelayForms.C.NC) ? DigitalLogicState.Low : DigitalLogicState.High;
             DigitalPortType digitalPortType = GetPortType(UE24.Relay);
             DigitalBitWrite(mccBoard, UE24.Relay, desiredState);
             DigitalLogicState outputState = DigitalBitRead(mccBoard, UE24.Relay);
@@ -114,13 +114,13 @@ namespace TestLibrary.Switching {
             DigitalPortsWrite(mccBoard, ports);
         }
 
-        public static C GetState((UE24_BOARDS Board, UE24 Relay) UE24) {
+        public static RelayForms.C GetState((UE24_BOARDS Board, UE24 Relay) UE24) {
             MccBoard mccBoard = new MccBoard((Int32)UE24.Board);
             DigitalLogicState outputState = DigitalBitRead(mccBoard, UE24.Relay);
             return (outputState == DigitalLogicState.Low) ? C.NC : C.NO;
         }
 
-        public static Dictionary<UE24, C> GetStates(UE24_BOARDS ue24Board) {
+        public static Dictionary<UE24, RelayForms.C> GetStates(UE24_BOARDS ue24Board) {
             MccBoard mccBoard = new MccBoard((Int32)ue24Board);
             UInt16[] bits = DigitalPortsRead(mccBoard);
             UInt32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 ui) { return (UInt32)ui; });
