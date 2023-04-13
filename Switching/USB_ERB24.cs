@@ -93,7 +93,7 @@ namespace TestLibrary.Switching {
             DigitalPortType digitalPortType = GetPortType(UE24.Relay);
             DigitalBitWrite(mccBoard, UE24.Relay, desiredState);
             DigitalLogicState outputState = DigitalBitRead(mccBoard, UE24.Relay);
-            if (outputState != desiredState) throw new InvalidOperationException($"MCC USB-ERB24 '({UE24.Board}, {UE24.Relay})' failed to set to '{State}'.");
+            if (outputState != desiredState) throw new InvalidOperationException($"USB-ERB24 '({UE24.Board}, {UE24.Relay})' failed to set to '{State}'.");
         }
 
         public static void SetStates(UE24_BOARDS Board, Dictionary<UE24, C> relayStates) {
@@ -195,7 +195,7 @@ namespace TestLibrary.Switching {
                 case UE24 relay when relay <= UE24.R24:
                     return DigitalPortType.FirstPortCH;
                 default:
-                    throw new NotImplementedException("Invalid MCC USB-ERB24 relay, must be in enum 'UE24'.");
+                    throw new NotImplementedException("Invalid USB-ERB24 relay, must be in enum 'UE24'.");
             }
         }
 
