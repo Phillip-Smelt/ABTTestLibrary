@@ -6,8 +6,8 @@
         public const string Cl = "Cl";
         public const string Op = "Op";
         // NOTE: Identifying Form C relays as enum "C" more critical than identifying relay State Closed as const String "C":
-        //  - This allows setting USB-ERB24's Form C relays as "(C, NO)" & "(C, NC)".
-        //  - This concisely describes "Form C relay set to State Normally Open" & "Form C relay set to State Normally Closed".
+        //  - This allows setting USB-ERB24's Form C relays as "(R#, NO)" & "(R#, NC)".
+        //  - This concisely describes "Form C relay R# set to State Normally Open" & "Form C relay R# set to State Normally Closed".
         // NOTE: Couldn't identify relay State Closed as optimal "C", due to identifying relay Form C as "C".
         //  - So identified State Closed as "Cl".
         //  - To be semi-consistent, identified relay State Open as "Op".

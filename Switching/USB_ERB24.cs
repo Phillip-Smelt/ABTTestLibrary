@@ -61,15 +61,15 @@ namespace TestLibrary.Switching {
         //  - Wish MCC had zero-indexed their Relays, numbering from R0 to R23 instead of R1 to R24.
         //  - Would've been optimal, as Relays 1 to 24 are controlled by digital port bits that are zero-indexed, from 0 to 23.
         public static Boolean AreUE24_BoardsReset() {
-            Boolean areUE24_BoardsReset = true;
+            Boolean ue24_BoardsReset = true;
             foreach (UE24_BOARDS ue24Board in Enum.GetValues(typeof(UE24_BOARDS))) {
                 MccBoard mccBoard = new MccBoard((Int32)ue24Board);
-                areUE24_BoardsReset = areUE24_BoardsReset && IsPortReset(mccBoard, DigitalPortType.FirstPortA);
-                areUE24_BoardsReset = areUE24_BoardsReset && IsPortReset(mccBoard, DigitalPortType.FirstPortB);
-                areUE24_BoardsReset = areUE24_BoardsReset && IsPortReset(mccBoard, DigitalPortType.FirstPortCL);
-                areUE24_BoardsReset = areUE24_BoardsReset && IsPortReset(mccBoard, DigitalPortType.FirstPortCH);
+                ue24_BoardsReset &= IsPortReset(mccBoard, DigitalPortType.FirstPortA);
+                ue24_BoardsReset &= IsPortReset(mccBoard, DigitalPortType.FirstPortB);
+                ue24_BoardsReset &= IsPortReset(mccBoard, DigitalPortType.FirstPortCL);
+                ue24_BoardsReset &= IsPortReset(mccBoard, DigitalPortType.FirstPortCH);
             }
-            return areUE24_BoardsReset;
+            return ue24_BoardsReset;
         }
 
         public static void DeEnergizeUE24(UE24_BOARDS ue24Board) {
