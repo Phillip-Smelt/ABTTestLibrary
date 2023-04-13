@@ -77,12 +77,19 @@ namespace TestLibrary.Switching {
             Boolean ue24_BoardsDeEnergized = true;
             foreach (UE24_BOARDS ue24_Board in Enum.GetValues(typeof(UE24_BOARDS))) {
                 MccBoard mccBoard = new MccBoard((Int32)ue24_Board);
-                ue24_BoardsDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortA);
-                ue24_BoardsDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortB);
-                ue24_BoardsDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortCL);
-                ue24_BoardsDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortCH);
+                ue24_BoardsDeEnergized &= IsUE24_BoardDeEnergized(ue24_Board);
             }
             return ue24_BoardsDeEnergized;
+        }
+
+        public static Boolean IsUE24_BoardDeEnergized(UE24_BOARDS ue24_Board) {
+            Boolean ue24_BoardDeEnergized = true;
+            MccBoard mccBoard = new MccBoard((Int32)ue24_Board);
+            ue24_BoardDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortA);
+            ue24_BoardDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortB);
+            ue24_BoardDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortCL);
+            ue24_BoardDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortCH);
+            return ue24_BoardDeEnergized;
         }
 
         public static void DeEnergizeUE24(UE24_BOARDS ue24_Board) {
