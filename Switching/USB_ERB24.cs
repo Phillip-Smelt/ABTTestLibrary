@@ -61,8 +61,8 @@ namespace TestLibrary.Switching {
             { UE24_RELAYS.R17, UE24_BITS.B16 }, { UE24_RELAYS.R18, UE24_BITS.B17 }, { UE24_RELAYS.R19, UE24_BITS.B18 }, { UE24_RELAYS.R20, UE24_BITS.B19 },
             { UE24_RELAYS.R21, UE24_BITS.B20 }, { UE24_RELAYS.R22, UE24_BITS.B21 }, { UE24_RELAYS.R23, UE24_BITS.B22 }, { UE24_RELAYS.R24, UE24_BITS.B23 },
         };
-        //  - Wish MCC had zero-indexed their Relays, numbering from R0 to R23 instead of R1 to R24.
-        //  - Would've been optimal, as Relays 1 to 24 are controlled by digital port bits that are zero-indexed, from 0 to 23.
+        //  - Wish MCC had zero-indexed their USB-ERB24 relays, numbering them from R0 to R23 instead of R1 to R24.
+        //  - Would've been optimal, as relays 1 to 24 are controlled by digital port bits that are zero-indexed, from 0 to 23.
         public static Boolean AreUE24_BoardsDeEnergized() {
             Boolean ue24_BoardsDeEnergized = true;
             foreach (UE24_BOARDS ue24_Board in Enum.GetValues(typeof(UE24_BOARDS))) {
