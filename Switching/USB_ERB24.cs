@@ -106,8 +106,8 @@ namespace TestLibrary.Switching {
             Byte[] bits = BitConverter.GetBytes(relayBits);
             UInt16[] biggerBits = Array.ConvertAll(bits, delegate (Byte b) { return (UInt16)b; });
             UInt16[] ports = DigitalPortsRead(mccBoard);
-            ports[(Int32)UE24_PORTS.A] |= biggerBits[(Int32)UE24_PORTS.A];
-            ports[(Int32)UE24_PORTS.B] |= biggerBits[(Int32)UE24_PORTS.B];
+            ports[(Int32)UE24_PORTS.A]  |= biggerBits[(Int32)UE24_PORTS.A];
+            ports[(Int32)UE24_PORTS.B]  |= biggerBits[(Int32)UE24_PORTS.B];
             ports[(Int32)UE24_PORTS.CL] |= (biggerBits[(Int32)UE24_PORTS.CL] &= 0x0F); // Remove CH bits.
             ports[(Int32)UE24_PORTS.CH] |= (biggerBits[(Int32)UE24_PORTS.CH] &= 0xF0); // Remove CL bits.
             DigitalPortsWrite(mccBoard, ports);
