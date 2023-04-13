@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
 using static TestLibrary.Switching.RelayForms;
+using static TestLibrary.Switching.USB_ERB24;
 
 namespace TestLibrary.Switching {
     public static class USB_ERB24 {
@@ -25,13 +26,14 @@ namespace TestLibrary.Switching {
         // NOTE: MCC's InstaCal USB-ERB24's board number indexing begins at 0, guessing because USB device indexing is likely also zero based.
         // - So UE24_BOARDS.E01 numerical value is 0, which is used when constructing a new MccBoard UE24_BOARDS.E01 object:
         // - Instantiation 'new MccBoard((Int32)UE24_BOARDS.E01)' is equivalent to 'new MccBoard(0)'.
-        public enum UE24 {
+        public enum UE24_RELAYS {
             R01, R02, R03, R04, R05, R06, R07, R08,
             R09, R10, R11, R12, R13, R14, R15, R16,
             R17, R18, R19, R20, R21, R22, R23, R24
         }
         internal enum UE24_PORTS { A, B, CL, CH }
-        private const Int32 UE24_PORT_COUNT = 4;
+        internal const Int32 UE24_PORT_COUNT = 4;
+        const String UE24_PORT_INVALID = "Invalid USB-ERB24 DigitalPortType, must be in set '{ FirstPortA, FirstPortB, FirstPortCL, FirstPortCH }'.";
         [Flags]
         internal enum UE24_BITS : UInt32 {
             None = 0,
@@ -51,56 +53,56 @@ namespace TestLibrary.Switching {
             B00 = UE24_BITS.B00, B01 = UE24_BITS.B01, B02 = UE24_BITS.B02, B03 = UE24_BITS.B03,
             All = B00 | B01 | B02 | B03
         }
-        internal static readonly Dictionary<UE24, UE24_BITS> UE24_RεB = new Dictionary<UE24, UE24_BITS>() {
-            { UE24.R01, UE24_BITS.B00 }, { UE24.R02, UE24_BITS.B01 }, { UE24.R03, UE24_BITS.B02 }, { UE24.R04, UE24_BITS.B03 },
-            { UE24.R05, UE24_BITS.B04 }, { UE24.R06, UE24_BITS.B05 }, { UE24.R07, UE24_BITS.B06 }, { UE24.R08, UE24_BITS.B07 },
-            { UE24.R09, UE24_BITS.B08 }, { UE24.R10, UE24_BITS.B09 }, { UE24.R11, UE24_BITS.B10 }, { UE24.R12, UE24_BITS.B11 },
-            { UE24.R13, UE24_BITS.B12 }, { UE24.R14, UE24_BITS.B13 }, { UE24.R15, UE24_BITS.B14 }, { UE24.R16, UE24_BITS.B15 },
-            { UE24.R17, UE24_BITS.B16 }, { UE24.R18, UE24_BITS.B17 }, { UE24.R19, UE24_BITS.B18 }, { UE24.R20, UE24_BITS.B19 },
-            { UE24.R21, UE24_BITS.B20 }, { UE24.R22, UE24_BITS.B21 }, { UE24.R23, UE24_BITS.B22 }, { UE24.R24, UE24_BITS.B23 },
+        internal static readonly Dictionary<UE24_RELAYS, UE24_BITS> UE24_RεB = new Dictionary<UE24_RELAYS, UE24_BITS>() {
+            { UE24_RELAYS.R01, UE24_BITS.B00 }, { UE24_RELAYS.R02, UE24_BITS.B01 }, { UE24_RELAYS.R03, UE24_BITS.B02 }, { UE24_RELAYS.R04, UE24_BITS.B03 },
+            { UE24_RELAYS.R05, UE24_BITS.B04 }, { UE24_RELAYS.R06, UE24_BITS.B05 }, { UE24_RELAYS.R07, UE24_BITS.B06 }, { UE24_RELAYS.R08, UE24_BITS.B07 },
+            { UE24_RELAYS.R09, UE24_BITS.B08 }, { UE24_RELAYS.R10, UE24_BITS.B09 }, { UE24_RELAYS.R11, UE24_BITS.B10 }, { UE24_RELAYS.R12, UE24_BITS.B11 },
+            { UE24_RELAYS.R13, UE24_BITS.B12 }, { UE24_RELAYS.R14, UE24_BITS.B13 }, { UE24_RELAYS.R15, UE24_BITS.B14 }, { UE24_RELAYS.R16, UE24_BITS.B15 },
+            { UE24_RELAYS.R17, UE24_BITS.B16 }, { UE24_RELAYS.R18, UE24_BITS.B17 }, { UE24_RELAYS.R19, UE24_BITS.B18 }, { UE24_RELAYS.R20, UE24_BITS.B19 },
+            { UE24_RELAYS.R21, UE24_BITS.B20 }, { UE24_RELAYS.R22, UE24_BITS.B21 }, { UE24_RELAYS.R23, UE24_BITS.B22 }, { UE24_RELAYS.R24, UE24_BITS.B23 },
         };
         //  - Wish MCC had zero-indexed their Relays, numbering from R0 to R23 instead of R1 to R24.
         //  - Would've been optimal, as Relays 1 to 24 are controlled by digital port bits that are zero-indexed, from 0 to 23.
-        public static Boolean AreUE24_BoardsReset() {
-            Boolean ue24_BoardsReset = true;
-            foreach (UE24_BOARDS ue24Board in Enum.GetValues(typeof(UE24_BOARDS))) {
-                MccBoard mccBoard = new MccBoard((Int32)ue24Board);
-                ue24_BoardsReset &= IsPortReset(mccBoard, DigitalPortType.FirstPortA);
-                ue24_BoardsReset &= IsPortReset(mccBoard, DigitalPortType.FirstPortB);
-                ue24_BoardsReset &= IsPortReset(mccBoard, DigitalPortType.FirstPortCL);
-                ue24_BoardsReset &= IsPortReset(mccBoard, DigitalPortType.FirstPortCH);
+        public static Boolean AreUE24_BoardsDeEnergized() {
+            Boolean ue24_BoardsDeEnergized = true;
+            foreach (UE24_BOARDS ue24_Board in Enum.GetValues(typeof(UE24_BOARDS))) {
+                MccBoard mccBoard = new MccBoard((Int32)ue24_Board);
+                ue24_BoardsDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortA);
+                ue24_BoardsDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortB);
+                ue24_BoardsDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortCL);
+                ue24_BoardsDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortCH);
             }
-            return ue24_BoardsReset;
+            return ue24_BoardsDeEnergized;
         }
 
-        public static void DeEnergizeUE24(UE24_BOARDS ue24Board) {
-            MccBoard mccBoard = new MccBoard((Int32)ue24Board);
-            DigitalPortsWrite(mccBoard, new UInt16[UE24_PORT_COUNT] { (UInt16)UE24_PORTS_AεB.None, (UInt16)UE24_PORTS_AεB.None, (UInt16)UE24_PORTS_AεB.None, (UInt16)UE24_PORTS_AεB.None });
+        public static void DeEnergizeUE24(UE24_BOARDS ue24_Board) {
+            MccBoard mccBoard = new MccBoard((Int32)ue24_Board);
+            DigitalPortsWrite(mccBoard, new UInt16[UE24_PORT_COUNT] { (UInt16)UE24_PORTS_AεB.None, (UInt16)UE24_PORTS_AεB.None, (UInt16)UE24_PORTS_CLεCH.None, (UInt16)UE24_PORTS_CLεCH.None });
         }
 
-        public static void EnergizeUE24(UE24_BOARDS ue24Board) {
-            MccBoard mccBoard = new MccBoard((Int32)ue24Board);
-            DigitalPortsWrite(mccBoard, new UInt16[UE24_PORT_COUNT] { (UInt16)UE24_PORTS_AεB.All, (UInt16)UE24_PORTS_AεB.All, (UInt16)UE24_PORTS_AεB.All, (UInt16)UE24_PORTS_AεB.All });
+        public static void EnergizeUE24(UE24_BOARDS ue24_Board) {
+            MccBoard mccBoard = new MccBoard((Int32)ue24_Board);
+            DigitalPortsWrite(mccBoard, new UInt16[UE24_PORT_COUNT] { (UInt16)UE24_PORTS_AεB.All, (UInt16)UE24_PORTS_AεB.All, (UInt16)UE24_PORTS_CLεCH.All, (UInt16)UE24_PORTS_CLεCH.All });
         }
 
-        public static void DeEnergizeUE24_All() { foreach (UE24_BOARDS ue24Board in Enum.GetValues(typeof(UE24_BOARDS))) DeEnergizeUE24(ue24Board); }
+        public static void DeEnergizeUE24_All() { foreach (UE24_BOARDS ue24_Board in Enum.GetValues(typeof(UE24_BOARDS))) DeEnergizeUE24(ue24_Board); }
 
-        public static void EnergizeUE24_All() { foreach (UE24_BOARDS ue24Board in Enum.GetValues(typeof(UE24_BOARDS))) EnergizeUE24(ue24Board); }
+        public static void EnergizeUE24_All() { foreach (UE24_BOARDS ue24_Board in Enum.GetValues(typeof(UE24_BOARDS))) EnergizeUE24(ue24_Board); }
 
-        public static void SetState((UE24_BOARDS Board, UE24 Relay) UE24, FORM_C State) {
-            MccBoard mccBoard = new MccBoard((Int32)UE24.Board);
-            DigitalLogicState desiredState = (State is FORM_C.NC) ? DigitalLogicState.Low : DigitalLogicState.High;
-            _ = GetPortType(UE24.Relay);
-            DigitalBitWrite(mccBoard, UE24.Relay, desiredState);
-            DigitalLogicState outputState = DigitalBitRead(mccBoard, UE24.Relay);
-            if (outputState != desiredState) throw new InvalidOperationException($"USB-ERB24 '({UE24.Board}, {UE24.Relay})' failed to set to '{State}'.");
+        public static void SetState((UE24_BOARDS Board, UE24_RELAYS Relay) UE24_RELAYS, FORM_C form_C) {
+            MccBoard mccBoard = new MccBoard((Int32)UE24_RELAYS.Board);
+            DigitalLogicState desiredState = (form_C is FORM_C.NC) ? DigitalLogicState.Low : DigitalLogicState.High;
+            _ = GetPortType(UE24_RELAYS.Relay);
+            DigitalBitWrite(mccBoard, UE24_RELAYS.Relay, desiredState);
+            DigitalLogicState outputState = DigitalBitRead(mccBoard, UE24_RELAYS.Relay);
+            if (outputState != desiredState) throw new InvalidOperationException($"USB-ERB24 '({UE24_RELAYS.Board}, {UE24_RELAYS.Relay})' failed to set to '{form_C}'.");
         }
 
-        public static void SetStates(UE24_BOARDS Board, Dictionary<UE24, FORM_C> relayStates) {
+        public static void SetStates(UE24_BOARDS Board, Dictionary<UE24_RELAYS, FORM_C> relayStates) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
             UInt32 relayBits = 0x0000;
             UE24_BITS ue24bit;
-            foreach (KeyValuePair<UE24, FORM_C> kvp in relayStates) {
+            foreach (KeyValuePair<UE24_RELAYS, FORM_C> kvp in relayStates) {
                 ue24bit = ((FORM_C)UE24_RεB[kvp.Key] is FORM_C.NC) ? UE24_BITS.None : (UE24_BITS)Enum.ToObject(typeof(UE24_BITS), (Int32)kvp.Key);
                 relayBits |= (UInt32)ue24bit; // Sets a 1 in each bit corresponding to relay state in relayStates.
             }
@@ -114,14 +116,14 @@ namespace TestLibrary.Switching {
             DigitalPortsWrite(mccBoard, ports);
         }
 
-        public static FORM_C GetState((UE24_BOARDS Board, UE24 Relay) UE24) {
-            MccBoard mccBoard = new MccBoard((Int32)UE24.Board);
-            DigitalLogicState outputState = DigitalBitRead(mccBoard, UE24.Relay);
+        public static FORM_C GetState((UE24_BOARDS Board, UE24_RELAYS Relay) ue24_Relays) {
+            MccBoard mccBoard = new MccBoard((Int32)ue24_Relays.Board);
+            DigitalLogicState outputState = DigitalBitRead(mccBoard, ue24_Relays.Relay);
             return (outputState == DigitalLogicState.Low) ? FORM_C.NC : FORM_C.NO;
         }
 
-        public static Dictionary<UE24, FORM_C> GetStates(UE24_BOARDS ue24Board) {
-            MccBoard mccBoard = new MccBoard((Int32)ue24Board);
+        public static Dictionary<UE24_RELAYS, FORM_C> GetStates(UE24_BOARDS ue24_Board) {
+            MccBoard mccBoard = new MccBoard((Int32)ue24_Board);
             UInt16[] bits = DigitalPortsRead(mccBoard);
             UInt32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 ui) { return (UInt32)ui; });
             UInt32 relayBits= 0x0000;
@@ -130,26 +132,26 @@ namespace TestLibrary.Switching {
             relayBits |= biggerBits[(Int32)UE24_PORTS.CL] << 12;
             relayBits |= biggerBits[(Int32)UE24_PORTS.CH] << 16;
             BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
-            Dictionary<UE24, FORM_C> relayStates = new Dictionary<UE24, FORM_C>();
+            Dictionary<UE24_RELAYS, FORM_C> relayStates = new Dictionary<UE24_RELAYS, FORM_C>();
 
-            UE24 ue24relay;
+            UE24_RELAYS ue24relay;
             FORM_C cState;
             for (Int32 i=0; i < 32; i++) {
-                ue24relay = (UE24)Enum.ToObject(typeof(UE24), bitVector32[i]);
+                ue24relay = (UE24_RELAYS)Enum.ToObject(typeof(UE24_RELAYS), bitVector32[i]);
                 cState = bitVector32[i] ? FORM_C.NO : FORM_C.NC;
                 relayStates.Add(ue24relay, cState);
             }
             return relayStates;
         }
 
-        internal static DigitalLogicState DigitalBitRead(MccBoard mccBoard, UE24 ue24Relay) {
-            ErrorInfo errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)ue24Relay, out DigitalLogicState bitValue);
+        internal static DigitalLogicState DigitalBitRead(MccBoard mccBoard, UE24_RELAYS ue24_Relay) {
+            ErrorInfo errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)ue24_Relay, out DigitalLogicState bitValue);
             if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
             return bitValue;
         }
 
-        internal static void DigitalBitWrite(MccBoard mccBoard, UE24 ue24Relay, DigitalLogicState inputLogicState) {
-            ErrorInfo errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA, (Int32)ue24Relay, inputLogicState);
+        internal static void DigitalBitWrite(MccBoard mccBoard, UE24_RELAYS ue24_Relay, DigitalLogicState inputLogicState) {
+            ErrorInfo errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA, (Int32)ue24_Relay, inputLogicState);
             if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
         }
 
@@ -169,8 +171,6 @@ namespace TestLibrary.Switching {
         }
 
         internal static void DigitalPortWrite(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 dataValue) {
-            Console.WriteLine($"Data Value: '{dataValue}'.");
-            Debug.WriteLine($"Data Value: '{dataValue}'.");
             ErrorInfo errorInfo = mccBoard.DOut(digitalPortType, dataValue);
             if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
         }
@@ -182,20 +182,31 @@ namespace TestLibrary.Switching {
             DigitalPortWrite(mccBoard, DigitalPortType.FirstPortCH, Ports[(Int32)UE24_PORTS.CH]);
         }
 
-        internal static Boolean IsPortReset(MccBoard mccBoard, DigitalPortType digitalPortType) { return DigitalPortRead(mccBoard, digitalPortType) == (UInt16)UE24_BITS.None; }
+        internal static Boolean IsPortDeEnergized(MccBoard mccBoard, DigitalPortType digitalPortType) {
+            switch(digitalPortType) {
+                case DigitalPortType.FirstPortA:
+                case DigitalPortType.FirstPortB:
+                    return DigitalPortRead(mccBoard, digitalPortType) == (UInt16)UE24_PORTS_AεB.None;
+                case DigitalPortType.FirstPortCL:
+                case DigitalPortType.FirstPortCH:
+                    return DigitalPortRead(mccBoard, digitalPortType) == (UInt16)UE24_PORTS_CLεCH.None;
+                default:
+                    throw new ArgumentException(UE24_PORT_INVALID);
+            }
+        }
 
-        internal static DigitalPortType GetPortType(UE24 ue24relay) {
+        internal static DigitalPortType GetPortType(UE24_RELAYS ue24relay) {
             switch (ue24relay) {
-                case UE24 relay when relay <= UE24.R08:
+                case UE24_RELAYS relay when relay <= UE24_RELAYS.R08:
                     return DigitalPortType.FirstPortA;
-                case UE24 relay when relay <= UE24.R16:
+                case UE24_RELAYS relay when relay <= UE24_RELAYS.R16:
                     return DigitalPortType.FirstPortB;
-                case UE24 relay when relay <= UE24.R20:
+                case UE24_RELAYS relay when relay <= UE24_RELAYS.R20:
                     return DigitalPortType.FirstPortCL;
-                case UE24 relay when relay <= UE24.R24:
+                case UE24_RELAYS relay when relay <= UE24_RELAYS.R24:
                     return DigitalPortType.FirstPortCH;
                 default:
-                    throw new NotImplementedException("Invalid USB-ERB24 relay, must be in enum 'UE24'.");
+                    throw new ArgumentException(UE24_PORT_INVALID);
             }
         }
 

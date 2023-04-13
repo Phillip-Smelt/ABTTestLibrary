@@ -1,5 +1,4 @@
 ﻿using System;
-using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 using TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
