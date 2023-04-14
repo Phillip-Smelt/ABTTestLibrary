@@ -118,10 +118,10 @@ namespace TestLibrary.Switching {
         public static void SetStates(UE24_BOARDS Board, Dictionary<UE24_RELAYS, FORM_C> relayStates) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
             UInt32 relayBits = 0x0000;
-            UE24_BITS ue24bit;
+            UE24_BITS ue24_bit;
             foreach (KeyValuePair<UE24_RELAYS, FORM_C> kvp in relayStates) {
-                ue24bit = ((FORM_C)UE24_RεB[kvp.Key] is FORM_C.NC) ? UE24_BITS.None : (UE24_BITS)Enum.ToObject(typeof(UE24_BITS), (Int32)kvp.Key);
-                relayBits |= (UInt32)ue24bit; // Sets a 1 in each bit corresponding to relay state in relayStates.
+                ue24_bit = ((FORM_C)UE24_RεB[kvp.Key] is FORM_C.NC) ? UE24_BITS.None : (UE24_BITS)Enum.ToObject(typeof(UE24_BITS), (Int32)kvp.Key);
+                relayBits |= (UInt32)ue24_bit; // Sets a 1 in each bit corresponding to relay state in relayStates.
             }
             Byte[] bits = BitConverter.GetBytes(relayBits);
             UInt16[] biggerBits = Array.ConvertAll(bits, delegate (Byte b) { return (UInt16)b; });
@@ -153,12 +153,12 @@ namespace TestLibrary.Switching {
             BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
             Dictionary<UE24_RELAYS, FORM_C> relayStates = new Dictionary<UE24_RELAYS, FORM_C>();
 
-            UE24_RELAYS ue24relay;
+            UE24_RELAYS ue24_relay;
             FORM_C cState;
             for (Int32 i=0; i < 32; i++) {
-                ue24relay = (UE24_RELAYS)Enum.ToObject(typeof(UE24_RELAYS), bitVector32[i]);
+                ue24_relay = (UE24_RELAYS)Enum.ToObject(typeof(UE24_RELAYS), bitVector32[i]);
                 cState = bitVector32[i] ? FORM_C.NO : FORM_C.NC;
-                relayStates.Add(ue24relay, cState);
+                relayStates.Add(ue24_relay, cState);
             }
             return relayStates;
         }
@@ -214,8 +214,8 @@ namespace TestLibrary.Switching {
             }
         }
 
-        internal static DigitalPortType GetPortType(UE24_RELAYS ue24relay) {
-            switch (ue24relay) {
+        internal static DigitalPortType GetPortType(UE24_RELAYS ue24_relay) {
+            switch (ue24_relay) {
                 case UE24_RELAYS relay when relay <= UE24_RELAYS.R08:
                     return DigitalPortType.FirstPortA;
                 case UE24_RELAYS relay when relay <= UE24_RELAYS.R16:
