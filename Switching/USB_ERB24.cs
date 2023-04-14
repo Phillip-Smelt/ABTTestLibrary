@@ -7,6 +7,7 @@ using static TestLibrary.Switching.RelayForms;
 namespace TestLibrary.Switching {
     public static class USB_ERB24 {
         // TODO: Convert the USB_ERB24 class to a Singleton, like the USB_TO_GPIO class.  If there are multiple USB-ERB24s, copy the USB_ERB24 class & append numbers?  USB_UE24_1, USB_UE24_2...
+        // TODO: Once this class' internal methods are fully verified by TestLibraryTests, refactor them to private methods & delete TestLibraryTest's Unit tests for the now private methods.
         // NOTE: This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
         // NOTE: USB-ERB24 relays are configurable for either Non-Inverting or Inverting logic, via hardware DIP switch S1.
         //  - Non-Inverting:  Logic low de-energizes the relays, logic high energizes them.
@@ -73,6 +74,7 @@ namespace TestLibrary.Switching {
         };
         //  - Wish MCC had zero-indexed their USB-ERB24 relays, numbering them from R0 to R23 instead of R1 to R24.
         //  - Would've been optimal, as relays 1 to 24 are controlled by digital port bits that are zero-indexed, from 0 to 23.
+
         public static Boolean AreUE24_BoardsDeEnergized() {
             Boolean ue24_BoardsDeEnergized = true;
             foreach (UE24_BOARDS ue24_Board in Enum.GetValues(typeof(UE24_BOARDS))) {
@@ -81,6 +83,8 @@ namespace TestLibrary.Switching {
             }
             return ue24_BoardsDeEnergized;
         }
+
+        public static Boolean AreUE24_BoardsEnergized() { return !AreUE24_BoardsDeEnergized(); }
 
         public static Boolean IsUE24_BoardDeEnergized(UE24_BOARDS ue24_Board) {
             Boolean ue24_BoardDeEnergized = true;
@@ -91,6 +95,8 @@ namespace TestLibrary.Switching {
             ue24_BoardDeEnergized &= IsPortDeEnergized(mccBoard, DigitalPortType.FirstPortCH);
             return ue24_BoardDeEnergized;
         }
+
+        public static Boolean IsUE24_BoardEnergized(UE24_BOARDS ue24_Board) { return !IsUE24_BoardDeEnergized(ue24_Board); }
 
         public static void DeEnergizeUE24(UE24_BOARDS ue24_Board) {
             MccBoard mccBoard = new MccBoard((Int32)ue24_Board);
@@ -144,21 +150,21 @@ namespace TestLibrary.Switching {
         public static Dictionary<UE24_RELAYS, FORM_C> GetStates(UE24_BOARDS ue24_Board) {
             MccBoard mccBoard = new MccBoard((Int32)ue24_Board);
             UInt16[] bits = DigitalPortsRead(mccBoard);
-            UInt32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 ui) { return (UInt32)ui; });
+            UInt32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
             UInt32 relayBits= 0x0000;
             relayBits |= biggerBits[(Int32)UE24_PORTS.A]  << 00;
             relayBits |= biggerBits[(Int32)UE24_PORTS.B]  << 08;
             relayBits |= biggerBits[(Int32)UE24_PORTS.CL] << 12;
             relayBits |= biggerBits[(Int32)UE24_PORTS.CH] << 16;
             BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
-            Dictionary<UE24_RELAYS, FORM_C> relayStates = new Dictionary<UE24_RELAYS, FORM_C>();
 
+            Dictionary<UE24_RELAYS, FORM_C> relayStates = new Dictionary<UE24_RELAYS, FORM_C>();
             UE24_RELAYS ue24_relay;
-            FORM_C cState;
+            FORM_C form_C;
             for (Int32 i=0; i < 32; i++) {
                 ue24_relay = (UE24_RELAYS)Enum.ToObject(typeof(UE24_RELAYS), bitVector32[i]);
-                cState = bitVector32[i] ? FORM_C.NO : FORM_C.NC;
-                relayStates.Add(ue24_relay, cState);
+                form_C = bitVector32[i] ? FORM_C.NO : FORM_C.NC;
+                relayStates.Add(ue24_relay, form_C);
             }
             return relayStates;
         }
@@ -200,6 +206,8 @@ namespace TestLibrary.Switching {
             DigitalPortWrite(mccBoard, DigitalPortType.FirstPortCL, Ports[(Int32)UE24_PORTS.CL]);
             DigitalPortWrite(mccBoard, DigitalPortType.FirstPortCH, Ports[(Int32)UE24_PORTS.CH]);
         }
+
+        internal static Boolean IsPortEnergized(MccBoard mccBoard, DigitalPortType digitalPortType) { return !IsPortDeEnergized(mccBoard, digitalPortType); }
 
         internal static Boolean IsPortDeEnergized(MccBoard mccBoard, DigitalPortType digitalPortType) {
             switch(digitalPortType) {

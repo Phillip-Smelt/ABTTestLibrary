@@ -220,6 +220,8 @@ namespace TestLibrary {
             foreach (KeyValuePair<String, Test> kvp in this.ConfigTest.Tests) {
                 try {
                     kvp.Value.Measurement = await Task.Run(() => RunTestAsync(kvp.Value.ID));
+                    // TODO: Restore original parameter export of "this".
+                    // kvp.Value.Measurement = await Task.Run(() => RunTestAsync(this));
                     kvp.Value.Result = EvaluateTestResult(kvp.Value);
                 } catch (Exception e) {
                     if (e.ToString().Contains(TestCancellationException.ClassName)) {
