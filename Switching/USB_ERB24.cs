@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static TestLibrary.Switching.RelayForms;
+using static TestLibrary.Switching.USB_ERB24;
 
 namespace TestLibrary.Switching {
     public static class USB_ERB24 {
@@ -31,15 +33,25 @@ namespace TestLibrary.Switching {
             R17, R18, R19, R20, R21, R22, R23, R24
         }
 
+        private readonly static String[] R = Enum.GetNames(typeof(UE24_RELAYS));
+        private readonly static UInt32[] B = (UInt32[])Enum.GetValues(typeof(UE24_BITS));
+        private readonly static Dictionary<String, (UE24_RELAYS, UE24_BITS)> UE24_SεRεB = GetUE24_SεRεB();
+        private static Dictionary<String, (UE24_RELAYS ue24_Relays, UE24_BITS ue24_Bits)> GetUE24_SεRεB() {
+            String[] S = Enum.GetNames(typeof(UE24_RELAYS));
+            Dictionary<String, (UE24_RELAYS, UE24_BITS)> UE24_SεRεB = new Dictionary<string, (UE24_RELAYS, UE24_BITS)>();
+            for (Int32 i = 0; i < R.Length; i++) { UE24_SεRεB.Add(S[i], ((UE24_RELAYS)i, (UE24_BITS)i)); }
+            return UE24_SεRεB;
+        }
+
         #region USB-ERB24 relay constants.
-        public const String R01 = "R01";    public const String R02 = "R02";    public const String R03 = "R03";
-        public const String R04 = "R04";    public const String R05 = "R05";    public const String R06 = "R06";
-        public const String R07 = "R07";    public const String R08 = "R08";    public const String R09 = "R09";
-        public const String R10 = "R10";    public const String R11 = "R11";    public const String R12 = "R12";
-        public const String R13 = "R13";    public const String R14 = "R14";    public const String R15 = "R15";
-        public const String R16 = "R16";    public const String R17 = "R17";    public const String R18 = "R18";
-        public const String R19 = "R19";    public const String R20 = "R20";    public const String R21 = "R21";
-        public const String R22 = "R22";    public const String R23 = "R23";    public const String R24 = "R24";
+        public readonly static String R01 = R[00];    public readonly static String R02 = R[01];    public readonly static String R03 = R[02];
+        public readonly static String R04 = R[03];    public readonly static String R05 = R[04];    public readonly static String R06 = R[05];
+        public readonly static String R07 = R[06];    public readonly static String R08 = R[07];    public readonly static String R09 = R[08];
+        public readonly static String R10 = R[09];    public readonly static String R11 = R[10];    public readonly static String R12 = R[11];
+        public readonly static String R13 = R[12];    public readonly static String R14 = R[13];    public readonly static String R15 = R[14];
+        public readonly static String R16 = R[15];    public readonly static String R17 = R[16];    public readonly static String R18 = R[17];
+        public readonly static String R19 = R[18];    public readonly static String R20 = R[19];    public readonly static String R21 = R[20];
+        public readonly static String R22 = R[21];    public readonly static String R23 = R[22];    public readonly static String R24 = R[23];
         #endregion USB-ERB24 relay constants.
 
         internal enum UE24_PORTS { A, B, CL, CH }
@@ -47,7 +59,6 @@ namespace TestLibrary.Switching {
         const String UE24_PORT_INVALID = "Invalid USB-ERB24 DigitalPortType, must be in set '{ FirstPortA, FirstPortB, FirstPortCL, FirstPortCH }'.";
         [Flags]
         internal enum UE24_BITS : UInt32 {
-            None = 0,
             B00 = 1 << 00, B01 = 1 << 01, B02 = 1 << 02, B03 = 1 << 03, B04 = 1 << 04, B05 = 1 << 05, B06 = 1 << 06, B07 = 1 << 07,
             B08 = 1 << 08, B09 = 1 << 09, B10 = 1 << 10, B11 = 1 << 11, B12 = 1 << 12, B13 = 1 << 13, B14 = 1 << 14, B15 = 1 << 15,
             B16 = 1 << 16, B17 = 1 << 17, B18 = 1 << 18, B19 = 1 << 19, B20 = 1 << 20, B21 = 1 << 21, B22 = 1 << 22, B23 = 1 << 23
@@ -64,7 +75,7 @@ namespace TestLibrary.Switching {
             B00 = UE24_BITS.B00, B01 = UE24_BITS.B01, B02 = UE24_BITS.B02, B03 = UE24_BITS.B03,
             All = B00 | B01 | B02 | B03
         }
-        internal static readonly Dictionary<UE24_RELAYS, UE24_BITS> UE24_RεB = new Dictionary<UE24_RELAYS, UE24_BITS>() {
+        internal readonly static Dictionary<UE24_RELAYS, UE24_BITS> UE24_RεB = new Dictionary<UE24_RELAYS, UE24_BITS>() {
             { UE24_RELAYS.R01, UE24_BITS.B00 }, { UE24_RELAYS.R02, UE24_BITS.B01 }, { UE24_RELAYS.R03, UE24_BITS.B02 }, { UE24_RELAYS.R04, UE24_BITS.B03 },
             { UE24_RELAYS.R05, UE24_BITS.B04 }, { UE24_RELAYS.R06, UE24_BITS.B05 }, { UE24_RELAYS.R07, UE24_BITS.B06 }, { UE24_RELAYS.R08, UE24_BITS.B07 },
             { UE24_RELAYS.R09, UE24_BITS.B08 }, { UE24_RELAYS.R10, UE24_BITS.B09 }, { UE24_RELAYS.R11, UE24_BITS.B10 }, { UE24_RELAYS.R12, UE24_BITS.B11 },
@@ -207,19 +218,10 @@ namespace TestLibrary.Switching {
             DigitalPortWrite(mccBoard, DigitalPortType.FirstPortCH, Ports[(Int32)UE24_PORTS.CH]);
         }
 
-        internal static Boolean IsPortEnergized(MccBoard mccBoard, DigitalPortType digitalPortType) { return !IsPortDeEnergized(mccBoard, digitalPortType); }
+        internal static Boolean IsPortState(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 portState) { return DigitalPortRead(mccBoard, digitalPortType) == portState; }
 
-        internal static Boolean IsPortDeEnergized(MccBoard mccBoard, DigitalPortType digitalPortType) {
-            switch(digitalPortType) {
-                case DigitalPortType.FirstPortA:
-                case DigitalPortType.FirstPortB:
-                    return DigitalPortRead(mccBoard, digitalPortType) == (UInt16)UE24_PORTS_AεB.None;
-                case DigitalPortType.FirstPortCL:
-                case DigitalPortType.FirstPortCH:
-                    return DigitalPortRead(mccBoard, digitalPortType) == (UInt16)UE24_PORTS_CLεCH.None;
-                default:
-                    throw new ArgumentException(UE24_PORT_INVALID);
-            }
+        internal static Boolean IsRelayState(MccBoard mccBoard, UE24_RELAYS ue24_Relay, FORM_C form_C) {
+            return DigitalPortRead(mccBoard, digitalPortType) == portState;
         }
 
         internal static DigitalPortType GetPortType(UE24_RELAYS ue24_relay) {
@@ -245,6 +247,11 @@ namespace TestLibrary.Switching {
                 $"MccBoard Descriptor : {mccBoard.Descriptor}.{Environment.NewLine}" +
                 $"ErrorInfo Value     : {errorInfo.Value}.{Environment.NewLine}" +
                 $"ErrorInfo Message   : {errorInfo.Message}.{Environment.NewLine}");
+        }
+
+        internal FORM_C GetRelayFromString(String relay) {
+            if (!Array.Exists(relays, r => r.Equals(Relay))) throw new ArgumentException($"Invalid relay '{Relay}', must be in set '{relays}'.");
+            (UE24_RELAYS)Enum.Parse(typeof(UE24_RELAYS), Relay)
         }
     }
 }

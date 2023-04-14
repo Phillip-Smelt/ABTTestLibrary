@@ -31,7 +31,7 @@ namespace TestLibrary.InterfaceAdapters {
         // - https://e2e.ti.com/support/power-management-group/power-management/f/power-management-forum/1132257/usb-to-gpio-the-difference-between-usb-to-gpio-and-usb-to-gpio2
         public readonly SMBusAdapter Adapter;
         public const String Description = "Texas Instruments © 2006 USB Interface Adapter";
-        private static readonly USB_TO_GPIO _only = new USB_TO_GPIO();
+        private readonly static USB_TO_GPIO _only = new USB_TO_GPIO();
         private static SAAStatus _saaStatus;
         private static BlockEncodedResult _blockEncodedResult;
         static USB_TO_GPIO() { }
