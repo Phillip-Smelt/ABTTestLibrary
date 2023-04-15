@@ -44,16 +44,16 @@ namespace TestLibrary.Switching {
         internal enum PORTS { A, B, CL, CH }
         internal readonly static UInt16[] Portslow  = { UINT16_0000, UINT16_0000, UINT16_0000, UINT16_0000 };
         internal readonly static UInt16[] PortsHIGH = { UINT16_00FF, UINT16_00FF, UINT16_000F, UINT16_000F };
+        internal readonly static Dictionary<String, (RELAYS R, UInt32 B)> SεRεB = GetSεRεB();
+        internal static Dictionary<String, (RELAYS, UInt32)> GetSεRεB() {
+            String[] S = Enum.GetNames(typeof(RELAYS));
+            Dictionary<String, (RELAYS, UInt32)> SεRεB = new Dictionary<String, (RELAYS, UInt32)>();
+            for (Int32 i = 0; i < S.Length; i++) { SεRεB.Add(S[i], ((RELAYS)i, (UInt32)1 << i)); }
+            return SεRεB;
+        }
         #endregion internal properties
 
         #region private properties
-        private readonly static Dictionary<String, (RELAYS R, UInt32 B)> SεRεB = GetSεRεB();
-        private static Dictionary<String, (RELAYS, UInt32)> GetSεRεB() {
-            String[] S = Enum.GetNames(typeof(RELAYS));
-            Dictionary<String, (RELAYS, UInt32)> SεRεB = new Dictionary<String, (RELAYS, UInt32)>();
-            for (Int32 i = 0; i < S.Length; i++) { SεRεB.Add(S[i], ((RELAYS)i, (UInt32)1<<i)); }
-            return SεRεB;
-        }
         private const String PORT_INVALID = "Invalid USB-ERB24 DigitalPortType, must be in set '{ FirstPortA, FirstPortB, FirstPortCL, FirstPortCH }'.";
         #endregion private properties
 
