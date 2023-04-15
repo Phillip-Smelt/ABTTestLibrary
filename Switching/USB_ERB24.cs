@@ -27,14 +27,14 @@ namespace TestLibrary.Switching {
         #region public properties
         public enum BOARDS { E01 }
         public enum RELAYS { R01, R02, R03, R04, R05, R06, R07, R08, R09, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22, R23, R24 }
-        public readonly static String R01 = R[00]; public readonly static String R02 = R[01]; public readonly static String R03 = R[02];
-        public readonly static String R04 = R[03]; public readonly static String R05 = R[04]; public readonly static String R06 = R[05];
-        public readonly static String R07 = R[06]; public readonly static String R08 = R[07]; public readonly static String R09 = R[08];
-        public readonly static String R10 = R[09]; public readonly static String R11 = R[10]; public readonly static String R12 = R[11];
-        public readonly static String R13 = R[12]; public readonly static String R14 = R[13]; public readonly static String R15 = R[14];
-        public readonly static String R16 = R[15]; public readonly static String R17 = R[16]; public readonly static String R18 = R[17];
-        public readonly static String R19 = R[18]; public readonly static String R20 = R[19]; public readonly static String R21 = R[20];
-        public readonly static String R22 = R[21]; public readonly static String R23 = R[22]; public readonly static String R24 = R[23];
+        public const String R01 = "R01"; public const String R02 = "R01"; public const String R03 = "R02";
+        public const String R04 = "R03"; public const String R05 = "R04"; public const String R06 = "R05";
+        public const String R07 = "R06"; public const String R08 = "R07"; public const String R09 = "R08";
+        public const String R10 = "R09"; public const String R11 = "R10"; public const String R12 = "R11";
+        public const String R13 = "R12"; public const String R14 = "R13"; public const String R15 = "R14";
+        public const String R16 = "R15"; public const String R17 = "R16"; public const String R18 = "R17";
+        public const String R19 = "R18"; public const String R20 = "R19"; public const String R21 = "R20";
+        public const String R22 = "R21"; public const String R23 = "R22"; public const String R24 = "R23";
         #endregion public properties
 
         #region internal properties
@@ -42,36 +42,16 @@ namespace TestLibrary.Switching {
         internal const UInt16 UINT16_000F = 0x000F;
         internal const UInt16 UINT16_00FF = 0x00FF;
         internal enum PORTS { A, B, CL, CH }
-        internal readonly static UInt16[] PortsAllLow = { UINT16_0000, UINT16_0000, UINT16_0000, UINT16_0000 };
-        internal readonly static UInt16[] PortsAllHigh = { UINT16_00FF, UINT16_00FF, UINT16_000F, UINT16_000F };
-        [Flags]
-        internal enum BITS : UInt32 {
-            B00 = 1 << 00, B01 = 1 << 01, B02 = 1 << 02, B03 = 1 << 03, B04 = 1 << 04, B05 = 1 << 05, B06 = 1 << 06, B07 = 1 << 07,
-            B08 = 1 << 08, B09 = 1 << 09, B10 = 1 << 10, B11 = 1 << 11, B12 = 1 << 12, B13 = 1 << 13, B14 = 1 << 14, B15 = 1 << 15,
-            B16 = 1 << 16, B17 = 1 << 17, B18 = 1 << 18, B19 = 1 << 19, B20 = 1 << 20, B21 = 1 << 21, B22 = 1 << 22, B23 = 1 << 23
-        }
-
-        internal readonly static Dictionary<RELAYS, BITS> RεB = new Dictionary<RELAYS, BITS>() {
-            { RELAYS.R01, BITS.B00 }, { RELAYS.R02, BITS.B01 }, { RELAYS.R03, BITS.B02 }, { RELAYS.R04, BITS.B03 },
-            { RELAYS.R05, BITS.B04 }, { RELAYS.R06, BITS.B05 }, { RELAYS.R07, BITS.B06 }, { RELAYS.R08, BITS.B07 },
-            { RELAYS.R09, BITS.B08 }, { RELAYS.R10, BITS.B09 }, { RELAYS.R11, BITS.B10 }, { RELAYS.R12, BITS.B11 },
-            { RELAYS.R13, BITS.B12 }, { RELAYS.R14, BITS.B13 }, { RELAYS.R15, BITS.B14 }, { RELAYS.R16, BITS.B15 },
-            { RELAYS.R17, BITS.B16 }, { RELAYS.R18, BITS.B17 }, { RELAYS.R19, BITS.B18 }, { RELAYS.R20, BITS.B19 },
-            { RELAYS.R21, BITS.B20 }, { RELAYS.R22, BITS.B21 }, { RELAYS.R23, BITS.B22 }, { RELAYS.R24, BITS.B23 },
-        };
-        //  - Wish MCC had zero-indexed their USB-ERB24 relays, numbering them from R0 to R23 instead of R1 to R24.
-        //  - Would've been optimal, as relays 1 to 24 are controlled by digital port bits that are zero-indexed, from 0 to 23.
+        internal readonly static UInt16[] Portslow  = { UINT16_0000, UINT16_0000, UINT16_0000, UINT16_0000 };
+        internal readonly static UInt16[] PortsHIGH = { UINT16_00FF, UINT16_00FF, UINT16_000F, UINT16_000F };
         #endregion internal properties
 
         #region private properties
-        private readonly static String[] R = Enum.GetNames(typeof(RELAYS));
-        private readonly static UInt32[] B = (UInt32[])Enum.GetValues(typeof(BITS));
-        private readonly static Dictionary<String, (RELAYS Relay, BITS Bit)> SεRεB = GetSεRεB();
-
-        private static Dictionary<String, (RELAYS, BITS)> GetSεRεB() {
+        private readonly static Dictionary<String, (RELAYS R, UInt32 B)> SεRεB = GetSεRεB();
+        private static Dictionary<String, (RELAYS, UInt32)> GetSεRεB() {
             String[] S = Enum.GetNames(typeof(RELAYS));
-            Dictionary<String, (RELAYS, BITS Bit)> SεRεB = new Dictionary<String, (RELAYS, BITS)>();
-            for (Int32 i = 0; i < R.Length; i++) { SεRεB.Add(S[i], ((RELAYS)i, (BITS)i)); }
+            Dictionary<String, (RELAYS, UInt32)> SεRεB = new Dictionary<String, (RELAYS, UInt32)>();
+            for (Int32 i = 0; i < S.Length; i++) { SεRεB.Add(S[i], ((RELAYS)i, (UInt32)1<<i)); }
             return SεRεB;
         }
         private const String PORT_INVALID = "Invalid USB-ERB24 DigitalPortType, must be in set '{ FirstPortA, FirstPortB, FirstPortCL, FirstPortCH }'.";
@@ -90,13 +70,13 @@ namespace TestLibrary.Switching {
             return boardsAreNO;
         }
 
-        public static Boolean IsNC(BOARDS Board) { return (Read(new MccBoard((Int32)Board)) == PortsAllLow); }
+        public static Boolean IsNC(BOARDS Board) { return (Read(new MccBoard((Int32)Board)) == Portslow); }
 
-        public static Boolean IsNO(BOARDS Board) { return (Read(new MccBoard((Int32)Board)) == PortsAllHigh); }
+        public static Boolean IsNO(BOARDS Board) { return (Read(new MccBoard((Int32)Board)) == PortsHIGH); }
 
-        public static void SetNC(BOARDS Board) { Write(new MccBoard((Int32)Board), PortsAllLow); }
+        public static void SetNC(BOARDS Board) { Write(new MccBoard((Int32)Board), Portslow); }
 
-        public static void SetNO(BOARDS Board) { Write(new MccBoard((Int32)Board), PortsAllHigh); }
+        public static void SetNO(BOARDS Board) { Write(new MccBoard((Int32)Board), PortsHIGH); }
 
         public static void SetNC() { foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) SetNC(board); }
 
@@ -111,7 +91,7 @@ namespace TestLibrary.Switching {
 
         public static RelayForms.C Get(BOARDS Board, String Relay) { return Get(Board, Convert(Relay)); }
 
-        public static Dictionary<RELAYS, RelayForms.C> GetR(BOARDS Board) {
+        public static Dictionary<RELAYS, RelayForms.C> GetRεC(BOARDS Board) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
             UInt16[] bits = Read(mccBoard);
             UInt32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
@@ -133,11 +113,9 @@ namespace TestLibrary.Switching {
             return relayStates;
         }
 
-        public static Dictionary<String, RelayForms.C> GetS(BOARDS Board) {
-            Dictionary<RELAYS, RelayForms.C> relayStates = GetR(Board);
-            Dictionary<String, RelayForms.C> relayStrings = new Dictionary<String, RelayForms.C>();
-            foreach (KeyValuePair<RELAYS, RelayForms.C> kvp in relayStates) relayStrings.Add(Convert(kvp.Key), kvp.Value);
-            return relayStrings;
+        public static Dictionary<String, RelayForms.C> GetSεC(BOARDS Board) {
+            Dictionary<RELAYS, RelayForms.C> RεC = GetRεC(Board);
+            return Convert(RεC);
         }
 
         public static Boolean Is(BOARDS Board, RELAYS Relay, RelayForms.C C) {
@@ -166,38 +144,26 @@ namespace TestLibrary.Switching {
 
         public static void Set(BOARDS Board, Dictionary<RELAYS, RelayForms.C> RεC) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
-            UInt32 relayBits = 0x00000000;
-            BITS bit;
-            foreach (RELAYS R in RεC.Keys) {
-
-
-            }
-
-            foreach (KeyValuePair<RELAYS, RelayForms.C> kvp in RεC) {
-                bit = ((RelayForms.C)RεB[kvp.Key] is RelayForms.C.NC) ? UINT16_0000 : (BITS)Enum.ToObject(typeof(BITS), (Int32)kvp.Key);
-                relayBits |= (UInt32)bit; // Sets a 1 in each bit corresponding to relay state in relayStates.
-            }
-            Byte[] bits = BitConverter.GetBytes(relayBits);
-            UInt16[] biggerBits = Array.ConvertAll(bits, delegate (Byte b) { return (UInt16)b; });
+            UInt32 portBits = 0x00000000;
+            foreach (RELAYS R in RεC.Keys) portBits |= (UInt32)SεRεB[Convert(R)].B;
+            // Sets a 1 in each bit corresponding to relay state in RεC.
+            Byte[] bite = BitConverter.GetBytes(portBits);
+            UInt16[] biggerBite = Array.ConvertAll(bite, delegate (Byte b) { return (UInt16)b; });
             UInt16[] ports = Read(mccBoard);
-            ports[(Int32)PORTS.A]  |= biggerBits[(Int32)PORTS.A];
-            ports[(Int32)PORTS.B]  |= biggerBits[(Int32)PORTS.B];
-            ports[(Int32)PORTS.CL] |= (biggerBits[(Int32)PORTS.CL] &= 0x0F); // Remove CH bits.
-            ports[(Int32)PORTS.CH] |= (biggerBits[(Int32)PORTS.CH] &= 0xF0); // Remove CL bits.
+            ports[(Int32)PORTS.A]  |= biggerBite[(Int32)PORTS.A];
+            ports[(Int32)PORTS.B]  |= biggerBite[(Int32)PORTS.B];
+            ports[(Int32)PORTS.CL] |= (biggerBite[(Int32)PORTS.CL] &= 0x0F); // Remove CH bits.
+            ports[(Int32)PORTS.CH] |= (biggerBite[(Int32)PORTS.CH] &= 0xF0); // Remove CL bits.
             Write(mccBoard, ports);
         }
 
-        public static void Set(BOARDS Board, Dictionary<String, RelayForms.C> RelayStates) {
-            Dictionary<RELAYS, RelayForms.C> relayStates = new Dictionary<RELAYS, RelayForms.C> ();
-            foreach (String relay in RelayStates.Keys) relayStates.Add(Convert(relay), RelayStates[relay]);
-            Set(Board, relayStates);
-        }
+        public static void Set(BOARDS Board, Dictionary<String, RelayForms.C> SεC) { Set(Board, Convert(SεC)); }
 
         public static String Convert(RELAYS Relay) { return Relay.ToString(); }
 
         public static RELAYS Convert(String Relay) {
             if (!SεRεB.ContainsKey(Relay)) throw new ArgumentException($"Invalid relay '{Relay}', must be in set '{new List<String>(SεRεB.Keys)}'.");
-            return SεRεB[Relay].Relay;
+            return SεRεB[Relay].R;
         }
 
         public static Dictionary<String, RelayForms.C> Convert(Dictionary<RELAYS, RelayForms.C> RεC) {
@@ -254,6 +220,7 @@ namespace TestLibrary.Switching {
         }
 
         internal static void ProcessErrorInfo(MccBoard mccBoard, ErrorInfo errorInfo) {
+            // Transform C style error-checking to .Net style exceptioning.
             if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) {
                 throw new InvalidOperationException(
                 $"{Environment.NewLine}" +
