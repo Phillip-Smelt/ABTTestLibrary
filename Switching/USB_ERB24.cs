@@ -5,7 +5,7 @@ using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Soft
 // using static TestLibrary.Switching.RelayForms;
 
 namespace TestLibrary.Switching {
-    public static class UE24 {
+    public static class USB_ERB24 {
         // TODO: Convert the UE24 class to a Singleton, like the USB_TO_GPIO class.  If there are multiple USB-ERB24s, copy the UE24 class & append numbers?  1, 2...
         // TODO: Once this class' internal methods are fully verified by TestLibraryTests, refactor them to private methods & delete TestLibraryTest's Unit tests for the now private methods.
         // NOTE: This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
