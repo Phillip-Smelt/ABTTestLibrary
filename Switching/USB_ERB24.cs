@@ -206,7 +206,6 @@ namespace TestLibrary.Switching {
             foreach (String S in SεF.Keys) RεF.Add(Convert(S), SεF[S]);
             return RεF;
         }
-
         #endregion public methods
 
         #region internal methods
