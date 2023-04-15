@@ -42,7 +42,7 @@ namespace TestLibrary.Switching {
         internal const UInt16 UINT16_000F = 0x000F;
         internal const UInt16 UINT16_00FF = 0x00FF;
         internal enum PORTS { A, B, CL, CH }
-        internal readonly static UInt16[] PortsAllLow  = { UINT16_0000, UINT16_0000, UINT16_0000, UINT16_0000 };
+        internal readonly static UInt16[] PortsAllLow = { UINT16_0000, UINT16_0000, UINT16_0000, UINT16_0000 };
         internal readonly static UInt16[] PortsAllHigh = { UINT16_00FF, UINT16_00FF, UINT16_000F, UINT16_000F };
         [Flags]
         internal enum BITS : UInt32 {
@@ -78,56 +78,93 @@ namespace TestLibrary.Switching {
         #endregion private properties
 
         #region public methods
-        public static Boolean AreBoardsNC() {
+        public static Boolean AreNC() {
             Boolean boardsAreNC = true;
-            foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) { boardsAreNC &= IsBoardNC(board); }
+            foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) { boardsAreNC &= IsNC(board); }
             return boardsAreNC;
         }
 
-        public static Boolean AreBoardsNO() {
+        public static Boolean AreNO() {
             Boolean boardsAreNO = true;
-            foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) { boardsAreNO &= IsBoardNO(board); }
+            foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) { boardsAreNO &= IsNO(board); }
             return boardsAreNO;
         }
 
-        public static Boolean IsBoardNC(BOARDS Board) { return (DigitalPortsRead(new MccBoard((Int32)Board)) == PortsAllLow); }
+        public static Boolean IsNC(BOARDS Board) { return (Read(new MccBoard((Int32)Board)) == PortsAllLow); }
 
-        public static Boolean IsBoardNO(BOARDS Board) { return (DigitalPortsRead(new MccBoard((Int32)Board)) == PortsAllHigh); }
+        public static Boolean IsNO(BOARDS Board) { return (Read(new MccBoard((Int32)Board)) == PortsAllHigh); }
 
-        public static void SetBoardNO(BOARDS Board) { DigitalPortsWrite(new MccBoard((Int32)Board), PortsAllLow); }
+        public static void SetNC(BOARDS Board) { Write(new MccBoard((Int32)Board), PortsAllLow); }
 
-        public static void SetBoardNC(BOARDS Board) { DigitalPortsWrite(new MccBoard((Int32)Board), PortsAllHigh); }
+        public static void SetNO(BOARDS Board) { Write(new MccBoard((Int32)Board), PortsAllHigh); }
 
-        public static void SetBoardsNC() { foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) SetBoardNC(board); }
+        public static void SetNC() { foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) SetNC(board); }
 
-        public static void SetBoardsNO() { foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) SetBoardNO(board); }
+        public static void SetNO() { foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) SetNO(board); }
 
-        public static FORM_C GetBoardRelay(BOARDS Board, RELAYS Relay) {
+        public static FORM_C Get(BOARDS Board, RELAYS Relay) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
             ErrorInfo errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)Relay, out DigitalLogicState bitValue);
-            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
+            ProcessErrorInfo(mccBoard, errorInfo);
             return (bitValue == DigitalLogicState.Low) ? FORM_C.NC : FORM_C.NO;
         }
 
-        public static FORM_C GetBoardRelay(BOARDS Board, String Relay) { return GetBoardRelay(Board, SεRεB[Relay].Relay); }
+        public static FORM_C Get(BOARDS Board, String Relay) { return Get(Board, Convert(Relay)); }
 
-        public static Boolean IsBoardRelay(BOARDS Board, RELAYS Relay, FORM_C form_C) {
+        public static Dictionary<RELAYS, FORM_C> GetR(BOARDS Board) {
+            MccBoard mccBoard = new MccBoard((Int32)Board);
+            UInt16[] bits = Read(mccBoard);
+            UInt32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
+            UInt32 relayBits = 0x0000;
+            relayBits |= biggerBits[(Int32)PORTS.A] << 00;
+            relayBits |= biggerBits[(Int32)PORTS.B] << 08;
+            relayBits |= biggerBits[(Int32)PORTS.CL] << 12;
+            relayBits |= biggerBits[(Int32)PORTS.CH] << 16;
+            BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
+
+            Dictionary<RELAYS, FORM_C> relayStates = new Dictionary<RELAYS, FORM_C>();
+            RELAYS relay;
+            FORM_C form_C;
+            for (Int32 i = 0; i < 32; i++) {
+                relay = (RELAYS)Enum.ToObject(typeof(RELAYS), bitVector32[i]);
+                form_C = bitVector32[i] ? FORM_C.NO : FORM_C.NC;
+                relayStates.Add(relay, form_C);
+            }
+            return relayStates;
+        }
+
+        public static Dictionary<String, FORM_C> GetS(BOARDS Board) {
+            Dictionary<RELAYS, FORM_C> relayStates = GetR(Board);
+            Dictionary<String, FORM_C> relayStrings = new Dictionary<String, FORM_C>();
+            foreach (KeyValuePair<RELAYS, FORM_C> kvp in relayStates) relayStrings.Add(Convert(kvp.Key), kvp.Value);
+            return relayStrings;
+        }
+
+        public static Boolean Is(BOARDS Board, RELAYS Relay, FORM_C form_C) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
             ErrorInfo errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)Relay, out DigitalLogicState bitValue);
-            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
+            ProcessErrorInfo(mccBoard, errorInfo);
             if (bitValue == DigitalLogicState.Low) return (form_C is FORM_C.NC);
             else return (form_C is FORM_C.NO);
         }
 
-        public static void SetBoardRelay(BOARDS Board, RELAYS Relay, FORM_C form_C) {
+        public static Boolean Is(BOARDS Board, String Relay, FORM_C form_C) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
-            ErrorInfo errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA, (Int32)Relay, (form_C is FORM_C.NC) ? DigitalLogicState.Low : DigitalLogicState.High);
-            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
+            ErrorInfo errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)Convert(Relay), out DigitalLogicState bitValue);
+            ProcessErrorInfo(mccBoard, errorInfo);
+            if (bitValue == DigitalLogicState.Low) return (form_C is FORM_C.NC);
+            else return (form_C is FORM_C.NO);
         }
 
-        public static void SetBoardRelay(BOARDS Board, String Relay, FORM_C form_C) { SetBoardRelay(Board, SεRεB[Relay].Relay, form_C); }
+        public static void Set(BOARDS Board, RELAYS Relay, FORM_C form_C) {
+            MccBoard mccBoard = new MccBoard((Int32)Board);
+            ErrorInfo errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA, (Int32)Relay, (form_C is FORM_C.NC) ? DigitalLogicState.Low : DigitalLogicState.High);
+            ProcessErrorInfo(mccBoard, errorInfo);
+        }
 
-        public static void SetStates(BOARDS Board, Dictionary<RELAYS, FORM_C> relayStates) {
+        public static void Set(BOARDS Board, String Relay, FORM_C form_C) { Set(Board, Convert(Relay), form_C); }
+
+        public static void Set(BOARDS Board, Dictionary<RELAYS, FORM_C> relayStates) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
             UInt32 relayBits = 0x00000000;
             BITS bit;
@@ -137,90 +174,91 @@ namespace TestLibrary.Switching {
             }
             Byte[] bits = BitConverter.GetBytes(relayBits);
             UInt16[] biggerBits = Array.ConvertAll(bits, delegate (Byte b) { return (UInt16)b; });
-            UInt16[] ports = DigitalPortsRead(mccBoard);
+            UInt16[] ports = Read(mccBoard);
             ports[(Int32)PORTS.A]  |= biggerBits[(Int32)PORTS.A];
             ports[(Int32)PORTS.B]  |= biggerBits[(Int32)PORTS.B];
             ports[(Int32)PORTS.CL] |= (biggerBits[(Int32)PORTS.CL] &= 0x0F); // Remove CH bits.
             ports[(Int32)PORTS.CH] |= (biggerBits[(Int32)PORTS.CH] &= 0xF0); // Remove CL bits.
-            DigitalPortsWrite(mccBoard, ports);
+            Write(mccBoard, ports);
         }
 
-        public static Dictionary<RELAYS, FORM_C> GetStates(BOARDS Board) {
-            MccBoard mccBoard = new MccBoard((Int32)Board);
-            UInt16[] bits = DigitalPortsRead(mccBoard);
-            UInt32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
-            UInt32 relayBits= 0x0000;
-            relayBits |= biggerBits[(Int32)PORTS.A]  << 00;
-            relayBits |= biggerBits[(Int32)PORTS.B]  << 08;
-            relayBits |= biggerBits[(Int32)PORTS.CL] << 12;
-            relayBits |= biggerBits[(Int32)PORTS.CH] << 16;
-            BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
-
-            Dictionary<RELAYS, FORM_C> relayStates = new Dictionary<RELAYS, FORM_C>();
-            RELAYS relay;
-            FORM_C form_C;
-            for (Int32 i=0; i < 32; i++) {
-                relay = (RELAYS)Enum.ToObject(typeof(RELAYS), bitVector32[i]);
-                form_C = bitVector32[i] ? FORM_C.NO : FORM_C.NC;
-                relayStates.Add(relay, form_C);
-            }
-            return relayStates;
+        public static void Set(BOARDS Board, Dictionary<String, FORM_C> RelayStates) {
+            Dictionary<RELAYS, FORM_C> relayStates = new Dictionary<RELAYS, FORM_C> ();
+            foreach (String relay in RelayStates.Keys) relayStates.Add(Convert(relay), RelayStates[relay]);
+            Set(Board, relayStates);
         }
 
-        public FORM_C GetRelayFromString(String Relay) {
-            if (!Array.Exists(relays, r => r.Equals(Relay))) throw new ArgumentException($"Invalid relay '{Relay}', must be in set '{relays}'.");
-            (RELAYS)Enum.Parse(typeof(RELAYS), Relay);
+        public static String Convert(RELAYS Relay) { return Relay.ToString(); }
+
+        public static RELAYS Convert(String Relay) {
+            if (!SεRεB.ContainsKey(Relay)) throw new ArgumentException($"Invalid relay '{Relay}', must be in set '{new List<String>(SεRεB.Keys)}'.");
+            return SεRεB[Relay].Relay;
         }
+
+        public static Dictionary<String, FORM_C> Convert(Dictionary<RELAYS, FORM_C> RεF) {
+            Dictionary<String, FORM_C> SεF = new Dictionary<String, FORM_C>();
+            foreach (RELAYS R in RεF.Keys) SεF.Add(Convert(R), RεF[R]);
+            return SεF;
+        }
+
+        public static Dictionary<RELAYS, FORM_C> Convert(Dictionary<String, FORM_C> SεF) {
+            Dictionary<RELAYS, FORM_C> RεF = new Dictionary<RELAYS, FORM_C>();
+            foreach (String S in SεF.Keys) RεF.Add(Convert(S), SεF[S]);
+            return RεF;
+        }
+
         #endregion public methods
 
         #region internal methods
-        internal static UInt16 DigitalPortRead(MccBoard mccBoard, DigitalPortType digitalPortType) {
+        internal static UInt16 Read(MccBoard mccBoard, DigitalPortType digitalPortType) {
             ErrorInfo errorInfo = mccBoard.DIn(digitalPortType, out UInt16 dataValue);
-            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
+            ProcessErrorInfo(mccBoard, errorInfo);
             return dataValue;
         }
 
-        internal static UInt16[] DigitalPortsRead(MccBoard mccBoard) {
+        internal static UInt16[] Read(MccBoard mccBoard) {
             return new UInt16[] {
-                DigitalPortRead(mccBoard, DigitalPortType.FirstPortA),
-                DigitalPortRead(mccBoard, DigitalPortType.FirstPortB),
-                DigitalPortRead(mccBoard, DigitalPortType.FirstPortCL),
-                DigitalPortRead(mccBoard, DigitalPortType.FirstPortCH)
+                Read(mccBoard, DigitalPortType.FirstPortA),
+                Read(mccBoard, DigitalPortType.FirstPortB),
+                Read(mccBoard, DigitalPortType.FirstPortCL),
+                Read(mccBoard, DigitalPortType.FirstPortCH)
             };
         }
 
-        internal static void DigitalPortWrite(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 dataValue) {
+        internal static void Write(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 dataValue) {
             ErrorInfo errorInfo = mccBoard.DOut(digitalPortType, dataValue);
-            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
+            ProcessErrorInfo(mccBoard, errorInfo);
         }
 
-        internal static void DigitalPortsWrite(MccBoard mccBoard, UInt16[] ports) {
-            DigitalPortWrite(mccBoard, DigitalPortType.FirstPortA,  ports[(Int32)PORTS.A]);
-            DigitalPortWrite(mccBoard, DigitalPortType.FirstPortB,  ports[(Int32)PORTS.B]);
-            DigitalPortWrite(mccBoard, DigitalPortType.FirstPortCL, ports[(Int32)PORTS.CL]);
-            DigitalPortWrite(mccBoard, DigitalPortType.FirstPortCH, ports[(Int32)PORTS.CH]);
+        internal static void Write(MccBoard mccBoard, UInt16[] ports) {
+            Write(mccBoard, DigitalPortType.FirstPortA, ports[(Int32)PORTS.A]);
+            Write(mccBoard, DigitalPortType.FirstPortB, ports[(Int32)PORTS.B]);
+            Write(mccBoard, DigitalPortType.FirstPortCL, ports[(Int32)PORTS.CL]);
+            Write(mccBoard, DigitalPortType.FirstPortCH, ports[(Int32)PORTS.CH]);
         }
 
-        internal static Boolean IsPort(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 portState) { return DigitalPortRead(mccBoard, digitalPortType) == portState; }
+        internal static Boolean Is(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 portState) { return Read(mccBoard, digitalPortType) == portState; }
 
-        internal static DigitalPortType GetPortType(RELAYS relay) {
+        internal static DigitalPortType Get(RELAYS relay) {
             switch (relay) {
-                case RELAYS r when RELAYS.R01 <= r && r <= RELAYS.R08:  return DigitalPortType.FirstPortA;
-                case RELAYS r when RELAYS.R09 <= r && r <= RELAYS.R16:  return DigitalPortType.FirstPortB;
-                case RELAYS r when RELAYS.R17 <= r && r <= RELAYS.R20:  return DigitalPortType.FirstPortCL;
-                case RELAYS r when RELAYS.R21 <= r && r <= RELAYS.R24:  return DigitalPortType.FirstPortCH;
+                case RELAYS r when RELAYS.R01 <= r && r <= RELAYS.R08: return DigitalPortType.FirstPortA;
+                case RELAYS r when RELAYS.R09 <= r && r <= RELAYS.R16: return DigitalPortType.FirstPortB;
+                case RELAYS r when RELAYS.R17 <= r && r <= RELAYS.R20: return DigitalPortType.FirstPortCL;
+                case RELAYS r when RELAYS.R21 <= r && r <= RELAYS.R24: return DigitalPortType.FirstPortCH;
                 default: throw new ArgumentException(PORT_INVALID);
             }
         }
 
-        internal static void MccBoardErrorHandler(MccBoard mccBoard, ErrorInfo errorInfo) {
-            throw new InvalidOperationException(
+        internal static void ProcessErrorInfo(MccBoard mccBoard, ErrorInfo errorInfo) {
+            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) {
+                throw new InvalidOperationException(
                 $"{Environment.NewLine}" +
                 $"MccBoard BoardNum   : {mccBoard.BoardNum}.{Environment.NewLine}" +
                 $"MccBoard BoardName  : {mccBoard.BoardName}.{Environment.NewLine}" +
                 $"MccBoard Descriptor : {mccBoard.Descriptor}.{Environment.NewLine}" +
                 $"ErrorInfo Value     : {errorInfo.Value}.{Environment.NewLine}" +
                 $"ErrorInfo Message   : {errorInfo.Message}.{Environment.NewLine}");
+            }
         }
         #endregion internal methods
     }
