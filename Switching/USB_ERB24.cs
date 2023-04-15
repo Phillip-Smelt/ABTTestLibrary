@@ -66,11 +66,11 @@ namespace TestLibrary.Switching {
         #region private properties
         private readonly static String[] R = Enum.GetNames(typeof(RELAYS));
         private readonly static UInt32[] B = (UInt32[])Enum.GetValues(typeof(BITS));
-        private readonly static Dictionary<String, (RELAYS, BITS)> SεRεB = GetSεRεB();
+        private readonly static Dictionary<String, (RELAYS Relay, BITS Bit)> SεRεB = GetSεRεB();
 
-        private static Dictionary<String, (RELAYS Relays, BITS Bits)> GetSεRεB() {
+        private static Dictionary<String, (RELAYS, BITS)> GetSεRεB() {
             String[] S = Enum.GetNames(typeof(RELAYS));
-            Dictionary<String, (RELAYS, BITS)> SεRεB = new Dictionary<String, (RELAYS, BITS)>();
+            Dictionary<String, (RELAYS, BITS Bit)> SεRεB = new Dictionary<String, (RELAYS, BITS)>();
             for (Int32 i = 0; i < R.Length; i++) { SεRεB.Add(S[i], ((RELAYS)i, (BITS)i)); }
             return SεRεB;
         }
@@ -78,38 +78,54 @@ namespace TestLibrary.Switching {
         #endregion private properties
 
         #region public methods
-        public static Boolean AreBoardStatesNC() {
-            Boolean boardsAreStateNC = true;
-            foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) { boardsAreStateNC &= IsBoardStateNC(board); }
-            return boardsAreStateNC;
+        public static Boolean AreBoardsNC() {
+            Boolean boardsAreNC = true;
+            foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) { boardsAreNC &= IsBoardNC(board); }
+            return boardsAreNC;
         }
 
-        public static Boolean AreBoardStatesNO() {
-            Boolean boardsAreStateNO = true;
-            foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) { boardsAreStateNO &= IsBoardStateNO(board); }
-            return boardsAreStateNO;
+        public static Boolean AreBoardsNO() {
+            Boolean boardsAreNO = true;
+            foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) { boardsAreNO &= IsBoardNO(board); }
+            return boardsAreNO;
         }
 
-        public static Boolean IsBoardStateNC(BOARDS Board) { return (DigitalPortsRead(new MccBoard((Int32)Board)) == PortsAllLow); }
+        public static Boolean IsBoardNC(BOARDS Board) { return (DigitalPortsRead(new MccBoard((Int32)Board)) == PortsAllLow); }
 
-        public static Boolean IsBoardStateNO(BOARDS Board) { return (DigitalPortsRead(new MccBoard((Int32)Board)) == PortsAllHigh); }
+        public static Boolean IsBoardNO(BOARDS Board) { return (DigitalPortsRead(new MccBoard((Int32)Board)) == PortsAllHigh); }
 
-        public static void SetBoardStateNO(BOARDS Board) { DigitalPortsWrite(new MccBoard((Int32)Board), PortsAllLow); }
+        public static void SetBoardNO(BOARDS Board) { DigitalPortsWrite(new MccBoard((Int32)Board), PortsAllLow); }
 
-        public static void SetBoardStateNC(BOARDS Board) { DigitalPortsWrite(new MccBoard((Int32)Board), PortsAllHigh); }
+        public static void SetBoardNC(BOARDS Board) { DigitalPortsWrite(new MccBoard((Int32)Board), PortsAllHigh); }
 
-        public static void SetStateNC_Boards() { foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) SetStateNC_Board(board); }
+        public static void SetBoardsNC() { foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) SetBoardNC(board); }
 
-        public static void SetStateNO_Boards() { foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) SetStateNO_Board(board); }
+        public static void SetBoardsNO() { foreach (BOARDS board in Enum.GetValues(typeof(BOARDS))) SetBoardNO(board); }
 
-        public static void SetState((BOARDS Board, RELAYS Relay) BεR, FORM_C form_C) {
-            MccBoard mccBoard = new MccBoard((Int32)RELAYS.Board);
-            DigitalLogicState desiredState = (form_C is FORM_C.NC) ? DigitalLogicState.Low : DigitalLogicState.High;
-            _ = GetPortType(RELAYS.Relay);
-            DigitalBitWrite(mccBoard, RELAYS.Relay, desiredState);
-            DigitalLogicState outputState = DigitalBitRead(mccBoard, RELAYS.Relay);
-            if (outputState != desiredState) throw new InvalidOperationException($"USB-ERB24 '({RELAYS.Board}, {RELAYS.Relay})' failed to set to '{form_C}'.");
+        public static FORM_C GetBoardRelay(BOARDS Board, RELAYS Relay) {
+            MccBoard mccBoard = new MccBoard((Int32)Board);
+            ErrorInfo errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)Relay, out DigitalLogicState bitValue);
+            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
+            return (bitValue == DigitalLogicState.Low) ? FORM_C.NC : FORM_C.NO;
         }
+
+        public static FORM_C GetBoardRelay(BOARDS Board, String Relay) { return GetBoardRelay(Board, SεRεB[Relay].Relay); }
+
+        public static Boolean IsBoardRelay(BOARDS Board, RELAYS Relay, FORM_C form_C) {
+            MccBoard mccBoard = new MccBoard((Int32)Board);
+            ErrorInfo errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)Relay, out DigitalLogicState bitValue);
+            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
+            if (bitValue == DigitalLogicState.Low) return (form_C is FORM_C.NC);
+            else return (form_C is FORM_C.NO);
+        }
+
+        public static void SetBoardRelay(BOARDS Board, RELAYS Relay, FORM_C form_C) {
+            MccBoard mccBoard = new MccBoard((Int32)Board);
+            ErrorInfo errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA, (Int32)Relay, (form_C is FORM_C.NC) ? DigitalLogicState.Low : DigitalLogicState.High);
+            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
+        }
+
+        public static void SetBoardRelay(BOARDS Board, String Relay, FORM_C form_C) { SetBoardRelay(Board, SεRεB[Relay].Relay, form_C); }
 
         public static void SetStates(BOARDS Board, Dictionary<RELAYS, FORM_C> relayStates) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
@@ -127,14 +143,6 @@ namespace TestLibrary.Switching {
             ports[(Int32)PORTS.CL] |= (biggerBits[(Int32)PORTS.CL] &= 0x0F); // Remove CH bits.
             ports[(Int32)PORTS.CH] |= (biggerBits[(Int32)PORTS.CH] &= 0xF0); // Remove CL bits.
             DigitalPortsWrite(mccBoard, ports);
-        }
-
-        public static FORM_C GetState(BOARDS Board, String Relay) {
-            String[] relays = Enum.GetNames(typeof(RELAYS));
-            if (!Array.Exists(relays, r => r.Equals(Relay))) throw new ArgumentException($"Invalid relay '{Relay}', must be in set '{relays}'.");
-            MccBoard mccBoard = new MccBoard((Int32)Board);
-            DigitalLogicState outputState = DigitalBitRead(mccBoard, (RELAYS)Enum.Parse(typeof(RELAYS), Relay));
-            return (outputState == DigitalLogicState.Low) ? FORM_C.NC : FORM_C.NO;
         }
 
         public static Dictionary<RELAYS, FORM_C> GetStates(BOARDS Board) {
@@ -166,17 +174,6 @@ namespace TestLibrary.Switching {
         #endregion public methods
 
         #region internal methods
-        internal static DigitalLogicState DigitalBitRead(MccBoard mccBoard, RELAYS Relay) {
-            ErrorInfo errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)Relay, out DigitalLogicState bitValue);
-            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
-            return bitValue;
-        }
-
-        internal static void DigitalBitWrite(MccBoard mccBoard, RELAYS Relay, DigitalLogicState inputLogicState) {
-            ErrorInfo errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA, (Int32)Relay, inputLogicState);
-            if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
-        }
-
         internal static UInt16 DigitalPortRead(MccBoard mccBoard, DigitalPortType digitalPortType) {
             ErrorInfo errorInfo = mccBoard.DIn(digitalPortType, out UInt16 dataValue);
             if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) MccBoardErrorHandler(mccBoard, errorInfo);
@@ -204,9 +201,7 @@ namespace TestLibrary.Switching {
             DigitalPortWrite(mccBoard, DigitalPortType.FirstPortCH, ports[(Int32)PORTS.CH]);
         }
 
-        internal static Boolean IsPortState(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 portState) { return DigitalPortRead(mccBoard, digitalPortType) == portState; }
-
-        internal static Boolean IsBitState(MccBoard mccBoard, RELAYS relay, DigitalLogicState digitalLogicState) { return DigitalBitRead(mccBoard, relay) == digitalLogicState; }
+        internal static Boolean IsPort(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 portState) { return DigitalPortRead(mccBoard, digitalPortType) == portState; }
 
         internal static DigitalPortType GetPortType(RELAYS relay) {
             switch (relay) {
