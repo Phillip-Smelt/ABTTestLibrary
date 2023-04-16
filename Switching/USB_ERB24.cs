@@ -26,7 +26,7 @@ namespace TestLibrary.Switching {
         // - Instantiation 'new MccBoard((Int32)BOARDS.E01)' is equivalent to 'new MccBoard(0)'.
         #region public properties
         public enum BOARDS { E01 }
-        public enum RELAYS { R01, R02, R03, R04, R05, R06, R07, R08, R09, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22, R23, R24 }
+        public enum RELAYS : Byte { R01, R02, R03, R04, R05, R06, R07, R08, R09, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22, R23, R24 }
         public const String R01 = "R01"; public const String R02 = "R01"; public const String R03 = "R02";
         public const String R04 = "R03"; public const String R05 = "R04"; public const String R06 = "R05";
         public const String R07 = "R06"; public const String R08 = "R07"; public const String R09 = "R08";
@@ -38,22 +38,12 @@ namespace TestLibrary.Switching {
         #endregion public properties
 
         #region internal properties
-        internal const UInt16 UINT16_0000 = 0x0000;
-        internal const UInt16 UINT16_000F = 0x000F;
-        internal const UInt16 UINT16_00FF = 0x00FF;
         internal enum PORTS { A, B, CL, CH }
-        internal readonly static UInt16[] Portslow  = { UINT16_0000, UINT16_0000, UINT16_0000, UINT16_0000 };
-        internal readonly static UInt16[] PortsHIGH = { UINT16_00FF, UINT16_00FF, UINT16_000F, UINT16_000F };
+        internal readonly static UInt16[] Portslow  = { 0x0000, 0x0000, 0x0000, 0x0000 };
+        internal readonly static UInt16[] PortsHIGH = { 0x00FF, 0x00FF, 0x000F, 0x000F };
         #endregion internal properties
 
         #region private properties
-        private readonly static Dictionary<String, (RELAYS R, UInt32 B)> SεRεB = GetSεRεB();
-        private static Dictionary<String, (RELAYS, UInt32)> GetSεRεB() {
-            String[] S = Enum.GetNames(typeof(RELAYS));
-            Dictionary<String, (RELAYS, UInt32)> SεRεB = new Dictionary<String, (RELAYS, UInt32)>();
-            for (Int32 i = 0; i < S.Length; i++) { SεRεB.Add(S[i], ((RELAYS)i, (UInt32)1<<i)); }
-            return SεRεB;
-        }
         private const String PORT_INVALID = "Invalid USB-ERB24 DigitalPortType, must be in set '{ FirstPortA, FirstPortB, FirstPortCL, FirstPortCH }'.";
         #endregion private properties
 
@@ -89,9 +79,7 @@ namespace TestLibrary.Switching {
             return (bitValue == DigitalLogicState.Low) ? RelayForms.C.NC : RelayForms.C.NO;
         }
 
-        public static RelayForms.C Get(BOARDS Board, String Relay) { return Get(Board, Convert(Relay)); }
-
-        public static Dictionary<RELAYS, RelayForms.C> GetRεC(BOARDS Board) {
+        public static Dictionary<RELAYS, RelayForms.C> Get(BOARDS Board) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
             UInt16[] bits = Read(mccBoard);
             UInt32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
@@ -113,22 +101,9 @@ namespace TestLibrary.Switching {
             return relayStates;
         }
 
-        public static Dictionary<String, RelayForms.C> GetSεC(BOARDS Board) {
-            Dictionary<RELAYS, RelayForms.C> RεC = GetRεC(Board);
-            return Convert(RεC);
-        }
-
         public static Boolean Is(BOARDS Board, RELAYS Relay, RelayForms.C C) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
             ErrorInfo errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)Relay, out DigitalLogicState bitValue);
-            ProcessErrorInfo(mccBoard, errorInfo);
-            if (bitValue == DigitalLogicState.Low) return (C is RelayForms.C.NC);
-            else return (C is RelayForms.C.NO);
-        }
-
-        public static Boolean Is(BOARDS Board, String Relay, RelayForms.C C) {
-            MccBoard mccBoard = new MccBoard((Int32)Board);
-            ErrorInfo errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)Convert(Relay), out DigitalLogicState bitValue);
             ProcessErrorInfo(mccBoard, errorInfo);
             if (bitValue == DigitalLogicState.Low) return (C is RelayForms.C.NC);
             else return (C is RelayForms.C.NO);
@@ -140,42 +115,19 @@ namespace TestLibrary.Switching {
             ProcessErrorInfo(mccBoard, errorInfo);
         }
 
-        public static void Set(BOARDS Board, String Relay, RelayForms.C C) { Set(Board, Convert(Relay), C); }
-
         public static void Set(BOARDS Board, Dictionary<RELAYS, RelayForms.C> RεC) {
             MccBoard mccBoard = new MccBoard((Int32)Board);
-            UInt32 portBits = 0x00000000;
-            foreach (RELAYS R in RεC.Keys) portBits |= (UInt32)SεRεB[Convert(R)].B;
+            UInt32 portBits = 0x0000_0000;
+            foreach (RELAYS R in RεC.Keys) portBits |= (UInt32)1 << (Byte)R;
             // Sets a 1 in each bit corresponding to relay state in RεC.
             Byte[] bite = BitConverter.GetBytes(portBits);
             UInt16[] biggerBite = Array.ConvertAll(bite, delegate (Byte b) { return (UInt16)b; });
             UInt16[] ports = Read(mccBoard);
             ports[(Int32)PORTS.A]  |= biggerBite[(Int32)PORTS.A];
             ports[(Int32)PORTS.B]  |= biggerBite[(Int32)PORTS.B];
-            ports[(Int32)PORTS.CL] |= (biggerBite[(Int32)PORTS.CL] &= 0x0F); // Remove CH bits.
-            ports[(Int32)PORTS.CH] |= (biggerBite[(Int32)PORTS.CH] &= 0xF0); // Remove CL bits.
+            ports[(Int32)PORTS.CL] |= (biggerBite[(Int32)PORTS.CL] &= 0x0F); // Clear CH bits.
+            ports[(Int32)PORTS.CH] |= (biggerBite[(Int32)PORTS.CH] &= 0xF0); // Clear CL bits.
             Write(mccBoard, ports);
-        }
-
-        public static void Set(BOARDS Board, Dictionary<String, RelayForms.C> SεC) { Set(Board, Convert(SεC)); }
-
-        public static String Convert(RELAYS Relay) { return Relay.ToString(); }
-
-        public static RELAYS Convert(String Relay) {
-            if (!SεRεB.ContainsKey(Relay)) throw new ArgumentException($"Invalid relay '{Relay}', must be in set '{new List<String>(SεRεB.Keys)}'.");
-            return SεRεB[Relay].R;
-        }
-
-        public static Dictionary<String, RelayForms.C> Convert(Dictionary<RELAYS, RelayForms.C> RεC) {
-            Dictionary<String, RelayForms.C> SεC = new Dictionary<String, RelayForms.C>();
-            foreach (RELAYS R in RεC.Keys) SεC.Add(Convert(R), RεC[R]);
-            return SεC;
-        }
-
-        public static Dictionary<RELAYS, RelayForms.C> Convert(Dictionary<String, RelayForms.C> SεC) {
-            Dictionary<RELAYS, RelayForms.C> RεC = new Dictionary<RELAYS, RelayForms.C>();
-            foreach (String S in SεC.Keys) RεC.Add(Convert(S), SεC[S]);
-            return RεC;
         }
         #endregion public methods
 
