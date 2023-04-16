@@ -24,28 +24,14 @@ namespace TestLibrary.Switching {
         // NOTE: MCC's InstaCal USB-ERB24's board number indexing begins at 0, guessing because USB device indexing is likely also zero based.
         // - So BOARDS.E01 numerical value is 0, which is used when constructing a new MccBoard BOARDS.E01 object:
         // - Instantiation 'new MccBoard((Int32)BOARDS.E01)' is equivalent to 'new MccBoard(0)'.
-        #region public properties
         public enum BOARDS { E01 }
         public enum RELAYS : Byte { R01, R02, R03, R04, R05, R06, R07, R08, R09, R10, R11, R12, R13, R14, R15, R16, R17, R18, R19, R20, R21, R22, R23, R24 }
-        public const String R01 = "R01"; public const String R02 = "R01"; public const String R03 = "R02";
-        public const String R04 = "R03"; public const String R05 = "R04"; public const String R06 = "R05";
-        public const String R07 = "R06"; public const String R08 = "R07"; public const String R09 = "R08";
-        public const String R10 = "R09"; public const String R11 = "R10"; public const String R12 = "R11";
-        public const String R13 = "R12"; public const String R14 = "R13"; public const String R15 = "R14";
-        public const String R16 = "R15"; public const String R17 = "R16"; public const String R18 = "R17";
-        public const String R19 = "R18"; public const String R20 = "R19"; public const String R21 = "R20";
-        public const String R22 = "R21"; public const String R23 = "R22"; public const String R24 = "R23";
-        #endregion public properties
 
-        #region internal properties
         internal enum PORTS { A, B, CL, CH }
         internal readonly static UInt16[] Portslow  = { 0x0000, 0x0000, 0x0000, 0x0000 };
         internal readonly static UInt16[] PortsHIGH = { 0x00FF, 0x00FF, 0x000F, 0x000F };
-        #endregion internal properties
 
-        #region private properties
         private const String PORT_INVALID = "Invalid USB-ERB24 DigitalPortType, must be in set '{ FirstPortA, FirstPortB, FirstPortCL, FirstPortCH }'.";
-        #endregion private properties
 
         #region public methods
         public static Boolean AreNC() {
