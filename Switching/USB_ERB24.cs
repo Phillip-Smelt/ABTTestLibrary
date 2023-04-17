@@ -102,19 +102,28 @@ namespace TestLibrary.Switching {
         public static Dictionary<R, C> Get(UE24 UE24) {
             MccBoard mccBoard = new MccBoard((Int32)UE24);
             UInt16[] bits = PortsRead(mccBoard);
-            UInt32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
-            UInt32 relayBits = 0x0000;
-            relayBits |= biggerBits[(Int32)PORTS.A] << 00;
+            Int32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 uInt16) { return (Int32)uInt16; });
+            for (Int32 i = 0; i < biggerBits.Length; i++) Console.WriteLine($"bB[{i}] = {biggerBits[i]}");
+            Int32 relayBits = 0x0000;
+            Console.WriteLine($"relayBits {relayBits}");
+            relayBits |= biggerBits[(Int32)PORTS.CH] << 00;
+            Console.WriteLine($"relayBits {relayBits}");
+            relayBits |= biggerBits[(Int32)PORTS.CL] << 04;
+            Console.WriteLine($"relayBits {relayBits}");
             relayBits |= biggerBits[(Int32)PORTS.B] << 08;
-            relayBits |= biggerBits[(Int32)PORTS.CL] << 12;
-            relayBits |= biggerBits[(Int32)PORTS.CH] << 16;
-            BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
+            Console.WriteLine($"relayBits {relayBits}");
+            relayBits |= biggerBits[(Int32)PORTS.A] << 16;
+            Console.WriteLine($"relayBits {relayBits}");
+            BitVector32 bitVector32 = new BitVector32(relayBits);
+            Console.WriteLine($"bitVector32 {bitVector32}");
 
             Dictionary<R, C> RεC = new Dictionary<R, C>();
             R R; C C;
-            for (Int32 i = 0; i < 32; i++) {
-                R = (R)Enum.ToObject(typeof(R), bitVector32[i]);
+            for (Int32 i = 0; i < 24; i++) {
+                R = (R)Enum.ToObject(typeof(R), i);
                 C = bitVector32[i] ? C.NO : C.NC;
+                Console.WriteLine($"bitVector32[{i}]={bitVector32[i]}.");
+                Console.WriteLine($"C={C}.");
                 RεC.Add(R, C);
             }
             return RεC;
