@@ -11,6 +11,8 @@ using TestLibrary.AppConfig;
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace TestLibrary.SCPI_VISA_Instruments {
     // TODO: Convert the MM_34661A class to a Singleton, like the USB_TO_GPIO class.
+    //  - If there are more than one MM_34661A in the test system, make the MM_34661A Singleton class a Dictionary of MM_34661As, rather than just one MM_34661A.
+    //  - Each MM_34661A in the Singleton's Dictionary can be accessed by its enum; MM.S01, MM.S02...MM.Snn, for Multi-Meter Singletons 01, 02...nn.
     public static class MM_34661A {
         public const String MODEL = "34461A";
 

@@ -8,6 +8,9 @@ using static TestLibrary.Switching.RelayForms;
 namespace TestLibrary.Switching {
     public static class USB_ERB24 {
         // TODO: Once this class' internal methods are fully verified by TestLibraryTests, refactor them to private methods & delete TestLibraryTest's Unit tests for the now private methods.
+        // TODO: Convert the UE24 class to a Singleton, like the USB_TO_GPIO class.
+        //  - If there are more than one USB-ERB24s in the test system, make the UE24 Singleton class a Dictionary of USB-ERB24s, rather than just one USB-ERB24.
+        //  - Each USB-ERB24 in the Singleton's Dictionary can be accessed by it's UE24 enum; UE24.S01, UE24.S02...UE24.Snn, for UE24 Singletons 01, 02...nn.
         // NOTE: This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
         // NOTE: USB-ERB24 relays are configurable for either Non-Inverting or Inverting logic, via hardware DIP switch S1.
         //  - Non-Inverting:  Logic low de-energizes the relays, logic high energizes them.

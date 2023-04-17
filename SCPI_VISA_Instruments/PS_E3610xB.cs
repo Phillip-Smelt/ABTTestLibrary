@@ -11,7 +11,9 @@ using TestLibrary.AppConfig;
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace TestLibrary.SCPI_VISA_Instruments {
-    // TODO: Convert the PS_E3610xB class to a Singleton, like the USB_TO_GPIO class.  To handle multiple PS_E3610xBs, create copies of the Singleton class & number them?  PS_E3610xB_1, PS_E3610xB_2...
+    // TODO: Convert the PS_E3610xB class to a Singleton, like the USB_TO_GPIO class.
+    //  - If there are more than one PS_E3610xB in the test system, make the PS_E3610xB Singleton class a Dictionary of PS_E3610xBs, rather than just one PS_E3610xB.
+    //  - Each PS_E3610xB in the Singleton's Dictionary can be accessed by its enum; PS.S01, PS.S02...PS.Snn, for Power Supply Singletons 01, 02...nn.
     // NOTE: SCPI99's IDN Identity Query won't return "E3610xB" in it's Identity string.  It only returns "E36103B", "E36105B" etc.
     public static class PS_E36103B { public const String MODEL = "E36103B"; } // PS_E36103B needed only in class TestLibrary.AppConfig.SCPI_VISA_Instrument.
 

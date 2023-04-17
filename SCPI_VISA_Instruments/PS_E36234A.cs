@@ -9,6 +9,9 @@ using TestLibrary.AppConfig;
 //
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
+// TODO: Convert the PS_E36234A class to a Singleton, like the USB_TO_GPIO class.
+//  - If there are more than one PS_E36234A in the test system, make the PS_E36234A Singleton class a Dictionary of PS_E36234As, rather than just one PS_E36234A.
+//  - Each PS_E36234A in the Singleton's Dictionary can be accessed by its enum; PS.S01, PS.S02...PS.Snn, for Power Supply Singletons 01, 02...nn.
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace TestLibrary.SCPI_VISA_Instruments {
     public static class PS_E36234A {
