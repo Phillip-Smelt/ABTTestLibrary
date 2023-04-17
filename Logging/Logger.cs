@@ -37,7 +37,7 @@ namespace TestLibrary.Logging {
                 Log.Information($"UUT Serial Number      : {configUUT.SerialNumber}");
                 Log.Information($"UUT Group ID           : {configTest.Group.ID}\n");
                 return;
-                // Log Header isn't written to Console when Group not Required, futher emphasizing test results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
+                // Log Header isn't written to Console when Group not Required, further emphasizing test results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
 
             if (configLogger.FileEnabled && !configLogger.SQLEnabled) {
@@ -127,7 +127,7 @@ namespace TestLibrary.Logging {
 
         public static void Stop(AppConfigUUT configUUT, AppConfigLogger configLogger, Group group, ref RichTextBox rtfResults) {
             if (!group.Required) Log.CloseAndFlush();
-            // Log Trailer isn't written when Group isn't Required, futher emphasizing test results
+            // Log Trailer isn't written when Group isn't Required, further emphasizing test results
             // aren't valid for pass verdict/$hip disposition, only troubleshooting failures.
             else {
                 Log.Information($"Final Result: {configUUT.EventCode}");
@@ -181,7 +181,7 @@ namespace TestLibrary.Logging {
         }
 
         public static void TestEvents(AppConfigUUT uut) {
-            String eventCode = String.Empty;
+            String eventCode;
             switch (uut.EventCode) {
                 case EventCodes.CANCEL:
                     eventCode = "A";

@@ -7,7 +7,6 @@ using static TestLibrary.Switching.RelayForms;
 
 namespace TestLibrary.Switching {
     public static class USB_ERB24 {
-        // TODO: Once this class' internal methods are fully verified by TestLibraryTests, refactor them to private methods & delete TestLibraryTest's Unit tests for the now private methods.
         // TODO: Convert the UE24 class to a Singleton, like the USB_TO_GPIO class.
         //  - If there are more than one USB-ERB24s in the test system, make the UE24 Singleton class a Dictionary of USB-ERB24s, rather than just one USB-ERB24.
         //  - Each USB-ERB24 in the Singleton's Dictionary can be accessed by it's UE24 enum; UE24.S01, UE24.S02...UE24.Snn, for UE24 Singletons 01, 02...nn.
@@ -102,7 +101,7 @@ namespace TestLibrary.Switching {
 
         public static Dictionary<R, C> Get(UE24 UE24) {
             MccBoard mccBoard = new MccBoard((Int32)UE24);
-            UInt16[] bits = Read(mccBoard);
+            UInt16[] bits = PortsRead(mccBoard);
             UInt32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
             UInt32 relayBits = 0x0000;
             relayBits |= biggerBits[(Int32)PORTS.A] << 00;
@@ -123,7 +122,7 @@ namespace TestLibrary.Switching {
 
         public static Dictionary<UE24, Dictionary<R, C>> Get() {
             Dictionary<UE24, Dictionary<R, C>> UE24εRεC = new Dictionary<UE24, Dictionary<R, C>>();
-            foreach (UE24 ue24 in Enum.GetValues(typeof(UE24))) UE24εRεC.Add(ue24, Get(ue24));
+            foreach (UE24 UE24 in Enum.GetValues(typeof(UE24))) UE24εRεC.Add(UE24, Get(UE24));
             return UE24εRεC;
         }
         #endregion Get
@@ -149,12 +148,12 @@ namespace TestLibrary.Switching {
             foreach (R R in RεC.Keys) portBits |= (UInt32)1 << (Byte)R; // Sets a 1 in each bit corresponding to relay state in RεC.
             Byte[] bite = BitConverter.GetBytes(portBits);
             UInt16[] biggerBite = Array.ConvertAll(bite, delegate (Byte b) { return (UInt16)b; });
-            UInt16[] ports = Read(mccBoard);
+            UInt16[] ports = PortsRead(mccBoard);
             ports[(Int32)PORTS.A] |= biggerBite[(Int32)PORTS.A];
             ports[(Int32)PORTS.B] |= biggerBite[(Int32)PORTS.B];
             ports[(Int32)PORTS.CL] |= (biggerBite[(Int32)PORTS.CL] &= 0x0F); // Clear CH bits.
             ports[(Int32)PORTS.CH] |= (biggerBite[(Int32)PORTS.CH] &= 0xF0); // Clear CL bits.
-            Write(mccBoard, ports);
+            PortsWrite(mccBoard, ports);
         }
 
         public static void Set(HashSet<UE24> UE24s, C C) { foreach (UE24 UE24 in UE24s) { Set(UE24, C); } }
@@ -166,37 +165,35 @@ namespace TestLibrary.Switching {
         public static void Set(C C) { foreach (UE24 UE24 in Enum.GetValues(typeof(UE24))) Set(UE24, C); }
         #endregion Set
 
-        #region internal methods
-        internal static UInt16 Read(MccBoard mccBoard, DigitalPortType digitalPortType) {
+        #region private methods
+        internal static UInt16 PortRead(MccBoard mccBoard, DigitalPortType digitalPortType) {
             ErrorInfo errorInfo = mccBoard.DIn(digitalPortType, out UInt16 dataValue);
             ProcessErrorInfo(mccBoard, errorInfo);
             return dataValue;
         }
 
-        internal static UInt16[] Read(MccBoard mccBoard) {
+        internal static UInt16[] PortsRead(MccBoard mccBoard) {
             return new UInt16[] {
-                Read(mccBoard, DigitalPortType.FirstPortA),
-                Read(mccBoard, DigitalPortType.FirstPortB),
-                Read(mccBoard, DigitalPortType.FirstPortCL),
-                Read(mccBoard, DigitalPortType.FirstPortCH)
+                PortRead(mccBoard, DigitalPortType.FirstPortA),
+                PortRead(mccBoard, DigitalPortType.FirstPortB),
+                PortRead(mccBoard, DigitalPortType.FirstPortCL),
+                PortRead(mccBoard, DigitalPortType.FirstPortCH)
             };
         }
 
-        internal static void Write(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 dataValue) {
+        internal static void PortWrite(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 dataValue) {
             ErrorInfo errorInfo = mccBoard.DOut(digitalPortType, dataValue);
             ProcessErrorInfo(mccBoard, errorInfo);
         }
 
-        internal static void Write(MccBoard mccBoard, UInt16[] ports) {
-            Write(mccBoard, DigitalPortType.FirstPortA, ports[(Int32)PORTS.A]);
-            Write(mccBoard, DigitalPortType.FirstPortB, ports[(Int32)PORTS.B]);
-            Write(mccBoard, DigitalPortType.FirstPortCL, ports[(Int32)PORTS.CL]);
-            Write(mccBoard, DigitalPortType.FirstPortCH, ports[(Int32)PORTS.CH]);
+        internal static void PortsWrite(MccBoard mccBoard, UInt16[] ports) {
+            PortWrite(mccBoard, DigitalPortType.FirstPortA, ports[(Int32)PORTS.A]);
+            PortWrite(mccBoard, DigitalPortType.FirstPortB, ports[(Int32)PORTS.B]);
+            PortWrite(mccBoard, DigitalPortType.FirstPortCL, ports[(Int32)PORTS.CL]);
+            PortWrite(mccBoard, DigitalPortType.FirstPortCH, ports[(Int32)PORTS.CH]);
         }
 
-        internal static Boolean Is(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 portState) { return Read(mccBoard, digitalPortType) == portState; }
-
-        internal static DigitalPortType Get(R R) {
+        internal static DigitalPortType GetPort(R R) {
             switch (R) {
                 case R r when R.C01 <= r && r <= R.C08: return DigitalPortType.FirstPortA;
                 case R r when R.C09 <= r && r <= R.C16: return DigitalPortType.FirstPortB;
@@ -218,6 +215,6 @@ namespace TestLibrary.Switching {
                 $"ErrorInfo Message   : {errorInfo.Message}.{Environment.NewLine}");
             }
         }
-        #endregion internal methods
+        #endregion private methods
     }
 }
