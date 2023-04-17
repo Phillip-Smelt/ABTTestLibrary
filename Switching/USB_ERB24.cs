@@ -73,7 +73,7 @@ namespace TestLibrary.Switching {
 
         public static Dictionary<R, C> Get(UE24 UE24, HashSet<R> Rs) {
             Dictionary<R, C> RεC = Get(UE24);
-            foreach(R relay in Relays) if (!RεC.ContainsKey(relay)) RεC.Remove(relay);
+            foreach(R R in Rs) if (!RεC.ContainsKey(R)) RεC.Remove(R);
             return RεC;
         }
 
@@ -89,12 +89,11 @@ namespace TestLibrary.Switching {
             BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
 
             Dictionary<R, C> RεC = new Dictionary<R, C>();
-            R relay;
-            C C;
+            R R; C C;
             for (Int32 i = 0; i < 32; i++) {
-                relay = (R)Enum.ToObject(typeof(R), bitVector32[i]);
+                R = (R)Enum.ToObject(typeof(R), bitVector32[i]);
                 C = bitVector32[i] ? C.NO : C.NC;
-                RεC.Add(relay, C);
+                RεC.Add(R, C);
             }
             return RεC;
         }
@@ -107,7 +106,7 @@ namespace TestLibrary.Switching {
 
         public static void Set(UE24 UE24, R R, C C) {
             MccBoard mccBoard = new MccBoard((Int32)UE24);
-            ErrorInfo errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA, (Int32)Relay, (C is C.NC) ? DigitalLogicState.Low : DigitalLogicState.High);
+            ErrorInfo errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA, (Int32)R, (C is C.NC) ? DigitalLogicState.Low : DigitalLogicState.High);
             ProcessErrorInfo(mccBoard, errorInfo);
         }
 
@@ -168,8 +167,8 @@ namespace TestLibrary.Switching {
 
         internal static Boolean Is(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 portState) { return Read(mccBoard, digitalPortType) == portState; }
 
-        internal static DigitalPortType Get(R relay) {
-            switch (relay) {
+        internal static DigitalPortType Get(R R) {
+            switch (R) {
                 case R r when R.C01 <= r && r <= R.C08: return DigitalPortType.FirstPortA;
                 case R r when R.C09 <= r && r <= R.C16: return DigitalPortType.FirstPortB;
                 case R r when R.C17 <= r && r <= R.C20: return DigitalPortType.FirstPortCL;
