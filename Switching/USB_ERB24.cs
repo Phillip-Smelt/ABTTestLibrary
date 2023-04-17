@@ -40,7 +40,7 @@ namespace TestLibrary.Switching {
 
         private const String PORT_INVALID = "Invalid USB-ERB24 DigitalPortType, must be in set '{ FirstPortA, FirstPortB, FirstPortCL, FirstPortCH }'.";
 
-        #region public methods
+        #region Is/Are
         public static Boolean Is(UE24 UE24, R R, C C) { return Get(UE24, R) == C; }
 
         public static Boolean Are(UE24 UE24, HashSet<R> Rs, C C) {
@@ -61,12 +61,32 @@ namespace TestLibrary.Switching {
             return areEqual;
         }
 
-        public static Boolean Are(C C) {
+        public static Boolean Are(HashSet<UE24> UE24s, C C) {
             Boolean areEqual = true;
-            foreach (UE24 ue24 in Enum.GetValues(typeof(UE24))) areEqual &= Are(ue24, C);
+            foreach (UE24 UE24 in UE24s) areEqual &= Are(UE24, C);
             return areEqual;
         }
 
+        public static Boolean Are(HashSet<UE24> UE24s, HashSet<R> Rs, C C) {
+            Boolean areEqual = true;
+            foreach (UE24 UE24 in UE24s) areEqual &= Are(UE24, Rs, C);
+            return areEqual;
+        }
+
+        public static Boolean Are(Dictionary<UE24, Dictionary<R, C>> UE24εRεC) {
+            Boolean areEqual = true;
+            foreach (KeyValuePair<UE24, Dictionary<R, C>> kvp in UE24εRεC) areEqual &= Are(kvp.Key, kvp.Value);
+            return areEqual;
+        }
+
+        public static Boolean Are(C C) {
+            Boolean areEqual = true;
+            foreach (UE24 UE24 in Enum.GetValues(typeof(UE24))) areEqual &= Are(UE24, C);
+            return areEqual;
+        }
+        #endregion Is/Are
+
+        #region Get
         public static C Get(UE24 UE24, R R) {
             MccBoard mccBoard = new MccBoard((Int32)UE24);
             ErrorInfo errorInfo = mccBoard.DBitIn(DigitalPortType.FirstPortA, (Int32)R, out DigitalLogicState digitalLogicState);
@@ -106,7 +126,9 @@ namespace TestLibrary.Switching {
             foreach (UE24 ue24 in Enum.GetValues(typeof(UE24))) UE24εRεC.Add(ue24, Get(ue24));
             return UE24εRεC;
         }
+        #endregion Get
 
+        #region Set
         public static void Set(UE24 UE24, R R, C C) {
             MccBoard mccBoard = new MccBoard((Int32)UE24);
             ErrorInfo errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA, (Int32)R, (C is C.NC) ? DigitalLogicState.Low : DigitalLogicState.High);
@@ -114,6 +136,12 @@ namespace TestLibrary.Switching {
         }
 
         public static void Set(UE24 UE24, HashSet<R> R, C C) { Set(UE24, R.ToDictionary(r => r, r => C)); }
+
+        public static void Set(UE24 UE24, C C) {
+            Dictionary<R, C> RεC = new Dictionary<R, C>();
+            foreach (R R in Enum.GetValues(typeof(R))) RεC.Add(R, C);
+            Set(UE24, RεC);
+        }
 
         public static void Set(UE24 UE24, Dictionary<R, C> RεC) {
             MccBoard mccBoard = new MccBoard((Int32)UE24);
@@ -129,16 +157,14 @@ namespace TestLibrary.Switching {
             Write(mccBoard, ports);
         }
 
-        public static void Set(UE24 UE24, C C) {
-            Dictionary<R, C> RεC = new Dictionary<R, C>();
-            foreach (R R in Enum.GetValues(typeof(R))) RεC.Add(R, C);
-            Set(UE24, RεC);
-        }
+        public static void Set(HashSet<UE24> UE24s, C C) { foreach (UE24 UE24 in UE24s) { Set(UE24, C); } }
 
-        public static void Set(C C) { foreach (UE24 ue24 in Enum.GetValues(typeof(UE24))) Set(ue24, C); }
+        public static void Set(HashSet<UE24> UE24s, HashSet<R> Rs, C C) { foreach (UE24 UE24 in UE24s) Set(UE24, Rs, C); }
 
         public static void Set(Dictionary<UE24, Dictionary<R, C>> UE24εRεC) { foreach (KeyValuePair<UE24, Dictionary<R, C>> kvp in UE24εRεC) Set(kvp.Key, kvp.Value); }
-        #endregion public methods
+
+        public static void Set(C C) { foreach (UE24 UE24 in Enum.GetValues(typeof(UE24))) Set(UE24, C); }
+        #endregion Set
 
         #region internal methods
         internal static UInt16 Read(MccBoard mccBoard, DigitalPortType digitalPortType) {
