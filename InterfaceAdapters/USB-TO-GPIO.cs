@@ -105,7 +105,7 @@ namespace TestLibrary.InterfaceAdapters {
         public static String HexStringToTextString(String hexString) {
             hexString = hexString.Replace("0x", "");
             Byte[] bytes = new Byte[hexString.Length / 2];
-            for (int i = 0; i < hexString.Length; i += 2) bytes[i / 2] = Convert.ToByte(hexString.Substring(i, 2), 16);
+            for (Int32 i = 0; i < hexString.Length; i += 2) bytes[i / 2] = Convert.ToByte(hexString.Substring(i, 2), 16);
             return System.Text.Encoding.ASCII.GetString(bytes, 0, bytes.Length);
         }
 
