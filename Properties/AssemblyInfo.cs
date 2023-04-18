@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("TestLibraryTests")]
+// TODO: Consider renaming project TestLibrary to project TestExecutive.  GitHub has *many* TestLibrary repositories, but comparatively few TestExecutive repositories.
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
