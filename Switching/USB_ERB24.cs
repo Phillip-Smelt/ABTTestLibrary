@@ -103,26 +103,17 @@ namespace TestLibrary.Switching {
             MccBoard mccBoard = new MccBoard((Int32)UE24);
             UInt16[] bits = PortsRead(mccBoard);
             UInt32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
-            for (Int32 i = 0; i < biggerBits.Length; i++) Console.WriteLine($"bB[{i}] = {biggerBits[i]}");
             UInt32 relayBits = 0x0000;
-            Console.WriteLine($"relayBits {relayBits}");
             relayBits |= biggerBits[(UInt32)PORTS.CH] << 00;
-            Console.WriteLine($"relayBits {relayBits}");
             relayBits |= biggerBits[(UInt32)PORTS.CL] << 04;
-            Console.WriteLine($"relayBits {relayBits}");
             relayBits |= biggerBits[(UInt32)PORTS.B] << 08;
-            Console.WriteLine($"relayBits {relayBits}");
             relayBits |= biggerBits[(UInt32)PORTS.A] << 16;
-            Console.WriteLine($"relayBits {relayBits}");
             BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
-            Console.WriteLine($"bitVector32 {bitVector32}");
 
             R R; C C; Dictionary<R, C> RεC = new Dictionary<R, C>();
             for (Int32 i = 0; i < _ue24bitVector32Masks.Length; i++) {
                 R = (R)Enum.ToObject(typeof(R), i);
                 C = bitVector32[_ue24bitVector32Masks[i]] ? C.NO : C.NC;
-                Console.WriteLine($"bitVector32[{i}]={bitVector32[_ue24bitVector32Masks[i]]}.");
-                Console.WriteLine($"C={C}.");
                 RεC.Add(R, C);
             }
             return RεC;
