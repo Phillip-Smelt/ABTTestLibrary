@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
 using static TestLibrary.Switching.RelayForms;
@@ -37,8 +38,7 @@ namespace TestLibrary.Switching {
         // NOTE: Enumerate Form B relays as R.B01, R.B02...
         internal enum PORTS { A, B, CL, CH }
 
-        private const String PORT_INVALID = "Invalid USB-ERB24 DigitalPortType, must be in set '{ FirstPortA, FirstPortB, FirstPortCL, FirstPortCH }'.";
-
+        private static Int32[] _ue24bitVector32Masks = GetUE24BitVector32Masks();
         #region Is/Are
         public static Boolean Is(UE24 UE24, R R, C C) { return Get(UE24, R) == C; }
 
@@ -102,27 +102,26 @@ namespace TestLibrary.Switching {
         public static Dictionary<R, C> Get(UE24 UE24) {
             MccBoard mccBoard = new MccBoard((Int32)UE24);
             UInt16[] bits = PortsRead(mccBoard);
-            Int32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 uInt16) { return (Int32)uInt16; });
+            UInt32[] biggerBits = Array.ConvertAll(bits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
             for (Int32 i = 0; i < biggerBits.Length; i++) Console.WriteLine($"bB[{i}] = {biggerBits[i]}");
-            Int32 relayBits = 0x0000;
+            UInt32 relayBits = 0x0000;
             Console.WriteLine($"relayBits {relayBits}");
-            relayBits |= biggerBits[(Int32)PORTS.CH] << 00;
+            relayBits |= biggerBits[(UInt32)PORTS.CH] << 00;
             Console.WriteLine($"relayBits {relayBits}");
-            relayBits |= biggerBits[(Int32)PORTS.CL] << 04;
+            relayBits |= biggerBits[(UInt32)PORTS.CL] << 04;
             Console.WriteLine($"relayBits {relayBits}");
-            relayBits |= biggerBits[(Int32)PORTS.B] << 08;
+            relayBits |= biggerBits[(UInt32)PORTS.B] << 08;
             Console.WriteLine($"relayBits {relayBits}");
-            relayBits |= biggerBits[(Int32)PORTS.A] << 16;
+            relayBits |= biggerBits[(UInt32)PORTS.A] << 16;
             Console.WriteLine($"relayBits {relayBits}");
-            BitVector32 bitVector32 = new BitVector32(relayBits);
+            BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
             Console.WriteLine($"bitVector32 {bitVector32}");
 
-            Dictionary<R, C> RεC = new Dictionary<R, C>();
-            R R; C C;
-            for (Int32 i = 0; i < 24; i++) {
+            R R; C C; Dictionary<R, C> RεC = new Dictionary<R, C>();
+            for (Int32 i = 0; i < _ue24bitVector32Masks.Length; i++) {
                 R = (R)Enum.ToObject(typeof(R), i);
-                C = bitVector32[i] ? C.NO : C.NC;
-                Console.WriteLine($"bitVector32[{i}]={bitVector32[i]}.");
+                C = bitVector32[_ue24bitVector32Masks[i]] ? C.NO : C.NC;
+                Console.WriteLine($"bitVector32[{i}]={bitVector32[_ue24bitVector32Masks[i]]}.");
                 Console.WriteLine($"C={C}.");
                 RεC.Add(R, C);
             }
@@ -208,7 +207,7 @@ namespace TestLibrary.Switching {
                 case R r when R.C09 <= r && r <= R.C16: return DigitalPortType.FirstPortB;
                 case R r when R.C17 <= r && r <= R.C20: return DigitalPortType.FirstPortCL;
                 case R r when R.C21 <= r && r <= R.C24: return DigitalPortType.FirstPortCH;
-                default: throw new ArgumentException(PORT_INVALID);
+                default: throw new ArgumentException("Invalid USB-ERB24 DigitalPortType, must be in set '{ FirstPortA, FirstPortB, FirstPortCL, FirstPortCH }'.");
             }
         }
 
@@ -223,6 +222,14 @@ namespace TestLibrary.Switching {
                 $"ErrorInfo Value     : {errorInfo.Value}.{Environment.NewLine}" +
                 $"ErrorInfo Message   : {errorInfo.Message}.{Environment.NewLine}");
             }
+        }
+
+        private static Int32[] GetUE24BitVector32Masks() {
+            Int32 ue24RelayCount = Enum.GetValues(typeof(R)).Length;
+            Debug.Assert(ue24RelayCount == 24);
+            Int32[] ue24BitVector32Masks = new Int32[ue24RelayCount];
+            for (Int32 i = 0; i < ue24RelayCount; i++) ue24BitVector32Masks[i + 1] = BitVector32.CreateMask(ue24BitVector32Masks[i]);
+            return ue24BitVector32Masks;
         }
         #endregion private methods
     }
