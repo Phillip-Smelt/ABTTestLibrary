@@ -122,9 +122,7 @@ namespace TestLibrary.Switching {
 
         public static Dictionary<UE24, Dictionary<R, C>> Get(HashSet<UE24> UE24s) {
             Dictionary<UE24, Dictionary<R, C>> UE24εRεC = Get();
-            foreach (UE24 UE24 in UE24s) {
-                if (!UE24εRεC.ContainsKey(UE24)) UE24εRεC.Remove(UE24);
-            }
+            foreach (UE24 UE24 in UE24s) if (!UE24εRεC.ContainsKey(UE24)) UE24εRεC.Remove(UE24);
             return UE24εRεC;
         }
 
@@ -136,7 +134,11 @@ namespace TestLibrary.Switching {
 
         public static Dictionary<UE24, Dictionary<R, C>> Get(Dictionary<UE24, R> UE24εR) {
             Dictionary<UE24, Dictionary<R, C>> UE24εRεC = new Dictionary<UE24, Dictionary<R, C>>();
-            foreach (UE24 UE24 in UE24εR.Keys) UE24εRεC.Add(UE24, Get(UE24, R));
+            Dictionary<R, C> RεC = new Dictionary<R, C>();
+            foreach (KeyValuePair<UE24, R> kvp in UE24εR) {
+                RεC.Add (kvp.Value, Get(kvp.Key, kvp.Value));
+                UE24εRεC.Add(kvp.Key, RεC);
+            }
             return UE24εRεC;
         }
 
