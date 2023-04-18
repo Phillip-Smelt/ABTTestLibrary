@@ -38,7 +38,7 @@ namespace TestLibrary.Switching {
         // NOTE: Enumerate Form B relays as R.B01, R.B02...
         internal enum PORTS { A, B, CL, CH }
 
-        private static Int32[] _ue24bitVector32Masks = GetUE24BitVector32Masks();
+        internal static Int32[] _ue24bitVector32Masks = GetUE24BitVector32Masks();
         #region Is/Are
         public static Boolean Is(UE24 UE24, R R, C C) { return Get(UE24, R) == C; }
 
@@ -224,11 +224,12 @@ namespace TestLibrary.Switching {
             }
         }
 
-        private static Int32[] GetUE24BitVector32Masks() {
+        internal static Int32[] GetUE24BitVector32Masks() {
             Int32 ue24RelayCount = Enum.GetValues(typeof(R)).Length;
             Debug.Assert(ue24RelayCount == 24);
             Int32[] ue24BitVector32Masks = new Int32[ue24RelayCount];
-            for (Int32 i = 0; i < ue24RelayCount; i++) ue24BitVector32Masks[i + 1] = BitVector32.CreateMask(ue24BitVector32Masks[i]);
+            ue24BitVector32Masks[0]=BitVector32.CreateMask();
+            for (Int32 i = 0; i < ue24RelayCount - 1; i++) ue24BitVector32Masks[i + 1] = BitVector32.CreateMask(ue24BitVector32Masks[i]);
             return ue24BitVector32Masks;
         }
         #endregion private methods
