@@ -142,16 +142,35 @@ namespace TestLibrary.Switching {
         }
 
         public static void Set(UE24 UE24, Dictionary<R, C> RεC) {
+            UInt32 bit;
+            UInt32 bits0 = 0x0000_0000;
+            UInt32 bits1 = 0x0000_0000;
+
+            foreach (KeyValuePair<R, C> kvp in RεC) {
+                bit = (UInt32)1 << (Byte)kvp.Key;
+                if (kvp.Value == C.NC) bits0 |= bit; // Sets a 1 in each bit0 bit corresponding to NC state in RεC.
+                else bits1 |= bit;                   // Sets a 1 in each bit1 bit corresponding to NO state in RεC.
+            }
+            BitVector32 bit0Vector32 = new BitVector32((Int32)bits0);
+            BitVector32 bit1Vector32 = new BitVector32((Int32)bits1);
+            BitVector32.Section portA = BitVector32.CreateSection(0b1111_1111);
+            BitVector32.Section portB = BitVector32.CreateSection(0b1111_1111, portA);
+            BitVector32.Section portCL = BitVector32.CreateSection(0b1111, portB);
+            BitVector32.Section portCH = BitVector32.CreateSection(0b1111, portCL);
+
             MccBoard mccBoard = new MccBoard((Int32)UE24);
-            UInt32 portBits = 0x0000_0000;
-            foreach (R R in RεC.Keys) portBits |= (UInt32)1 << (Byte)R; // Sets a 1 in each bit corresponding to relay state in RεC.
-            Byte[] bite = BitConverter.GetBytes(portBits);
-            UInt16[] biggerBite = Array.ConvertAll(bite, delegate (Byte b) { return (UInt16)b; });
             UInt16[] ports = PortsRead(mccBoard);
-            ports[(Int32)PORTS.A] |= biggerBite[(Int32)PORTS.A];
-            ports[(Int32)PORTS.B] |= biggerBite[(Int32)PORTS.B];
-            ports[(Int32)PORTS.CL] |= (biggerBite[(Int32)PORTS.CL] &= 0x0F); // Clear CH bits.
-            ports[(Int32)PORTS.CH] |= (biggerBite[(Int32)PORTS.CH] &= 0xF0); // Clear CL bits.
+
+            ports[(Int32)PORTS.A]  |= (UInt16)bit1Vector32[portA]; 
+            ports[(Int32)PORTS.B]  |= (UInt16)bit1Vector32[portB];
+            ports[(Int32)PORTS.CL] |= (UInt16)bit1Vector32[portCL];
+            ports[(Int32)PORTS.CH] |= (UInt16)bit1Vector32[portCH];
+
+            ports[(Int32)PORTS.A]  &= (UInt16)~bit0Vector32[portA];
+            ports[(Int32)PORTS.B]  &= (UInt16)~bit0Vector32[portB];
+            ports[(Int32)PORTS.CL] &= (UInt16)~bit0Vector32[portCL];
+            ports[(Int32)PORTS.CH] &= (UInt16)~bit0Vector32[portCH];
+
             PortsWrite(mccBoard, ports);
         }
 
