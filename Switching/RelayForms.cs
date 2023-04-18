@@ -4,7 +4,7 @@
 
         public enum A { NO, C }
         // A.NO; Form A relay is deenergized and in normally opened state.
-        // A.C;  Form A relay is energized and in abnormally closed state.Form A 
+        // A.C;  Form A relay is energized and in abnormally closed state.
 
         public enum B { NC, O }
         // B.NC; Form B relay is deenergized and in normally closed state.

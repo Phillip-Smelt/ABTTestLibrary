@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
 using static TestLibrary.Switching.RelayForms;
+using static TestLibrary.Switching.USB_ERB24;
 
 namespace TestLibrary.Switching {
     public static class USB_ERB24 {
@@ -119,6 +120,26 @@ namespace TestLibrary.Switching {
             return RεC;
         }
 
+        public static Dictionary<UE24, Dictionary<R, C>> Get(HashSet<UE24> UE24s) {
+            Dictionary<UE24, Dictionary<R, C>> UE24εRεC = Get();
+            foreach (UE24 UE24 in UE24s) {
+                if (!UE24εRεC.ContainsKey(UE24)) UE24εRεC.Remove(UE24);
+            }
+            return UE24εRεC;
+        }
+
+        public static Dictionary<UE24, Dictionary<R, C>> Get(HashSet<UE24> UE24s, HashSet<R> Rs) {
+            Dictionary<UE24, Dictionary<R, C>> UE24εRεC = new Dictionary<UE24, Dictionary<R, C>>();
+            foreach (UE24 UE24 in UE24s) UE24εRεC.Add(UE24, Get(UE24, Rs));
+            return UE24εRεC;
+        }
+
+        public static Dictionary<UE24, Dictionary<R, C>> Get(Dictionary<UE24, R> UE24εR) {
+            Dictionary<UE24, Dictionary<R, C>> UE24εRεC = new Dictionary<UE24, Dictionary<R, C>>();
+            foreach (UE24 UE24 in UE24εR.Keys) UE24εRεC.Add(UE24, Get(UE24, R));
+            return UE24εRεC;
+        }
+
         public static Dictionary<UE24, Dictionary<R, C>> Get() {
             Dictionary<UE24, Dictionary<R, C>> UE24εRεC = new Dictionary<UE24, Dictionary<R, C>>();
             foreach (UE24 UE24 in Enum.GetValues(typeof(UE24))) UE24εRεC.Add(UE24, Get(UE24));
@@ -133,13 +154,7 @@ namespace TestLibrary.Switching {
             ProcessErrorInfo(mccBoard, errorInfo);
         }
 
-        public static void Set(UE24 UE24, HashSet<R> R, C C) { Set(UE24, R.ToDictionary(r => r, r => C)); }
-
-        public static void Set(UE24 UE24, C C) {
-            Dictionary<R, C> RεC = new Dictionary<R, C>();
-            foreach (R R in Enum.GetValues(typeof(R))) RεC.Add(R, C);
-            Set(UE24, RεC);
-        }
+        public static void Set(UE24 UE24, HashSet<R> Rs, C C) { Set(UE24, Rs.ToDictionary(r => r, r => C)); }
 
         public static void Set(UE24 UE24, Dictionary<R, C> RεC) {
             UInt32 bit;
@@ -174,11 +189,17 @@ namespace TestLibrary.Switching {
             PortsWrite(mccBoard, ports);
         }
 
+        public static void Set(UE24 UE24, C C) {
+            Dictionary<R, C> RεC = new Dictionary<R, C>();
+            foreach (R R in Enum.GetValues(typeof(R))) RεC.Add(R, C);
+            Set(UE24, RεC);
+        }
+
         public static void Set(HashSet<UE24> UE24s, C C) { foreach (UE24 UE24 in UE24s) { Set(UE24, C); } }
 
         public static void Set(HashSet<UE24> UE24s, HashSet<R> Rs, C C) { foreach (UE24 UE24 in UE24s) Set(UE24, Rs, C); }
 
-public static void Set(Dictionary<UE24, Dictionary<R, C>> UE24εRεC) { foreach (KeyValuePair<UE24, Dictionary<R, C>> kvp in UE24εRεC) Set(kvp.Key, kvp.Value); }
+        public static void Set(Dictionary<UE24, Dictionary<R, C>> UE24εRεC) { foreach (KeyValuePair<UE24, Dictionary<R, C>> kvp in UE24εRεC) Set(kvp.Key, kvp.Value); }
 
         public static void Set(C C) { foreach (UE24 UE24 in Enum.GetValues(typeof(UE24))) Set(UE24, C); }
         #endregion Set
