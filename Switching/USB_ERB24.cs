@@ -127,21 +127,21 @@ namespace TestLibrary.Switching {
         #endregion Get
 
         #region Set
-public static void Set(UE24 UE24, R R, C C) {
+        public static void Set(UE24 UE24, R R, C C) {
             MccBoard mccBoard = new MccBoard((Int32)UE24);
             ErrorInfo errorInfo = mccBoard.DBitOut(DigitalPortType.FirstPortA, (Int32)R, (C is C.NC) ? DigitalLogicState.Low : DigitalLogicState.High);
             ProcessErrorInfo(mccBoard, errorInfo);
         }
 
-public static void Set(UE24 UE24, HashSet<R> R, C C) { Set(UE24, R.ToDictionary(r => r, r => C)); }
+        public static void Set(UE24 UE24, HashSet<R> R, C C) { Set(UE24, R.ToDictionary(r => r, r => C)); }
 
-public static void Set(UE24 UE24, C C) {
+        public static void Set(UE24 UE24, C C) {
             Dictionary<R, C> RεC = new Dictionary<R, C>();
             foreach (R R in Enum.GetValues(typeof(R))) RεC.Add(R, C);
             Set(UE24, RεC);
         }
 
-public static void Set(UE24 UE24, Dictionary<R, C> RεC) {
+        public static void Set(UE24 UE24, Dictionary<R, C> RεC) {
             UInt32 bit;
             UInt32 bits0 = 0x0000_0000;
             UInt32 bits1 = 0x0000_0000;
@@ -174,13 +174,13 @@ public static void Set(UE24 UE24, Dictionary<R, C> RεC) {
             PortsWrite(mccBoard, ports);
         }
 
-public static void Set(HashSet<UE24> UE24s, C C) { foreach (UE24 UE24 in UE24s) { Set(UE24, C); } }
+        public static void Set(HashSet<UE24> UE24s, C C) { foreach (UE24 UE24 in UE24s) { Set(UE24, C); } }
 
         public static void Set(HashSet<UE24> UE24s, HashSet<R> Rs, C C) { foreach (UE24 UE24 in UE24s) Set(UE24, Rs, C); }
 
-        public static void Set(Dictionary<UE24, Dictionary<R, C>> UE24εRεC) { foreach (KeyValuePair<UE24, Dictionary<R, C>> kvp in UE24εRεC) Set(kvp.Key, kvp.Value); }
+public static void Set(Dictionary<UE24, Dictionary<R, C>> UE24εRεC) { foreach (KeyValuePair<UE24, Dictionary<R, C>> kvp in UE24εRεC) Set(kvp.Key, kvp.Value); }
 
-public static void Set(C C) { foreach (UE24 UE24 in Enum.GetValues(typeof(UE24))) Set(UE24, C); }
+        public static void Set(C C) { foreach (UE24 UE24 in Enum.GetValues(typeof(UE24))) Set(UE24, C); }
         #endregion Set
 
         #region private methods
