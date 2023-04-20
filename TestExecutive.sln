@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.4.33205.214
+VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLibrary", "TestLibrary.csproj", "{314614CB-6E17-4B74-A9F9-CE4699F78C9B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsoMicro", "P:\Test\Engineers\repos\IsoMicro\IsoMicro.csproj", "{5AB1CDE9-19FE-49B3-AAD6-A3C55DBC98A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExecutive", "TestExecutive.csproj", "{314614CB-6E17-4B74-A9F9-CE4699F78C9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,15 +15,11 @@ Global
 		{314614CB-6E17-4B74-A9F9-CE4699F78C9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{314614CB-6E17-4B74-A9F9-CE4699F78C9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{314614CB-6E17-4B74-A9F9-CE4699F78C9B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5AB1CDE9-19FE-49B3-AAD6-A3C55DBC98A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5AB1CDE9-19FE-49B3-AAD6-A3C55DBC98A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5AB1CDE9-19FE-49B3-AAD6-A3C55DBC98A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5AB1CDE9-19FE-49B3-AAD6-A3C55DBC98A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B7A9BDBC-ACFC-405C-92FA-F2A2ED0B9993}
+		SolutionGuid = {79CDEC59-5E80-4F9E-96AF-A73200E0454F}
 	EndGlobalSection
 EndGlobal

@@ -28,8 +28,7 @@ using ABT.TestSpace.Switching;
 //  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
 //  - https://github.com/Amphenol-Borisch-Technologies/TestProgram
 //  - https://github.com/Amphenol-Borisch-Technologies/TestExecutiveTests
-namespace ABT.TestSpace
-{
+namespace ABT.TestSpace {
     public abstract partial class TestExecutive : Form {
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<String, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get();
