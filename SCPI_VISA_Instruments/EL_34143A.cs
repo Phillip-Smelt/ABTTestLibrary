@@ -1,6 +1,6 @@
 ﻿using System;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
-using ABT.TestLibrary.AppConfig;
+using ABT.TestSpace.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -9,7 +9,7 @@ using ABT.TestLibrary.AppConfig;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
-namespace ABT.TestLibrary.SCPI_VISA_Instruments {
+namespace ABT.TestSpace.SCPI_VISA_Instruments {
     // TODO: Convert the EL_34143A class to a Singleton, like the USB_TO_GPIO class.
     //  - If there are more than one EL_34143A in the test system, make the EL_34143A Singleton class a Dictionary of EL_34143As, rather than just one EL_34143A.
     //  - Each EL_34143A in the Singleton's Dictionary can be accessed by its enum; EL.S01, EL.S02...EL.Snn, for Electronic Load Singletons 01, 02...nn.

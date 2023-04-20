@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
-using ABT.TestLibrary.AppConfig;
+using ABT.TestSpace.AppConfig;
 
 // TODO: SQL Server Express: Persist test data into Microsoft SQL Server Express.
 // TODO: SQL Server Express: Create a Microsoft C# front-end exporting/report app for persisted SQL Server Express test data.  Export in CSV, report in RTF.
@@ -15,11 +15,11 @@ using ABT.TestLibrary.AppConfig;
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used Serilog commands are conveniences, not necessities.
 // NOTE: Will never fully implement wrapper methods for the complete set of Serilog commands, just some of the most commonly used ones.
-// - In general, TestLibrary's InterfaceAdapters, Logging, SCPI_VISA_Instruments & Switching namespaces exist partly to eliminate
-//   the need to reference TestLibrary's various DLLs directly from TestProgram client apps.
+// - In general, TestExecutive's InterfaceAdapters, Logging, SCPI_VISA_Instruments & Switching namespaces exist partly to eliminate
+//   the need to reference TestExecutive's various DLLs directly from TestProgram client apps.
 // - As long as suitable wrapper methods exists in Logger, needn't directly reference Serilog from TestProgram client apps,
-//   as referencing TestLibrary suffices.
-namespace ABT.TestLibrary.Logging {
+//   as referencing TestExecutive suffices.
+namespace ABT.TestSpace.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
 
@@ -62,7 +62,7 @@ namespace ABT.TestLibrary.Logging {
             }
             Log.Information($"START                  : {DateTime.Now}");
             Log.Information($"TestProgram Version    : {_appAssemblyVersion}");
-            Log.Information($"TestLibrary Version    : {_libraryAssemblyVersion}");
+            Log.Information($"TestExecutive Version    : {_libraryAssemblyVersion}");
             Log.Information($"UUT Customer           : {configUUT.Customer}");
             Log.Information($"UUT Test Specification : {configUUT.TestSpecification}");
             Log.Information($"UUT Description        : {configUUT.Description}");

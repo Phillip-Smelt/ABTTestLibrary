@@ -10,13 +10,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
-using ABT.TestLibrary.AppConfig;
-using ABT.TestLibrary.SCPI_VISA_Instruments;
-using ABT.TestLibrary.Logging;
-using ABT.Switching;
+using ABT.TestSpace.AppConfig;
+using ABT.TestSpace.SCPI_VISA_Instruments;
+using ABT.TestSpace.Logging;
+using ABT.TestSpace.Switching;
 
 
-// TODO: Refactor TestLibrary to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
+// TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 // TODO: Update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.0 when possible.
 // NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library is compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
 //  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
@@ -25,10 +25,11 @@ using ABT.Switching;
 // NOTE: With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 //
 //  References:
-//  - https://github.com/Amphenol-Borisch-Technologies/TestLibrary
+//  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
 //  - https://github.com/Amphenol-Borisch-Technologies/TestProgram
-//  - https://github.com/Amphenol-Borisch-Technologies/TestLibraryTests
-namespace ABT.TestLibrary {
+//  - https://github.com/Amphenol-Borisch-Technologies/TestExecutiveTests
+namespace ABT.TestSpace
+{
     public abstract partial class TestExecutive : Form {
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<String, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get();
@@ -85,7 +86,7 @@ namespace ABT.TestLibrary {
 
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             #region Long Test Cancellation Comment
-            // NOTE: Two types of TestLibrary/Operator initiated cancellations possible, proactive & reactive:
+            // NOTE: Two types of TestExecutive/Operator initiated cancellations possible, proactive & reactive:
             //  1)  Proactive:
             //      - Microsoft's recommended CancellationTokenSource technique, which can proactively
             //        cancel currently executing Test, *if* implemented.
@@ -93,7 +94,7 @@ namespace ABT.TestLibrary {
             //      - Implementation necessary if the *currently* executing Test must be cancellable during
             //        execution.
             //  2)  Reactive:
-            //      - TestLibrary's already implemented, always available & default reactive "Cancel before next Test" technique,
+            //      - TestExecutive's already implemented, always available & default reactive "Cancel before next Test" technique,
             //        which simply sets this._cancelled Boolean to true, checked at the end of RunTest()'s foreach loop.
             //      - If this._cancelled is true, RunTest()'s foreach loop is broken, causing reactive cancellation
             //        prior to the next Test's execution.
@@ -102,7 +103,7 @@ namespace ABT.TestLibrary {
             //      - If necessary to deterministically cancel a specific Test's execution, Microsoft's
             //        CancellationTokenSource technique *must* be implemented by the Test Developer.
             //      - If only necessary to deterministically cancel overall Test Program execution,
-            //        TestLibrary's basic "Cancel before next Test" technique is already available without
+            //        TestExecutive's basic "Cancel before next Test" technique is already available without
             //        any Test Developer implementation needed.
             //      - Note that some Tests may not be safely cancellable mid-execution.
             //          - For such, simply don't implement Microsoft's CancellationTokenSource technique.
@@ -321,7 +322,7 @@ namespace ABT.TestLibrary {
     }
 
     public class TestCancellationException : Exception {
-        // NOTE: Only ever throw TestCancellationException from TestPrograms, never from TestLibrary.
+        // NOTE: Only ever throw TestCancellationException from TestPrograms, never from TestExecutive.
         public TestCancellationException(String message = "") : base(message) { }
         public const String ClassName = nameof(TestCancellationException);
     }

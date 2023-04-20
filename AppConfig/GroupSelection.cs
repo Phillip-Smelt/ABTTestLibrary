@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace ABT.TestLibrary.AppConfig {
+namespace ABT.TestSpace.AppConfig {
     public partial class GroupSelect : Form {
         public String GroupSelected { get; private set; }
         internal readonly Dictionary<String, Group> Groups;

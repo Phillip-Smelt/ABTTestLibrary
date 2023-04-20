@@ -1,17 +1,17 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
-[assembly: InternalsVisibleTo("TestLibraryTests")]
-// TODO: Consider renaming project TestLibrary to project TestExecutive.  GitHub has *many* TestLibrary repositories, but comparatively few TestExecutive repositories.
+[assembly: InternalsVisibleTo("TestExecutiveTests")]
+// TODO: Consider renaming project TestExecutive to project TestExecutive.  GitHub has *many* TestExecutive repositories, but comparatively few TestExecutive repositories.
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TestLibrary")]
-[assembly: AssemblyDescription("Test Library for Functional Test")]
+[assembly: AssemblyTitle("TestExecutive")]
+[assembly: AssemblyDescription("Test Executive for Functional Test")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Amphenol Borisch Technologies")]
-[assembly: AssemblyProduct("TestLibrary")]
+[assembly: AssemblyProduct("TestExecutive")]
 [assembly: AssemblyCopyright("Copyright © Amphenol Borisch Technologies 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

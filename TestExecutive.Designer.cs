@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace ABT.TestLibrary {
+namespace ABT.TestSpace {
     public abstract partial class TestExecutive : Form {
         /// <summary>
         /// Required designer variable.

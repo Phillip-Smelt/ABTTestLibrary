@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
-using ABT.TestLibrary.AppConfig;
+using ABT.TestSpace.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -9,9 +9,9 @@ using ABT.TestLibrary.AppConfig;
 //
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
-// NOTE: Unlike all other classes in namespace ABT.TestLibrary.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
+// NOTE: Unlike all other classes in namespace ABT.TestSpace.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
-namespace ABT.TestLibrary.SCPI_VISA_Instruments {
+namespace ABT.TestSpace.SCPI_VISA_Instruments {
     public static class SCPI99 {
         // NOTE: SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows common functionality.
         // NOTE: Using this SCPI99 class is sub-optimal when a compatible .Net VISA instrument driver is available:
@@ -21,8 +21,8 @@ namespace ABT.TestLibrary.SCPI_VISA_Instruments {
         //		- SCPI Command strings must be perfectly phrased, without syntax errors, as C#'s compiler simply passes them into the SCPI instrument's interpreter.
         //		- SCPI Query return strings must be painstakingly parsed & interpreted to extract results.
         //  - Also, the SCPI99 standard isn't always implemented consistently by instrument manufacturers:
-        //	    - Assuming the SCPI99 VISA driver utilized by TestLibrary is perfectly SCPI99 compliant & bug-free.
-        //	    - Assuming all manufacturer SCPI99 VISA instruments utilized by TestLibrary are perfectly SCPI99 compliant & their interpreters bug-free.
+        //	    - Assuming the SCPI99 VISA driver utilized by TestExecutive is perfectly SCPI99 compliant & bug-free.
+        //	    - Assuming all manufacturer SCPI99 VISA instruments utilized by TestExecutive are perfectly SCPI99 compliant & their interpreters bug-free.
         //  - Then SCPI VISA instruments utilizing this SCPI99 class should work, albeit inconveniently.
         private const Char IDENTITY_SEPARATOR = ',';
 
