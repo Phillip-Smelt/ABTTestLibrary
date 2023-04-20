@@ -7,7 +7,7 @@ using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
 
-namespace TestLibrary.Logging {
+namespace ABT.TestLibrary.Logging {
     public class RichTextBoxSink : ILogEventSink {
         private readonly RichTextBox richTextBox;
         private readonly ITextFormatter formatter;

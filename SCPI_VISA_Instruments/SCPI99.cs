@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
-using TestLibrary.AppConfig;
+using ABT.TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -9,9 +9,9 @@ using TestLibrary.AppConfig;
 //
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
-// NOTE: Unlike all other classes in namespace TestLibrary.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
+// NOTE: Unlike all other classes in namespace ABT.TestLibrary.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
-namespace TestLibrary.SCPI_VISA_Instruments {
+namespace ABT.TestLibrary.SCPI_VISA_Instruments {
     public static class SCPI99 {
         // NOTE: SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows common functionality.
         // NOTE: Using this SCPI99 class is sub-optimal when a compatible .Net VISA instrument driver is available:

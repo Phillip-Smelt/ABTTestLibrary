@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace TestLibrary.AppConfig {
+namespace ABT.TestLibrary.AppConfig {
     public partial class GroupSelect : Form {
         public String GroupSelected { get; private set; }
         internal readonly Dictionary<String, Group> Groups;

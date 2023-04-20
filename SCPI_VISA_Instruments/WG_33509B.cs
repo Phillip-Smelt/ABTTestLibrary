@@ -1,6 +1,6 @@
 ﻿using System;
 using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
-using TestLibrary.AppConfig;
+using ABT.TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -9,7 +9,7 @@ using TestLibrary.AppConfig;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
-namespace TestLibrary.SCPI_VISA_Instruments {
+namespace ABT.TestLibrary.SCPI_VISA_Instruments {
     // TODO: Convert the WG_33509B class to a Singleton, like the USB_TO_GPIO class.
     //  - If there are more than one WG_33509B in the test system, make the WG_33509B Singleton class a Dictionary of WG_33509Bs, rather than just one WG_33509B.
     //  - Each WG_33509B in the Singleton's Dictionary can be accessed by its enum; WG.S01, WG.S02...WG.Snn, for Wave Generator Singletons 01, 02...nn.

@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
-using TestLibrary.AppConfig;
+using ABT.TestLibrary.AppConfig;
 
 // TODO: SQL Server Express: Persist test data into Microsoft SQL Server Express.
 // TODO: SQL Server Express: Create a Microsoft C# front-end exporting/report app for persisted SQL Server Express test data.  Export in CSV, report in RTF.
@@ -19,7 +19,7 @@ using TestLibrary.AppConfig;
 //   the need to reference TestLibrary's various DLLs directly from TestProgram client apps.
 // - As long as suitable wrapper methods exists in Logger, needn't directly reference Serilog from TestProgram client apps,
 //   as referencing TestLibrary suffices.
-namespace TestLibrary.Logging {
+namespace ABT.TestLibrary.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
-using TestLibrary.AppConfig;
+using ABT.TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -10,7 +10,7 @@ using TestLibrary.AppConfig;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
-namespace TestLibrary.SCPI_VISA_Instruments {
+namespace ABT.TestLibrary.SCPI_VISA_Instruments {
     // TODO: Convert the PS_E3610xB class to a Singleton, like the USB_TO_GPIO class.
     //  - If there are more than one PS_E3610xB in the test system, make the PS_E3610xB Singleton class a Dictionary of PS_E3610xBs, rather than just one PS_E3610xB.
     //  - Each PS_E3610xB in the Singleton's Dictionary can be accessed by its enum; PS.S01, PS.S02...PS.Snn, for Power Supply Singletons 01, 02...nn.

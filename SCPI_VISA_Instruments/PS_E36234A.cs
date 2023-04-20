@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
-using TestLibrary.AppConfig;
+using ABT.TestLibrary.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -13,7 +13,7 @@ using TestLibrary.AppConfig;
 //  - If there are more than one PS_E36234A in the test system, make the PS_E36234A Singleton class a Dictionary of PS_E36234As, rather than just one PS_E36234A.
 //  - Each PS_E36234A in the Singleton's Dictionary can be accessed by its enum; PS.S01, PS.S02...PS.Snn, for Power Supply Singletons 01, 02...nn.
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
-namespace TestLibrary.SCPI_VISA_Instruments {
+namespace ABT.TestLibrary.SCPI_VISA_Instruments {
     public static class PS_E36234A {
         public const String MODEL = "E36234A";
 

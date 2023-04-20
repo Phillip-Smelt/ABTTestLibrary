@@ -10,10 +10,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
-using TestLibrary.AppConfig;
-using TestLibrary.SCPI_VISA_Instruments;
-using TestLibrary.Logging;
-using TestLibrary.Switching;
+using ABT.TestLibrary.AppConfig;
+using ABT.TestLibrary.SCPI_VISA_Instruments;
+using ABT.TestLibrary.Logging;
+using ABT.Switching;
+
 
 // TODO: Refactor TestLibrary to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 // TODO: Update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.0 when possible.
@@ -27,7 +28,7 @@ using TestLibrary.Switching;
 //  - https://github.com/Amphenol-Borisch-Technologies/TestLibrary
 //  - https://github.com/Amphenol-Borisch-Technologies/TestProgram
 //  - https://github.com/Amphenol-Borisch-Technologies/TestLibraryTests
-namespace TestLibrary {
+namespace ABT.TestLibrary {
     public abstract partial class TestExecutive : Form {
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<String, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get();

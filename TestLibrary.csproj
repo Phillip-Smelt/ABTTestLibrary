@@ -7,7 +7,7 @@
     <ProjectGuid>{314614CB-6E17-4B74-A9F9-CE4699F78C9B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestLibrary</RootNamespace>
+    <RootNamespace>ABT.TestLibrary</RootNamespace>
     <AssemblyName>TestLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -47,8 +47,6 @@
     <Compile Include="SCPI_VISA_Instruments\PS_E3610xB.cs" />
     <Compile Include="SCPI_VISA_Instruments\SCPI.cs" />
     <Compile Include="SCPI_VISA_Instruments\SCPI99.cs" />
-    <Compile Include="Switching\RelayForms.cs" />
-    <Compile Include="Switching\USB_ERB24.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -129,6 +127,9 @@
     <Reference Include="TIDP.SAA, Version=3.0.8.15626, Culture=neutral, PublicKeyToken=4ce2ce38201aeb82, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\Texas Instruments Fusion API\Library\TIDP.SAA.dll</HintPath>
+    </Reference>
+    <Reference Include="USB-ERB24">
+      <HintPath>..\USB-ERB24\bin\Debug\net48\USB-ERB24.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

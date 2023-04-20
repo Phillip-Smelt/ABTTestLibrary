@@ -1,7 +1,7 @@
 ﻿using System;
 using TIDP.SAA; // https://www.ti.com/tool/FUSION_USB_ADAPTER_API/
 
-namespace TestLibrary.InterfaceAdapters {
+namespace ABT.TestLibrary.InterfaceAdapters {
     public sealed class USB_TO_GPIO {
         // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SMBusAdapter commands are conveniences, not necessities.
         // NOTE: Will never fully implement wrapper methods for the complete set of SMBusAdapter commands, just some of the most commonly used ones.

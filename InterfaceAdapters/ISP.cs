@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using TestLibrary.AppConfig;
+using ABT.TestLibrary.AppConfig;
 
-namespace TestLibrary.InterfaceAdapters {
+namespace ABT.TestLibrary.InterfaceAdapters {
     public enum ISP_METHOD { ExitCode, Redirect }
 
     public static class ISP {
