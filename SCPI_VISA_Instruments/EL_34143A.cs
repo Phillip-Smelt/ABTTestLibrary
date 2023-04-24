@@ -10,7 +10,8 @@ using ABT.TestSpace.AppConfig;
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace ABT.TestSpace.SCPI_VISA_Instruments {
-    // TODO: Convert the EL_34143A class to a Singleton, like the USB_TO_GPIO class.
+    // TODO: Convert the EL_34143A class to a Singleton, like the USB_TO_GPIO class?
+    //  - Realize Singletons often considered "anti-patterns", but handy for objects that can only have 1 instance.
     //  - If there are more than one EL_34143A in the test system, make the EL_34143A Singleton class a Dictionary of EL_34143As, rather than just one EL_34143A.
     //  - Each EL_34143A in the Singleton's Dictionary can be accessed by its enum; EL.S01, EL.S02...EL.Snn, for Electronic Load Singletons 01, 02...nn.
     public enum LOAD_MODE { CURR, POW, RES, VOLT } // Musn't re-order LOAD_MODE, as sequence directly correlates to LOAD_UNITS for conversion.

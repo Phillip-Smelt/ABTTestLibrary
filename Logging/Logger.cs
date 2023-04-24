@@ -199,7 +199,7 @@ namespace ABT.TestSpace.Logging {
                 default:
                     throw new NotImplementedException($"Unrecognized EventCode '{uut.EventCode}'.");
             }
-            // TODO: Invoke TestEvents with $"{uut.Number} {uut.SerialNumber} {eventCode}";
+            // TODO: Invoke TestEvents with $"{uut.Number} {uut.SerialNumber} {uut.eventCode}";
         }
     }
 }

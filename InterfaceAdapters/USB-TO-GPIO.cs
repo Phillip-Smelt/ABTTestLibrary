@@ -40,11 +40,11 @@ namespace ABT.TestSpace.InterfaceAdapters {
 
         private USB_TO_GPIO() {
             if (SMBusAdapter.Discover() == 0) throw new InvalidOperationException($"No '{Description}' found!");
-            Adapter = SMBusAdapter.Adapter;
-            Adapter.Set_Bus_Speed(SMBusAdapter.BusSpeed.Speed400KHz);
-            Adapter.Set_PEC_Enabled(true);
-            Adapter.Set_Pull_Ups(SMBusAdapter.ResistorValue.Ohm22k, SMBusAdapter.ResistorValue.Ohm22k, SMBusAdapter.ResistorValue.Ohm22k);
-            Adapter.Set_Parallel_Mode(false);
+            this.Adapter = SMBusAdapter.Adapter;
+            this.Adapter.Set_Bus_Speed(SMBusAdapter.BusSpeed.Speed400KHz);
+            this.Adapter.Set_PEC_Enabled(true);
+            this.Adapter.Set_Pull_Ups(SMBusAdapter.ResistorValue.Ohm22k, SMBusAdapter.ResistorValue.Ohm22k, SMBusAdapter.ResistorValue.Ohm22k);
+            this.Adapter.Set_Parallel_Mode(false);
         }
         
         public static USB_TO_GPIO Only { get { return _only; } }
@@ -57,7 +57,7 @@ namespace ABT.TestSpace.InterfaceAdapters {
 
         public static String BlockWriteBlockReadProcessCallConvertToText(Byte Address, Byte CommandCode, Byte[] WriteBlock) {
             _blockEncodedResult = BlockWriteBlockReadProcessCall(Address, CommandCode, WriteBlock);
-            Array.Reverse(_blockEncodedResult.Bytes); // Accomodate low/high to high/low byte ordering.
+            Array.Reverse(_blockEncodedResult.Bytes); // Accommodate low/high to high/low byte ordering.
             return _blockEncodedResult.ToString();
         }
 
