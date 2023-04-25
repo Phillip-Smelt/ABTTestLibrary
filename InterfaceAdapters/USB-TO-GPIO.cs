@@ -84,7 +84,7 @@ namespace ABT.TestSpace.InterfaceAdapters {
         }
 
         public static void WriteBlockStripStatus(Byte Address, Byte CommandCode, Byte[] Data) { WriteBlock(Address, CommandCode, Data); }
-        // NOTE: the void WriteBlock/Byte/WordStripStatus methods exist solely to eliminate referencing TI's TIDP.SAA.dll library from TestExecutive client TestExecutor programs.
+        // NOTE: the void *StripStatus methods exist solely to eliminate referencing TI's TIDP.SAA.dll library from TestExecutive client TestExecutor programs.
 
         public static SAAStatus WriteByte(Byte Address, Byte CommandCode, Byte Data) {
             _saaStatus = USB_TO_GPIO.Only.Adapter.Write_Byte(Address, CommandCode, Data);
