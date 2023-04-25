@@ -264,7 +264,6 @@ namespace ABT.TestSpace {
             Logger.Stop(this.ConfigUUT, this.ConfigLogger, this.ConfigTest.Group, ref this.rtfResults);
         }
 
-        // TODO:
         internal static String EvaluateTestResult(Test test) {
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
@@ -287,7 +286,6 @@ namespace ABT.TestSpace {
             }
         }
 
-        // TODO:
         internal static String EvaluateUUTResult(AppConfigTest configTest) {
             if (!configTest.Group.Required) return EventCodes.UNSET;
             // 0th priority evaluation that precedes all others.
