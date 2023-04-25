@@ -6,8 +6,8 @@ namespace ABT.TestSpace.InterfaceAdapters {
         // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SMBusAdapter commands are conveniences, not necessities.
         // NOTE: Will never fully implement wrapper methods for the complete set of SMBusAdapter commands, just some of the most commonly used ones.
         // - In general, TestExecutive's InterfaceAdapters, Logging, SCPI_VISA_Instruments & Switching namespaces exist partly to eliminate
-        //   the need to reference TestExecutive's various DLLs directly from TestProgram client apps.
-        // - As long as suitable wrapper methods exists in USB_TO_GPIO, needn't directly reference TIDP.SAA from TestProgram client apps,
+        //   the need to reference TestExecutive's various DLLs directly from TestExecutor client apps.
+        // - As long as suitable wrapper methods exists in USB_TO_GPIO, needn't directly reference TIDP.SAA from TestExecutor client apps,
         //   as referencing TestExecutive suffices.
         // NOTE: Update to .Net 7.0 & C# 11.0 if possible.  See 2nd Note below.
         // - Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments' TIDP.SAA Fusion API targets
@@ -84,7 +84,7 @@ namespace ABT.TestSpace.InterfaceAdapters {
         }
 
         public static void WriteBlockStripStatus(Byte Address, Byte CommandCode, Byte[] Data) { WriteBlock(Address, CommandCode, Data); }
-        // NOTE: the void WriteBlock/Byte/WordStripStatus methods exist solely to eliminate referencing TI's TIDP.SAA.dll library from TestExecutive client TestPrograms.
+        // NOTE: the void WriteBlock/Byte/WordStripStatus methods exist solely to eliminate referencing TI's TIDP.SAA.dll library from TestExecutive client TestExecutor programs.
 
         public static SAAStatus WriteByte(Byte Address, Byte CommandCode, Byte Data) {
             _saaStatus = USB_TO_GPIO.Only.Adapter.Write_Byte(Address, CommandCode, Data);

@@ -29,7 +29,7 @@ using ABT.TestSpace.Switching;
 //
 //  References:
 //  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
-//  - https://github.com/Amphenol-Borisch-Technologies/TestProgram
+//  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
 //  - https://github.com/Amphenol-Borisch-Technologies/TestExecutiveTests
 namespace ABT.TestSpace {
     public abstract partial class TestExecutive : Form {
@@ -113,8 +113,8 @@ namespace ABT.TestSpace {
             //  https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
             //  https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
             //
-            //  NOTE: TestProgram/Test Developer initiated cancellations also possible:
-            //      - Any TestProgram's Test can initiate a cancellation programmatically by simply
+            //  NOTE: TestExecutor/Test Developer initiated cancellations also possible:
+            //      - Any TestExecutor's Test can initiate a cancellation programmatically by simply
             //        throwing a TestCancellationException:
             //        - Let's say we want to abort if specific conditions occur in a Test, for example if
             //          power application fails.
@@ -122,10 +122,10 @@ namespace ABT.TestSpace {
             //          because any subsequent failures are likely due to the UUT not being powered
             //          correctly.
             //        - So, simply throw a TestCancellationException if an applied power bus fails.
-            //        - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestProgram/blob/master/TestProgram.T-Shared.cs
+            //        - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestExecutor/blob/master/TestProgram/T-Common.cs
             //        - Test Developer must set TestCancellationException's message to the Measured
             //          value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
-        #endregion Long Test Cancellation Comment
+            #endregion Long Test Cancellation Comment
             this.CancelTokenSource.Cancel();
             this._cancelled = true;
             this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
@@ -324,7 +324,7 @@ namespace ABT.TestSpace {
     }
 
     public class TestCancellationException : Exception {
-        // NOTE: Only ever throw TestCancellationException from TestPrograms, never from TestExecutive.
+        // NOTE: Only ever throw TestCancellationException from TestExecutor, never from TestExecutive.
         public TestCancellationException(String message = "") : base(message) { }
         public const String ClassName = nameof(TestCancellationException);
     }

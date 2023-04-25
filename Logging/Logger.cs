@@ -16,8 +16,8 @@ using ABT.TestSpace.AppConfig;
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used Serilog commands are conveniences, not necessities.
 // NOTE: Will never fully implement wrapper methods for the complete set of Serilog commands, just some of the most commonly used ones.
 // - In general, TestExecutive's InterfaceAdapters, Logging, SCPI_VISA_Instruments & Switching namespaces exist partly to eliminate
-//   the need to reference TestExecutive's various DLLs directly from TestProgram client apps.
-// - As long as suitable wrapper methods exists in Logger, needn't directly reference Serilog from TestProgram client apps,
+//   the need to reference TestExecutive's various DLLs directly from TestExecutor client apps.
+// - As long as suitable wrapper methods exists in Logger, needn't directly reference Serilog from TestExecutor client apps,
 //   as referencing TestExecutive suffices.
 namespace ABT.TestSpace.Logging {
     public static class Logger {
@@ -61,8 +61,8 @@ namespace ABT.TestSpace.Logging {
                     .CreateLogger();
             }
             Log.Information($"START                  : {DateTime.Now}");
-            Log.Information($"TestProgram Version    : {_appAssemblyVersion}");
-            Log.Information($"TestExecutive Version    : {_libraryAssemblyVersion}");
+            Log.Information($"TestExecutor Version   : {_appAssemblyVersion}");
+            Log.Information($"TestExecutive Version  : {_libraryAssemblyVersion}");
             Log.Information($"UUT Customer           : {configUUT.Customer}");
             Log.Information($"UUT Test Specification : {configUUT.TestSpecification}");
             Log.Information($"UUT Description        : {configUUT.Description}");
