@@ -20,13 +20,13 @@ namespace ABT.TestSpace.AppConfig {
     [ConfigurationCollection(typeof(TestElement))]
     public class TestElements : ConfigurationElementCollection {
         public const String PropertyName = "TestElement";
-        public TestElement this[Int32 idx] { get { return (TestElement)BaseGet(idx); } }
+        public TestElement this[Int32 idx] { get { return (TestElement)this.BaseGet(idx); } }
         public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
         protected override String ElementName { get { return PropertyName; } }
-        protected override bool IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
-        public override bool IsReadOnly() { return false; }
+        protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
+        public override Boolean IsReadOnly() { return false; }
         protected override ConfigurationElement CreateNewElement() { return new TestElement(); }
-        protected override object GetElementKey(ConfigurationElement element) { return ((TestElement)(element)).ID; }
+        protected override Object GetElementKey(ConfigurationElement element) { return ((TestElement)(element)).ID; }
     }
 
     public class TestsSection : ConfigurationSection {
@@ -47,7 +47,7 @@ namespace ABT.TestSpace.AppConfig {
             String[] args = arguments.Split(Test.SPLIT_ARGUMENTS_CHAR);
             String[] kvp;
             Dictionary<String, String> argDictionary = new Dictionary<String, String>();
-            for (int i = 0; i < args.Length; i++) {
+            for (Int32 i = 0; i < args.Length; i++) {
                 kvp = args[i].Split('=');
                 argDictionary.Add(kvp[0].Trim(), kvp[1].Trim());
             }
@@ -65,7 +65,7 @@ namespace ABT.TestSpace.AppConfig {
                     $"   Example: 'NameFirst=Harry|" +
                     $"             NameLast=Potter|" +
                     $"             Occupation=Auror'{Environment.NewLine}" +
-                    $"   Actual : '{Arguments}'");
+                    $"   Actual : '{this.Arguments}'");
         }
     }
 
@@ -158,7 +158,7 @@ namespace ABT.TestSpace.AppConfig {
         public readonly String Description;
         public readonly String Revision;
         public readonly String ClassName;
-        public readonly object ClassObject;
+        public readonly Object ClassObject;
         public String Measurement { get; set; } = String.Empty; // Determined during test.
         public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
 
@@ -167,7 +167,7 @@ namespace ABT.TestSpace.AppConfig {
             this.Description = description;
             this.Revision = revision;
             this.ClassName = className;
-            this.ClassObject = Activator.CreateInstance(Type.GetType(GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
+            this.ClassObject = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
             if (String.Equals(this.ClassName, TestNumerical.ClassName)) this.Measurement = Double.NaN.ToString();
         }
 
@@ -197,7 +197,7 @@ namespace ABT.TestSpace.AppConfig {
             String[] groupTestIDs = this.Group.TestIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToArray();
             this.LogFormattingLength = groupTestIDs.OrderByDescending(TestID => TestID.Length).First().Length + 1;
             foreach (String TestID in groupTestIDs) {
-                if (!allTests.ContainsKey(TestID)) throw new InvalidOperationException($"Group '{Group.ID}' includes Test ID '{TestID}', which isn't present in TestElements in App.config.");
+                if (!allTests.ContainsKey(TestID)) throw new InvalidOperationException($"Group '{this.Group.ID}' includes Test ID '{TestID}', which isn't present in TestElements in App.config.");
                 this.Tests.Add(TestID, allTests[TestID]); // Add only Tests correlated to the Group previously selected by operator.
             }
         }

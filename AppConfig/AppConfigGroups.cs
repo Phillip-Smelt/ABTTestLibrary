@@ -14,13 +14,13 @@ namespace ABT.TestSpace.AppConfig {
     [ConfigurationCollection(typeof(GroupElement))]
     public class GroupElements : ConfigurationElementCollection {
         public const String PropertyName = "GroupElement";
-        public GroupElement this[Int32 idx] { get { return (GroupElement)BaseGet(idx); } }
+        public GroupElement this[Int32 idx] { get { return (GroupElement)this.BaseGet(idx); } }
         public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
         protected override String ElementName { get { return PropertyName; } }
-        protected override bool IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
-        public override bool IsReadOnly() { return false; }
+        protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
+        public override Boolean IsReadOnly() { return false; }
         protected override ConfigurationElement CreateNewElement() { return new GroupElement(); }
-        protected override object GetElementKey(ConfigurationElement element) { return ((GroupElement)(element)).ID; }
+        protected override Object GetElementKey(ConfigurationElement element) { return ((GroupElement)(element)).ID; }
     }
 
     public class GroupsSection : ConfigurationSection {
