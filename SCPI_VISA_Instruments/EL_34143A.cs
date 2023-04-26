@@ -59,7 +59,6 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
                 default:
                     throw new ArgumentException(INVALID_MODE);
             }
-            ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
             SetOutputState(SVI, State);
         }
 
@@ -77,6 +76,8 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
         public static Boolean IsValueAndMode(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode) {
             Boolean stateIs = IsLoadMode(SVI, LoadMode);
             Double delta = 0.01;
+            ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
+            // Despite being part of VOLTage sub-system, SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal") enables 4-wire Kelvin sensing for all capable loads.
             switch (LoadMode) {
                 case LOAD_MODE.CURR:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(null, SCPI.CHANNEL_1, out Double ampsDC);
