@@ -3,16 +3,18 @@ using TIDP.SAA; // https://www.ti.com/tool/FUSION_USB_ADAPTER_API/
 
 namespace ABT.TestSpace.InterfaceAdapters {
     public sealed class USB_TO_GPIO {
+        // TODO: Separate this USB_TO_GPIO class into it's own Project, like USB-ERB24, so it can easily be included/excluded as needed.
+        // NOTE: If USB_TO_GPIO is externally linked to TestExecutive, like USB-ERB24, it will be easier to update TestExecutive to .Net 7.0 & C# 11.0.
+        // TODO: Update to .Net 7.0 & C# 11.0 if possible.
+        // - Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments' TIDP.SAA Fusion API targets
+        //   .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
+        // https://www.ti.com/tool/FUSION_USB_ADAPTER_API
         // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SMBusAdapter commands are conveniences, not necessities.
         // NOTE: Will never fully implement wrapper methods for the complete set of SMBusAdapter commands, just some of the most commonly used ones.
         // - In general, TestExecutive's InterfaceAdapters, Logging, SCPI_VISA_Instruments & Switching namespaces exist partly to eliminate
         //   the need to reference TestExecutive's various DLLs directly from TestExecutor client apps.
         // - As long as suitable wrapper methods exists in USB_TO_GPIO, needn't directly reference TIDP.SAA from TestExecutor client apps,
         //   as referencing TestExecutive suffices.
-        // NOTE: Update to .Net 7.0 & C# 11.0 if possible.  See 2nd Note below.
-        // - Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments' TIDP.SAA Fusion API targets
-        //   .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
-        // https://www.ti.com/tool/FUSION_USB_ADAPTER_API
         // NOTE: Microsoft supports I2C with their Windows.Devices.I2c & System.Device.I2c Namespaces:
         // - Conceivable above TI's TIDP.SAA Fusion Library could be replaced by these Namespaces, though they'd need
         //   to communicate with a GPIO adapter capable of interfacing to the customer's UUT.
@@ -93,6 +95,18 @@ namespace ABT.TestSpace.InterfaceAdapters {
         }
 
         public static void WriteByteStripStatus(Byte Address, Byte CommandCode, Byte Data) { WriteByte(Address, CommandCode, Data); }
+
+        public static String ReadWord(Byte Address, Byte CommandCode) {
+            WordEncodedResult wordEncodedResult = USB_TO_GPIO.Only.Adapter.Read_Word(Address, CommandCode);
+            if (!wordEncodedResult.Success) throw new InvalidOperationException(wordEncodedResult.SAA_Status_String);
+            return wordEncodedResult.ToString();
+        }
+
+        public static (Byte ByteLow, Byte ByteHigh) ReadWordStripStatus(Byte Address, Byte CommandCode) {
+            _saaStatus = USB_TO_GPIO.Only.Adapter.Read_Word(Address, CommandCode, out Byte ByteHigh, out Byte ByteLow);
+            if (_saaStatus != SAAStatus.Success) throw new InvalidOperationException(_saaStatus.ToString());
+            return(ByteLow, ByteHigh);
+        }
 
         public static SAAStatus WriteWord(Byte Address, Byte CommandCode, Byte ByteHigh, Byte ByteLow) {
             _saaStatus = USB_TO_GPIO.Only.Adapter.Write_Word(Address, CommandCode, ByteHigh, ByteLow);
