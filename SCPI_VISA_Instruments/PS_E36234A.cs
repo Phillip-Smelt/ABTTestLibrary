@@ -49,12 +49,20 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
             else return OUTPUT.off;
         }
 
-        public static Double GetSlewRateRising(SCPI_VISA_Instrument SVI, Double SlewRate, String Channel) {
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.RISing.IMMediate.Query(null, Channel, out Double[] SRR);
-            return SRR[ConvertChannel(SVI, Channel)];
+        public static Boolean AreSlewRates(SCPI_VISA_Instrument SVI, String Channel, Double SlewRateRising, Double SlewRateFalling) {
+            return ((SlewRateRising, SlewRateFalling) == GetSlewRates(SVI, Channel));
         }
 
-        public static void SetSlewRateRising(SCPI_VISA_Instrument SVI, Double SlewRate, String Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.RISing.IMMediate.Command(SlewRate, Channel); }
+        public static void SetSlewRates(SCPI_VISA_Instrument SVI, String Channel, Double SlewRateRising, Double SlewRateFalling) {
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.RISing.IMMediate.Command(SlewRateRising, Channel);
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.FALLing.IMMediate.Command(SlewRateFalling, Channel);
+        }
+
+        public static (Double SlewRateRising, Double SlewRateFalling) GetSlewRates(SCPI_VISA_Instrument SVI, String Channel) {
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.RISing.IMMediate.Query(null, Channel, out Double[] srr);
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.FALLing.IMMediate.Query(null, Channel, out Double[] srf);
+            return (srr[ConvertChannel(SVI, Channel)], srf[ConvertChannel(SVI, Channel)]);
+        }
 
         public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, String Channel, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
             SetVDC(SVI, VoltsDC, Channel);
