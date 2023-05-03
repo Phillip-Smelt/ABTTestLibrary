@@ -71,15 +71,9 @@ namespace ABT.TestSpace.InterfaceAdapters {
             return _blockEncodedResult;
         }
 
-        public static String ReadBlockConvertToHexString(Byte Address, Byte CommandCode) {
-            _blockEncodedResult = ReadBlock(Address, CommandCode);
-            return _blockEncodedResult.ToString();
-        }
+        public static String ReadBlockConvertToHexString(Byte Address, Byte CommandCode) { return ReadBlock(Address, CommandCode).ToString(); }
 
-        public static String ReadBlockConvertToTextString(Byte Address, Byte CommandCode) {
-            String hexString = ReadBlockConvertToHexString(Address, CommandCode);
-            return HexStringToTextString(hexString);
-        }
+        public static String ReadBlockConvertToTextString(Byte Address, Byte CommandCode) { return HexStringToTextString(ReadBlockConvertToHexString(Address, CommandCode)); }
 
         public static String ReadWord(Byte Address, Byte CommandCode) {
             WordEncodedResult wordEncodedResult = USB_TO_GPIO.Only.Adapter.Read_Word(Address, CommandCode);
@@ -88,11 +82,11 @@ namespace ABT.TestSpace.InterfaceAdapters {
             return wordEncodedResult.ToString();
         }
 
-        public static (Byte ByteLow, Byte ByteHigh) ReadWordStripStatus(Byte Address, Byte CommandCode) {
+        public static Int32 ReadWordStripStatus(Byte Address, Byte CommandCode) {
             _saaStatus = USB_TO_GPIO.Only.Adapter.Read_Word(Address, CommandCode, out Byte ByteHigh, out Byte ByteLow);
             // Documented in TIDP.SAA's SMBusAdapter Class as method readWord(Byte, Byte, Byte, Byte)
             if (_saaStatus != SAAStatus.Success) throw new InvalidOperationException(_saaStatus.ToString());
-            return (ByteLow, ByteHigh);
+            return ByteHigh * 256 + ByteLow;
         }
 
         public static SAAStatus WriteBlock(Byte Address, Byte CommandCode, Byte[] Data) {
