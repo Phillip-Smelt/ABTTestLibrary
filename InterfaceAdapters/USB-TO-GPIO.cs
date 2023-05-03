@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using TIDP.SAA; // https://www.ti.com/tool/FUSION_USB_ADAPTER_API/
 
 namespace ABT.TestSpace.InterfaceAdapters {
@@ -64,11 +65,26 @@ namespace ABT.TestSpace.InterfaceAdapters {
             return _blockEncodedResult.ToString();
         }
 
+        public static SAAStatus SendByte(Byte Address, Byte CommandCode) {
+            _saaStatus = USB_TO_GPIO.Only.Adapter.Send_Byte(Address, CommandCode);
+            if (_saaStatus != SAAStatus.Success) throw new InvalidOperationException(_saaStatus.ToString());
+            return _saaStatus;
+        }
+
+        public static void SendByteStripStatus(Byte Address, Byte CommandCode) { _ = USB_TO_GPIO.Only.Adapter.Send_Byte(Address, CommandCode); }
+
         public static BlockEncodedResult ReadBlock(Byte Address, Byte CommandCode) {
             _blockEncodedResult = USB_TO_GPIO.Only.Adapter.Read_Block(Address, CommandCode);
             // Documented in TIDP.SAA's SMBusAdapter Class as method readBlock(Byte, Byte)
             if (!_blockEncodedResult.Success) throw new InvalidOperationException(_blockEncodedResult.ToString());
             return _blockEncodedResult;
+        }
+
+        public static (Int32 VinCountsController, Int32 VinCountsResponder) ReadBlockStripStatus(Byte Address, Byte CommandCode) {
+            _saaStatus = USB_TO_GPIO.Only.Adapter.Read_Block(Address, CommandCode, out Byte[] VinCounts);
+            // Documented in TIDP.SAA's SMBusAdapter Class as method readBlock(Byte, Byte)
+            if (_saaStatus != SAAStatus.Success) throw new InvalidOperationException(_saaStatus.ToString());
+            return (256 * VinCounts[1] + VinCounts[0], 256 * VinCounts[3] + VinCounts[2]);
         }
 
         public static String ReadBlockConvertToHexString(Byte Address, Byte CommandCode) { return ReadBlock(Address, CommandCode).ToString(); }
@@ -96,7 +112,7 @@ namespace ABT.TestSpace.InterfaceAdapters {
             return _saaStatus;
         }
 
-        public static void WriteBlockStripStatus(Byte Address, Byte CommandCode, Byte[] Data) { WriteBlock(Address, CommandCode, Data); }
+        public static void WriteBlockStripStatus(Byte Address, Byte CommandCode, Byte[] Data) { _ = WriteBlock(Address, CommandCode, Data); }
         // NOTE: the void *StripStatus methods exist solely to eliminate referencing TI's TIDP.SAA.dll library from TestExecutive client TestExecutor programs.
 
         public static SAAStatus WriteByte(Byte Address, Byte CommandCode, Byte Data) {
@@ -106,7 +122,7 @@ namespace ABT.TestSpace.InterfaceAdapters {
             return _saaStatus;
         }
 
-        public static void WriteByteStripStatus(Byte Address, Byte CommandCode, Byte Data) { WriteByte(Address, CommandCode, Data); }
+        public static void WriteByteStripStatus(Byte Address, Byte CommandCode, Byte Data) { _ = WriteByte(Address, CommandCode, Data); }
 
         public static SAAStatus WriteWord(Byte Address, Byte CommandCode, Byte ByteHigh, Byte ByteLow) {
             _saaStatus = USB_TO_GPIO.Only.Adapter.Write_Word(Address, CommandCode, ByteHigh, ByteLow);
@@ -115,7 +131,7 @@ namespace ABT.TestSpace.InterfaceAdapters {
             return _saaStatus;
         }
 
-        public static void WriteWordStripStatus(Byte Address, Byte CommandCode, Byte ByteHigh, Byte ByteLow) { WriteWord(Address, CommandCode, ByteHigh, ByteLow); }
+        public static void WriteWordStripStatus(Byte Address, Byte CommandCode, Byte ByteHigh, Byte ByteLow) { _ = WriteWord(Address, CommandCode, ByteHigh, ByteLow); }
 
         public static String HexStringToTextString(String hexString) {
             hexString = hexString.Replace("0x", "");

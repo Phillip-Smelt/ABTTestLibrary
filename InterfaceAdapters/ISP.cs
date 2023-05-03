@@ -11,21 +11,21 @@ namespace ABT.TestSpace.InterfaceAdapters {
     public static class ISP {
 
         public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect) {
-            PreConnect();
+            if (PreConnect != null) PreConnect();
             _ = MessageBox.Show($"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
                 $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                 $"AFTER connecting, click OK to continue.",
                 $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            PostConnect();
+            if (PostConnect != null) PostConnect();
         }
 
         public static void DisConnect(String Description, String Connector, Action PreDisconnect, Action PostDisconnect) {
-            PreDisconnect();
+            if (PreDisconnect != null) PreDisconnect();
             _ = MessageBox.Show($"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Disconnect '{Description}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER disconnecting, click OK to continue.",
                     $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            PostDisconnect();
+            if (PostDisconnect != null) PostDisconnect();
         }
 
         public static String ProcessExitCode(String arguments, String fileName, String workingDirectory) {
