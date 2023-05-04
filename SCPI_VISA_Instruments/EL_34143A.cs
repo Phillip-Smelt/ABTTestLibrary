@@ -76,21 +76,21 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
         public static Boolean IsLoadUnits(SCPI_VISA_Instrument SVI, LOAD_UNITS LoadUnits) { return LoadUnits == GetLoadUnits(SVI); }
 
         public static Boolean IsValueAndMode(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode) {
-            Boolean stateIs = IsLoadMode(SVI, LoadMode);
+            if (!IsLoadMode(SVI, LoadMode)) return false;
             Double delta = 0.01;
             switch (LoadMode) {
                 case LOAD_MODE.CURR:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(null, SCPI.CHANNEL_1, out Double ampsDC);
-                    return stateIs && SCPI.IsCloseEnough(LoadValue, ampsDC, delta);
+                    return SCPI.IsCloseEnough(LoadValue, ampsDC, delta);
                 case LOAD_MODE.POW:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Query(null, SCPI.CHANNEL_1, out Double[] watts);
-                    return stateIs && SCPI.IsCloseEnough(LoadValue, watts[0], delta);
+                    return SCPI.IsCloseEnough(LoadValue, watts[0], delta);
                 case LOAD_MODE.RES:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query(null, SCPI.CHANNEL_1, out Double[] ohms);
-                    return stateIs && SCPI.IsCloseEnough(LoadValue, ohms[0], delta);
+                    return SCPI.IsCloseEnough(LoadValue, ohms[0], delta);
                 case LOAD_MODE.VOLT:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, SCPI.CHANNEL_1, out Double[] voltsDC);
-                    return stateIs && SCPI.IsCloseEnough(LoadValue, voltsDC[0], delta);
+                    return SCPI.IsCloseEnough(LoadValue, voltsDC[0], delta);
                 default:
                     throw new ArgumentException(INVALID_MODE);
             }
