@@ -11,21 +11,21 @@ namespace ABT.TestSpace.InterfaceAdapters {
     public static class ISP {
 
         public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect) {
-            if (PreConnect != null) PreConnect();
+            PreConnect?.Invoke();
             _ = MessageBox.Show($"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
                 $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                 $"AFTER connecting, click OK to continue.",
                 $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            if (PostConnect != null) PostConnect();
+            PostConnect?.Invoke();
         }
 
         public static void DisConnect(String Description, String Connector, Action PreDisconnect, Action PostDisconnect) {
-            if (PreDisconnect != null) PreDisconnect();
+            PreDisconnect?.Invoke();
             _ = MessageBox.Show($"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
                     $"Disconnect '{Description}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                     $"AFTER disconnecting, click OK to continue.",
                     $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            if (PostDisconnect != null) PostDisconnect();
+            PostDisconnect?.Invoke();
         }
 
         public static String ProcessExitCode(String arguments, String fileName, String workingDirectory) {
@@ -74,13 +74,13 @@ namespace ABT.TestSpace.InterfaceAdapters {
             else return (standardError, standardOutput, exitCode);
         }
 
-        public static String ExitCode(Test test, Dictionary<String, SCPI_VISA_Instrument> SVIs) {
+        public static String ExitCode(Test test) {
             TestISP testISP = (TestISP)test.ClassObject;
             String exitCode = ProcessExitCode(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder);
             return exitCode;
         }
 
-        public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(Test test, Dictionary<String, SCPI_VISA_Instrument> SVIs) {
+        public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(Test test) {
             TestISP testISP = (TestISP)test.ClassObject;
             (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder, testISP.ISPExpected);
             return (StandardError, StandardOutput, ExitCode);

@@ -22,6 +22,7 @@ using ABT.TestSpace.AppConfig;
 namespace ABT.TestSpace.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
+        public const String SPACES_16 = "                ";
 
         public static void Start(AppConfigUUT configUUT, AppConfigLogger configLogger, AppConfigTest configTest, String _appAssemblyVersion, String _libraryAssemblyVersion, ref RichTextBox rtfResults) {
             if (!configTest.Group.Required) {

@@ -26,7 +26,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
         }
 
         public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
-            ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone("AUTO", "MAXimum", out Double voltsDC);
+            ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone(30D, "MAXimum", out Double voltsDC);
             return voltsDC;
         }
 
