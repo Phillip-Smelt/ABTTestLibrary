@@ -103,7 +103,7 @@ namespace ABT.TestSpace.AppConfig {
         }
 
         public static String GetInfo(SCPI_VISA_Instrument SVI, String optionalHeader = "") {
-            String info = (optionalHeader == "") ? "" : optionalHeader += Environment.NewLine;
+            String info = (optionalHeader == "") ? optionalHeader : optionalHeader += Environment.NewLine;
             foreach (PropertyInfo pi in SVI.GetType().GetProperties()) info += $"{pi.Name,FORMAT_WIDTH}: '{pi.GetValue(SVI)}'{Environment.NewLine}";
             return info;
         }
