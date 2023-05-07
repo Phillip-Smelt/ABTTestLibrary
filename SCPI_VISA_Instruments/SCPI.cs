@@ -13,6 +13,9 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
     public enum OUTPUT { off, ON }
     public enum LOGIC { low, HIGH }
     public enum BINARY { zero, ONE }
+    [Flags]
+    public enum CHANNELS { C1, C2 }
+
     // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
 
     public static class SCPI {
