@@ -123,6 +123,9 @@ namespace ABT.TestSpace.Logging {
                     throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
             }
             message += $"  Result      : {test.Result}{Environment.NewLine}";
+#if DEBUG
+            message += $"{test.DebugInfo}{Environment.NewLine}";
+#endif
             Log.Information(message);
         }
 
