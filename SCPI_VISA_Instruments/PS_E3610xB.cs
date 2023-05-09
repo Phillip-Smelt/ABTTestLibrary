@@ -33,7 +33,6 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
             SCPI99.Initialize(SVI);
             ((AgE3610XB)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command();
             ((AgE3610XB)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
-            RemoteLock(SVI);
         }
 
         public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {

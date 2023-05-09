@@ -35,7 +35,6 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
             SCPI99.Initialize(SVI);
             ((AgEL30000)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command();
             ((AgEL30000)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
-            RemoteLock(SVI);
         }
 
         public static void SetOutputState(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, SCPI.CHANNEL_1); }
