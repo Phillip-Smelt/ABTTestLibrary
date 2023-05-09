@@ -36,8 +36,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             try {
-                Reset(SVI);
-                Clear(SVI);
+                Initialize(SVI);
                 new AgSCPI99(SVI.Address).SCPI.TST.Query(out Int32 selfTestResult);
                 if (selfTestResult != 0) throw new InvalidOperationException($"Self Test returned result '{selfTestResult}'.");
             } catch (Exception e) {
@@ -53,7 +52,6 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             Reset(SVI); // Reset SVI to default power-on states.
             Clear(SVI); // Clear all event registers & the Status Byte register.
-            SelfTest(SVI);
         }
 
         public static void InitializeAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) Initialize(kvp.Value); }
