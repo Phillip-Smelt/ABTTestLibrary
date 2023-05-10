@@ -124,7 +124,7 @@ namespace ABT.TestSpace.Logging {
             }
             message += $"  Result      : {test.Result}{Environment.NewLine}";
 #if DEBUG
-            message += $"{test.DebugInfo}{Environment.NewLine}";
+            message += test.DebugMessage;
 #endif
             Log.Information(message);
         }

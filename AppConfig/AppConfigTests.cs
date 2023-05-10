@@ -162,7 +162,7 @@ namespace ABT.TestSpace.AppConfig {
         public String Measurement { get; set; } = String.Empty; // Determined during test.
         public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
 #if DEBUG
-        public String DebugInfo { get; set; } = String.Empty; // Determined during test.
+        public String DebugMessage { get; set; } = String.Empty; // Determined during test, only available for Debug compilations.
 #endif
         private Test(String id, String description, String revision, String className, String arguments) {
             this.ID = id;
