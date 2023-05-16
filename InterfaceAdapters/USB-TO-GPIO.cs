@@ -59,10 +59,14 @@ namespace ABT.TestSpace.InterfaceAdapters {
             return _blockEncodedResult;
         }
 
-        public static String BlockWriteBlockReadProcessCallConvertToText(Byte Address, Byte CommandCode, Byte[] WriteBlock) {
+        public static Byte[] BlockWriteBlockReadProcessCallConvertToBytes(Byte Address, Byte CommandCode, Byte[] WriteBlock) {
             _blockEncodedResult = BlockWriteBlockReadProcessCall(Address, CommandCode, WriteBlock);
             Array.Reverse(_blockEncodedResult.Bytes); // Accommodate low/high to high/low byte ordering.
-            return _blockEncodedResult.ToString();
+            return _blockEncodedResult.Bytes;
+        }
+
+        public static String BlockWriteBlockReadProcessCallConvertToText(Byte Address, Byte CommandCode, Byte[] WriteBlock) {
+            return BlockWriteBlockReadProcessCall(Address, CommandCode, WriteBlock).ToString();
         }
 
         public static SAAStatus SendByte(Byte Address, Byte CommandCode) {
