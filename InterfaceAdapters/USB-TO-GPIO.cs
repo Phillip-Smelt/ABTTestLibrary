@@ -66,7 +66,7 @@ namespace ABT.TestSpace.InterfaceAdapters {
         }
 
         public static String BlockWriteBlockReadProcessCallConvertToText(Byte Address, Byte CommandCode, Byte[] WriteBlock) {
-            return BlockWriteBlockReadProcessCall(Address, CommandCode, WriteBlock).ToString();
+            return BlockWriteBlockReadProcessCallConvertToBytes(Address, CommandCode, WriteBlock).ToString();
         }
 
         public static SAAStatus SendByte(Byte Address, Byte CommandCode) {
