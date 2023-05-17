@@ -210,6 +210,9 @@ namespace ABT.TestSpace {
                 if (String.Equals(kvp.Value.ClassName, TestNumerical.ClassName)) kvp.Value.Measurement = Double.NaN.ToString();
                 else kvp.Value.Measurement = String.Empty;
                 kvp.Value.Result = EventCodes.UNSET;
+#if DEBUG
+                kvp.Value.DebugMessage = String.Empty;
+#endif
             }
             this.ConfigUUT.EventCode = EventCodes.UNSET;
             USB_ERB24.Set(RelayForms.C.NC);
