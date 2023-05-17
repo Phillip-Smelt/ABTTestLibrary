@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using TIDP.SAA; // https://www.ti.com/tool/FUSION_USB_ADAPTER_API/
 
@@ -61,12 +62,13 @@ namespace ABT.TestSpace.InterfaceAdapters {
 
         public static Byte[] BlockWriteBlockReadProcessCallConvertToBytes(Byte Address, Byte CommandCode, Byte[] WriteBlock) {
             _blockEncodedResult = BlockWriteBlockReadProcessCall(Address, CommandCode, WriteBlock);
-            Array.Reverse(_blockEncodedResult.Bytes); // Accommodate low/high to high/low byte ordering.
             return _blockEncodedResult.Bytes;
         }
 
         public static String BlockWriteBlockReadProcessCallConvertToText(Byte Address, Byte CommandCode, Byte[] WriteBlock) {
-            return BlockWriteBlockReadProcessCallConvertToBytes(Address, CommandCode, WriteBlock).ToString();
+            _blockEncodedResult = BlockWriteBlockReadProcessCall(Address, CommandCode, WriteBlock);
+            Array.Reverse(_blockEncodedResult.Bytes); // Accommodate low/high to high/low byte ordering.
+            return _blockEncodedResult.ToString();
         }
 
         public static SAAStatus SendByte(Byte Address, Byte CommandCode) {

@@ -80,8 +80,9 @@ namespace ABT.TestSpace {
         }
 
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
-            this.ConfigUUT.SerialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.ConfigUUT.SerialNumber);
-            if (String.Equals(this.ConfigUUT.SerialNumber, String.Empty)) return;
+            String serialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.ConfigUUT.SerialNumber);
+            if (String.Equals(serialNumber, String.Empty)) return;
+            this.ConfigUUT.SerialNumber = serialNumber;
             await this.RunAsync();
         }
 
