@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+	This TestExecutive.config.xml file allows configuring TestExecutive SCPI VISA instruments easily:
+	- For calibration or replacement, swap identical SCPI VISA Instruments with others, then update Addresses.
+	- For additions/deletions, add/remove SCPI_VISA_Instruments.  Update TestExecutive if needed.
+
+	NOTE: Each TestExecutor that utilizes TestExecutive should also utilize it's TestExecutor App.config file:
+	- Specifically, customize each TestExecutor's App.config to that TestExecutor's specific needs:
+	- *Only* include required/utilized SCPI VISA Instruments.
+	- Do *not* include SCPI_VISA_InstrumentElements for unused SCPI VISA Instruments:
+		- Doing so documents the *minimum* necessary SCPI VISA Instrument configuration for the TestExecutor's program.
+		- Allows a TestExecutor program to be most easily ported to different Test Systems having different TestExecutive.config.xmlconfigurations.
+			- If Test System #1 with it's specific SCPI VISA Instruments dies suddenly, may need to run its TestExecutor programs on Test System #2
+			  with different SCPI VISA Instruments.
+			- If all TestExecutor App.configs only list necessary their necessary SCPI VISA Instruments, easy to determine if their App.configs are 
+			  subsets of the Test Systems' TestExecutive.config.xml configurations.
+	- This approach is identical to the Keysight i3070's Board config files.
+		- i3070 Board config files specify only the subset of i3070 cards used by their test programs.
+		- This makes porting a Keysight i3070 In-Circuit Test program to a differently configured i3070 as easy as possible, though not necessarily easy.
+	ID:				- Required element.
+					- Unique Identifier; no 2 can be identical, as ID is unique key in a Dictionary object.
+					- Recommend following naming conventions:
+						- CT1, CT2, CT33ε4...	Single-input Counter Timers 1 & 2 and Dual-input 3ε4.
+						- MM1, MM2, MM3...		Single-input MultiMeters 1, 2 & 3.
+						- OS1, OS2, OS3ε4...	Single-input Oscilloscopes 1 & 2 and Dual-input 3ε4.
+						- LCR1, LCR2, LCR3...	Single-input LCR Meters 1, 2 & 3.
+						- EL1, EL2, EL3ε4...	Single-channel Electronic Loads 1 & 2 and Dual-channel 3ε4.
+						- PS1, PS2, PS3ε4...	Single-output Power Supplies 1 & 2 and Dual-output 3ε4.
+						- WG1, WG2, WG3ε4...	Single-output Waveform Generators 1 & 2 and Dual-output 3ε4.
+						- SM1, SM2, SM3...		Switching Modules 1, 2 & 3.
+						NOTE: Each TestExecutor's App.config file allows aliasing TestExecutive.config.xml IDs to more meanining names:
+							- PS1	= P3V3
+							- PS2	= P5V
+							- PS3ε4 = P12V_N12V, where PS3ε4's output 1 is P12V, output 2 is N12V.
+							- EL1	= VOUT
+							- WG1	= CLK
+	Description:	- Required element.
+						- Concise description of SCPI VISA Instrument.
+						- Recommend convention of Manufacturer, Model, Input/Output quantity if applicable, and Instrument type.
+							- Keysight E36103B Single-output Power Supply
+							- Keysight E36234A Dual-output Power Supply
+							- Keysight 34461A Multi-Meter
+	Address:		-Required element.
+						- Address elements must also all be unique, no duplicates.
+						- They must also be valid VISA instrument addresses.
+						- VISA instrument addresses are easily determined using Keysight's Connection Expert app
+							- https://www.keysight.com/us/en/assets/7018-03222/data-sheets/5990-9362.pdf.
+							- Example VISA address for USB instrument: USB0::0x2A8D::0x1602::MY61001983::0::INSTR.
+					NOTE: VISA addresses (AKA VISA Resource Names, VISA Addresses) are explained at:
+					- https://www.ni.com/docs/en-US/bundle/labview/page/lvinstio/visa_resource_name_generic.html.
+					- https://www.ivifoundation.org/downloads/Architecture%20Specifications/vpp43_2022-05-19.pdf.
+-->
+<SCPI_VISA_Instruments>
+	<SCPI_VISA_Instrument>
+		<ID>PS1</ID>
+		<Description>Keysight E36103B Single-output Power Supply</Description>
+		<Address>USB0::0x2A8D::0x1602::MY61001983::0::INSTR</Address>
+	</SCPI_VISA_Instrument>
+	<SCPI_VISA_Instrument>
+		<ID>PS2</ID>
+		<Description>Keysight E36103B Single-output Power Supply</Description>
+		<Address>USB0::0x2A8D::0x1602::MY61001958::0::INSTR</Address>
+	</SCPI_VISA_Instrument>
+	<SCPI_VISA_Instrument>
+		<ID>PS3ε4</ID>
+		<Description>Keysight E36234A Dual-output Power Supply</Description>
+		<Address>USB0::0x2A8D::0x3402::MY61002598::0::INSTR</Address>		
+	</SCPI_VISA_Instrument>
+	<SCPI_VISA_Instrument>
+		<ID>EL1</ID>
+		<Description>Keysight EL34143A Single-channel Electronic Load</Description>
+		<Address>USB0::0x2A8D::0x3802::MY61001295::0::INSTR</Address>
+	</SCPI_VISA_Instrument>
+	<SCPI_VISA_Instrument>
+		<ID>WG1</ID>
+		<Description>Keysight 33509B Single-output Waveform Generator</Description>
+		<Address>USB0::0x0957::0x2507::MY59003604::0::INSTR</Address>
+	</SCPI_VISA_Instrument>
+	<!--
+	<SCPI_VISA_Instrument>
+		<ID>MM1</ID>
+		<Description>Keysight 34461A Multi-Meter</Description>
+		<Address>USB0::0x2A8D::0x1301::MY60049978::0::INSTR</Address>
+	</SCPI_VISA_Instrument>
+	-->
+</SCPI_VISA_Instruments>

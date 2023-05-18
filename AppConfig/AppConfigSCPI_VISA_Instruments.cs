@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Xml.Linq;
 using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
 using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
@@ -9,7 +13,6 @@ using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 using ABT.TestSpace.SCPI_VISA_Instruments;
 using ABT.TestSpace.Logging;
-using System.Reflection;
 
 namespace ABT.TestSpace.AppConfig {
     // NOTE: https://forums.ni.com/t5/Instrument-Control-GPIB-Serial/IVI-Drivers-Pros-and-Cons/td-p/4165671.
@@ -95,10 +98,23 @@ namespace ABT.TestSpace.AppConfig {
             }
         }
 
+        struct SVI {
+            internal String ID { get; set; }
+            internal String Description { get; set; }
+            internal String Address { get; set; }
+        }
+
         public static Dictionary<String, SCPI_VISA_Instrument> Get() {
-            Dictionary<String, (String id, String description, String address)> visaInstrumentElements = GetVISA_InstrumentElements();
             Dictionary<String, SCPI_VISA_Instrument> SVIs = new Dictionary<String, SCPI_VISA_Instrument>();
-            foreach (KeyValuePair<String, (String id, String description, String address)> kvp in visaInstrumentElements) SVIs.Add(kvp.Key, new SCPI_VISA_Instrument(kvp.Value.id, kvp.Value.description, kvp.Value.address));
+            XElement teConfig = XElement.Load("TestExecutive.config.xml");
+            IEnumerable<SVI> svis =
+                from svi in teConfig.Elements("SCPI_VISA_Instrument")
+                select new SVI {
+                    ID = svi.Element("ID").Value,
+                    Description = svi.Element("Description").Value,
+                    Address = svi.Element("Address").Value
+                };
+            foreach (SVI svi in svis) SVIs.Add(svi.ID, new SCPI_VISA_Instrument(svi.ID, svi.Description, svi.Address));
             return SVIs;
         }
 
@@ -108,7 +124,6 @@ namespace ABT.TestSpace.AppConfig {
             return info;
         }
 
-        // TODO:
         private static Dictionary<String, (String id, String description, String address)> GetVISA_InstrumentElements() {
             SCPI_VISA_InstrumentsSection viSection = (SCPI_VISA_InstrumentsSection)ConfigurationManager.GetSection("SCPI_VISA_InstrumentsSection"); 
             SCPI_VISA_InstrumentElements viElements = viSection.SCPI_VISA_InstrumentElements;
