@@ -30,9 +30,9 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
         //      - Given: public dynamic Instrument { get; private set; }
         //      - Then:  Instrument.SCPI.OUTPut.STATe.Query(out Boolean state); should work for E3610xB & E36234A Power Supplies & EL34143A Electronic Load.
         // - May ultimately implement this, obviating below methods and need to cast public Object Instrument to specific instrument, ala ((AgE3610XB)SVI.Instrument).
-        public const String CHANNEL_1 = "(@1)";
-        public const String CHANNEL_2 = "(@2)";
-        public const String CHANNEL_1ε2 = "(@1:2)";
+        public const String CHANNEL1 = "(@1)";
+        public const String CHANNEL2 = "(@2)";
+        public const String CHANNELS1ε2 = "(@1:2)";
 
         public static OUTPUT GetOutputState(SCPI_VISA_Instrument SVI) {
             if (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) return OUTPUT.off;

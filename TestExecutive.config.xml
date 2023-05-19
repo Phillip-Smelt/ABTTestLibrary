@@ -4,19 +4,32 @@
 	- For calibration or replacement, swap identical SCPI VISA Instruments with others, then update Addresses.
 	- For additions/deletions, add/remove SCPI_VISA_Instruments.  Update TestExecutive if needed.
 
-	NOTE: Each TestExecutor that utilizes TestExecutive should also utilize it's TestExecutor App.config file:
-	- Specifically, customize each TestExecutor's App.config to that TestExecutor's specific needs:
-	- *Only* include required/utilized SCPI VISA Instruments.
-	- Do *not* include SCPI_VISA_InstrumentElements for unused SCPI VISA Instruments:
-		- Doing so documents the *minimum* necessary SCPI VISA Instrument configuration for the TestExecutor's program.
-		- Allows a TestExecutor program to be most easily ported to different Test Systems having different TestExecutive.config.xmlconfigurations.
-			- If Test System #1 with it's specific SCPI VISA Instruments dies suddenly, may need to run its TestExecutor programs on Test System #2
-			  with different SCPI VISA Instruments.
-			- If all TestExecutor App.configs only list necessary their necessary SCPI VISA Instruments, easy to determine if their App.configs are 
-			  subsets of the Test Systems' TestExecutive.config.xml configurations.
-	- This approach is identical to the Keysight i3070's Board config files.
-		- i3070 Board config files specify only the subset of i3070 cards used by their test programs.
-		- This makes porting a Keysight i3070 In-Circuit Test program to a differently configured i3070 as easy as possible, though not necessarily easy.
+	NOTE: Recommend each TestExecutor utilize sealed class 'ID' in file TestExecutor.cs to map generic SCPI VISA
+	      Instrument IDs to more meaningful, domain specific ones:
+		  
+			internal sealed class ID : SCPI_VISA_InstrumentElement_IDs {
+				// String constants for SCPI_VISA_InstrumentElement IDs from TestExecutor's TestExecutive.config.xml configuration file.
+				internal const String P3V3 = "PS1";
+				internal const String P5V = "PS2";
+				internal const String P12V_N12V = "PS3ε4";
+				internal const String VOUT_LOAD = "EL1";
+				internal const String MM = "MM1";
+				internal const String CLK = "WG1";
+			}
+
+			- Include required/utilized SCPI VISA Instruments:
+				- That is, if this TestExecutive.config.xml contains elements for 10 power supplies, but a TestExecutor program
+				  only requires & utilizes 2, simply don't alias then in class 'ID'.
+			- This documents the minimum necessary SCPI VISA Instrument configuration for the TestExecutor's program.
+			- Allows a TestExecutor program to be most easily ported to different Test Systems having different TestExecutive.config.xml configurations.
+				- If Test System #1 with it's specific SCPI VISA Instruments dies suddenly, may need to run its TestExecutor programs on Test System #2
+					with different SCPI VISA Instruments.
+				- If all TestExecutor.cs files list only their necessary SCPI VISA Instruments, quite easy to determine if which are 
+					compatible subsets of the Test Systems' TestExecutive.config.xml configurations.
+			- This approach is similar to the Keysight i3070's Board config files.
+				- i3070 Board config files specify only the subset of i3070 cards used by their test programs.
+				- This makes porting a Keysight i3070 In-Circuit Test program to a differently configured i3070 as easy as possible, though not necessarily easy.
+		
 	ID:				- Required element.
 					- Unique Identifier; no 2 can be identical, as ID is unique key in a Dictionary object.
 					- Recommend following naming conventions:
@@ -28,12 +41,6 @@
 						- PS1, PS2, PS3ε4...	Single-output Power Supplies 1 & 2 and Dual-output 3ε4.
 						- WG1, WG2, WG3ε4...	Single-output Waveform Generators 1 & 2 and Dual-output 3ε4.
 						- SM1, SM2, SM3...		Switching Modules 1, 2 & 3.
-						NOTE: Each TestExecutor's App.config file allows aliasing TestExecutive.config.xml IDs to more meanining names:
-							- PS1	= P3V3
-							- PS2	= P5V
-							- PS3ε4 = P12V_N12V, where PS3ε4's output 1 is P12V, output 2 is N12V.
-							- EL1	= VOUT
-							- WG1	= CLK
 	Description:	- Required element.
 						- Concise description of SCPI VISA Instrument.
 						- Recommend convention of Manufacturer, Model, Input/Output quantity if applicable, and Instrument type.

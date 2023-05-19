@@ -28,7 +28,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             SCPI99.Initialize(SVI);
-            ((AgE36200)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command(SCPI.CHANNEL_1ε2);
+            ((AgE36200)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command(SCPI.CHANNELS1ε2);
             ((AgE36200)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
         }
 
@@ -145,6 +145,6 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
 
         public static void SetCurrentProtectionState(SCPI_VISA_Instrument SVI, OUTPUT State, String Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is OUTPUT.ON), Channel); }
 
-        private static String ConvertChannel(CHANNELS Channel) { return Channel == CHANNELS.C1 ? SCPI.CHANNEL_1 : SCPI.CHANNEL_2; }
+        private static String ConvertChannel(CHANNELS Channel) { return Channel == CHANNELS.C1 ? SCPI.CHANNEL1 : SCPI.CHANNEL2; }
     }
 }
