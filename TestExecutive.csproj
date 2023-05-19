@@ -106,10 +106,6 @@
     <Reference Include="AgSCPI99_1_0">
       <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgSCPI99_1_0.dll</HintPath>
     </Reference>
-    <Reference Include="MccDaq, Version=2.9.0.0, Culture=neutral, PublicKeyToken=a37eefcf5c6ca10a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files (x86)\Measurement Computing\DAQ\MccDaq.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
@@ -124,13 +120,6 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="TIDP.SAA, Version=3.0.8.15626, Culture=neutral, PublicKeyToken=4ce2ce38201aeb82, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files (x86)\Texas Instruments Fusion API\Library\TIDP.SAA.dll</HintPath>
-    </Reference>
-    <Reference Include="USB-ERB24">
-      <HintPath>..\USB-ERB24\bin\Debug\net48\USB-ERB24.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -142,9 +131,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\USB-TO-GPIO\USB-TO-GPIO.csproj">
-      <Project>{f4f8588f-cb29-4190-9c88-56837e967f20}</Project>
-      <Name>USB-TO-GPIO</Name>
+    <ProjectReference Include="..\USB-ERB24\USB-ERB24.csproj">
+      <Project>{0a47615c-b80a-4467-b4d1-43be4802169d}</Project>
+      <Name>USB-ERB24</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
