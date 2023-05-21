@@ -10,7 +10,7 @@ using ABT.TestSpace.AppConfig;
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace ABT.TestSpace.SCPI_VISA_Instruments {
-    // TODO: Convert the WG_33509B class to a Singleton, like the USB_TO_GPIO class?
+    // NOTE: Perhaps convert the WG_33509B class to a Singleton, like the USB_TO_GPIO class?
     //  - Realize Singletons often considered "anti-patterns", but handy for objects that can only have 1 instance.
     //  - If there are more than one WG_33509B in the test system, make the WG_33509B Singleton class a Dictionary of WG_33509Bs, rather than just one WG_33509B.
     //  - Each WG_33509B in the Singleton's Dictionary can be accessed by its enum; WG.S01, WG.S02...WG.Snn, for Wave Generator Singletons 01, 02...nn.

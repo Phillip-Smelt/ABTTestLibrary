@@ -10,7 +10,7 @@ using ABT.TestSpace.AppConfig;
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace ABT.TestSpace.SCPI_VISA_Instruments {
-    // TODO: Convert the MM_34661A class to a Singleton, like the USB_TO_GPIO class?
+    // NOTE: Perhaps convert the MM_34661A class to a Singleton, like the USB_TO_GPIO class?
     //  - Realize Singletons often considered "anti-patterns", but handy for objects that can only have 1 instance.
     //  - If there are more than one MM_34661A in the test system, make the MM_34661A Singleton class a Dictionary of MM_34661As, rather than just one MM_34661A.
     //  - Each MM_34661A in the Singleton's Dictionary can be accessed by its enum; MM.S01, MM.S02...MM.Snn, for Multi-Meter Singletons 01, 02...nn.
