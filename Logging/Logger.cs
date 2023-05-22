@@ -33,6 +33,7 @@ namespace ABT.TestSpace.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
                 Log.Information($"Note: following test results invalid for UUT production testing, only troubleshooting.");
+                Log.Information($"START                  : {DateTime.Now}");
                 Log.Information($"UUT Number             : {configUUT.Number}");
                 Log.Information($"UUT Revision           : {configUUT.Revision}");
                 Log.Information($"UUT Serial Number      : {configUUT.SerialNumber}");
