@@ -33,10 +33,11 @@ namespace ABT.TestSpace.AppConfig {
     //    public IEnumerable<GroupElement> GroupElement { get { foreach (GroupElement ge in this.GroupElements) if (ge != null) yield return ge; } }
     //}
 
-    // NOTE: Possibly desirable to implement a 3rd tier of ConfigurationCollections:
-    //  - Currently is Groups to Tests.
-    //  - 3rd tier would be Groups to SubGroups to Tests.
-    //  - Would permit Groups to relate to SubGroups like 'Shorts', 'Opens', 'Analog to Digital", "In System-Programming", "Boundary Scan", etc.
+    // TODO: Possibly desirable to implement a 3rd tier of ConfigurationCollections:
+    // TODO: If implemented, rename 3 tiers to TestRequirements, TestGroups & Tests.
+    //  - Currently is TestGroups to Tests.
+    //  - 3rd tier would be TestRequirements to TestGroups to Tests.
+    //  - Would permit TestRequirements to relate to TestGroups like 'Shorts', 'Opens', 'Analog to Digital", "In System-Programming", "Boundary Scan", etc.
     //  - Implementation would simply be another nested foreach loop like below:
     //      Dictionary<String, Group> dictionary = new Dictionary<String, Group>();
     //      foreach (GroupElement groupElement in groupElements) {
