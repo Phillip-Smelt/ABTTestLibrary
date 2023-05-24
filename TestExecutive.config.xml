@@ -30,7 +30,7 @@
 				- i3070 Board config files specify only the subset of i3070 cards used by their test programs.
 				- This makes porting a Keysight i3070 In-Circuit Test program to a differently configured i3070 as easy as possible, though not necessarily easy.
 		
-	ID:				- Required element.
+	ID:			- Required element.
 					- Unique Identifier; no 2 can be identical, as ID is unique key in a Dictionary object.
 					- Recommend following naming conventions:
 						- CT1, CT2, CT33ε4...	Single-input Counter Timers 1 & 2 and Dual-input 3ε4.
@@ -40,6 +40,11 @@
 						- EL1, EL2, EL3ε4...	Single-channel Electronic Loads 1 & 2 and Dual-channel 3ε4.
 						- PS1, PS2, PS3ε4...	Single-output Power Supplies 1 & 2 and Dual-output 3ε4.
 						- WG1, WG2, WG3ε4...	Single-output Waveform Generators 1 & 2 and Dual-output 3ε4.
+            - MF1, MF2, MF3...    MainFrames 1, 2 & 3.
+                                  MainFrames can contain multiple dissimilar and/or multiple similar instruments.
+                                  - Keysight's HP34970A accomodates multiple heterogenous modules; switching, multi-function (digital IO, totalizer & analog output) & multiplexing.
+                                    Or it can be configured with with multiple homogenous modules; all switching for example.
+                                  - Chroma's 6314 Electronic Load accomodates multiple homogenous load modules.
 						- SM1, SM2, SM3...		Switching Modules 1, 2 & 3.
 	Description:	- Required element.
 						- Concise description of SCPI VISA Instrument.
