@@ -8,7 +8,7 @@
 	      Instrument IDs to more meaningful, domain specific ones:
 		  
 			internal sealed class ID : SCPI_VISA_InstrumentElement_IDs {
-				// String constants for SCPI_VISA_InstrumentElement IDs from TestExecutor's TestExecutive.config.xml configuration file.
+				// String constants for SCPI_VISA_InstrumentElement IDs from TestExecutive's TestExecutive.config.xml configuration file.
 				internal const String P3V3 = "PS1";
 				internal const String P5V = "PS2";
 				internal const String P12V_N12V = "PS3ε4";
@@ -58,9 +58,9 @@
 						- VISA instrument addresses are easily determined using Keysight's Connection Expert app
 							- https://www.keysight.com/us/en/assets/7018-03222/data-sheets/5990-9362.pdf.
 							- Example VISA address for USB instrument: USB0::0x2A8D::0x1602::MY61001983::0::INSTR.
-					NOTE: VISA addresses (AKA VISA Resource Names, VISA Addresses) are explained at:
-					- https://www.ni.com/docs/en-US/bundle/labview/page/lvinstio/visa_resource_name_generic.html.
-					- https://www.ivifoundation.org/downloads/Architecture%20Specifications/vpp43_2022-05-19.pdf.
+	NOTE: VISA addresses (AKA VISA Resource Names, VISA Addresses) are explained at:
+	- https://www.ni.com/docs/en-US/bundle/labview/page/lvinstio/visa_resource_name_generic.html.
+	- https://www.ivifoundation.org/downloads/Architecture%20Specifications/vpp43_2022-05-19.pdf.
 -->
 <SCPI_VISA_Instruments>
 	<SCPI_VISA_Instrument>
