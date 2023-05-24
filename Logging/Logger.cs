@@ -112,8 +112,8 @@ namespace ABT.TestSpace.Logging {
                     message.AppendLine($"  High Limit  : {testNumerical.High:G}");
                     message.AppendLine($"  Measurement : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
                     message.AppendLine($"  Low Limit   : {testNumerical.Low:G}");
-                    message.AppendLine($"  SI Units    : {Enum.GetName(typeof(SI_UNITS), testNumerical.SI_Units)}");
-                    if (testNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.AppendLine($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), testNumerical.SI_Units_Modifier)}");
+                    message.Append($"  SI Units    : {Enum.GetName(typeof(SI_UNITS), testNumerical.SI_Units)}");
+                    if (testNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.Append($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), testNumerical.SI_Units_Modifier)}");
                     message.AppendLine("");
                     break;
                 case TestTextual.ClassName:
@@ -124,7 +124,7 @@ namespace ABT.TestSpace.Logging {
                 default:
                     throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
             }
-            message.AppendLine($"  Result      : {test.Result}{Environment.NewLine}");
+            message.AppendLine($"  Result      : {test.Result}");
 #if DEBUG
             message.AppendLine(test.DebugMessage);
 #endif
