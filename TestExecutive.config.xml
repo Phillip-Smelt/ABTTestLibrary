@@ -43,7 +43,7 @@
             - MF1, MF2, MF3...    MainFrames 1, 2 & 3.
                                   MainFrames can contain multiple dissimilar and/or multiple similar instruments.
                                   - Keysight's HP34970A accomodates multiple heterogenous modules; switching, multi-function (digital IO, totalizer & analog output) & multiplexing.
-                                    Or it can be configured with with multiple homogenous modules; all switching for example.
+                                    Or it can be configured with multiple homogenous modules; all switching for example.
                                   - Chroma's 6314 Electronic Load accomodates multiple homogenous load modules.
 						- SM1, SM2, SM3...		Switching Modules 1, 2 & 3.
 	Description:	- Required element.
