@@ -41,10 +41,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
 
         public static void SetOutputState(SCPI_VISA_Instrument SVI, OUTPUT State) { SCPI99.Command(SVI, (State is OUTPUT.off) ? ":OUTPUT 0" : ":OUTPUT 1"); }
 
-        public static Boolean IsOutputState(SCPI_VISA_Instrument SVI, OUTPUT State) {
-            if (GetOutputState(SVI) == State) return true;
-            else return false;
-        }
+        public static Boolean IsOutputState(SCPI_VISA_Instrument SVI, OUTPUT State) { return (GetOutputState(SVI) == State); }
 
         internal static String GetErrorMessage(SCPI_VISA_Instrument SVI) { return SCPI_VISA_Instrument.GetInfo(SVI, $"SCPI VISA Instrument Address '{0}' failed.{Environment.NewLine}"); }
 
