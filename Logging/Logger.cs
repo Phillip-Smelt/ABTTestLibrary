@@ -90,45 +90,45 @@ namespace ABT.TestSpace.Logging {
         }
 
         public static void LogTest(Test test) {
-            String message;
-            message =  $"Test ID '{test.ID}'\n";
-            message += $"  Revision    : {test.Revision}\n";
-            message += $"  Description : {test.Description}\n";
-            message += $"  Test Type   : {test.ClassName}\n";
+            StringBuilder message = new StringBuilder();
+            message.AppendLine($"Test ID '{test.ID}'");
+            message.AppendLine($"  Revision    : {test.Revision}");
+            message.AppendLine($"  Description : {test.Description}");
+            message.AppendLine($"  Test Type   : {test.ClassName}");
             switch (test.ClassName) {
-                // TODO: Eliminate TestCustomizable arguements.
+                // TODO: Eliminate TestCustomizable arguments.
                 case TestCustomizable.ClassName:
                     TestCustomizable testCustomizable = (TestCustomizable)test.ClassObject;
-                    foreach (KeyValuePair<String, String> kvp in testCustomizable.Arguments) message += $"  Key=Value   : {kvp.Key}={kvp.Value}\n";
-                    message += $"  Actual      : {test.Measurement}\n";
+                    foreach (KeyValuePair<String, String> kvp in testCustomizable.Arguments) message.AppendLine($"  Key=Value   : {kvp.Key}={kvp.Value}");
+                    message.AppendLine($"  Actual      : {test.Measurement}");
                     break;
                 case TestISP.ClassName:
                     TestISP testISP = (TestISP)test.ClassObject;
-                    message += $"  Expected    : {testISP.ISPExpected}\n";
-                    message += $"  Actual      : {test.Measurement}\n";
+                    message.AppendLine($"  Expected    : {testISP.ISPExpected}");
+                    message.AppendLine($"  Actual      : {test.Measurement}");
                     break;
                 case TestNumerical.ClassName:
                     TestNumerical testNumerical = (TestNumerical)test.ClassObject;
-                    message += $"  High Limit  : {testNumerical.High:G}\n";
-                    message += $"  Measurement : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}\n";
-                    message += $"  Low Limit   : {testNumerical.Low:G}\n";
-                    message += $"  SI Units    : {Enum.GetName(typeof(SI_UNITS), testNumerical.SI_Units)}";
-                    if (testNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message += $" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), testNumerical.SI_Units_Modifier)}";
-                    message += "\n";
+                    message.AppendLine($"  High Limit  : {testNumerical.High:G}");
+                    message.AppendLine($"  Measurement : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
+                    message.AppendLine($"  Low Limit   : {testNumerical.Low:G}");
+                    message.AppendLine($"  SI Units    : {Enum.GetName(typeof(SI_UNITS), testNumerical.SI_Units)}");
+                    if (testNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.AppendLine($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), testNumerical.SI_Units_Modifier)}");
+                    message.AppendLine("");
                     break;
                 case TestTextual.ClassName:
                     TestTextual testTextual = (TestTextual)test.ClassObject;
-                    message += $"  Expected    : {testTextual.Text}\n";
-                    message += $"  Actual      : {test.Measurement}\n";
+                    message.AppendLine($"  Expected    : {testTextual.Text}");
+                    message.AppendLine($"  Actual      : {test.Measurement}");
                     break;
                 default:
                     throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
             }
-            message += $"  Result      : {test.Result}{Environment.NewLine}";
+            message.AppendLine($"  Result      : {test.Result}{Environment.NewLine}");
 #if DEBUG
-            message += test.DebugMessage;
+            message.AppendLine(test.DebugMessage);
 #endif
-            Log.Information(message);
+            Log.Information(message.ToString());
         }
 
         public static void Stop(AppConfigUUT configUUT, AppConfigLogger configLogger, Group group, ref RichTextBox rtfResults) {

@@ -57,7 +57,7 @@ namespace ABT.TestSpace.AppConfig {
 
     public class TestCustomizable : TestAbstract {
         public new const String ClassName = nameof(TestCustomizable);
-        // TODO: Eliminate TestCustomizable arguements.
+        // TODO: Eliminate TestCustomizable arguments.
         public readonly Dictionary<String, String> Arguments;
 
         public TestCustomizable(String id, String arguments) {

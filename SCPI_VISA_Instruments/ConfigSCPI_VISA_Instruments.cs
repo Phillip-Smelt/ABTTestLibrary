@@ -23,7 +23,6 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
         public readonly String Address;
         public readonly String Identity;
         public readonly Object Instrument; // NOTE: The assumption, thus far proven correct, is that Keysight's SCPI drivers don't contain state, thus can be readonly.
-        public const Int32 FORMAT_WIDTH = -16;
 
         private SCPI_VISA_Instrument(String id, String description, String address) {
             this.ID = id;
@@ -77,7 +76,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
 
         public static String GetInfo(SCPI_VISA_Instrument SVI, String optionalHeader = "") {
             String info = (optionalHeader == "") ? optionalHeader : optionalHeader += Environment.NewLine;
-            foreach (PropertyInfo pi in SVI.GetType().GetProperties()) info += $"{pi.Name,FORMAT_WIDTH}: '{pi.GetValue(SVI)}'{Environment.NewLine}";
+            foreach (PropertyInfo pi in SVI.GetType().GetProperties()) info += $"{pi.Name.PadLeft(Logger.SPACES_16.Length)}: '{pi.GetValue(SVI)}'{Environment.NewLine}";
             return info;
         }
     }
