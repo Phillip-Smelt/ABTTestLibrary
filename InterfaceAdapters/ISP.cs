@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ABT.TestSpace.AppConfig;
 
@@ -11,19 +13,31 @@ namespace ABT.TestSpace.InterfaceAdapters {
 
         public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect) {
             PreConnect?.Invoke();
-            _ = MessageBox.Show($"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
-                $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
-                $"AFTER connecting, click OK to continue.",
-                $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            String message = $"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
+                             $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
+                             $"AFTER connecting, click OK to continue.";
+#if DEBUG
+            Form form = new Form() { Size = new Size(0, 0) };
+            Task.Delay(TimeSpan.FromSeconds(1.5)).ContinueWith((t) => form.Close(), TaskScheduler.FromCurrentSynchronizationContext());
+            _ = MessageBox.Show(form, message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+#else
+            _ = MessageBox.Show(message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
             PostConnect?.Invoke();
         }
 
         public static void DisConnect(String Description, String Connector, Action PreDisconnect, Action PostDisconnect) {
             PreDisconnect?.Invoke();
-            _ = MessageBox.Show($"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
-                    $"Disconnect '{Description}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
-                    $"AFTER disconnecting, click OK to continue.",
-                    $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            String message = $"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
+                             $"Disconnect '{Description}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
+                             $"AFTER disconnecting, click OK to continue.";
+#if DEBUG
+            Form form = new Form() { Size = new Size(0, 0) };
+            Task.Delay(TimeSpan.FromSeconds(1.5)).ContinueWith((t) => form.Close(), TaskScheduler.FromCurrentSynchronizationContext());
+            _ = MessageBox.Show(form, message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+#else
+            _ = MessageBox.Show(message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
             PostDisconnect?.Invoke();
         }
 
