@@ -11,34 +11,30 @@ namespace ABT.TestSpace.InterfaceAdapters {
 
     public static class ISP {
 
-        public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect) {
+        public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect, Boolean AutoClose = false) { 
             PreConnect?.Invoke();
             String message = $"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
                              $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                              $"AFTER connecting, click OK to continue.";
-#if DEBUG
-            Form form = new Form() { Size = new Size(0, 0) };
-            Task.Delay(TimeSpan.FromSeconds(1.5)).ContinueWith((t) => form.Close(), TaskScheduler.FromCurrentSynchronizationContext());
-            _ = MessageBox.Show(form, message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
-#else
-            _ = MessageBox.Show(message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
-#endif
+            if (AutoClose) _ = MessageBox.Show(GetInterconnectForm(), message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else _ = MessageBox.Show(message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
             PostConnect?.Invoke();
         }
 
-        public static void DisConnect(String Description, String Connector, Action PreDisconnect, Action PostDisconnect) {
+        public static void DisConnect(String Description, String Connector, Action PreDisconnect, Action PostDisconnect, Boolean AutoClose = false) {
             PreDisconnect?.Invoke();
             String message = $"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
                              $"Disconnect '{Description}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                              $"AFTER disconnecting, click OK to continue.";
-#if DEBUG
-            Form form = new Form() { Size = new Size(0, 0) };
-            Task.Delay(TimeSpan.FromSeconds(1.5)).ContinueWith((t) => form.Close(), TaskScheduler.FromCurrentSynchronizationContext());
-            _ = MessageBox.Show(form, message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
-#else
-            _ = MessageBox.Show(message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
-#endif
+            if (AutoClose) _ = MessageBox.Show(GetInterconnectForm(), message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else _ = MessageBox.Show(message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
             PostDisconnect?.Invoke();
+        }
+
+        private static Form GetInterconnectForm() {
+            Form form = new Form() { Size = new Size(0, 0) };
+            Task.Delay(TimeSpan.FromSeconds(1.0)).ContinueWith((t) => form.Close(), TaskScheduler.FromCurrentSynchronizationContext());
+            return form;
         }
 
         public static String ProcessExitCode(String arguments, String fileName, String workingDirectory) {
