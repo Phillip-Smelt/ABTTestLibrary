@@ -11,22 +11,22 @@ namespace ABT.TestSpace.InterfaceAdapters {
 
     public static class ISP {
 
-        public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect, Boolean AutoClose = false) { 
+        public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect, Boolean AutoContinue = false) { 
             PreConnect?.Invoke();
             String message = $"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
                              $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                              $"AFTER connecting, click OK to continue.";
-            if (AutoClose) _ = MessageBox.Show(GetInterconnectForm(), message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (AutoContinue) _ = MessageBox.Show(GetInterconnectForm(), message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
             else _ = MessageBox.Show(message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
             PostConnect?.Invoke();
         }
 
-        public static void DisConnect(String Description, String Connector, Action PreDisconnect, Action PostDisconnect, Boolean AutoClose = false) {
+        public static void DisConnect(String Description, String Connector, Action PreDisconnect, Action PostDisconnect, Boolean AutoContinue = false) {
             PreDisconnect?.Invoke();
             String message = $"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
                              $"Disconnect '{Description}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                              $"AFTER disconnecting, click OK to continue.";
-            if (AutoClose) _ = MessageBox.Show(GetInterconnectForm(), message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (AutoContinue) _ = MessageBox.Show(GetInterconnectForm(), message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
             else _ = MessageBox.Show(message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
             PostDisconnect?.Invoke();
         }
