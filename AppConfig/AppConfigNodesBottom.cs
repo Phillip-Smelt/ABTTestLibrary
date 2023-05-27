@@ -9,34 +9,34 @@ namespace ABT.TestSpace.AppConfig {
     public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
     public enum SI_UNITS_MODIFIERS { AC, DC, Peak, PP, NotApplicable, RMS }
 
-    public class TestElement : ConfigurationElement {
+    public class NodeBottom : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
-        [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
+        [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
         [ConfigurationProperty("ClassName", IsKey = false, IsRequired = true)] public String ClassName { get { return ((String)base["ClassName"]).Trim(); } }
         [ConfigurationProperty("Arguments", IsKey = false, IsRequired = true)] public String Arguments { get { return ((String)base["Arguments"]).Trim(); } }
     }
 
-    [ConfigurationCollection(typeof(TestElement))]
-    public class TestElements : ConfigurationElementCollection {
-        public const String PropertyName = "TestElement";
-        public TestElement this[Int32 idx] { get { return (TestElement)this.BaseGet(idx); } }
+    [ConfigurationCollection(typeof(NodeBottom))]
+    public class NodesBottom : ConfigurationElementCollection {
+        public const String PropertyName = "NodeBottom";
+        public NodeBottom this[Int32 idx] { get { return (NodeBottom)this.BaseGet(idx); } }
         public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
         protected override String ElementName { get { return PropertyName; } }
         protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
         public override Boolean IsReadOnly() { return false; }
-        protected override ConfigurationElement CreateNewElement() { return new TestElement(); }
-        protected override Object GetElementKey(ConfigurationElement element) { return ((TestElement)(element)).ID; }
+        protected override ConfigurationElement CreateNewElement() { return new NodeBottom(); }
+        protected override Object GetElementKey(ConfigurationElement element) { return ((NodeBottom)(element)).ID; }
     }
 
-    public class TestsSection : ConfigurationSection {
-        [ConfigurationProperty("TestElements")] public TestElements TestElements { get { return ((TestElements)(base["TestElements"])); } }
+    public class NodesBottomSection : ConfigurationSection {
+        [ConfigurationProperty("NodesBottom")] public NodesBottom NodesBottom { get { return ((NodesBottom)(base["NodesBottom"])); } }
     }
 
     public class ConfigTests {
-        public TestsSection TestsSection { get { return (TestsSection)ConfigurationManager.GetSection("TestsSection"); } }
-        public TestElements TestElements { get { return this.TestsSection.TestElements; } }
-        public IEnumerable<TestElement> TestElement { get { foreach (TestElement te in this.TestElements) if (te != null) yield return te; } }
+        public NodesBottomSection NodesBottomSection { get { return (NodesBottomSection)ConfigurationManager.GetSection("NodesBottomSection"); } }
+        public NodesBottom NodesBottom { get { return this.NodesBottomSection.NodesBottom; } }
+        public IEnumerable<NodeBottom> NodeBottom { get { foreach (NodeBottom nb in this.NodesBottom) if (nb != null) yield return nb; } }
     }
 
     public abstract class TestAbstract {
