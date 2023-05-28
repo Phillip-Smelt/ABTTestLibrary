@@ -9,20 +9,6 @@ namespace ABT.TestSpace.AppConfig {
     public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
     public enum SI_UNITS_MODIFIERS { AC, DC, Peak, PP, NotApplicable, RMS }
 
-    public class TestMeasurementsSection : ConfigurationSection { [ConfigurationProperty("TestMeasurements")] public TestMeasurements TestMeasurements { get { return ((TestMeasurements)(base["TestMeasurements"])); } } }
-    [ConfigurationCollection(typeof(TestElement))]
-    public class TestMeasurements : TestElements { public new const String PropertyName = "TestMeasurements"; }
-    public class TestMeasurement : TestElement {
-        [ConfigurationProperty("ClassName", IsKey = false, IsRequired = true)] public String ClassName { get { return ((String)base["ClassName"]).Trim(); } }
-        [ConfigurationProperty("Arguments", IsKey = false, IsRequired = true)] public String Arguments { get { return ((String)base["Arguments"]).Trim(); } }
-    }
-
-    public class ConfigTests {
-        public TestMeasurementsSection TestMeasurementsSection { get { return (TestMeasurementsSection)ConfigurationManager.GetSection("TestMeasurementsSection"); } }
-        public TestMeasurements TestMeasurements { get { return this.TestMeasurementsSection.TestMeasurements; } }
-        public IEnumerable<TestMeasurement> TestMeasurement { get { foreach (TestMeasurement tm in this.TestMeasurements) if (tm != null) yield return tm; } }
-    }
-
     public abstract class TestAbstract {
         public const String ClassName = nameof(TestAbstract);
         private protected TestAbstract() { }
@@ -41,6 +27,9 @@ namespace ABT.TestSpace.AppConfig {
 
     public class TestCustomizable : TestAbstract {
         public new const String ClassName = nameof(TestCustomizable);
+        public readonly Dictionary<String, String> Arguments;
+
+        public TestCustomizable(String id, String arguments) { this.Arguments = TestAbstract.SplitArguments(arguments); }
     }
 
     public class TestISP : TestAbstract {
@@ -148,10 +137,10 @@ namespace ABT.TestSpace.AppConfig {
         }
 
         public static Dictionary<String, Test> Get() {
-            TestsSection testElementsSection = (TestsSection)ConfigurationManager.GetSection("TestsSection");
-            TestElements testElements = testElementsSection.TestElements;
+            TestMeasurementsSection testMeasurementsSection = (TestMeasurementsSection)ConfigurationManager.GetSection("TestMeasurementsSection");
+            TestMeasurements testMeasurements = testMeasurementsSection.TestMeasurements;
             Dictionary<String, Test> dictionary = new Dictionary<String, Test>();
-            foreach (TestElement testElement in testElements) dictionary.Add(testElement.ID, new Test(testElement.ID, testElement.Description, testElement.Revision, testElement.ClassName, testElement.Arguments));
+            foreach (TestMeasurement tm in testMeasurements) { dictionary.Add(tm.ID, new Test(tm.ID, tm.Description, tm.Revision, tm.ClassName, tm.Arguments)); }
             return dictionary;
         }
     }
