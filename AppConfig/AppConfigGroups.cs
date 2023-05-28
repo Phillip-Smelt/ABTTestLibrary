@@ -21,7 +21,6 @@ namespace ABT.TestSpace.AppConfig {
         protected override ConfigurationElement CreateNewElement() { return new Node(); }
         protected override Object GetElementKey(ConfigurationElement element) { return ((Node)(element)).ID; }
     }
-
     public class NodesSection : ConfigurationSection { [ConfigurationProperty("Nodes")] public Nodes Node { get { return ((Nodes)(base["Nodes"])); } } }
 
     public class TestProgram : Node { [ConfigurationProperty("TestGroups", IsKey = false, IsRequired = true)] public String TestGroups { get { return ((String)base["TestGroups"]).Trim(); } } }

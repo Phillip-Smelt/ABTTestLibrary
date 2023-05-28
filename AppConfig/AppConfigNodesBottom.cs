@@ -57,17 +57,6 @@ namespace ABT.TestSpace.AppConfig {
 
     public class TestCustomizable : TestAbstract {
         public new const String ClassName = nameof(TestCustomizable);
-        // TODO: Eliminate TestCustomizable arguments.
-        public readonly Dictionary<String, String> Arguments;
-
-        public TestCustomizable(String id, String arguments) {
-            this.Arguments = TestAbstract.SplitArguments(arguments);
-            if (this.Arguments.Count == 0) throw new ArgumentException($"TestElement ID '{id}' with ClassName '{ClassName}' requires 1 or more key=value arguments:{Environment.NewLine}" +
-                    $"   Example: 'NameFirst=Harry|" +
-                    $"             NameLast=Potter|" +
-                    $"             Occupation=Auror'{Environment.NewLine}" +
-                    $"   Actual : '{this.Arguments}'");
-        }
     }
 
     public class TestISP : TestAbstract {

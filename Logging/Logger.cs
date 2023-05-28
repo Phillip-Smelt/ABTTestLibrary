@@ -96,10 +96,8 @@ namespace ABT.TestSpace.Logging {
             message.AppendLine($"  Description : {test.Description}");
             message.AppendLine($"  Test Type   : {test.ClassName}");
             switch (test.ClassName) {
-                // TODO: Eliminate TestCustomizable arguments.
                 case TestCustomizable.ClassName:
                     TestCustomizable testCustomizable = (TestCustomizable)test.ClassObject;
-                    foreach (KeyValuePair<String, String> kvp in testCustomizable.Arguments) message.AppendLine($"  Key=Value   : {kvp.Key}={kvp.Value}");
                     message.AppendLine($"  Actual      : {test.Measurement}");
                     break;
                 case TestISP.ClassName:
