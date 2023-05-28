@@ -48,6 +48,28 @@ namespace ABT.TestSpace.AppConfig {
         public IEnumerable<TestMeasurement> TestMeasurement { get { foreach (TestMeasurement tm in this.TestMeasurements) if (tm != null) yield return tm; } }
     }
 
+    public class Operation {
+        public readonly String ID;
+        public readonly String Revision;
+        public readonly String Description;
+        public readonly String TestGroupIDs;
+
+        private Operation(String id, String revision, String description, String testGroupIDs) {
+            this.ID = id;
+            this.Revision = revision;
+            this.Description = description;
+            this.TestGroupIDs = testGroupIDs;
+        }
+
+        public static Dictionary<String, Operation> Get() {
+            TestOperationsSection testOperationsSection = (TestOperationsSection)ConfigurationManager.GetSection("TestOperationsSection");
+            TestOperations testOperations = testOperationsSection.TestOperations;
+            Dictionary<String, Operation> dictionary = new Dictionary<String, Operation>();
+            foreach (TestOperation to in testOperations) dictionary.Add(to.ID, new Operation(to.ID, to.Revision, to.Description, to.TestGroupIDs));
+            return dictionary;
+        }
+    }
+
     public class Group {
         public readonly String ID;
         public readonly String Revision;    

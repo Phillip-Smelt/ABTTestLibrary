@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 
 namespace ABT.TestSpace.AppConfig {
-    partial class GroupSelect {
+    partial class SelectTests {
         /// <summary>
         /// Required designer variable.
         /// </summary>

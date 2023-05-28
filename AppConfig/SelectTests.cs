@@ -5,13 +5,13 @@ using System.Linq;
 using System.Windows.Forms;
 
 namespace ABT.TestSpace.AppConfig {
-    public partial class GroupSelect : Form {
+    public partial class SelectTests : Form {
         public String GroupSelected { get; private set; }
         internal readonly Dictionary<String, Group> Groups;
         private readonly List<String> _keysRequired;
         private readonly List<String> _keysOptional;
 
-        public GroupSelect(Dictionary<String, Group> groups) {
+        public SelectTests(Dictionary<String, Group> groups) {
             this.InitializeComponent();
             this.Groups = groups;
             this._keysRequired = this.Groups.Where(g => (g.Value.Required)).Select(g => g.Key).ToList();
