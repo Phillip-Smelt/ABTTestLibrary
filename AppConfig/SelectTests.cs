@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace ABT.TestSpace.AppConfig {
     public partial class SelectTests : Form {
-        public String GroupSelected { get; private set; }
+        public String Selection { get; private set; }
         internal readonly Dictionary<String, Group> Groups;
         private readonly List<String> _keysRequired;
         private readonly List<String> _keysOptional;
@@ -16,7 +16,7 @@ namespace ABT.TestSpace.AppConfig {
             this.Groups = groups;
             this._keysRequired = this.Groups.Where(g => (g.Value.Required)).Select(g => g.Key).ToList();
             this._keysOptional = this.Groups.Where(g => (!g.Value.Required)).Select(g => g.Key).ToList();
-            this.ListGroups.MultiSelect = false;
+            this.ListSelections.MultiSelect = false;
 
             this.ListViewRefresh();
             this.radioButtonRequired.Enabled = (this._keysRequired.Count > 0);
@@ -25,25 +25,25 @@ namespace ABT.TestSpace.AppConfig {
         }
 
         private void ListViewRefresh() {
-            this.ListGroups.Clear();
-            this.ListGroups.View = View.Details;
-            this.ListGroups.Columns.Add("ID");
-            this.ListGroups.Columns.Add("Description");
+            this.ListSelections.Clear();
+            this.ListSelections.View = View.Details;
+            this.ListSelections.Columns.Add("ID");
+            this.ListSelections.Columns.Add("Description");
         }
 
         private void FormRefresh() {
-            if (this.radioButtonRequired.Checked) foreach (String key in this._keysRequired) this.ListGroups.Items.Add(new ListViewItem(new String[] { this.Groups[key].ID, this.Groups[key].Description }));
-            else if (this.radioButtonOptional.Checked) foreach (String key in this._keysOptional) this.ListGroups.Items.Add(new ListViewItem(new String[] { this.Groups[key].ID, this.Groups[key].Description }));
-            this.ListGroups.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
-            this.ListGroups.Columns[1].Width = -2;
+            if (this.radioButtonRequired.Checked) foreach (String key in this._keysRequired) this.ListSelections.Items.Add(new ListViewItem(new String[] { this.Groups[key].ID, this.Groups[key].Description }));
+            else if (this.radioButtonOptional.Checked) foreach (String key in this._keysOptional) this.ListSelections.Items.Add(new ListViewItem(new String[] { this.Groups[key].ID, this.Groups[key].Description }));
+            this.ListSelections.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
+            this.ListSelections.Columns[1].Width = -2;
             // https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.columnheader.width?redirectedfrom=MSDN&view=windowsdesktop-7.0#System_Windows_Forms_ColumnHeader_Width
-            this.ListGroups.ResetText();
+            this.ListSelections.ResetText();
             this.OK.Enabled = false;
         }
 
         private void OK_Click(Object sender, EventArgs e) {
-            if (this.ListGroups.SelectedItems.Count == 1) {
-                this.GroupSelected = this.ListGroups.SelectedItems[0].Text;
+            if (this.ListSelections.SelectedItems.Count == 1) {
+                this.Selection = this.ListSelections.SelectedItems[0].Text;
                 this.DialogResult = DialogResult.OK;
             }
         }
@@ -65,6 +65,10 @@ namespace ABT.TestSpace.AppConfig {
                 this.ListViewRefresh();
                 this.FormRefresh();
             }
+        }
+
+        private void SelectTests_Load(Object sender, EventArgs e) {
+
         }
     }
 }

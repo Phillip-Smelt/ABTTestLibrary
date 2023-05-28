@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace ABT.TestSpace.AppConfig {
     public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
@@ -146,20 +147,22 @@ namespace ABT.TestSpace.AppConfig {
     }
 
     public class AppConfigTest {
-        public readonly Group Group;
+        public readonly String Selection;
+        public readonly Boolean Operation;
         public readonly Dictionary<String, Test> Tests;
         public readonly Int32 LogFormattingLength;
 
         private AppConfigTest() {
-            Dictionary<String, Group> Groups = Group.Get();
+            Dictionary<String, Group> Selection = SelectTests.Get();
             String GroupSelected = GroupSelect.Get(Groups);
-            this.Group = Groups[GroupSelected];
+            this.Selection = Groups[GroupSelected];
+            // TODO: this.Operation = (this.Selection == Operation)
             // Operator selects the Group they want to test, from the Dictionary of all Groups.
             // GroupSelected is Dictionary Groups' Key.
 
             Dictionary<String, Test> allTests = Test.Get();
             this.Tests = new Dictionary<String, Test>();
-            String[] groupTestIDs = this.Group.TestIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToArray();
+            String[] selectionTestIDs = this.Selection.TestIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToArray();
             this.LogFormattingLength = groupTestIDs.OrderByDescending(TestID => TestID.Length).First().Length + 1;
             foreach (String TestID in groupTestIDs) {
                 if (!allTests.ContainsKey(TestID)) throw new InvalidOperationException($"Group '{this.Group.ID}' includes Test ID '{TestID}', which isn't present in TestElements in App.config.");

@@ -21,62 +21,63 @@ namespace ABT.TestSpace.AppConfig {
 
         #region
         private void InitializeComponent() {
-            this.LabelGroups = new System.Windows.Forms.Label();
+            this.LabelSelections = new System.Windows.Forms.Label();
             this.OK = new System.Windows.Forms.Button();
-            this.ListGroups = new System.Windows.Forms.ListView();
+            this.ListSelections = new System.Windows.Forms.ListView();
             this.radioButtonRequired = new System.Windows.Forms.RadioButton();
             this.radioButtonOptional = new System.Windows.Forms.RadioButton();
-            this.groupBoxSelect = new System.Windows.Forms.GroupBox();
-            this.groupBoxSelect.SuspendLayout();
+            this.selectionType = new System.Windows.Forms.GroupBox();
+            this.selectionType.SuspendLayout();
             this.SuspendLayout();
             // 
-            // LabelGroups
+            // LabelSelections
             // 
-            this.LabelGroups.AutoSize = true;
-            this.LabelGroups.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.LabelGroups.Location = new System.Drawing.Point(16, 7);
-            this.LabelGroups.Name = "LabelGroups";
-            this.LabelGroups.Size = new System.Drawing.Size(81, 16);
-            this.LabelGroups.TabIndex = 0;
-            this.LabelGroups.Text = "Test Groups";
-            this.LabelGroups.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.LabelSelections.AutoSize = true;
+            this.LabelSelections.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.LabelSelections.Location = new System.Drawing.Point(12, 6);
+            this.LabelSelections.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.LabelSelections.Name = "LabelSelections";
+            this.LabelSelections.Size = new System.Drawing.Size(56, 13);
+            this.LabelSelections.TabIndex = 0;
+            this.LabelSelections.Text = "Selections";
+            this.LabelSelections.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // OK
             // 
             this.OK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.OK.Enabled = false;
-            this.OK.Location = new System.Drawing.Point(414, 366);
-            this.OK.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.OK.Location = new System.Drawing.Point(310, 297);
+            this.OK.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.OK.Name = "OK";
-            this.OK.Size = new System.Drawing.Size(77, 44);
+            this.OK.Size = new System.Drawing.Size(58, 36);
             this.OK.TabIndex = 4;
             this.OK.Text = "OK";
             this.OK.UseVisualStyleBackColor = true;
             this.OK.Click += new System.EventHandler(this.OK_Click);
             // 
-            // ListGroups
+            // ListSelections
             // 
-            this.ListGroups.FullRowSelect = true;
-            this.ListGroups.GridLines = true;
-            this.ListGroups.HideSelection = false;
-            this.ListGroups.LabelWrap = false;
-            this.ListGroups.Location = new System.Drawing.Point(13, 27);
-            this.ListGroups.Margin = new System.Windows.Forms.Padding(4);
-            this.ListGroups.MultiSelect = false;
-            this.ListGroups.Name = "ListGroups";
-            this.ListGroups.ShowGroups = false;
-            this.ListGroups.Size = new System.Drawing.Size(886, 312);
-            this.ListGroups.TabIndex = 0;
-            this.ListGroups.UseCompatibleStateImageBehavior = false;
-            this.ListGroups.View = System.Windows.Forms.View.Details;
-            this.ListGroups.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.ListGroups_SelectionChanged);
+            this.ListSelections.FullRowSelect = true;
+            this.ListSelections.GridLines = true;
+            this.ListSelections.HideSelection = false;
+            this.ListSelections.LabelWrap = false;
+            this.ListSelections.Location = new System.Drawing.Point(10, 22);
+            this.ListSelections.MultiSelect = false;
+            this.ListSelections.Name = "ListSelections";
+            this.ListSelections.ShowGroups = false;
+            this.ListSelections.Size = new System.Drawing.Size(666, 254);
+            this.ListSelections.TabIndex = 0;
+            this.ListSelections.UseCompatibleStateImageBehavior = false;
+            this.ListSelections.View = System.Windows.Forms.View.Details;
+            this.ListSelections.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.ListGroups_SelectionChanged);
             // 
             // radioButtonRequired
             // 
             this.radioButtonRequired.AutoSize = true;
-            this.radioButtonRequired.Location = new System.Drawing.Point(7, 18);
+            this.radioButtonRequired.Location = new System.Drawing.Point(5, 15);
+            this.radioButtonRequired.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.radioButtonRequired.Name = "radioButtonRequired";
-            this.radioButtonRequired.Size = new System.Drawing.Size(84, 20);
+            this.radioButtonRequired.Size = new System.Drawing.Size(68, 17);
             this.radioButtonRequired.TabIndex = 2;
             this.radioButtonRequired.TabStop = true;
             this.radioButtonRequired.Text = "Required";
@@ -86,54 +87,58 @@ namespace ABT.TestSpace.AppConfig {
             // radioButtonOptional
             // 
             this.radioButtonOptional.AutoSize = true;
-            this.radioButtonOptional.Location = new System.Drawing.Point(6, 44);
+            this.radioButtonOptional.Location = new System.Drawing.Point(4, 36);
+            this.radioButtonOptional.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.radioButtonOptional.Name = "radioButtonOptional";
-            this.radioButtonOptional.Size = new System.Drawing.Size(78, 20);
+            this.radioButtonOptional.Size = new System.Drawing.Size(64, 17);
             this.radioButtonOptional.TabIndex = 3;
             this.radioButtonOptional.TabStop = true;
             this.radioButtonOptional.Text = "Optional";
             this.radioButtonOptional.UseVisualStyleBackColor = true;
             this.radioButtonOptional.CheckedChanged += new System.EventHandler(this.GroupBoxSelect_CheckedChanged);
             // 
-            // groupBoxSelect
+            // selectionType
             // 
-            this.groupBoxSelect.Controls.Add(this.radioButtonOptional);
-            this.groupBoxSelect.Controls.Add(this.radioButtonRequired);
-            this.groupBoxSelect.Location = new System.Drawing.Point(12, 346);
-            this.groupBoxSelect.Name = "groupBoxSelect";
-            this.groupBoxSelect.Size = new System.Drawing.Size(138, 70);
-            this.groupBoxSelect.TabIndex = 1;
-            this.groupBoxSelect.TabStop = false;
+            this.selectionType.Controls.Add(this.radioButtonOptional);
+            this.selectionType.Controls.Add(this.radioButtonRequired);
+            this.selectionType.Location = new System.Drawing.Point(9, 281);
+            this.selectionType.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.selectionType.Name = "selectionType";
+            this.selectionType.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.selectionType.Size = new System.Drawing.Size(104, 57);
+            this.selectionType.TabIndex = 1;
+            this.selectionType.TabStop = false;
             // 
-            // GroupSelect
+            // SelectTests
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(912, 466);
+            this.ClientSize = new System.Drawing.Size(684, 379);
             this.ControlBox = false;
-            this.Controls.Add(this.groupBoxSelect);
-            this.Controls.Add(this.ListGroups);
+            this.Controls.Add(this.selectionType);
+            this.Controls.Add(this.ListSelections);
             this.Controls.Add(this.OK);
-            this.Controls.Add(this.LabelGroups);
+            this.Controls.Add(this.LabelSelections);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "GroupSelect";
+            this.Name = "SelectTests";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Choose Test Group";
-            this.groupBoxSelect.ResumeLayout(false);
-            this.groupBoxSelect.PerformLayout();
+            this.Text = "Select Tests";
+            this.Load += new System.EventHandler(this.SelectTests_Load);
+            this.selectionType.ResumeLayout(false);
+            this.selectionType.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
         #endregion
-        private Label LabelGroups;
+        private Label LabelSelections;
         private Button OK;
-        private ListView ListGroups;
+        private ListView ListSelections;
         private RadioButton radioButtonRequired;
         private RadioButton radioButtonOptional;
-        private GroupBox groupBoxSelect;
+        private GroupBox selectionType;
     }
 }
