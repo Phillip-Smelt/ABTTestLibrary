@@ -148,25 +148,29 @@ namespace ABT.TestSpace.AppConfig {
 
     public class AppConfigTest {
         public readonly String Selection;
-        public readonly Boolean Operation;
+        public readonly Boolean IsOperation;
         public readonly Dictionary<String, Test> Tests;
         public readonly Int32 LogFormattingLength;
 
         private AppConfigTest() {
-            Dictionary<String, Group> Selection = SelectTests.Get();
-            String GroupSelected = GroupSelect.Get(Groups);
-            this.Selection = Groups[GroupSelected];
-            // TODO: this.Operation = (this.Selection == Operation)
-            // Operator selects the Group they want to test, from the Dictionary of all Groups.
-            // GroupSelected is Dictionary Groups' Key.
+            Dictionary<String, Operation> testOperations = Operation.Get();
+            Dictionary<String, Group> testGroups = Group.Get();
+            String testElementID;  List<String> testMeasurementIDs = new List<String>();
+            (this.IsOperation, testElementID) = SelectTests.Get(testOperations, testGroups);
+            if (this.IsOperation) {
+                List<String> testGroupIDs = testOperations[testElementID].TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList();
+                foreach (String testGroupID in testGroupIDs) testMeasurementIDs.AddRange(testGroupID.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList());
+            } else {
+                testMeasurementIDs = testGroups[testElementID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList(); 
+            }
 
-            Dictionary<String, Test> allTests = Test.Get();
+            Dictionary<String, Test> testMeasurements = Test.Get();
             this.Tests = new Dictionary<String, Test>();
             String[] selectionTestIDs = this.Selection.TestIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToArray();
             this.LogFormattingLength = groupTestIDs.OrderByDescending(TestID => TestID.Length).First().Length + 1;
             foreach (String TestID in groupTestIDs) {
-                if (!allTests.ContainsKey(TestID)) throw new InvalidOperationException($"Group '{this.Group.ID}' includes Test ID '{TestID}', which isn't present in TestElements in App.config.");
-                this.Tests.Add(TestID, allTests[TestID]); // Add only Tests correlated to the Group previously selected by operator.
+                if (!testMeasurements.ContainsKey(TestID)) throw new InvalidOperationException($"Group '{this.Group.ID}' includes Test ID '{TestID}', which isn't present in TestElements in App.config.");
+                this.Tests.Add(TestID, testMeasurements[TestID]); // Add only Tests correlated to the Group previously selected by operator.
             }
         }
         public static AppConfigTest Get() { return new AppConfigTest(); }
