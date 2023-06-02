@@ -55,7 +55,7 @@ namespace ABT.TestSpace.AppConfig {
             return (testElementID, isOperation);
         }
 
-        private void ListGroups_SelectionChanged(Object sender, ListViewItemSelectionChangedEventArgs e) { this.OK.Enabled = true; }
+        private void List_SelectionChanged(Object sender, ListViewItemSelectionChangedEventArgs e) { this.OK.Enabled = true; }
 
         private void GroupBoxSelect_CheckedChanged(Object sender, EventArgs e) {
             if (((RadioButton)sender).Checked) { // Do stuff only if the radio button is checked (or the action will run twice).

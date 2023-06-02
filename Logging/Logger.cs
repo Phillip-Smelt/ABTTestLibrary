@@ -26,7 +26,7 @@ namespace ABT.TestSpace.Logging {
 
         public static void Start(AppConfigUUT configUUT, AppConfigLogger configLogger, AppConfigTest configTest, String _appAssemblyVersion, String _libraryAssemblyVersion, ref RichTextBox rtfResults) {
             if (!configTest.IsOperation) {
-                // When non-Required Groups are executed, test data is never saved to configLogger.FilePath as Rich Text.  Never.
+                // When TestGroups are executed, test data is never saved to configLogger.FilePath as Rich Text.  Never.
                 // RichTextBox only. 
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
@@ -40,11 +40,11 @@ namespace ABT.TestSpace.Logging {
                 Log.Information($"UUT Test Element ID          : {configTest.TestElementID}");
                 Log.Information($"UUT Test Element Description : {configTest.TestElementDescription}\n");
                 return;
-                // Log Header isn't written to Console when Group not Required, further emphasizing test results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
+                // Log Header isn't written to Console when TestGroups are executed, further emphasizing test results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
 
             if (configLogger.FileEnabled && !configLogger.SQLEnabled) {
-                // When Required Groups are executed, test data is always & automatically saved to config.Logger.FilePath as Rich Text.  Always.
+                // When TestOperations are executed, test data is always & automatically saved to config.Logger.FilePath as Rich Text.  Always.
                 // RichTextBox + File.
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
@@ -77,7 +77,7 @@ namespace ABT.TestSpace.Logging {
             Log.Information($"UUT Test Element Description : {configTest.TestElementDescription}\n");
             StringBuilder s = new StringBuilder();
             foreach (KeyValuePair<String, Test> kvp in configTest.Tests) s.Append(String.Format("\t{0:" + configTest.LogFormattingLength + "} : {1}\n", kvp.Value.ID, kvp.Value.Description));
-            Log.Information($"UUT Group Tests              : \n{s}");
+            Log.Information($"UUT Test Measurements        : \n{s}");
             Log.Information($"Test Operator                : {UserPrincipal.Current.DisplayName}");
             // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             // Haven't used it on non-Active Directory PCs.
@@ -148,7 +148,7 @@ namespace ABT.TestSpace.Logging {
             String[] files = Directory.GetFiles(configLogger.FilePath, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
             // Will fail if invalid this.ConfigLogger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
             // Otherwise, files is the set of all files in config.Logger.FilePath like
-            // config.configUUT.Number_Config.configUUT.SerialNumber_Config.Group.ID_*.rtf.
+            // config.configUUT.Number_Config.configUUT.SerialNumber_configTest.TestElementID_*.rtf.
             Int32 maxNumber = 0; String s;
             foreach (String f in files) {
                 s = f;
@@ -158,8 +158,8 @@ namespace ABT.TestSpace.Logging {
                 foreach (FieldInfo fi in typeof(EventCodes).GetFields()) s = s.Replace((String)fi.GetValue(null), String.Empty);
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
                 // Example for final (3rd) iteration of foreach (String f in files):
-                //   FileName            : 'UUTNumber_GroupID_SerialNumber'
-                //   Initially           : 'P:\Test\TDR\D4522137\Functional\UUTNumber_GroupID_SerialNumber_3_PASS.rtf'
+                //   FileName            : 'UUTNumber_TestElementID_SerialNumber'
+                //   Initially           : 'P:\Test\TDR\D4522137\Functional\UUTNumber_TestElementID_SerialNumber_3_PASS.rtf'
                 //   FilePath + fileName : '_3_PASS.rtf'
                 //   .txt                : '_3_PASS'
                 //   _                   : '3PASS'

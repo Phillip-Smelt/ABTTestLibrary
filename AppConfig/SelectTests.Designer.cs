@@ -69,7 +69,7 @@ namespace ABT.TestSpace.AppConfig {
             this.ListSelections.TabIndex = 0;
             this.ListSelections.UseCompatibleStateImageBehavior = false;
             this.ListSelections.View = System.Windows.Forms.View.Details;
-            this.ListSelections.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.ListGroups_SelectionChanged);
+            this.ListSelections.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.List_SelectionChanged);
             // 
             // radioButtonTestOperations
             // 
