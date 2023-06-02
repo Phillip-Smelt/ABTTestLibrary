@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace ABT.TestSpace.AppConfig {
@@ -13,6 +14,13 @@ namespace ABT.TestSpace.AppConfig {
             this.Operations = testOperations;
             this.Groups = testGroups;
             this.ListSelections.MultiSelect = false;
+#if DEBUG
+            this.radioButtonTestOperations.Checked = false;
+            this.radioButtonTestGroups.Checked = true;
+#else
+            this.radioButtonTestOperations.Checked = true;
+            this.radioButtonTestGroups.Checked = false;
+#endif
             this.ListViewRefresh();
             this.FormRefresh();
         }

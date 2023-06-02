@@ -44,7 +44,7 @@ namespace ABT.TestSpace.AppConfig {
     public class TestMeasurementsSection : ConfigurationSection { [ConfigurationProperty("TestMeasurements")] public TestMeasurements TestMeasurements { get { return ((TestMeasurements)(base["TestMeasurements"])); } } }
     [ConfigurationCollection(typeof(TestMeasurement))]
     public class TestMeasurements : ConfigurationElementCollection {
-        public const String PropertyName = "TestGroup";
+        public const String PropertyName = "TestMeasurement";
         public TestMeasurement this[Int32 idx] { get { return (TestMeasurement)this.BaseGet(idx); } }
         public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
         protected override String ElementName { get { return PropertyName; } }
