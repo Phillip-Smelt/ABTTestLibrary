@@ -68,14 +68,14 @@ namespace ABT.TestSpace {
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
                 } else MessageBox.Show(Form.ActiveForm, $"Path {this.ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            this.ButtonSelectGroup.Enabled = true;
+            this.ButtonSelectTests.Enabled = true;
         }
 
-        private void ButtonSelectGroup_Click(Object sender, EventArgs e) {
+        private void ButtonSelectTests_Click(Object sender, EventArgs e) {
             this.ConfigTest = AppConfigTest.Get();
             this.Text = $"{this.ConfigUUT.Number}, {this.ConfigUUT.Description}, {this.ConfigTest.TestElementID}";
             this.FormReset();
-            this.ButtonSelectGroup.Enabled = true;
+            this.ButtonSelectTests.Enabled = true;
             this.ButtonStartReset(enabled: true);
         }
 
@@ -163,7 +163,7 @@ namespace ABT.TestSpace {
         }
 
         private void FormReset() {
-            this.ButtonSelectGroup.Enabled = false;
+            this.ButtonSelectTests.Enabled = false;
             this.ButtonStartReset(enabled: false);
             this.ButtonCancelReset(enabled: false);
             this.TextUUTResult.Text = String.Empty;
@@ -258,7 +258,7 @@ namespace ABT.TestSpace {
         private void PostRun() {
             SCPI99.ResetAll(this.SVIs);
             USB_ERB24.Set(RelayForms.C.NC);
-            this.ButtonSelectGroup.Enabled = true;
+            this.ButtonSelectTests.Enabled = true;
             this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);
             this.ConfigUUT.EventCode = EvaluateUUTResult(this.ConfigTest);

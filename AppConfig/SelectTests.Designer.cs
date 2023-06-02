@@ -61,7 +61,7 @@ namespace ABT.TestSpace.AppConfig {
             this.ListSelections.HideSelection = false;
             this.ListSelections.LabelWrap = false;
             this.ListSelections.Location = new System.Drawing.Point(13, 27);
-            this.ListSelections.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ListSelections.Margin = new System.Windows.Forms.Padding(4);
             this.ListSelections.MultiSelect = false;
             this.ListSelections.Name = "ListSelections";
             this.ListSelections.ShowGroups = false;
@@ -77,10 +77,10 @@ namespace ABT.TestSpace.AppConfig {
             this.radioButtonTestOperations.Location = new System.Drawing.Point(7, 18);
             this.radioButtonTestOperations.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.radioButtonTestOperations.Name = "radioButtonTestOperations";
-            this.radioButtonTestOperations.Size = new System.Drawing.Size(330, 20);
+            this.radioButtonTestOperations.Size = new System.Drawing.Size(327, 20);
             this.radioButtonTestOperations.TabIndex = 2;
             this.radioButtonTestOperations.TabStop = true;
-            this.radioButtonTestOperations.Text = "FilePro Traveller Operations for Production Testing";
+            this.radioButtonTestOperations.Text = "FilePro Traveler Operations for Production Testing";
             this.radioButtonTestOperations.UseVisualStyleBackColor = true;
             this.radioButtonTestOperations.CheckedChanged += new System.EventHandler(this.GroupBoxSelect_CheckedChanged);
             // 

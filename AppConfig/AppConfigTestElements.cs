@@ -3,41 +3,77 @@ using System.Collections.Generic;
 using System.Configuration;
 
 namespace ABT.TestSpace.AppConfig {
-    [ConfigurationCollection(typeof(TestElement))]
-    public class TestElements : ConfigurationElementCollection {
-        public const String PropertyName = "Element";
-        public TestElement this[Int32 idx] { get { return (TestElement)this.BaseGet(idx); } }
+    //[ConfigurationCollection(typeof(TestElement))]
+    //public class TestElements : ConfigurationElementCollection {
+    //    public const String PropertyName = "Element";
+    //    public TestElement this[Int32 idx] { get { return (TestElement)this.BaseGet(idx); } }
+    //    public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
+    //    protected override String ElementName { get { return PropertyName; } }
+    //    protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
+    //    public override Boolean IsReadOnly() { return false; }
+    //    protected override ConfigurationElement CreateNewElement() { return new TestElement(); }
+    //    protected override Object GetElementKey(ConfigurationElement element) { return ((TestElement)(element)).ID; }
+    //}
+    //public class TestElement : ConfigurationElement {
+    //    [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
+    //    [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
+    //    [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
+    //}
+
+    public class TestOperationsSection : ConfigurationSection { [ConfigurationProperty("TestOperations")] public TestOperations TestOperations { get { return ((TestOperations)(base["TestOperations"])); } } }
+    [ConfigurationCollection(typeof(TestOperation))]
+    public class TestOperations : ConfigurationElementCollection {
+        public const String PropertyName = "TestOperation";
+        public TestOperation this[Int32 idx] { get { return (TestOperation)this.BaseGet(idx); } }
         public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
         protected override String ElementName { get { return PropertyName; } }
         protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
         public override Boolean IsReadOnly() { return false; }
-        protected override ConfigurationElement CreateNewElement() { return new TestElement(); }
-        protected override Object GetElementKey(ConfigurationElement element) { return ((TestElement)(element)).ID; }
+        protected override ConfigurationElement CreateNewElement() { return new TestOperation(); }
+        protected override Object GetElementKey(ConfigurationElement element) { return ((TestOperation)(element)).ID; }
     }
-    public class TestElement : ConfigurationElement {
+    public class TestOperation : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
         [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
-    }
-
-    public class TestOperationsSection : ConfigurationSection { [ConfigurationProperty("TestOperations")] public TestOperations TestOperations { get { return ((TestOperations)(base["TestOperations"])); } } }
-    [ConfigurationCollection(typeof(TestOperation))]
-    public class TestOperations : TestElements { public new const String PropertyName = "TestOperations"; }
-    public class TestOperation : TestElement {
         [ConfigurationProperty("TestGroupIDs", IsKey = false, IsRequired = true)] public String TestGroupIDs { get { return ((String)base["TestGroupIDs"]).Trim(); } }
     }
 
     public class TestGroupsSection : ConfigurationSection { [ConfigurationProperty("TestGroups")] public TestGroups TestGroups { get { return ((TestGroups)(base["TestGroups"])); } } }
     [ConfigurationCollection(typeof(TestGroup))]
-    public class TestGroups : TestElements { public new const String PropertyName = "TestGroups"; }
-    public class TestGroup : TestElement {
+    public class TestGroups : ConfigurationElementCollection {
+        public const String PropertyName = "TestGroup";
+        public TestGroup this[Int32 idx] { get { return (TestGroup)this.BaseGet(idx); } }
+        public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
+        protected override String ElementName { get { return PropertyName; } }
+        protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
+        public override Boolean IsReadOnly() { return false; }
+        protected override ConfigurationElement CreateNewElement() { return new TestGroup(); }
+        protected override Object GetElementKey(ConfigurationElement element) { return ((TestGroup)(element)).ID; }
+    }
+    public class TestGroup : ConfigurationElement {
+        [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
+        [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
+        [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
         [ConfigurationProperty("TestMeasurementIDs", IsKey = false, IsRequired = true)] public String TestMeasurementIDs { get { return ((String)base["TestMeasurementIDs"]).Trim(); } }
     }
 
     public class TestMeasurementsSection : ConfigurationSection { [ConfigurationProperty("TestMeasurements")] public TestMeasurements TestMeasurements { get { return ((TestMeasurements)(base["TestMeasurements"])); } } }
     [ConfigurationCollection(typeof(TestMeasurement))]
-    public class TestMeasurements : TestElements { public new const String PropertyName = "TestMeasurements"; }
-    public class TestMeasurement : TestElement {
+    public class TestMeasurements : ConfigurationElementCollection {
+        public const String PropertyName = "TestGroup";
+        public TestMeasurement this[Int32 idx] { get { return (TestMeasurement)this.BaseGet(idx); } }
+        public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
+        protected override String ElementName { get { return PropertyName; } }
+        protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
+        public override Boolean IsReadOnly() { return false; }
+        protected override ConfigurationElement CreateNewElement() { return new TestMeasurement(); }
+        protected override Object GetElementKey(ConfigurationElement element) { return ((TestMeasurement)(element)).ID; }
+    }
+    public class TestMeasurement : ConfigurationElement {
+        [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
+        [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
+        [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
         [ConfigurationProperty("ClassName", IsKey = false, IsRequired = true)] public String ClassName { get { return ((String)base["ClassName"]).Trim(); } }
         [ConfigurationProperty("Arguments", IsKey = false, IsRequired = true)] public String Arguments { get { return ((String)base["Arguments"]).Trim(); } }
     }
