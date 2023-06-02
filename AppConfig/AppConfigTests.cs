@@ -27,9 +27,9 @@ namespace ABT.TestSpace.AppConfig {
 
     public class TestCustomizable : TestAbstract {
         public new const String ClassName = nameof(TestCustomizable);
-        public readonly Dictionary<String, String> Arguments;
+        public readonly Dictionary<String, String> Arguments = null;
 
-        public TestCustomizable(String id, String arguments) { this.Arguments = TestAbstract.SplitArguments(arguments); }
+        public TestCustomizable(String id, String arguments) { if (!String.Equals(arguments, "NotApplicable")) this.Arguments = TestAbstract.SplitArguments(arguments); }
     }
 
     public class TestISP : TestAbstract {
