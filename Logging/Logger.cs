@@ -25,7 +25,7 @@ namespace ABT.TestSpace.Logging {
         public const String SPACES_16 = "                ";
 
         public static void Start(AppConfigUUT configUUT, AppConfigLogger configLogger, AppConfigTest configTest, String _appAssemblyVersion, String _libraryAssemblyVersion, ref RichTextBox rtfResults) {
-            if (!configTest.Group.Required) {
+            if (!configTest.IsOperation) {
                 // When non-Required Groups are executed, test data is never saved to configLogger.FilePath as Rich Text.  Never.
                 // RichTextBox only. 
                 Log.Logger = new LoggerConfiguration()

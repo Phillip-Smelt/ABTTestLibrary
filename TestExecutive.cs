@@ -73,7 +73,7 @@ namespace ABT.TestSpace {
 
         private void ButtonSelectGroup_Click(Object sender, EventArgs e) {
             this.ConfigTest = AppConfigTest.Get();
-            this.Text = $"{this.ConfigUUT.Number}, {this.ConfigUUT.Description}, {this.ConfigTest.Group.ID}";
+            this.Text = $"{this.ConfigUUT.Number}, {this.ConfigUUT.Description}, {this.ConfigTest.TestElementID}";
             this.FormReset();
             this.ButtonSelectGroup.Enabled = true;
             this.ButtonStartReset(enabled: true);
@@ -169,8 +169,8 @@ namespace ABT.TestSpace {
             this.TextUUTResult.Text = String.Empty;
             this.TextUUTResult.BackColor = Color.White;
             if (this.ConfigTest != null) {
-                this.ButtonSaveOutput.Enabled = !this.ConfigTest.Group.Required;
-                this.ButtonOpenTestDataFolder.Enabled = (this.ConfigTest.Group.Required && this.ConfigLogger.FileEnabled);
+                this.ButtonSaveOutput.Enabled = !this.ConfigTest.IsOperation;
+                this.ButtonOpenTestDataFolder.Enabled = (this.ConfigTest.IsOperation && this.ConfigLogger.FileEnabled);
             } else {
                 this.ButtonSaveOutput.Enabled = false;
                 this.ButtonOpenTestDataFolder.Enabled = false;
@@ -190,7 +190,7 @@ namespace ABT.TestSpace {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{this.ConfigUUT.Number}_{this.ConfigTest.Group.ID}_{this.ConfigUUT.SerialNumber}",
+                FileName = $"{this.ConfigUUT.Number}_{this.ConfigTest.TestElementID}_{this.ConfigUUT.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -290,7 +290,7 @@ namespace ABT.TestSpace {
         }
 
         internal static String EvaluateUUTResult(AppConfigTest configTest) {
-            if (!configTest.Group.Required) return EventCodes.UNSET;
+            if (!configTest.IsOperation) return EventCodes.UNSET;
             // 0th priority evaluation that precedes all others.
             if (GetResultCount(configTest.Tests, EventCodes.PASS) == configTest.Tests.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)

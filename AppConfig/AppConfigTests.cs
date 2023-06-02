@@ -4,7 +4,6 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace ABT.TestSpace.AppConfig {
     public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
@@ -147,32 +146,42 @@ namespace ABT.TestSpace.AppConfig {
     }
 
     public class AppConfigTest {
-        public readonly String Selection;
+        public readonly String TestElementID;
         public readonly Boolean IsOperation;
+        public readonly String TestElementDescription;
+        public readonly String TestElementRevision;
         public readonly Dictionary<String, Test> Tests;
         public readonly Int32 LogFormattingLength;
 
         private AppConfigTest() {
             Dictionary<String, Operation> testOperations = Operation.Get();
             Dictionary<String, Group> testGroups = Group.Get();
-            String testElementID;  List<String> testMeasurementIDs = new List<String>();
-            (this.IsOperation, testElementID) = SelectTests.Get(testOperations, testGroups);
+
+            (this.TestElementID, this.IsOperation) = SelectTests.Get(testOperations, testGroups);
+
+            List<String> testMeasurementIDs = new List<String>();
             if (this.IsOperation) {
-                List<String> testGroupIDs = testOperations[testElementID].TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList();
+                this.TestElementDescription = testOperations[this.TestElementID].Description;
+                this.TestElementRevision = testOperations[this.TestElementID].Revision;
+                List<String> testGroupIDs = testOperations[this.TestElementID].TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList();
                 foreach (String testGroupID in testGroupIDs) testMeasurementIDs.AddRange(testGroupID.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList());
             } else {
-                testMeasurementIDs = testGroups[testElementID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList(); 
+                this.TestElementDescription = testGroups[this.TestElementID].Description;
+                this.TestElementRevision = testGroups[this.TestElementID].Revision;
+                testMeasurementIDs = testGroups[this.TestElementID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList(); 
             }
 
             Dictionary<String, Test> testMeasurements = Test.Get();
             this.Tests = new Dictionary<String, Test>();
-            String[] selectionTestIDs = this.Selection.TestIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToArray();
-            this.LogFormattingLength = groupTestIDs.OrderByDescending(TestID => TestID.Length).First().Length + 1;
-            foreach (String TestID in groupTestIDs) {
-                if (!testMeasurements.ContainsKey(TestID)) throw new InvalidOperationException($"Group '{this.Group.ID}' includes Test ID '{TestID}', which isn't present in TestElements in App.config.");
-                this.Tests.Add(TestID, testMeasurements[TestID]); // Add only Tests correlated to the Group previously selected by operator.
+
+            this.LogFormattingLength = 0;
+            foreach (String testMeasurementID in testMeasurementIDs) {
+                if (!testMeasurements.ContainsKey(testMeasurementID)) throw new InvalidOperationException($"Test Element ID '{this.TestElementID}' includes Test Measurement ID '{testMeasurementID}', which isn't present in TestMeasurementsSection in App.config.");
+                this.Tests.Add(testMeasurementID, testMeasurements[testMeasurementID]); // Add only TestMeasurements correlated to the TestElementID selected by operator.
+                if (this.Tests[testMeasurementID].ID.Length > this.LogFormattingLength) this.LogFormattingLength = this.Tests[testMeasurementID].ID.Length;
             }
         }
+
         public static AppConfigTest Get() { return new AppConfigTest(); }
     }
 }

@@ -46,18 +46,16 @@ namespace ABT.TestSpace.AppConfig {
             }
         }
 
-        public static (Boolean IsOperation, String TestElementID) Get(Dictionary<String, Operation> testOperations, Dictionary<String, Group> testGroups) {
-            SelectTests st = new SelectTests(testOperations, testGroups);
-            st.ShowDialog(); // Waits until user clicks OK button.
-            Boolean isOperation = st.radioButtonTestOperations.Checked;
-            String testElementID = st.ListSelections.SelectedItems[0].Text;
-            st.Dispose();
-            return (isOperation, testElementID);
+        public static (String TestElementID, Boolean IsOperation) Get(Dictionary<String, Operation> testOperations, Dictionary<String, Group> testGroups) {
+            SelectTests selectTests = new SelectTests(testOperations, testGroups);
+            selectTests.ShowDialog(); // Waits until user clicks OK button.
+            String testElementID = selectTests.ListSelections.SelectedItems[0].Text;
+            Boolean isOperation = selectTests.radioButtonTestOperations.Checked;
+            selectTests.Dispose();
+            return (testElementID, isOperation);
         }
 
-        private void ListGroups_SelectionChanged(Object sender, ListViewItemSelectionChangedEventArgs e) {
-            this.OK.Enabled = true;
-        }
+        private void ListGroups_SelectionChanged(Object sender, ListViewItemSelectionChangedEventArgs e) { this.OK.Enabled = true; }
 
         private void GroupBoxSelect_CheckedChanged(Object sender, EventArgs e) {
             if (((RadioButton)sender).Checked) { // Do stuff only if the radio button is checked (or the action will run twice).
@@ -66,8 +64,6 @@ namespace ABT.TestSpace.AppConfig {
             }
         }
 
-        private void SelectTests_Load(Object sender, EventArgs e) {
-
-        }
+        private void SelectTests_Load(Object sender, EventArgs e) { }
     }
 }
