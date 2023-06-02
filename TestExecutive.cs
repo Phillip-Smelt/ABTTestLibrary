@@ -264,7 +264,7 @@ namespace ABT.TestSpace {
             this.ConfigUUT.EventCode = EvaluateUUTResult(this.ConfigTest);
             this.TextUUTResult.Text = this.ConfigUUT.EventCode;
             this.TextUUTResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
-            Logger.Stop(this.ConfigUUT, this.ConfigLogger, this.ConfigTest.Group, ref this.rtfResults);
+            Logger.Stop(this.ConfigUUT, this.ConfigLogger, this.ConfigTest, ref this.rtfResults);
         }
 
         internal static String EvaluateTestResult(Test test) {

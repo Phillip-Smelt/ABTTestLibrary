@@ -33,11 +33,12 @@ namespace ABT.TestSpace.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
                 Log.Information($"Note: following test results invalid for UUT production testing, only troubleshooting.");
-                Log.Information($"START                  : {DateTime.Now}");
-                Log.Information($"UUT Number             : {configUUT.Number}");
-                Log.Information($"UUT Revision           : {configUUT.Revision}");
-                Log.Information($"UUT Serial Number      : {configUUT.SerialNumber}");
-                Log.Information($"UUT Group ID           : {configTest.Group.ID}\n");
+                Log.Information($"START                        : {DateTime.Now}");
+                Log.Information($"UUT Number                   : {configUUT.Number}");
+                Log.Information($"UUT Revision                 : {configUUT.Revision}");
+                Log.Information($"UUT Serial Number            : {configUUT.SerialNumber}");
+                Log.Information($"UUT Test Element ID          : {configTest.TestElementID}");
+                Log.Information($"UUT Test Element Description : {configTest.TestElementDescription}\n");
                 return;
                 // Log Header isn't written to Console when Group not Required, further emphasizing test results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
@@ -51,10 +52,10 @@ namespace ABT.TestSpace.Logging {
                     .CreateLogger();
             } else if (!configLogger.FileEnabled && configLogger.SQLEnabled) {
                 // TODO: RichTextBox + SQL.
-                SQLStart(configUUT, configTest.Group);
+                SQLStart(configUUT, configTest);
             } else if (configLogger.FileEnabled && configLogger.SQLEnabled) {
                 // TODO: RichTextBox + File + SQL.
-                SQLStart(configUUT, configTest.Group);
+                SQLStart(configUUT, configTest);
             } else {
                 // RichTextBox only; customer doesn't require saved test data, unusual for Functional testing, but common for other testing methodologies.
                 Log.Logger = new LoggerConfiguration()
@@ -62,25 +63,25 @@ namespace ABT.TestSpace.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
             }
-            Log.Information($"START                  : {DateTime.Now}");
-            Log.Information($"TestExecutor Version   : {_appAssemblyVersion}");
-            Log.Information($"TestExecutive Version  : {_libraryAssemblyVersion}");
-            Log.Information($"UUT Customer           : {configUUT.Customer}");
-            Log.Information($"UUT Test Specification : {configUUT.TestSpecification}");
-            Log.Information($"UUT Description        : {configUUT.Description}");
-            Log.Information($"UUT Type               : {configUUT.Type}");
-            Log.Information($"UUT Number             : {configUUT.Number}");
-            Log.Information($"UUT Revision           : {configUUT.Revision}");
-            Log.Information($"UUT Group ID           : {configTest.Group.ID}");
-            Log.Information($"UUT Group Revision     : {configTest.Group.Revision}");
-            Log.Information($"UUT Group Description  : \n{configTest.Group.Description}\n");
+            Log.Information($"START                        : {DateTime.Now}");
+            Log.Information($"TestExecutor Version         : {_appAssemblyVersion}");
+            Log.Information($"TestExecutive Version        : {_libraryAssemblyVersion}");
+            Log.Information($"UUT Customer                 : {configUUT.Customer}");
+            Log.Information($"UUT Test Specification       : {configUUT.TestSpecification}");
+            Log.Information($"UUT Description              : {configUUT.Description}");
+            Log.Information($"UUT Type                     : {configUUT.Type}");
+            Log.Information($"UUT Number                   : {configUUT.Number}");
+            Log.Information($"UUT Revision                 : {configUUT.Revision}");
+            Log.Information($"UUT Test Element ID          : {configTest.TestElementID}");
+            Log.Information($"UUT Test Element Revision    : {configTest.TestElementRevision}");
+            Log.Information($"UUT Test Element Description : {configTest.TestElementDescription}\n");
             StringBuilder s = new StringBuilder();
             foreach (KeyValuePair<String, Test> kvp in configTest.Tests) s.Append(String.Format("\t{0:" + configTest.LogFormattingLength + "} : {1}\n", kvp.Value.ID, kvp.Value.Description));
-            Log.Information($"UUT Group Tests        : \n{s}");
-            Log.Information($"Test Operator          : {UserPrincipal.Current.DisplayName}");
+            Log.Information($"UUT Group Tests              : \n{s}");
+            Log.Information($"Test Operator                : {UserPrincipal.Current.DisplayName}");
             // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             // Haven't used it on non-Active Directory PCs.
-            Log.Information($"UUT Serial Number      : {configUUT.SerialNumber}\n");
+            Log.Information($"UUT Serial Number            : {configUUT.SerialNumber}\n");
             Log.Debug($"Environment.UserDomainName         : {Environment.UserDomainName}");
             Log.Debug($"Environment.MachineName            : {Environment.MachineName}");
             Log.Debug($"Environment.OSVersion              : {Environment.OSVersion}");
@@ -129,22 +130,21 @@ namespace ABT.TestSpace.Logging {
             Log.Information(message.ToString());
         }
 
-        public static void Stop(AppConfigUUT configUUT, AppConfigLogger configLogger, Group group, ref RichTextBox rtfResults) {
-            if (!group.Required) Log.CloseAndFlush();
-            // Log Trailer isn't written when Group isn't Required, further emphasizing test results
-            // aren't valid for pass verdict/$hip disposition, only troubleshooting failures.
+        public static void Stop(AppConfigUUT configUUT, AppConfigLogger configLogger, AppConfigTest configTest, ref RichTextBox rtfResults) {
+            if (!configTest.IsOperation) Log.CloseAndFlush();
+            // Log Trailer isn't written when not a TestOperation, urther emphasizing test results aren't valid for pass verdict/$hip disposition, only troubleshooting failures.
             else {
                 Log.Information($"Final Result: {configUUT.EventCode}");
                 Log.Information($"STOP:  {DateTime.Now}");
                 Log.CloseAndFlush();
-                if (configLogger.FileEnabled) FileStop(configUUT, configLogger, group, ref rtfResults);
-                if (configLogger.SQLEnabled) SQLStop(configUUT, group);
+                if (configLogger.FileEnabled) FileStop(configUUT, configLogger, configTest, ref rtfResults);
+                if (configLogger.SQLEnabled) SQLStop(configUUT, configTest);
                 if (configLogger.TestEventsEnabled) TestEvents(configUUT);
             }
         }
 
-        private static void FileStop(AppConfigUUT configUUT, AppConfigLogger configLogger, Group group, ref RichTextBox rtfResults) {
-            String fileName = $"{configUUT.Number}_{configUUT.SerialNumber}_{group.ID}";
+        private static void FileStop(AppConfigUUT configUUT, AppConfigLogger configLogger, AppConfigTest configTest, ref RichTextBox rtfResults) {
+            String fileName = $"{configUUT.Number}_{configUUT.SerialNumber}_{configTest.TestElementID}";
             String[] files = Directory.GetFiles(configLogger.FilePath, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
             // Will fail if invalid this.ConfigLogger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
             // Otherwise, files is the set of all files in config.Logger.FilePath like
@@ -170,11 +170,11 @@ namespace ABT.TestSpace.Logging {
             rtfResults.SaveFile($"{configLogger.FilePath}{fileName}");
         }
 
-        private static void SQLStart(AppConfigUUT UUT, Group group) {
+        private static void SQLStart(AppConfigUUT UUT, AppConfigTest configTest) {
             // TODO: SQL Server Express: SQLStart.
         }
 
-        private static void SQLStop(AppConfigUUT UUT, Group group) {
+        private static void SQLStop(AppConfigUUT UUT, AppConfigTest configTest) {
             // TODO: SQL Server Express: SQLStop.
         }
 
