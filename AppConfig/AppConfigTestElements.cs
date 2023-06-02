@@ -3,23 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 
 namespace ABT.TestSpace.AppConfig {
-    //[ConfigurationCollection(typeof(TestElement))]
-    //public class TestElements : ConfigurationElementCollection {
-    //    public const String PropertyName = "Element";
-    //    public TestElement this[Int32 idx] { get { return (TestElement)this.BaseGet(idx); } }
-    //    public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
-    //    protected override String ElementName { get { return PropertyName; } }
-    //    protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
-    //    public override Boolean IsReadOnly() { return false; }
-    //    protected override ConfigurationElement CreateNewElement() { return new TestElement(); }
-    //    protected override Object GetElementKey(ConfigurationElement element) { return ((TestElement)(element)).ID; }
-    //}
-    //public class TestElement : ConfigurationElement {
-    //    [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
-    //    [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
-    //    [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
-    //}
-
     public class TestOperationsSection : ConfigurationSection { [ConfigurationProperty("TestOperations")] public TestOperations TestOperations { get { return ((TestOperations)(base["TestOperations"])); } } }
     [ConfigurationCollection(typeof(TestOperation))]
     public class TestOperations : ConfigurationElementCollection {
