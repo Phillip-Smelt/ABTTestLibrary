@@ -68,14 +68,14 @@ namespace ABT.TestSpace {
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
                 } else MessageBox.Show(Form.ActiveForm, $"Path {this.ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            this.ButtonSelectGroup.Enabled = true;
+            this.ButtonSelectTests.Enabled = true;
         }
 
-        private void ButtonSelectGroup_Click(Object sender, EventArgs e) {
+        private void ButtonSelectTests_Click(Object sender, EventArgs e) {
             this.ConfigTest = AppConfigTest.Get();
-            this.Text = $"{this.ConfigUUT.Number}, {this.ConfigUUT.Description}, {this.ConfigTest.Group.ID}";
+            this.Text = $"{this.ConfigUUT.Number}, {this.ConfigUUT.Description}, {this.ConfigTest.TestElementID}";
             this.FormReset();
-            this.ButtonSelectGroup.Enabled = true;
+            this.ButtonSelectTests.Enabled = true;
             this.ButtonStartReset(enabled: true);
         }
 
@@ -163,14 +163,14 @@ namespace ABT.TestSpace {
         }
 
         private void FormReset() {
-            this.ButtonSelectGroup.Enabled = false;
+            this.ButtonSelectTests.Enabled = false;
             this.ButtonStartReset(enabled: false);
             this.ButtonCancelReset(enabled: false);
             this.TextUUTResult.Text = String.Empty;
             this.TextUUTResult.BackColor = Color.White;
             if (this.ConfigTest != null) {
-                this.ButtonSaveOutput.Enabled = !this.ConfigTest.Group.Required;
-                this.ButtonOpenTestDataFolder.Enabled = (this.ConfigTest.Group.Required && this.ConfigLogger.FileEnabled);
+                this.ButtonSaveOutput.Enabled = !this.ConfigTest.IsOperation;
+                this.ButtonOpenTestDataFolder.Enabled = (this.ConfigTest.IsOperation && this.ConfigLogger.FileEnabled);
             } else {
                 this.ButtonSaveOutput.Enabled = false;
                 this.ButtonOpenTestDataFolder.Enabled = false;
@@ -190,7 +190,7 @@ namespace ABT.TestSpace {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{this.ConfigUUT.Number}_{this.ConfigTest.Group.ID}_{this.ConfigUUT.SerialNumber}",
+                FileName = $"{this.ConfigUUT.Number}_{this.ConfigTest.TestElementID}_{this.ConfigUUT.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -258,13 +258,13 @@ namespace ABT.TestSpace {
         private void PostRun() {
             SCPI99.ResetAll(this.SVIs);
             USB_ERB24.Set(RelayForms.C.NC);
-            this.ButtonSelectGroup.Enabled = true;
+            this.ButtonSelectTests.Enabled = true;
             this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);
             this.ConfigUUT.EventCode = EvaluateUUTResult(this.ConfigTest);
             this.TextUUTResult.Text = this.ConfigUUT.EventCode;
             this.TextUUTResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
-            Logger.Stop(this.ConfigUUT, this.ConfigLogger, this.ConfigTest.Group, ref this.rtfResults);
+            Logger.Stop(this.ConfigUUT, this.ConfigLogger, this.ConfigTest, ref this.rtfResults);
         }
 
         internal static String EvaluateTestResult(Test test) {
@@ -290,7 +290,7 @@ namespace ABT.TestSpace {
         }
 
         internal static String EvaluateUUTResult(AppConfigTest configTest) {
-            if (!configTest.Group.Required) return EventCodes.UNSET;
+            if (!configTest.IsOperation) return EventCodes.UNSET;
             // 0th priority evaluation that precedes all others.
             if (GetResultCount(configTest.Tests, EventCodes.PASS) == configTest.Tests.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)

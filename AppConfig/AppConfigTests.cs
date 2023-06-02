@@ -9,36 +9,6 @@ namespace ABT.TestSpace.AppConfig {
     public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
     public enum SI_UNITS_MODIFIERS { AC, DC, Peak, PP, NotApplicable, RMS }
 
-    public class TestElement : ConfigurationElement {
-        [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
-        [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
-        [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
-        [ConfigurationProperty("ClassName", IsKey = false, IsRequired = true)] public String ClassName { get { return ((String)base["ClassName"]).Trim(); } }
-        [ConfigurationProperty("Arguments", IsKey = false, IsRequired = true)] public String Arguments { get { return ((String)base["Arguments"]).Trim(); } }
-    }
-
-    [ConfigurationCollection(typeof(TestElement))]
-    public class TestElements : ConfigurationElementCollection {
-        public const String PropertyName = "TestElement";
-        public TestElement this[Int32 idx] { get { return (TestElement)this.BaseGet(idx); } }
-        public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
-        protected override String ElementName { get { return PropertyName; } }
-        protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
-        public override Boolean IsReadOnly() { return false; }
-        protected override ConfigurationElement CreateNewElement() { return new TestElement(); }
-        protected override Object GetElementKey(ConfigurationElement element) { return ((TestElement)(element)).ID; }
-    }
-
-    public class TestsSection : ConfigurationSection {
-        [ConfigurationProperty("TestElements")] public TestElements TestElements { get { return ((TestElements)(base["TestElements"])); } }
-    }
-
-    public class ConfigTests {
-        public TestsSection TestsSection { get { return (TestsSection)ConfigurationManager.GetSection("TestsSection"); } }
-        public TestElements TestElements { get { return this.TestsSection.TestElements; } }
-        public IEnumerable<TestElement> TestElement { get { foreach (TestElement te in this.TestElements) if (te != null) yield return te; } }
-    }
-
     public abstract class TestAbstract {
         public const String ClassName = nameof(TestAbstract);
         private protected TestAbstract() { }
@@ -57,17 +27,9 @@ namespace ABT.TestSpace.AppConfig {
 
     public class TestCustomizable : TestAbstract {
         public new const String ClassName = nameof(TestCustomizable);
-        // TODO: Eliminate TestCustomizable arguments.
-        public readonly Dictionary<String, String> Arguments;
+        public readonly Dictionary<String, String> Arguments = null;
 
-        public TestCustomizable(String id, String arguments) {
-            this.Arguments = TestAbstract.SplitArguments(arguments);
-            if (this.Arguments.Count == 0) throw new ArgumentException($"TestElement ID '{id}' with ClassName '{ClassName}' requires 1 or more key=value arguments:{Environment.NewLine}" +
-                    $"   Example: 'NameFirst=Harry|" +
-                    $"             NameLast=Potter|" +
-                    $"             Occupation=Auror'{Environment.NewLine}" +
-                    $"   Actual : '{this.Arguments}'");
-        }
+        public TestCustomizable(String id, String arguments) { if (!String.Equals(arguments, "NotApplicable")) this.Arguments = TestAbstract.SplitArguments(arguments); }
     }
 
     public class TestISP : TestAbstract {
@@ -175,35 +137,51 @@ namespace ABT.TestSpace.AppConfig {
         }
 
         public static Dictionary<String, Test> Get() {
-            TestsSection testElementsSection = (TestsSection)ConfigurationManager.GetSection("TestsSection");
-            TestElements testElements = testElementsSection.TestElements;
+            TestMeasurementsSection testMeasurementsSection = (TestMeasurementsSection)ConfigurationManager.GetSection("TestMeasurementsSection");
+            TestMeasurements testMeasurements = testMeasurementsSection.TestMeasurements;
             Dictionary<String, Test> dictionary = new Dictionary<String, Test>();
-            foreach (TestElement testElement in testElements) dictionary.Add(testElement.ID, new Test(testElement.ID, testElement.Description, testElement.Revision, testElement.ClassName, testElement.Arguments));
+            foreach (TestMeasurement tm in testMeasurements) { dictionary.Add(tm.ID, new Test(tm.ID, tm.Description, tm.Revision, tm.ClassName, tm.Arguments)); }
             return dictionary;
         }
     }
 
     public class AppConfigTest {
-        public readonly Group Group;
+        public readonly String TestElementID;
+        public readonly Boolean IsOperation;
+        public readonly String TestElementDescription;
+        public readonly String TestElementRevision;
         public readonly Dictionary<String, Test> Tests;
         public readonly Int32 LogFormattingLength;
 
         private AppConfigTest() {
-            Dictionary<String, Group> Groups = Group.Get();
-            String GroupSelected = GroupSelect.Get(Groups);
-            this.Group = Groups[GroupSelected];
-            // Operator selects the Group they want to test, from the Dictionary of all Groups.
-            // GroupSelected is Dictionary Groups' Key.
+            Dictionary<String, Operation> testOperations = Operation.Get();
+            Dictionary<String, Group> testGroups = Group.Get();
 
-            Dictionary<String, Test> allTests = Test.Get();
+            (this.TestElementID, this.IsOperation) = SelectTests.Get(testOperations, testGroups);
+
+            List<String> testMeasurementIDs = new List<String>();
+            if (this.IsOperation) {
+                this.TestElementDescription = testOperations[this.TestElementID].Description;
+                this.TestElementRevision = testOperations[this.TestElementID].Revision;
+                List<String> testGroupIDs = testOperations[this.TestElementID].TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList();
+                foreach (String testGroupID in testGroupIDs) testMeasurementIDs.AddRange(testGroups[testGroupID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList());
+            } else {
+                this.TestElementDescription = testGroups[this.TestElementID].Description;
+                this.TestElementRevision = testGroups[this.TestElementID].Revision;
+                testMeasurementIDs = testGroups[this.TestElementID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList(); 
+            }
+
+            Dictionary<String, Test> testMeasurements = Test.Get();
             this.Tests = new Dictionary<String, Test>();
-            String[] groupTestIDs = this.Group.TestIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToArray();
-            this.LogFormattingLength = groupTestIDs.OrderByDescending(TestID => TestID.Length).First().Length + 1;
-            foreach (String TestID in groupTestIDs) {
-                if (!allTests.ContainsKey(TestID)) throw new InvalidOperationException($"Group '{this.Group.ID}' includes Test ID '{TestID}', which isn't present in TestElements in App.config.");
-                this.Tests.Add(TestID, allTests[TestID]); // Add only Tests correlated to the Group previously selected by operator.
+
+            this.LogFormattingLength = 0;
+            foreach (String testMeasurementID in testMeasurementIDs) {
+                if (!testMeasurements.ContainsKey(testMeasurementID)) throw new InvalidOperationException($"Test Element ID '{this.TestElementID}' includes Test Measurement ID '{testMeasurementID}', which isn't present in TestMeasurementsSection in App.config.");
+                this.Tests.Add(testMeasurementID, testMeasurements[testMeasurementID]); // Add only TestMeasurements correlated to the TestElementID selected by operator.
+                if (this.Tests[testMeasurementID].ID.Length > this.LogFormattingLength) this.LogFormattingLength = this.Tests[testMeasurementID].ID.Length;
             }
         }
+
         public static AppConfigTest Get() { return new AppConfigTest(); }
     }
 }

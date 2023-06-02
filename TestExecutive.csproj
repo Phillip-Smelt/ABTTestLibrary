@@ -60,12 +60,12 @@
     <Compile Include="TestExecutive.Designer.cs">
       <DependentUpon>TestExecutive.cs</DependentUpon>
     </Compile>
-    <Compile Include="AppConfig\AppConfigGroups.cs" />
-    <Compile Include="AppConfig\GroupSelection.cs">
+    <Compile Include="AppConfig\AppConfigTestElements.cs" />
+    <Compile Include="AppConfig\SelectTests.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AppConfig\GroupSelection.Designer.cs">
-      <DependentUpon>GroupSelection.cs</DependentUpon>
+    <Compile Include="AppConfig\SelectTests.Designer.cs">
+      <DependentUpon>SelectTests.cs</DependentUpon>
     </Compile>
     <Compile Include="AppConfig\AppConfigTests.cs" />
     <Compile Include="SCPI_VISA_Instruments\PS_E36234A.cs" />
@@ -84,8 +84,8 @@
       <DependentUpon>TestExecutive.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="AppConfig\GroupSelection.resx">
-      <DependentUpon>GroupSelection.cs</DependentUpon>
+    <EmbeddedResource Include="AppConfig\SelectTests.resx">
+      <DependentUpon>SelectTests.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -123,9 +123,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="TestExecutive.config.xml">
