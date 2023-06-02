@@ -164,7 +164,7 @@ namespace ABT.TestSpace.AppConfig {
                 this.TestElementDescription = testOperations[this.TestElementID].Description;
                 this.TestElementRevision = testOperations[this.TestElementID].Revision;
                 List<String> testGroupIDs = testOperations[this.TestElementID].TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList();
-                foreach (String testGroupID in testGroupIDs) testMeasurementIDs.AddRange(testGroupID.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList());
+                foreach (String testGroupID in testGroupIDs) testMeasurementIDs.AddRange(testGroups[testGroupID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList());
             } else {
                 this.TestElementDescription = testGroups[this.TestElementID].Description;
                 this.TestElementRevision = testGroups[this.TestElementID].Revision;
