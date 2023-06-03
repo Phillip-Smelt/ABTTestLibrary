@@ -24,7 +24,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
         // TODO: Create methods for simple Commands/Queries applicable to multiples SCPI VISA instruments, invoked as SCPI99 Commands/Queries.
         //  - Thus passed directly to SCPI instrument interpreters with Keysight's AgSCPI99 SCPI-99 driver.
         //  - Eliminates instrument specific methods for each SCPI VISA instrument.
-        //  - That is, don't need Get/Set/Is_OutputState() methods for the E3610xB & E36234A Power Supplies & EL34143A Electronic Load.
+        //  - That is, won't need Get/Set/Is_OutputState() methods for the E3610xB & E36234A Power Supplies & EL34143A Electronic Load.
         // NOTE: Could also have declared class SCPI_VISA_Instrument's Instrument property as type dynamic, instead of Object.
         //  - This would permit invoking any applicable SCPI command directly on a SCPI_VISA_Instrument.Instrument property.
         //      - Given: public dynamic Instrument { get; private set; }

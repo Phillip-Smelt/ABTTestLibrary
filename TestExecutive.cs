@@ -20,7 +20,8 @@ using ABT.TestSpace.Switching;
 //  - Prefer named arguments for public methods be capitalized/PascalCased, not uncapitalized/camelCased.
 //  - Invoking public methods with named arguments is a wonderful, self-documenting coding technique, improved by PascalCasing.
 // TODO: Update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.0 when possible.
-// NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library is compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
+// NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library supposedly compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
+//       TIDP.SAA actually appears to be compiled to .Net FrameWork 4.5, but that's still not necessarily compatible with .Net 7.0.
 //  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
 // TODO: Update to UWP instead of WinForms when possible.
 // NOTE: Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
