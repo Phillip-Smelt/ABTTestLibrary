@@ -19,21 +19,21 @@
 
 			- Include required/utilized SCPI VISA Instruments:
 				- That is, if this TestExecutive.config.xml contains elements for 10 power supplies, but a TestExecutor program
-				  only requires & utilizes 2, simply don't alias then in class 'ID'.
+				  only requires & utilizes 2, simply don't alias them in class 'ID'.
 			- This documents the minimum necessary SCPI VISA Instrument configuration for the TestExecutor's program.
 			- Allows a TestExecutor program to be most easily ported to different Test Systems having different TestExecutive.config.xml configurations.
 				- If Test System #1 with it's specific SCPI VISA Instruments dies suddenly, may need to run its TestExecutor programs on Test System #2
 					with different SCPI VISA Instruments.
-				- If all TestExecutor.cs files list only their necessary SCPI VISA Instruments, quite easy to determine if which are 
+				- If all TestExecutor.cs files list only their necessary SCPI VISA Instruments, quite easy to determine which are 
 					compatible subsets of the Test Systems' TestExecutive.config.xml configurations.
-			- This approach is similar to the Keysight i3070's Board config files.
+			- This approach is similar to the Keysight i3070's Board config files:
 				- i3070 Board config files specify only the subset of i3070 cards used by their test programs.
 				- This makes porting a Keysight i3070 In-Circuit Test program to a differently configured i3070 as easy as possible, though not necessarily easy.
 		
 	ID:			- Required element.
 					- Unique Identifier; no 2 can be identical, as ID is unique key in a Dictionary object.
 					- Recommend following naming conventions:
-						- CT1, CT2, CT33ε4...	Single-input Counter Timers 1 & 2 and Dual-input 3ε4.
+						- CT1, CT2, CT3ε4...	Single-input Counter Timers 1 & 2 and Dual-input 3ε4.
 						- MM1, MM2, MM3...		Single-input MultiMeters 1, 2 & 3.
 						- OS1, OS2, OS3ε4...	Single-input Oscilloscopes 1 & 2 and Dual-input 3ε4.
 						- LCR1, LCR2, LCR3...	Single-input LCR Meters 1, 2 & 3.

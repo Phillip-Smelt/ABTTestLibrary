@@ -11,7 +11,6 @@ using ABT.TestSpace.AppConfig;
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace ABT.TestSpace.SCPI_VISA_Instruments {
     public enum LOAD_MODE { CURR, POW, RES, VOLT } // Musn't re-order LOAD_MODE, as sequence directly correlates to LOAD_UNITS for conversion.
-
     public enum LOAD_UNITS { AMPS_DC, WATTS, OHMS, VOLTS_DC } // Mustn't re-order LOAD_UNITS, as sequence directly correlates to LOAD_MODE for conversion.
 
     public static class EL_34143A {
