@@ -50,6 +50,9 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
         public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
+#if !DEBUG
+            SelfTest(SVI); // SelfTest() is painfully slow to run, re-run, re-run, re-run... while debugging, but only executes once during test system initialization after release.
+#endif
             Reset(SVI); // Reset SVI to default power-on states.
             Clear(SVI); // Clear all event registers & the Status Byte register.
         }
