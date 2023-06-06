@@ -88,11 +88,9 @@
 		<Description>Keysight 33509B Single-output Waveform Generator</Description>
 		<Address>USB0::0x0957::0x2507::MY59003604::0::INSTR</Address>
 	</SCPI_VISA_Instrument>
-	<!--
 	<SCPI_VISA_Instrument>
 		<ID>MM1</ID>
 		<Description>Keysight 34461A Multi-Meter</Description>
 		<Address>USB0::0x2A8D::0x1301::MY60049978::0::INSTR</Address>
 	</SCPI_VISA_Instrument>
-	-->
 </SCPI_VISA_Instruments>
