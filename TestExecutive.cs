@@ -17,7 +17,7 @@ using ABT.TestSpace.Switching;
 
 // TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 // NOTE: For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
-//  - Prefer named arguments for public methods be capitalized/PascalCased, not uncapitalized/camelCased.
+//  - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
 //  - Invoking public methods with named arguments is a wonderful, self-documenting coding technique, improved by PascalCasing.
 // TODO: Update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.0 when possible.
 // NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library supposedly compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
