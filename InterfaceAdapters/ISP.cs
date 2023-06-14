@@ -42,7 +42,7 @@ namespace ABT.TestSpace.InterfaceAdapters {
             using (Process process = new Process()) {
                 ProcessStartInfo psi = new ProcessStartInfo {
                     Arguments = arguments,
-                    FileName = fileName,
+                    FileName = workingDirectory + fileName,
                     WorkingDirectory = workingDirectory,
                     CreateNoWindow = false,
                     UseShellExecute = false,
@@ -63,7 +63,7 @@ namespace ABT.TestSpace.InterfaceAdapters {
             using (Process process = new Process()) {
                 ProcessStartInfo psi = new ProcessStartInfo {
                     Arguments = arguments,
-                    FileName = fileName,
+                    FileName = workingDirectory + fileName,
                     WorkingDirectory = workingDirectory,
                     CreateNoWindow = true,
                     UseShellExecute = false,
