@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -20,11 +21,11 @@ using ABT.TestSpace.Switching;
 //  - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
 //  - Invoking public methods with named arguments is a wonderful, self-documenting coding technique, improved by PascalCasing.
 // TODO: Update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.0 when possible.
-// NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library supposedly compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & UWP.
+// NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library supposedly compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & WinUI 3.
 //       TIDP.SAA actually appears to be compiled to .Net FrameWork 4.5, but that's still not necessarily compatible with .Net 7.0.
 //  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
-// TODO: Update to UWP instead of WinForms when possible.
-// NOTE: Chose WinForms due to incompatibility of UWP with .Net Framework, and unfamiliarity with WPF.
+// TODO: Update to WinUI 3 or WPF instead of WinForms when possible.
+// NOTE: Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
 // NOTE: With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 //
 //  References:
@@ -225,34 +226,35 @@ namespace ABT.TestSpace {
 
         private async Task RunAsync() {
             this.PreRun();
-            foreach (KeyValuePair<String, Test> kvp in this.ConfigTest.Tests) {
+            for (Int32 i = 0; i < this.ConfigTest.TestMeasurementIDsSequence.Count; i++) {
+                String testMeasurementID = this.ConfigTest.TestMeasurementIDsSequence[i];
                 try {
-                    kvp.Value.Measurement = await Task.Run(() => this.RunTestAsync(kvp.Value.ID));
-                    kvp.Value.Result = EvaluateTestResult(kvp.Value);
+                    this.ConfigTest.Tests[testMeasurementID].Measurement = await Task.Run(() => this.RunTestAsync(testMeasurementID));
+                    this.ConfigTest.Tests[testMeasurementID].Result = EvaluateTestResult(this.ConfigTest.Tests[testMeasurementID]);
                 } catch (Exception e) {
                     if (e.ToString().Contains(TestCancellationException.ClassName)) {
-                        kvp.Value.Result = EventCodes.CANCEL;
+                        this.ConfigTest.Tests[testMeasurementID].Result = EventCodes.CANCEL;
                         while (!(e is TestCancellationException) && (e.InnerException != null)) e = e.InnerException;
-                        if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) kvp.Value.Measurement = e.Message;
+                        if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Tests[testMeasurementID].Measurement = e.Message;
                     } else {
-                        this.StopRun(kvp, e.ToString());
+                        this.StopRun(testMeasurementID, e.ToString());
                     }
                     break;
                 } finally {
-                    Logger.LogTest(kvp.Value);
+                    Logger.LogTest(this.ConfigTest.Tests[testMeasurementID]);
                 }
                 if (this._cancelled) {
-                    kvp.Value.Result = EventCodes.CANCEL;
+                    this.ConfigTest.Tests[testMeasurementID].Result = EventCodes.CANCEL;
                     break;
                 }
             }
             this.PostRun();
         }
 
-        private void StopRun(KeyValuePair<String, Test> kvp, String exceptionString) {
+        private void StopRun(String testMeasurementID, String exceptionString) {
             SCPI99.ResetAll(this.SVIs);
             USB_ERB24.Set(RelayForms.C.NC);
-            kvp.Value.Result = EventCodes.ERROR;
+            this.ConfigTest.Tests[testMeasurementID].Result = EventCodes.ERROR;
             Logger.UnexpectedErrorHandler(exceptionString.ToString());
         }
 
