@@ -24,8 +24,8 @@ namespace ABT.TestSpace.Logging {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_16 = "                ";
 
-        public static void Start(AppConfigUUT configUUT, AppConfigLogger configLogger, AppConfigTest configTest, String _appAssemblyVersion, String _libraryAssemblyVersion, ref RichTextBox rtfResults) {
-            if (!configTest.IsOperation) {
+        public static void Start(TestExecutive testExecutive, ref RichTextBox rtfResults) {
+            if (!testExecutive.ConfigTest.IsOperation) {
                 // When TestGroups are executed, test data is never saved to configLogger.FilePath as Rich Text.  Never.
                 // RichTextBox only. 
                 Log.Logger = new LoggerConfiguration()
@@ -34,28 +34,28 @@ namespace ABT.TestSpace.Logging {
                     .CreateLogger();
                 Log.Information($"Note: following test results invalid for UUT production testing, only troubleshooting.");
                 Log.Information($"START                        : {DateTime.Now}");
-                Log.Information($"UUT Number                   : {configUUT.Number}");
-                Log.Information($"UUT Revision                 : {configUUT.Revision}");
-                Log.Information($"UUT Serial Number            : {configUUT.SerialNumber}");
-                Log.Information($"UUT Test Element ID          : {configTest.TestElementID}");
-                Log.Information($"UUT Test Element Description : {configTest.TestElementDescription}\n");
+                Log.Information($"UUT Revision                 : {testExecutive.ConfigUUT.Revision}");
+                Log.Information($"UUT Number                   : {testExecutive.ConfigUUT.Number}");
+                Log.Information($"UUT Serial Number            : {testExecutive.ConfigUUT.SerialNumber}");
+                Log.Information($"UUT Test Element ID          : {testExecutive.ConfigTest.TestElementID}");
+                Log.Information($"UUT Test Element Description : {testExecutive.ConfigTest.TestElementDescription}\n");
                 return;
                 // Log Header isn't written to Console when TestGroups are executed, further emphasizing test results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
 
-            if (configLogger.FileEnabled && !configLogger.SQLEnabled) {
+            if (testExecutive.ConfigLogger.FileEnabled && !testExecutive.ConfigLogger.SQLEnabled) {
                 // When TestOperations are executed, test data is always & automatically saved to config.Logger.FilePath as Rich Text.  Always.
                 // RichTextBox + File.
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
-            } else if (!configLogger.FileEnabled && configLogger.SQLEnabled) {
+            } else if (!testExecutive.ConfigLogger.FileEnabled && testExecutive.ConfigLogger.SQLEnabled) {
                 // TODO: RichTextBox + SQL.
-                SQLStart(configUUT, configTest);
-            } else if (configLogger.FileEnabled && configLogger.SQLEnabled) {
+                SQLStart(testExecutive);
+            } else if (testExecutive.ConfigLogger.FileEnabled && testExecutive.ConfigLogger.SQLEnabled) {
                 // TODO: RichTextBox + File + SQL.
-                SQLStart(configUUT, configTest);
+                SQLStart(testExecutive);
             } else {
                 // RichTextBox only; customer doesn't require saved test data, unusual for Functional testing, but common for other testing methodologies.
                 Log.Logger = new LoggerConfiguration()
@@ -64,24 +64,24 @@ namespace ABT.TestSpace.Logging {
                     .CreateLogger();
             }
             Log.Information($"START                        : {DateTime.Now}");
-            Log.Information($"TestExecutor Version         : {_appAssemblyVersion}");
-            Log.Information($"TestExecutive Version        : {_libraryAssemblyVersion}");
-            Log.Information($"UUT Customer                 : {configUUT.Customer}");
-            Log.Information($"UUT Test Specification       : {configUUT.TestSpecification}");
-            Log.Information($"UUT Description              : {configUUT.Description}");
-            Log.Information($"UUT Type                     : {configUUT.Type}");
-            Log.Information($"UUT Number                   : {configUUT.Number}");
-            Log.Information($"UUT Revision                 : {configUUT.Revision}");
-            Log.Information($"UUT Test Element ID          : {configTest.TestElementID}");
-            Log.Information($"UUT Test Element Revision    : {configTest.TestElementRevision}");
-            Log.Information($"UUT Test Element Description : {configTest.TestElementDescription}\n");
+            Log.Information($"TestExecutor Version         : {testExecutive._appAssemblyVersion}");
+            Log.Information($"TestExecutive Version        : {testExecutive._libraryAssemblyVersion}");
+            Log.Information($"UUT Customer                 : {testExecutive.ConfigUUT.Customer}");
+            Log.Information($"UUT Test Specification       : {testExecutive.ConfigUUT.TestSpecification}");
+            Log.Information($"UUT Description              : {testExecutive.ConfigUUT.Description}");
+            Log.Information($"UUT Type                     : {testExecutive.ConfigUUT.Type}");
+            Log.Information($"UUT Number                   : {testExecutive.ConfigUUT.Number}");
+            Log.Information($"UUT Revision                 : {testExecutive.ConfigUUT.Revision}");
+            Log.Information($"UUT Test Element ID          : {testExecutive.ConfigTest.TestElementID}");
+            Log.Information($"UUT Test Element Revision    : {testExecutive.ConfigTest.TestElementRevision}");
+            Log.Information($"UUT Test Element Description : {testExecutive.ConfigTest.TestElementDescription}\n");
             StringBuilder s = new StringBuilder();
-            foreach (KeyValuePair<String, Test> kvp in configTest.Tests) s.Append(String.Format("\t{0:" + configTest.LogFormattingLength + "} : {1}\n", kvp.Value.ID, kvp.Value.Description));
+            foreach (KeyValuePair<String, Test> kvp in testExecutive.ConfigTest.Tests) s.Append(String.Format("\t{0:" + testExecutive.ConfigTest.LogFormattingLength + "} : {1}\n", kvp.Value.ID, kvp.Value.Description));
             Log.Information($"UUT Test Measurements        : \n{s}");
             Log.Information($"Test Operator                : {UserPrincipal.Current.DisplayName}");
             // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             // Haven't used it on non-Active Directory PCs.
-            Log.Information($"UUT Serial Number            : {configUUT.SerialNumber}\n");
+            Log.Information($"UUT Serial Number            : {testExecutive.ConfigUUT.SerialNumber}\n");
             Log.Debug($"Environment.UserDomainName         : {Environment.UserDomainName}");
             Log.Debug($"Environment.MachineName            : {Environment.MachineName}");
             Log.Debug($"Environment.OSVersion              : {Environment.OSVersion}");
@@ -131,29 +131,29 @@ namespace ABT.TestSpace.Logging {
             Log.Information(message.ToString());
         }
 
-        public static void Stop(AppConfigUUT configUUT, AppConfigLogger configLogger, AppConfigTest configTest, ref RichTextBox rtfResults) {
-            if (!configTest.IsOperation) Log.CloseAndFlush();
+        public static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
+            if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing test results aren't valid for pass verdict/$hip disposition, only troubleshooting failures.
             else {
-                Log.Information($"Final Result: {configUUT.EventCode}");
+                Log.Information($"Final Result: {testExecutive.ConfigUUT.EventCode}");
                 Log.Information($"STOP:  {DateTime.Now}");
                 Log.CloseAndFlush();
-                if (configLogger.FileEnabled) FileStop(configUUT, configLogger, configTest, ref rtfResults);
-                if (configLogger.SQLEnabled) SQLStop(configUUT, configTest);
-                if (configLogger.TestEventsEnabled) TestEvents(configUUT);
+                if (testExecutive.ConfigLogger.FileEnabled) FileStop(testExecutive, ref rtfResults);
+                if (testExecutive.ConfigLogger.SQLEnabled) SQLStop(testExecutive);
+                if (testExecutive.ConfigLogger.TestEventsEnabled) TestEvents(testExecutive.ConfigUUT);
             }
         }
 
-        private static void FileStop(AppConfigUUT configUUT, AppConfigLogger configLogger, AppConfigTest configTest, ref RichTextBox rtfResults) {
-            String fileName = $"{configUUT.Number}_{configUUT.SerialNumber}_{configTest.TestElementID}";
-            String[] files = Directory.GetFiles(configLogger.FilePath, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
+        private static void FileStop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
+            String fileName = $"{testExecutive.ConfigUUT.Number}_{testExecutive.ConfigUUT.SerialNumber}_{testExecutive.ConfigTest.TestElementID}";
+            String[] files = Directory.GetFiles(testExecutive.ConfigLogger.FilePath, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
             // Will fail if invalid this.ConfigLogger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
             // Otherwise, files is the set of all files in config.Logger.FilePath like
             // config.configUUT.Number_Config.configUUT.SerialNumber_configTest.TestElementID_*.rtf.
             Int32 maxNumber = 0; String s;
             foreach (String f in files) {
                 s = f;
-                s = s.Replace($"{configLogger.FilePath}{fileName}", String.Empty);
+                s = s.Replace($"{testExecutive.ConfigLogger.FilePath}{fileName}", String.Empty);
                 s = s.Replace(".rtf", String.Empty);
                 s = s.Replace("_", String.Empty);
                 foreach (FieldInfo fi in typeof(EventCodes).GetFields()) s = s.Replace((String)fi.GetValue(null), String.Empty);
@@ -167,15 +167,15 @@ namespace ABT.TestSpace.Logging {
                 //   foreach (FieldInfo  : '3'
                 //   maxNumber           : '3'
             }
-            fileName += $"_{++maxNumber}_{configUUT.EventCode}.rtf";
-            rtfResults.SaveFile($"{configLogger.FilePath}{fileName}");
+            fileName += $"_{++maxNumber}_{testExecutive.ConfigUUT.EventCode}.rtf";
+            rtfResults.SaveFile($"{testExecutive.ConfigLogger.FilePath}{fileName}");
         }
 
-        private static void SQLStart(AppConfigUUT UUT, AppConfigTest configTest) {
+        private static void SQLStart(TestExecutive testExecutive) {
             // TODO: SQL Server Express: SQLStart.
         }
 
-        private static void SQLStop(AppConfigUUT UUT, AppConfigTest configTest) {
+        private static void SQLStop(TestExecutive testExecutive) {
             // TODO: SQL Server Express: SQLStop.
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -39,8 +38,8 @@ namespace ABT.TestSpace {
         public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by button_click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
-        private readonly String _appAssemblyVersion;
-        private readonly String _libraryAssemblyVersion;
+        internal readonly String _appAssemblyVersion;
+        internal readonly String _libraryAssemblyVersion;
         private Boolean _cancelled = false;
 
         protected abstract Task<String> RunTestAsync(String TestID);
@@ -220,7 +219,7 @@ namespace ABT.TestSpace {
             this.ConfigUUT.EventCode = EventCodes.UNSET;
             USB_ERB24.Set(RelayForms.C.NC);
             SCPI99.ResetAll(this.SVIs);
-            Logger.Start(this.ConfigUUT, this.ConfigLogger, this.ConfigTest, this._appAssemblyVersion, this._libraryAssemblyVersion, ref this.rtfResults);
+            Logger.Start(this, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
         }
 
@@ -255,7 +254,7 @@ namespace ABT.TestSpace {
             SCPI99.ResetAll(this.SVIs);
             USB_ERB24.Set(RelayForms.C.NC);
             this.ConfigTest.Tests[testMeasurementID].Result = EventCodes.ERROR;
-            Logger.UnexpectedErrorHandler(exceptionString.ToString());
+            Logger.UnexpectedErrorHandler(exceptionString);
         }
 
         private void PostRun() {
@@ -267,7 +266,7 @@ namespace ABT.TestSpace {
             this.ConfigUUT.EventCode = EvaluateUUTResult(this.ConfigTest);
             this.TextUUTResult.Text = this.ConfigUUT.EventCode;
             this.TextUUTResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
-            Logger.Stop(this.ConfigUUT, this.ConfigLogger, this.ConfigTest, ref this.rtfResults);
+            Logger.Stop(this, ref this.rtfResults);
         }
 
         internal static String EvaluateTestResult(Test test) {
