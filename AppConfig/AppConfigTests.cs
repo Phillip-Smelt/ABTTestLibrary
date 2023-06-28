@@ -121,7 +121,9 @@ namespace ABT.TestSpace.AppConfig {
         public readonly String Description;
         public readonly String Revision;
         public readonly String ClassName;
+        public readonly String Arguments;
         public readonly Object ClassObject;
+        // TODO: Replace 'public readonly Object ClassObject;' with 'public readonly String Arguments;'.
         public String Measurement { get; set; } = String.Empty; // Determined during test.
         public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
 #if DEBUG
@@ -132,6 +134,7 @@ namespace ABT.TestSpace.AppConfig {
             this.Description = description;
             this.Revision = revision;
             this.ClassName = className;
+            this.Arguments = arguments;
             this.ClassObject = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
             if (String.Equals(this.ClassName, TestNumerical.ClassName)) this.Measurement = Double.NaN.ToString();
         }
