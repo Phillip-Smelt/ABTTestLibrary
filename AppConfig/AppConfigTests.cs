@@ -11,6 +11,7 @@ namespace ABT.TestSpace.AppConfig {
 
     public abstract class TestAbstract {
         public const String ClassName = nameof(TestAbstract);
+        public const String NOT_APPLICABLE = "NotApplicable";
         private protected TestAbstract() { }
 
         public static Dictionary<String, String> SplitArguments(String arguments) {
@@ -29,7 +30,7 @@ namespace ABT.TestSpace.AppConfig {
         public new const String ClassName = nameof(TestCustomizable);
         public readonly Dictionary<String, String> Arguments = null;
 
-        public TestCustomizable(String id, String arguments) { if (!String.Equals(arguments, "NotApplicable")) this.Arguments = TestAbstract.SplitArguments(arguments); }
+        public TestCustomizable(String _, String arguments) { if (!String.Equals(arguments, TestAbstract.NOT_APPLICABLE)) this.Arguments = TestAbstract.SplitArguments(arguments); }
     }
 
     public class TestISP : TestAbstract {
