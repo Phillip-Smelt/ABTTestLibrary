@@ -179,7 +179,6 @@ namespace ABT.TestSpace.AppConfig {
 
             this.LogFormattingLength = 0;
             foreach (String testMeasurementID in this.TestMeasurementIDsSequence) {
-                if (!testMeasurements.ContainsKey(testMeasurementID)) throw new InvalidOperationException($"Test Element ID '{this.TestElementID}' includes Test Measurement ID '{testMeasurementID}', which isn't present in TestMeasurementsSection in App.config.");
                 this.Tests.Add(testMeasurementID, testMeasurements[testMeasurementID]); // Add only TestMeasurements correlated to the TestElementID selected by operator.
                 if (this.Tests[testMeasurementID].ID.Length > this.LogFormattingLength) this.LogFormattingLength = this.Tests[testMeasurementID].ID.Length;
             }

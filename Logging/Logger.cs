@@ -191,16 +191,18 @@ namespace ABT.TestSpace.Logging {
                 case EventCodes.CANCEL:
                     eventCode = "A";
                     break;
+                case EventCodes.ERROR:
+                    eventCode = "E";
+                    break;
                 case EventCodes.FAIL:
                     eventCode = "F";
                     break;
                 case EventCodes.PASS:
                     eventCode = "P";
                     break;
-                case EventCodes.ERROR:
                 case EventCodes.UNSET:
-                    return;
-                    // Don't record TestEvents for ERROR or UNSET.
+                    eventCode = "U";
+                    break;
                 default:
                     throw new NotImplementedException($"Unrecognized EventCode '{uut.EventCode}'.");
             }
