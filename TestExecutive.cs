@@ -225,8 +225,7 @@ namespace ABT.TestSpace {
 
         private async Task RunAsync() {
             this.PreRun();
-            for (Int32 i = 0; i < this.ConfigTest.TestMeasurementIDsSequence.Count; i++) {
-                String testMeasurementID = this.ConfigTest.TestMeasurementIDsSequence[i];
+            foreach (String testMeasurementID in this.ConfigTest.TestMeasurementIDsSequence) {
                 try {
                     this.ConfigTest.Tests[testMeasurementID].Measurement = await Task.Run(() => this.RunTestAsync(testMeasurementID));
                     this.ConfigTest.Tests[testMeasurementID].Result = EvaluateTestResult(this.ConfigTest.Tests[testMeasurementID]);
