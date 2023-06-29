@@ -10,8 +10,11 @@ using ABT.TestSpace.AppConfig;
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace ABT.TestSpace.SCPI_VISA_Instruments {
-    public enum LOAD_MODE { CURR, POW, RES, VOLT } // Musn't re-order LOAD_MODE, as sequence directly correlates to LOAD_UNITS for conversion.
-    public enum LOAD_UNITS { AMPS_DC, WATTS, OHMS, VOLTS_DC } // Mustn't re-order LOAD_UNITS, as sequence directly correlates to LOAD_MODE for conversion.
+    public enum LOAD_MODE { CURR=0, POW=1, RES=2, VOLT=3 }
+    // LOAD_MODE represents the canonical set of EL34143A electrical loads; current, power, resistance & voltage, in alphabetical & numerical order.
+    public enum LOAD_UNITS { AMPS_DC=0, WATTS=1, OHMS=2, VOLTS_DC=3 }
+    // LOAD_UNITS is a syntactic sugar equivalent of LOAD_MODE with Système International Units substituted for the EL34143A modes; AMPS_DC≡CURR, WATTS≡POW, OHMS≡RES, VOLTS_DC≡VOLT.
+    // The explicit integer values correlate LOAD_MODE to LOAD_UNITS; their actual values are irrelevant.
 
     public static class EL_34143A {
         public const String MODEL = "EL34143A";
