@@ -147,6 +147,8 @@ namespace ABT.TestSpace.AppConfig {
             foreach (TestMeasurement tm in testMeasurements) { dictionary.Add(tm.ID, new Test(tm.ID, tm.Description, tm.Revision, tm.ClassName, tm.Arguments)); }
             return dictionary;
         }
+
+        public static Test Get(String TestMeasurementID) { return Get()[TestMeasurementID]; }
     }
 
     public class AppConfigTest {
@@ -168,12 +170,12 @@ namespace ABT.TestSpace.AppConfig {
             if (this.IsOperation) {
                 this.TestElementDescription = testOperations[this.TestElementID].Description;
                 this.TestElementRevision = testOperations[this.TestElementID].Revision;
-                List<String> testGroupIDs = testOperations[this.TestElementID].TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList();
-                foreach (String testGroupID in testGroupIDs) this.TestMeasurementIDsSequence.AddRange(testGroups[testGroupID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList());
+                List<String> testGroupIDs = testOperations[this.TestElementID].TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList();
+                foreach (String testGroupID in testGroupIDs) this.TestMeasurementIDsSequence.AddRange(testGroups[testGroupID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList());
             } else {
                 this.TestElementDescription = testGroups[this.TestElementID].Description;
                 this.TestElementRevision = testGroups[this.TestElementID].Revision;
-                this.TestMeasurementIDsSequence = testGroups[this.TestElementID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(TestID => TestID.Trim()).ToList(); 
+                this.TestMeasurementIDsSequence = testGroups[this.TestElementID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList(); 
             }
             IEnumerable<String> duplicateIDs = this.TestMeasurementIDsSequence.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
             if (duplicateIDs.Count() !=0) throw new InvalidOperationException($"Duplicated TestMeasurementIDs '{String.Join("', '", duplicateIDs)}'.");

@@ -1,9 +1,10 @@
 ﻿using System;
-using System.IO;
-using System.DirectoryServices.AccountManagement;
-using System.Reflection;
 using System.Collections.Generic;
+using System.DirectoryServices.AccountManagement;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
@@ -75,8 +76,18 @@ namespace ABT.TestSpace.Logging {
             Log.Information($"UUT Test Element ID          : {testExecutive.ConfigTest.TestElementID}");
             Log.Information($"UUT Test Element Revision    : {testExecutive.ConfigTest.TestElementRevision}");
             Log.Information($"UUT Test Element Description : {testExecutive.ConfigTest.TestElementDescription}\n");
+
             StringBuilder s = new StringBuilder();
-            foreach (KeyValuePair<String, Test> kvp in testExecutive.ConfigTest.Tests) s.Append(String.Format("\t{0:" + testExecutive.ConfigTest.LogFormattingLength + "} : {1}\n", kvp.Value.ID, kvp.Value.Description));
+            Operation operation = Operation.Get(testExecutive.ConfigTest.TestElementID);
+            List<String> testGroupIDs = operation.TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList();
+            foreach (String testGroupID in testGroupIDs) {
+                Group group = Group.Get(testGroupID);
+                s.Append(String.Format("\t{0:" + 10 + "} : {1}\n", group.ID, group.Description));
+                List<String> testMeasurementIDs = group.TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList();
+                foreach (String testMeasurementID in testMeasurementIDs) {
+                    s.Append(String.Format("\t{0:" + 10 + testExecutive.ConfigTest.LogFormattingLength + "} : {1}\n", testExecutive.ConfigTest.Tests[testMeasurementID].ID, testExecutive.ConfigTest.Tests[testMeasurementID].Description));
+                }
+            }
             Log.Information($"UUT Test Measurements        : \n{s}");
             Log.Information($"Test Operator                : {UserPrincipal.Current.DisplayName}");
             // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Runtime.CompilerServices;
 
 namespace ABT.TestSpace.AppConfig {
     public class TestOperationsSection : ConfigurationSection { [ConfigurationProperty("TestOperations")] public TestOperations TestOperations { get { return ((TestOperations)(base["TestOperations"])); } } }
@@ -87,6 +88,8 @@ namespace ABT.TestSpace.AppConfig {
             foreach (TestOperation to in testOperations) dictionary.Add(to.ID, new Operation(to.ID, to.Revision, to.Description, to.TestGroupIDs));
             return dictionary;
         }
+
+        public static Operation Get(String TestOperationID) { return Get()[TestOperationID]; }
     }
 
     public class Group {
@@ -94,6 +97,7 @@ namespace ABT.TestSpace.AppConfig {
         public readonly String Revision;    
         public readonly String Description;
         public readonly String TestMeasurementIDs;
+
 
         private Group(String id, String revision, String description, String testMeasurementIDs) {
             this.ID = id;
@@ -109,5 +113,7 @@ namespace ABT.TestSpace.AppConfig {
             foreach (TestGroup tg in testGroups) dictionary.Add(tg.ID, new Group(tg.ID, tg.Revision, tg.Description, tg.TestMeasurementIDs));
             return dictionary;
         }
+
+        public static Group Get(String TestGroupID) { return Get()[TestGroupID]; }
     }
 }
