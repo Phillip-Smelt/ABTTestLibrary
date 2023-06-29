@@ -1,6 +1,5 @@
 ﻿using System;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
-using ABT.TestSpace.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -13,13 +12,12 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
     public enum LOAD_MODE { CURR=0, POW=1, RES=2, VOLT=3 }
     // LOAD_MODE represents the canonical set of EL34143A electrical loads; current, power, resistance & voltage, in alphabetical & numerical order.
     public enum LOAD_UNITS { AMPS_DC=0, WATTS=1, OHMS=2, VOLTS_DC=3 }
-    // LOAD_UNITS is a syntactic sugar equivalent of LOAD_MODE with Système International Units substituted for the EL34143A modes; AMPS_DC≡CURR, WATTS≡POW, OHMS≡RES, VOLTS_DC≡VOLT.
+    // LOAD_UNITS is a syntactic sugar representation of LOAD_MODE substituting Système International Units for their equivalent modes; AMPS_DC≡CURR, WATTS≡POW, OHMS≡RES, VOLTS_DC≡VOLT.
     // The explicit integer values correlate LOAD_MODE to LOAD_UNITS; their actual values are irrelevant.
 
     public static class EL_34143A {
         public const String MODEL = "EL34143A";
-
-        private const String INVALID_MODE = "Invalid EL_34143A Load Mode, must be in enum '{ CURR, POW, RES, VOLT }'.";
+        private static readonly String UNIMPLEMENTED_LOAD_MODE = $"Unimplemented Load Mode, switch must support all items in enum '{{{String.Join(",", Enum.GetNames(typeof(LOAD_MODE)))}}}'.";
 
         public static Boolean IsEL_34143A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgEL30000)); }
 
@@ -56,7 +54,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
                     SetVOLtage(SVI, LoadValue);
                     break;
                 default:
-                    throw new ArgumentException(INVALID_MODE);
+                    throw new NotImplementedException(UNIMPLEMENTED_LOAD_MODE); // Default case should never occur, but C# requires it.
             }
             SetOutputState(SVI, State);
         }
@@ -89,7 +87,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, SCPI.CHANNEL1, out Double[] voltsDC);
                     return SCPI.IsCloseEnough(LoadValue, voltsDC[0], delta);
                 default:
-                    throw new ArgumentException(INVALID_MODE);
+                    throw new NotImplementedException(UNIMPLEMENTED_LOAD_MODE); // Default case should never occur, but C# requires it.
             }
         }
 
