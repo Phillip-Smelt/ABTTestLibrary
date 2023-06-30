@@ -158,7 +158,8 @@ namespace ABT.TestSpace.AppConfig {
         public readonly String TestElementRevision;
         public readonly List<String> TestMeasurementIDsSequence;
         public readonly Dictionary<String, Test> Tests;
-        public readonly Int32 LogFormattingLength;
+        public readonly Int32 TestGroupFormattingLength = 0;
+        public readonly Int32 TestMeasurementFormattingLength = 0;
 
         private AppConfigTest() {
             Dictionary<String, Operation> testOperations = Operation.Get();
@@ -171,7 +172,10 @@ namespace ABT.TestSpace.AppConfig {
                 this.TestElementDescription = testOperations[this.TestElementID].Description;
                 this.TestElementRevision = testOperations[this.TestElementID].Revision;
                 List<String> testGroupIDs = testOperations[this.TestElementID].TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList();
-                foreach (String testGroupID in testGroupIDs) this.TestMeasurementIDsSequence.AddRange(testGroups[testGroupID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList());
+                foreach (String testGroupID in testGroupIDs) {
+                    this.TestMeasurementIDsSequence.AddRange(testGroups[testGroupID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList());
+                    if (testGroupID.Length > this.TestGroupFormattingLength) this.TestGroupFormattingLength = testGroupID.Length;
+                }
             } else {
                 this.TestElementDescription = testGroups[this.TestElementID].Description;
                 this.TestElementRevision = testGroups[this.TestElementID].Revision;
@@ -183,10 +187,9 @@ namespace ABT.TestSpace.AppConfig {
             Dictionary<String, Test> testMeasurements = Test.Get();
             this.Tests = new Dictionary<String, Test>();
 
-            this.LogFormattingLength = 0;
             foreach (String testMeasurementID in this.TestMeasurementIDsSequence) {
                 this.Tests.Add(testMeasurementID, testMeasurements[testMeasurementID]); // Add only TestMeasurements correlated to the TestElementID selected by operator.
-                if (this.Tests[testMeasurementID].ID.Length > this.LogFormattingLength) this.LogFormattingLength = this.Tests[testMeasurementID].ID.Length;
+                if (testMeasurementID.Length > this.TestMeasurementFormattingLength) this.TestMeasurementFormattingLength = testMeasurementID.Length;
             }
         }
 
