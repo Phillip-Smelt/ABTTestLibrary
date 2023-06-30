@@ -82,10 +82,10 @@ namespace ABT.TestSpace.Logging {
             List<String> testGroupIDs = operation.TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList();
             foreach (String testGroupID in testGroupIDs) {
                 Group group = Group.Get(testGroupID);
-                s.Append(String.Format("\t{0:" + 10 + "} : {1}\n", group.ID, group.Description));
+                s.Append(String.Format("\t{0:" + 15 + "} : {1}\n", group.ID, group.Description));
                 List<String> testMeasurementIDs = group.TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList();
                 foreach (String testMeasurementID in testMeasurementIDs) {
-                    s.Append(String.Format("\t{0:" + 10 + testExecutive.ConfigTest.LogFormattingLength + "} : {1}\n", testExecutive.ConfigTest.Tests[testMeasurementID].ID, testExecutive.ConfigTest.Tests[testMeasurementID].Description));
+                    s.Append(String.Format("\t\t{0:" + testExecutive.ConfigTest.LogFormattingLength + "} : {1}\n", testExecutive.ConfigTest.Tests[testMeasurementID].ID, testExecutive.ConfigTest.Tests[testMeasurementID].Description));
                 }
             }
             Log.Information($"UUT Test Measurements        : \n{s}");
