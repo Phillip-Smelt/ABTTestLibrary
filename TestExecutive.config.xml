@@ -11,7 +11,7 @@
 				// String constants for SCPI_VISA_InstrumentElement IDs from TestExecutive's TestExecutive.config.xml configuration file.
 				internal const String P3V3 = "PS1";
 				internal const String P5V = "PS2";
-				internal const String P12V_N12V = "PS3ε4";
+				internal const String P12V_N12V = "PS4ε5";
 				internal const String VOUT_LOAD = "EL1";
 				internal const String MM = "MM1";
 				internal const String CLK = "WG1";
@@ -38,7 +38,7 @@
 						- OS1, OS2, OS3ε4...	Single-input Oscilloscopes 1 & 2 and Dual-input 3ε4.
 						- LCR1, LCR2, LCR3...	Single-input LCR Meters 1, 2 & 3.
 						- EL1, EL2, EL3ε4...	Single-channel Electronic Loads 1 & 2 and Dual-channel 3ε4.
-						- PS1, PS2, PS3ε4...	Single-output Power Supplies 1 & 2 and Dual-output 3ε4.
+						- PS1, PS2, PS4ε5...	Single-output Power Supplies 1 & 2 and Dual-output 3ε4.
 						- WG1, WG2, WG3ε4...	Single-output Waveform Generators 1 & 2 and Dual-output 3ε4.
 						- MF1, MF2, MF3...    MainFrames 1, 2 & 3.
                                   MainFrames can contain multiple dissimilar and/or multiple similar instruments.
@@ -74,7 +74,12 @@
 		<Address>USB0::0x2A8D::0x1602::MY61001958::0::INSTR</Address>
 	</SCPI_VISA_Instrument>
 	<SCPI_VISA_Instrument>
-		<ID>PS3ε4</ID>
+		<ID>PS3</ID>
+		<Description>Keysight E36105B Single-output Power Supply</Description>
+		<Address>USB0::0x2A8D::0x1802::MY61001696::0::INSTR</Address>
+	</SCPI_VISA_Instrument>
+	<SCPI_VISA_Instrument>
+		<ID>PS4ε5</ID>
 		<Description>Keysight E36234A Dual-output Power Supply</Description>
 		<Address>USB0::0x2A8D::0x3402::MY61002598::0::INSTR</Address>		
 	</SCPI_VISA_Instrument>
