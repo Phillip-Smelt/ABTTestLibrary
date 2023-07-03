@@ -162,13 +162,19 @@ namespace ABT.TestSpace.Logging {
             }
         }
 
-        public static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
+        public static void UnexpectedErrorHandler(String logMessage) {
+            Log.Error(logMessage);
+            MessageBox.Show(Form.ActiveForm, $"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
+                            $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
             richTextBox.SelectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord); ;
             richTextBox.SelectionLength = originalText.Length;
             richTextBox.SelectedText.Replace(originalText, replacementText);
         }
 
-        public static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
+        private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
             richTextBox.SelectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord); ;
             richTextBox.SelectionLength = findText.Length;
             richTextBox.SelectionBackColor = backColor;
@@ -209,13 +215,7 @@ namespace ABT.TestSpace.Logging {
             // TODO: SQL Server Express: SQLStop.
         }
 
-        public static void UnexpectedErrorHandler(String logMessage) {
-            Log.Error(logMessage);
-            MessageBox.Show(Form.ActiveForm, $"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
-                            $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        public static void TestEvents(AppConfigUUT uut) {
+        private static void TestEvents(AppConfigUUT uut) {
             String eventCode;
             switch (uut.EventCode) {
                 case EventCodes.CANCEL:
