@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.TestSpace.AppConfig;
+using System.Drawing;
 
 // TODO: SQL Server Express: Persist test data into Microsoft SQL Server Express.
 // TODO: SQL Server Express: Create a Microsoft C# front-end exporting/report app for persisted SQL Server Express test data.  Export in CSV, report in RTF.
@@ -24,6 +25,8 @@ namespace ABT.TestSpace.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_16 = "                ";
+        private const String MESSAGE_STOP = "STOP                         : ";
+        private const String MESSAGE_UUT_RESULT = "UUT Test Result              : ";
 
         public static void Start(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) {
@@ -65,6 +68,7 @@ namespace ABT.TestSpace.Logging {
                     .CreateLogger();
             }
             Log.Information($"START                        : {DateTime.Now}");
+            Log.Information($"{MESSAGE_STOP}");
             Log.Information($"TestExecutor Version         : {testExecutive._appAssemblyVersion}");
             Log.Information($"TestExecutive Version        : {testExecutive._libraryAssemblyVersion}");
             Log.Information($"UUT Customer                 : {testExecutive.ConfigUUT.Customer}");
@@ -75,7 +79,8 @@ namespace ABT.TestSpace.Logging {
             Log.Information($"UUT Revision                 : {testExecutive.ConfigUUT.Revision}");
             Log.Information($"UUT Test Element ID          : {testExecutive.ConfigTest.TestElementID}");
             Log.Information($"UUT Test Element Revision    : {testExecutive.ConfigTest.TestElementRevision}");
-            Log.Information($"UUT Test Element Description : {testExecutive.ConfigTest.TestElementDescription}\n");
+            Log.Information($"UUT Test Element Description : {testExecutive.ConfigTest.TestElementDescription}");
+            Log.Information($"{MESSAGE_UUT_RESULT}\n");
 
             StringBuilder s = new StringBuilder();
             Operation operation = Operation.Get(testExecutive.ConfigTest.TestElementID);
@@ -101,7 +106,7 @@ namespace ABT.TestSpace.Logging {
             Log.Debug($"Environment.Version                : {Environment.Version}\n");
         }
 
-        public static void LogTest(Test test) {
+        public static void LogTest(Test test, ref RichTextBox rtfResults) {
             StringBuilder message = new StringBuilder();
             message.AppendLine($"Test ID '{test.ID}'");
             message.AppendLine($"  Revision    : {test.Revision}");
@@ -136,6 +141,7 @@ namespace ABT.TestSpace.Logging {
                     throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
             }
             message.AppendLine($"  Result      : {test.Result}");
+            SetBackColor(ref rtfResults, 0, test.ID, EventCodes.GetColor(test.Result));
 #if DEBUG
             message.AppendLine(test.DebugMessage);
 #endif
@@ -144,15 +150,28 @@ namespace ABT.TestSpace.Logging {
 
         public static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
-            // Log Trailer isn't written when not a TestOperation, further emphasizing test results aren't valid for pass verdict/$hip disposition, only troubleshooting failures.
+            // Log Trailer isn't written when not a TestOperation, further emphasizing test results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
-                Log.Information($"Final Result: {testExecutive.ConfigUUT.EventCode}");
-                Log.Information($"STOP:  {DateTime.Now}");
+                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_RESULT, String.Join(MESSAGE_UUT_RESULT, testExecutive.ConfigUUT.EventCode));
+                SetBackColor(ref rtfResults, 0, testExecutive.ConfigUUT.EventCode, EventCodes.GetColor(testExecutive.ConfigUUT.EventCode));
+                ReplaceText(ref rtfResults, 0, MESSAGE_STOP, String.Join(MESSAGE_STOP, DateTime.Now));               
                 Log.CloseAndFlush();
                 if (testExecutive.ConfigLogger.FileEnabled) FileStop(testExecutive, ref rtfResults);
                 if (testExecutive.ConfigLogger.SQLEnabled) SQLStop(testExecutive);
                 if (testExecutive.ConfigLogger.TestEventsEnabled) TestEvents(testExecutive.ConfigUUT);
             }
+        }
+
+        public static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
+            richTextBox.SelectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord); ;
+            richTextBox.SelectionLength = originalText.Length;
+            richTextBox.SelectedText.Replace(originalText, replacementText);
+        }
+
+        public static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
+            richTextBox.SelectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord); ;
+            richTextBox.SelectionLength = findText.Length;
+            richTextBox.SelectionBackColor = backColor;
         }
 
         private static void FileStop(TestExecutive testExecutive, ref RichTextBox rtfResults) {

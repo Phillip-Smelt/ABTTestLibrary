@@ -239,7 +239,7 @@ namespace ABT.TestSpace {
                     }
                     break;
                 } finally {
-                    Logger.LogTest(this.ConfigTest.Tests[testMeasurementID]);
+                    Logger.LogTest(this.ConfigTest.Tests[testMeasurementID], ref this.rtfResults);
                 }
                 if (this._cancelled) {
                     this.ConfigTest.Tests[testMeasurementID].Result = EventCodes.CANCEL;
