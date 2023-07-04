@@ -67,6 +67,7 @@ namespace ABT.TestSpace.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
             }
+            Log.Information($"{MESSAGE_UUT_RESULT}\n");
             Log.Information($"START                        : {DateTime.Now}");
             Log.Information($"{MESSAGE_STOP}");
             Log.Information($"TestExecutor Version         : {testExecutive._appAssemblyVersion}");
@@ -79,8 +80,7 @@ namespace ABT.TestSpace.Logging {
             Log.Information($"UUT Revision                 : {testExecutive.ConfigUUT.Revision}");
             Log.Information($"UUT Test Element ID          : {testExecutive.ConfigTest.TestElementID}");
             Log.Information($"UUT Test Element Revision    : {testExecutive.ConfigTest.TestElementRevision}");
-            Log.Information($"UUT Test Element Description : {testExecutive.ConfigTest.TestElementDescription}");
-            Log.Information($"{MESSAGE_UUT_RESULT}\n");
+            Log.Information($"UUT Test Element Description : {testExecutive.ConfigTest.TestElementDescription}\n");
 
             StringBuilder s = new StringBuilder();
             Operation operation = Operation.Get(testExecutive.ConfigTest.TestElementID);
