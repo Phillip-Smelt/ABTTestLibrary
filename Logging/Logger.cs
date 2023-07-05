@@ -68,6 +68,10 @@ namespace ABT.TestSpace.Logging {
                     .CreateLogger();
             }
             Log.Information($"{MESSAGE_UUT_RESULT}");
+            Log.Information($"UUT Serial Number            : {testExecutive.ConfigUUT.SerialNumber}");
+            Log.Information($"Test Operator                : {UserPrincipal.Current.DisplayName}");
+            // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
+            // Haven't used it on non-Active Directory PCs.
             Log.Information($"START                        : {DateTime.Now}");
             Log.Information($"{MESSAGE_STOP}");
             Log.Information($"TestExecutor Version         : {testExecutive._appAssemblyVersion}");
@@ -94,10 +98,6 @@ namespace ABT.TestSpace.Logging {
                 }
             }
             Log.Information($"UUT Test Measurements        : \n{s}");
-            Log.Information($"Test Operator                : {UserPrincipal.Current.DisplayName}");
-            // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
-            // Haven't used it on non-Active Directory PCs.
-            Log.Information($"UUT Serial Number            : {testExecutive.ConfigUUT.SerialNumber}\n");
             Log.Debug($"Environment.UserDomainName         : {Environment.UserDomainName}");
             Log.Debug($"Environment.MachineName            : {Environment.MachineName}");
             Log.Debug($"Environment.OSVersion              : {Environment.OSVersion}");
