@@ -68,19 +68,19 @@ namespace ABT.TestSpace.Logging {
                     .CreateLogger();
             }
             Log.Information($"{MESSAGE_UUT_RESULT}");
-            Log.Information($"UUT Serial Number            : {testExecutive.ConfigUUT.SerialNumber}");
             Log.Information($"START                        : {DateTime.Now}");
             Log.Information($"{MESSAGE_STOP}");
+            Log.Information($"UUT Serial Number            : {testExecutive.ConfigUUT.SerialNumber}");
+            Log.Information($"UUT Number                   : {testExecutive.ConfigUUT.Number}");
+            Log.Information($"UUT Revision                 : {testExecutive.ConfigUUT.Revision}");
+            Log.Information($"UUT Description              : {testExecutive.ConfigUUT.Description}");
+            Log.Information($"UUT Type                     : {testExecutive.ConfigUUT.Type}");
+            Log.Information($"UUT Customer                 : {testExecutive.ConfigUUT.Customer}");
             Log.Information($"Test Operator                : {UserPrincipal.Current.DisplayName}");
             // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             Log.Information($"TestExecutive Version        : {testExecutive._libraryAssemblyVersion}");
             Log.Information($"TestExecutor Version         : {testExecutive._appAssemblyVersion}");
-            Log.Information($"UUT Customer                 : {testExecutive.ConfigUUT.Customer}");
             Log.Information($"UUT Test Specification       : {testExecutive.ConfigUUT.TestSpecification}");
-            Log.Information($"UUT Description              : {testExecutive.ConfigUUT.Description}");
-            Log.Information($"UUT Type                     : {testExecutive.ConfigUUT.Type}");
-            Log.Information($"UUT Number                   : {testExecutive.ConfigUUT.Number}");
-            Log.Information($"UUT Revision                 : {testExecutive.ConfigUUT.Revision}");
             Log.Information($"UUT Test Element ID          : {testExecutive.ConfigTest.TestElementID}");
             Log.Information($"UUT Test Element Revision    : {testExecutive.ConfigTest.TestElementRevision}");
             Log.Information($"UUT Test Element Description : {testExecutive.ConfigTest.TestElementDescription}\n");
