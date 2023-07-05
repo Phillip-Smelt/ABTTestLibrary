@@ -26,7 +26,7 @@ namespace ABT.TestSpace.Logging {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_16 = "                ";
         private const String MESSAGE_STOP = "STOP                         : ";
-        private const String MESSAGE_UUT_RESULT = "UUT Test Result              : ";
+        private const String MESSAGE_UUT_RESULT = "Result                       : ";
 
         public static void Start(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) {
@@ -67,23 +67,25 @@ namespace ABT.TestSpace.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
             }
-            Log.Information($"{MESSAGE_UUT_RESULT}");
-            Log.Information($"START                        : {DateTime.Now}");
-            Log.Information($"{MESSAGE_STOP}");
-            Log.Information($"UUT Serial Number            : {testExecutive.ConfigUUT.SerialNumber}");
-            Log.Information($"UUT Number                   : {testExecutive.ConfigUUT.Number}");
-            Log.Information($"UUT Revision                 : {testExecutive.ConfigUUT.Revision}");
-            Log.Information($"UUT Description              : {testExecutive.ConfigUUT.Description}");
-            Log.Information($"UUT Type                     : {testExecutive.ConfigUUT.Type}");
-            Log.Information($"UUT Customer                 : {testExecutive.ConfigUUT.Customer}");
-            Log.Information($"Test Operator                : {UserPrincipal.Current.DisplayName}");
+            Log.Information($"UUT:");
+            Log.Information($"\t{MESSAGE_UUT_RESULT}");
+            Log.Information($"\tSerial Number       : {testExecutive.ConfigUUT.SerialNumber}");
+            Log.Information($"\tNumber              : {testExecutive.ConfigUUT.Number}");
+            Log.Information($"\tRevision            : {testExecutive.ConfigUUT.Revision}");
+            Log.Information($"\tDescription         : {testExecutive.ConfigUUT.Description}");
+            Log.Information($"\tType                : {testExecutive.ConfigUUT.Type}");
+            Log.Information($"\tCustomer            : {testExecutive.ConfigUUT.Customer}");
+            Log.Information($"Test:");
+            Log.Information($"\tSTART               : {DateTime.Now}");
+            Log.Information($"\t{MESSAGE_STOP}");
+            Log.Information($"\tOperator            : {UserPrincipal.Current.DisplayName}");
             // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
-            Log.Information($"TestExecutive Version        : {testExecutive._libraryAssemblyVersion}");
-            Log.Information($"TestExecutor Version         : {testExecutive._appAssemblyVersion}");
-            Log.Information($"UUT Test Specification       : {testExecutive.ConfigUUT.TestSpecification}");
-            Log.Information($"UUT Test Element ID          : {testExecutive.ConfigTest.TestElementID}");
-            Log.Information($"UUT Test Element Revision    : {testExecutive.ConfigTest.TestElementRevision}");
-            Log.Information($"UUT Test Element Description : {testExecutive.ConfigTest.TestElementDescription}\n");
+            Log.Information($"\tExecutive Version   : {testExecutive._libraryAssemblyVersion}");
+            Log.Information($"\tExecutor Version    : {testExecutive._appAssemblyVersion}");
+            Log.Information($"\tSpecification       : {testExecutive.ConfigUUT.TestSpecification}");
+            Log.Information($"\tElement ID          : {testExecutive.ConfigTest.TestElementID}");
+            Log.Information($"\tRevision            : {testExecutive.ConfigTest.TestElementRevision}");
+            Log.Information($"\tDescription         : {testExecutive.ConfigTest.TestElementDescription}\n");
 
             StringBuilder s = new StringBuilder();
             Operation operation = Operation.Get(testExecutive.ConfigTest.TestElementID);
