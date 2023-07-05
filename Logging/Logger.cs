@@ -67,7 +67,7 @@ namespace ABT.TestSpace.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
             }
-            Log.Information($"{MESSAGE_UUT_RESULT}\n");
+            Log.Information($"{MESSAGE_UUT_RESULT}");
             Log.Information($"START                        : {DateTime.Now}");
             Log.Information($"{MESSAGE_STOP}");
             Log.Information($"TestExecutor Version         : {testExecutive._appAssemblyVersion}");
@@ -152,9 +152,9 @@ namespace ABT.TestSpace.Logging {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing test results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
-                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_RESULT, String.Join(MESSAGE_UUT_RESULT, testExecutive.ConfigUUT.EventCode));
+                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_RESULT, MESSAGE_UUT_RESULT + testExecutive.ConfigUUT.EventCode);
                 SetBackColor(ref rtfResults, 0, testExecutive.ConfigUUT.EventCode, EventCodes.GetColor(testExecutive.ConfigUUT.EventCode));
-                ReplaceText(ref rtfResults, 0, MESSAGE_STOP, String.Join(MESSAGE_STOP, DateTime.Now));               
+                ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);               
                 Log.CloseAndFlush();
                 if (testExecutive.ConfigLogger.FileEnabled) FileStop(testExecutive, ref rtfResults);
                 if (testExecutive.ConfigLogger.SQLEnabled) SQLStop(testExecutive);
@@ -171,7 +171,7 @@ namespace ABT.TestSpace.Logging {
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
             richTextBox.SelectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord); ;
             richTextBox.SelectionLength = originalText.Length;
-            richTextBox.SelectedText.Replace(originalText, replacementText);
+            richTextBox.SelectedText = replacementText;
         }
 
         private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
