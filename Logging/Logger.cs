@@ -25,8 +25,8 @@ namespace ABT.TestSpace.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_16 = "                ";
-        private const String MESSAGE_STOP = "STOP                         : ";
-        private const String MESSAGE_UUT_RESULT = "Result                       : ";
+        private const String MESSAGE_STOP = "STOP              : ";
+        private const String MESSAGE_UUT_RESULT = "Result            : ";
 
         public static void Start(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) {
@@ -37,12 +37,12 @@ namespace ABT.TestSpace.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
                 Log.Information($"Note: following test results invalid for UUT production testing, only troubleshooting.");
-                Log.Information($"START                        : {DateTime.Now}");
-                Log.Information($"UUT Revision                 : {testExecutive.ConfigUUT.Revision}");
-                Log.Information($"UUT Number                   : {testExecutive.ConfigUUT.Number}");
-                Log.Information($"UUT Serial Number            : {testExecutive.ConfigUUT.SerialNumber}");
-                Log.Information($"UUT Test Element ID          : {testExecutive.ConfigTest.TestElementID}");
-                Log.Information($"UUT Test Element Description : {testExecutive.ConfigTest.TestElementDescription}\n");
+                Log.Information($"START             : {DateTime.Now}");
+                Log.Information($"UUT Revision      : {testExecutive.ConfigUUT.Revision}");
+                Log.Information($"UUT Number        : {testExecutive.ConfigUUT.Number}");
+                Log.Information($"UUT Serial Number : {testExecutive.ConfigUUT.SerialNumber}");
+                Log.Information($"Test ID           : {testExecutive.ConfigTest.TestElementID}");
+                Log.Information($"Test Description  : {testExecutive.ConfigTest.TestElementDescription}\n");
                 return;
                 // Log Header isn't written to Console when TestGroups are executed, further emphasizing test results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
@@ -69,23 +69,24 @@ namespace ABT.TestSpace.Logging {
             }
             Log.Information($"UUT:");
             Log.Information($"\t{MESSAGE_UUT_RESULT}");
-            Log.Information($"\tSerial Number       : {testExecutive.ConfigUUT.SerialNumber}");
-            Log.Information($"\tNumber              : {testExecutive.ConfigUUT.Number}");
-            Log.Information($"\tRevision            : {testExecutive.ConfigUUT.Revision}");
-            Log.Information($"\tDescription         : {testExecutive.ConfigUUT.Description}");
-            Log.Information($"\tType                : {testExecutive.ConfigUUT.Type}");
-            Log.Information($"\tCustomer            : {testExecutive.ConfigUUT.Customer}");
+            Log.Information($"\tSerial Number     : {testExecutive.ConfigUUT.SerialNumber}");
+            Log.Information($"\tNumber            : {testExecutive.ConfigUUT.Number}");
+            Log.Information($"\tRevision          : {testExecutive.ConfigUUT.Revision}");
+            Log.Information($"\tDescription       : {testExecutive.ConfigUUT.Description}");
+            Log.Information($"\tType              : {testExecutive.ConfigUUT.Type}");
+            Log.Information($"\tCustomer          : {testExecutive.ConfigUUT.Customer}\n");
+
             Log.Information($"Test:");
-            Log.Information($"\tSTART               : {DateTime.Now}");
+            Log.Information($"\tSTART             : {DateTime.Now}");
             Log.Information($"\t{MESSAGE_STOP}");
-            Log.Information($"\tOperator            : {UserPrincipal.Current.DisplayName}");
+            Log.Information($"\tOperator          : {UserPrincipal.Current.DisplayName}");
             // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
-            Log.Information($"\tExecutive Version   : {testExecutive._libraryAssemblyVersion}");
-            Log.Information($"\tExecutor Version    : {testExecutive._appAssemblyVersion}");
-            Log.Information($"\tSpecification       : {testExecutive.ConfigUUT.TestSpecification}");
-            Log.Information($"\tElement ID          : {testExecutive.ConfigTest.TestElementID}");
-            Log.Information($"\tRevision            : {testExecutive.ConfigTest.TestElementRevision}");
-            Log.Information($"\tDescription         : {testExecutive.ConfigTest.TestElementDescription}\n");
+            Log.Information($"\tExecutive Version : {testExecutive._libraryAssemblyVersion}");
+            Log.Information($"\tExecutor Version  : {testExecutive._appAssemblyVersion}");
+            Log.Information($"\tSpecification     : {testExecutive.ConfigUUT.TestSpecification}");
+            Log.Information($"\tID                : {testExecutive.ConfigTest.TestElementID}");
+            Log.Information($"\tRevision          : {testExecutive.ConfigTest.TestElementRevision}");
+            Log.Information($"\tDescription       : {testExecutive.ConfigTest.TestElementDescription}\n");
 
             StringBuilder s = new StringBuilder();
             Operation operation = Operation.Get(testExecutive.ConfigTest.TestElementID);
@@ -98,18 +99,12 @@ namespace ABT.TestSpace.Logging {
                     s.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthTestMeasurement + "} : {1}\n", testExecutive.ConfigTest.Tests[testMeasurementID].ID, testExecutive.ConfigTest.Tests[testMeasurementID].Description));
                 }
             }
-            Log.Information($"UUT Test Measurements        : \n{s}");
-            Log.Debug($"Environment.UserDomainName         : {Environment.UserDomainName}");
-            Log.Debug($"Environment.MachineName            : {Environment.MachineName}");
-            Log.Debug($"Environment.OSVersion              : {Environment.OSVersion}");
-            Log.Debug($"Environment.Is64BitOperatingSystem : {Environment.Is64BitOperatingSystem}");
-            Log.Debug($"Environment.Is64BitProcess         : {Environment.Is64BitProcess}");
-            Log.Debug($"Environment.Version                : {Environment.Version}\n");
+            Log.Information($"Measurements:\n{s}");
         }
 
         public static void LogTest(Test test, ref RichTextBox rtfResults) {
             StringBuilder message = new StringBuilder();
-            message.AppendLine($"Test ID '{test.ID}'");
+            message.AppendLine($"ID '{test.ID}'");
             message.AppendLine($"  Revision    : {test.Revision}");
             message.AppendLine($"  Description : {test.Description}");
             message.AppendLine($"  Test Type   : {test.ClassName}");
