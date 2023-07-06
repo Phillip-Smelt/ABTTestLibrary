@@ -102,7 +102,7 @@ namespace ABT.TestSpace.Logging {
             Log.Information($"Measurements:\n{s}");
         }
 
-        public static void LogTest(Test test, ref RichTextBox rtfResults) {
+        public static void LogTest(Boolean isOperation, Test test, ref RichTextBox rtfResults) {
             StringBuilder message = new StringBuilder();
             message.AppendLine($"ID '{test.ID}'");
             message.AppendLine($"  Revision    : {test.Revision}");
@@ -137,7 +137,7 @@ namespace ABT.TestSpace.Logging {
                     throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
             }
             message.AppendLine($"  Result      : {test.Result}");
-            SetBackColor(ref rtfResults, 0, test.ID, EventCodes.GetColor(test.Result));
+            if (isOperation) SetBackColor(ref rtfResults, 0, test.ID, EventCodes.GetColor(test.Result));
 #if DEBUG
             message.AppendLine(test.DebugMessage);
 #endif
