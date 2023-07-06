@@ -165,15 +165,23 @@ namespace ABT.TestSpace.Logging {
         }
 
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
-            richTextBox.SelectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord); ;
-            richTextBox.SelectionLength = originalText.Length;
-            richTextBox.SelectedText = replacementText;
+            Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord);
+            // TODO:
+            if (selectionStart != -1) {
+                richTextBox.SelectionStart = selectionStart;
+                richTextBox.SelectionLength = originalText.Length;
+                richTextBox.SelectedText = replacementText;
+            }
         }
 
         private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
-            richTextBox.SelectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord); ;
-            richTextBox.SelectionLength = findText.Length;
-            richTextBox.SelectionBackColor = backColor;
+            Int32 selectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord);
+            // TODO:
+            if (selectionStart != -1) {
+                richTextBox.SelectionStart = selectionStart;
+                richTextBox.SelectionLength = findText.Length;
+                richTextBox.SelectionBackColor = backColor;
+            }
         }
 
         private static void FileStop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
