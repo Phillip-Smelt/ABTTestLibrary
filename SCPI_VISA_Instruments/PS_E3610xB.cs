@@ -44,7 +44,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
             SetVDC(SVI, VoltsDC);
             SetADC(SVI, AmpsDC);
             SetCurrentProtectionDelay(SVI, DelayCurrentProtectionSeconds);
-            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal");
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("INTernal");
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false);
             SCPI.SetOutputState(SVI, State);
             Thread.Sleep((Int32)(DelayMeasurementSeconds * 1000));
