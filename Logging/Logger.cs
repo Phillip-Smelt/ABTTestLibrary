@@ -110,17 +110,17 @@ namespace ABT.TestSpace.Logging {
             message.AppendLine($"  Test Type   : {test.ClassName}");
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
-                    TestCustomizable testCustomizable = (TestCustomizable)test.ClassObject;
+                    TestCustomizable testCustomizable = new TestCustomizable(test.ID, test.Arguments);
                     if (testCustomizable.Arguments != null) foreach (KeyValuePair<String, String> kvp in testCustomizable.Arguments) message.AppendLine($"  Key=Value   : {kvp.Key}={kvp.Value}");
                     message.AppendLine($"  Actual      : {test.Measurement}");
                     break;
                 case TestISP.ClassName:
-                    TestISP testISP = (TestISP)test.ClassObject;
+                    TestISP testISP = new TestISP(test.ID, test.Arguments);
                     message.AppendLine($"  Expected    : {testISP.ISPExpected}");
                     message.AppendLine($"  Actual      : {test.Measurement}");
                     break;
                 case TestNumerical.ClassName:
-                    TestNumerical testNumerical = (TestNumerical)test.ClassObject;
+                    TestNumerical testNumerical = new TestNumerical(test.ID, test.Arguments);
                     message.AppendLine($"  High Limit  : {testNumerical.High:G}");
                     message.AppendLine($"  Measurement : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
                     message.AppendLine($"  Low Limit   : {testNumerical.Low:G}");
@@ -129,7 +129,7 @@ namespace ABT.TestSpace.Logging {
                     message.AppendLine("");
                     break;
                 case TestTextual.ClassName:
-                    TestTextual testTextual = (TestTextual)test.ClassObject;
+                    TestTextual testTextual = new TestTextual(test.ID, test.Arguments);
                     message.AppendLine($"  Expected    : {testTextual.Text}");
                     message.AppendLine($"  Actual      : {test.Measurement}");
                     break;
@@ -137,11 +137,11 @@ namespace ABT.TestSpace.Logging {
                     throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
             }
             message.AppendLine($"  Result      : {test.Result}");
-            if (isOperation) SetBackColor(ref rtfResults, 0, test.ID, EventCodes.GetColor(test.Result));
 #if DEBUG
             message.AppendLine(test.DebugMessage);
 #endif
             Log.Information(message.ToString());
+            if (isOperation) SetBackColor(ref rtfResults, 0, test.ID, EventCodes.GetColor(test.Result));
         }
 
         public static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
