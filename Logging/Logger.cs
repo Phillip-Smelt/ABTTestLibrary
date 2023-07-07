@@ -166,7 +166,6 @@ namespace ABT.TestSpace.Logging {
 
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
             Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord);
-            // TODO:
             if (selectionStart != -1) {
                 richTextBox.SelectionStart = selectionStart;
                 richTextBox.SelectionLength = originalText.Length;
@@ -176,7 +175,6 @@ namespace ABT.TestSpace.Logging {
 
         private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
             Int32 selectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord);
-            // TODO:
             if (selectionStart != -1) {
                 richTextBox.SelectionStart = selectionStart;
                 richTextBox.SelectionLength = findText.Length;
