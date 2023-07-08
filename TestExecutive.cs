@@ -229,7 +229,6 @@ namespace ABT.TestSpace {
                 try {
                     this.ConfigTest.Tests[testMeasurementID].Measurement = await Task.Run(() => this.RunTestAsync(testMeasurementID));
                     this.ConfigTest.Tests[testMeasurementID].Result = EvaluateTestResult(this.ConfigTest.Tests[testMeasurementID]);
-                    if (String.Equals(this.ConfigTest.Tests[testMeasurementID].Result, EventCodes.FAIL) && this.ConfigTest.Tests[testMeasurementID].CancelOnFailure) this._cancelled = true;
                 } catch (Exception e) {
                     if (e.ToString().Contains(TestCancellationException.ClassName)) {
                         this.ConfigTest.Tests[testMeasurementID].Result = EventCodes.CANCEL;
@@ -246,6 +245,7 @@ namespace ABT.TestSpace {
                     this.ConfigTest.Tests[testMeasurementID].Result = EventCodes.CANCEL;
                     break;
                 }
+                if (String.Equals(this.ConfigTest.Tests[testMeasurementID].Result, EventCodes.FAIL) && this.ConfigTest.Tests[testMeasurementID].CancelOnFailure) break;
             }
             this.PostRun();
         }
