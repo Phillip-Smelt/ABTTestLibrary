@@ -13,6 +13,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
     public enum OUTPUT { off, ON }
     public enum LOGIC { low, HIGH }
     public enum BINARY { zero, ONE }
+    public enum SENSE_MODE { EXTernal, INTernal }
     [Flags]
     public enum CHANNELS { C1, C2 }
 

@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Runtime.Remoting.Channels;
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
-using ABT.TestSpace.AppConfig;
+using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -40,11 +41,11 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
             return ampsDC;
         }
 
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
             SetVDC(SVI, VoltsDC);
             SetADC(SVI, AmpsDC);
             SetCurrentProtectionDelay(SVI, DelayCurrentProtectionSeconds);
-            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("INTernal");
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense));
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false);
             SCPI.SetOutputState(SVI, State);
             Thread.Sleep((Int32)(DelayMeasurementSeconds * 1000));

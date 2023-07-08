@@ -41,7 +41,7 @@ namespace ABT.TestSpace.Logging {
                 Log.Information($"UUT Revision      : {testExecutive.ConfigUUT.Revision}");
                 Log.Information($"UUT Number        : {testExecutive.ConfigUUT.Number}");
                 Log.Information($"UUT Serial Number : {testExecutive.ConfigUUT.SerialNumber}");
-                Log.Information($"Test ID           : {testExecutive.ConfigTest.TestElementID}");
+                Log.Information($"TestGroup ID      : {testExecutive.ConfigTest.TestElementID}");
                 Log.Information($"Test Description  : {testExecutive.ConfigTest.TestElementDescription}\n");
                 return;
                 // Log Header isn't written to Console when TestGroups are executed, further emphasizing test results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
@@ -76,7 +76,7 @@ namespace ABT.TestSpace.Logging {
             Log.Information($"\tType              : {testExecutive.ConfigUUT.Type}");
             Log.Information($"\tCustomer          : {testExecutive.ConfigUUT.Customer}\n");
 
-            Log.Information($"Test:");
+            Log.Information($"TestOperation:");
             Log.Information($"\tSTART             : {DateTime.Now}");
             Log.Information($"\t{MESSAGE_STOP}");
             Log.Information($"\tOperator          : {UserPrincipal.Current.DisplayName}");
@@ -99,12 +99,12 @@ namespace ABT.TestSpace.Logging {
                     s.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthTestMeasurement + "} : {1}\n", testExecutive.ConfigTest.Tests[testMeasurementID].ID, testExecutive.ConfigTest.Tests[testMeasurementID].Description));
                 }
             }
-            Log.Information($"Measurements:\n{s}");
+            Log.Information($"TestMeasurements:\n{s}");
         }
 
         public static void LogTest(Boolean isOperation, Test test, ref RichTextBox rtfResults) {
             StringBuilder message = new StringBuilder();
-            message.AppendLine($"ID '{test.ID}'");
+            message.AppendLine($"TestMeasurement ID '{test.ID}'");
             message.AppendLine($"  Revision    : {test.Revision}");
             message.AppendLine($"  Description : {test.Description}");
             message.AppendLine($"  Test Type   : {test.ClassName}");
@@ -134,7 +134,7 @@ namespace ABT.TestSpace.Logging {
                     message.AppendLine($"  Actual      : {test.Measurement}");
                     break;
                 default:
-                    throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
+                    throw new NotImplementedException($"TestMeasurement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
             }
             message.AppendLine($"  Result      : {test.Result}");
 #if DEBUG

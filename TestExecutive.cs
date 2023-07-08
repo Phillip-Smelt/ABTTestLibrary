@@ -277,7 +277,7 @@ namespace ABT.TestSpace {
                     if (String.Equals(testISP.ISPExpected, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestNumerical.ClassName:
-                    if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestElement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
+                    if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
                     TestNumerical testNumerical = new TestNumerical(test.ID, test.Arguments);
                     if ((testNumerical.Low <= dMeasurement) && (dMeasurement <= testNumerical.High)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
@@ -286,7 +286,7 @@ namespace ABT.TestSpace {
                     if (String.Equals(testTextual.Text, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 default:
-                    throw new NotImplementedException($"TestElement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
+                    throw new NotImplementedException($"TestMeasurement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
             }
         }
 

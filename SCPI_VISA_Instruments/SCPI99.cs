@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
-using ABT.TestSpace.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.

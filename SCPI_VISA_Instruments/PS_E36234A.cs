@@ -56,11 +56,11 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
             return (srr[(Int32)Channel], srf[(Int32)Channel]);
         }
 
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, CHANNELS Channel, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, CHANNELS Channel, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
             SetVDC(SVI, VoltsDC, Channel);
             SetADC(SVI, AmpsDC, Channel);
             SetCurrentProtectionDelay(SVI, DelayCurrentProtectionSeconds, Channel);
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal", ConvertChannel(Channel));
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), ConvertChannel(Channel));
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false, ConvertChannel(Channel));
             ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command(true, ConvertChannel(Channel));
             SetOutputState(SVI, State, Channel);
