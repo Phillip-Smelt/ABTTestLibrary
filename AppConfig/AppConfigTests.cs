@@ -122,17 +122,19 @@ namespace ABT.TestSpace.AppConfig {
         public readonly String Description;
         public readonly String Revision;
         public readonly String ClassName;
+        public readonly Boolean CancelOnFailure;
         public readonly String Arguments;
         public String Measurement { get; set; } = String.Empty; // Determined during test.
         public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
 #if DEBUG
         public String DebugMessage { get; set; } = String.Empty; // Determined during test, only available for Debug compilations.
 #endif
-        private Test(String id, String description, String revision, String className, String arguments) {
+        private Test(String id, String description, String revision, String className, Boolean cancelOnFailure, String arguments) {
             this.ID = id;
             this.Description = description;
             this.Revision = revision;
             this.ClassName = className;
+            this.CancelOnFailure = cancelOnFailure;
             this.Arguments = arguments;
             if (String.Equals(this.ClassName, TestNumerical.ClassName)) this.Measurement = Double.NaN.ToString();
             Object _ = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
@@ -143,7 +145,7 @@ namespace ABT.TestSpace.AppConfig {
             TestMeasurementsSection testMeasurementsSection = (TestMeasurementsSection)ConfigurationManager.GetSection("TestMeasurementsSection");
             TestMeasurements testMeasurements = testMeasurementsSection.TestMeasurements;
             Dictionary<String, Test> dictionary = new Dictionary<String, Test>();
-            foreach (TestMeasurement tm in testMeasurements) { dictionary.Add(tm.ID, new Test(tm.ID, tm.Description, tm.Revision, tm.ClassName, tm.Arguments)); }
+            foreach (TestMeasurement tm in testMeasurements) { dictionary.Add(tm.ID, new Test(tm.ID, tm.Description, tm.Revision, tm.ClassName, tm.CancelOnFailure, tm.Arguments)); }
             return dictionary;
         }
 

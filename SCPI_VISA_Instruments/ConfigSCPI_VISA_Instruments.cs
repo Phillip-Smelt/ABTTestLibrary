@@ -76,7 +76,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
 
         public static String GetInfo(SCPI_VISA_Instrument SVI, String optionalHeader = "") {
             String info = (optionalHeader == "") ? optionalHeader : optionalHeader += Environment.NewLine;
-            foreach (PropertyInfo pi in SVI.GetType().GetProperties()) info += $"{pi.Name.PadLeft(Logger.SPACES_16.Length)}: '{pi.GetValue(SVI)}'{Environment.NewLine}";
+            foreach (PropertyInfo pi in SVI.GetType().GetProperties()) info += $"{pi.Name.PadLeft(Logger.SPACES_21.Length)}: '{pi.GetValue(SVI)}'{Environment.NewLine}";
             return info;
         }
     }

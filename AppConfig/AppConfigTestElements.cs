@@ -59,6 +59,7 @@ namespace ABT.TestSpace.AppConfig {
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
         [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
         [ConfigurationProperty("ClassName", IsKey = false, IsRequired = true)] public String ClassName { get { return ((String)base["ClassName"]).Trim(); } }
+        [ConfigurationProperty("CancelOnFailure", IsKey = false, IsRequired = true)] public Boolean CancelOnFailure { get { return ((Boolean)base["CancelOnFailure"]); } }
         [ConfigurationProperty("Arguments", IsKey = false, IsRequired = true)] public String Arguments { get { return ((String)base["Arguments"]).Trim(); } }
     }
 
