@@ -149,7 +149,7 @@ namespace ABT.TestSpace.AppConfig {
             return dictionary;
         }
 
-        public static Test Get(String TestMeasurementID) { return Get()[TestMeasurementID]; }
+        public static Test Get(String TestMeasurementIDPresent) { return Get()[TestMeasurementIDPresent]; }
     }
 
     public class AppConfigTest {

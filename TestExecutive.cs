@@ -42,7 +42,7 @@ namespace ABT.TestSpace {
         internal readonly String _libraryAssemblyVersion;
         private Boolean _cancelled = false;
 
-        protected abstract Task<String> RunTestAsync(String TestID);
+        protected abstract Task<String> RunTest(String TestMeasurementIDPresent);
 
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();
@@ -84,7 +84,9 @@ namespace ABT.TestSpace {
             String serialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.ConfigUUT.SerialNumber);
             if (String.Equals(serialNumber, String.Empty)) return;
             this.ConfigUUT.SerialNumber = serialNumber;
-            await this.RunAsync();
+            this.PreRun();
+            await this.Run();
+            this.PostRun();
         }
 
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
@@ -223,11 +225,10 @@ namespace ABT.TestSpace {
             this.ButtonCancelReset(enabled: true);
         }
 
-        private async Task RunAsync() {
-            this.PreRun();
+        private async Task Run() {
             foreach (String testMeasurementID in this.ConfigTest.TestMeasurementIDsSequence) {
                 try {
-                    this.ConfigTest.Tests[testMeasurementID].Measurement = await Task.Run(() => this.RunTestAsync(testMeasurementID));
+                    this.ConfigTest.Tests[testMeasurementID].Measurement = await Task.Run(() => this.RunTest(testMeasurementID));
                     this.ConfigTest.Tests[testMeasurementID].Result = EvaluateTestResult(this.ConfigTest.Tests[testMeasurementID]);
                 } catch (Exception e) {
                     if (e.ToString().Contains(TestCancellationException.ClassName)) {
@@ -247,7 +248,6 @@ namespace ABT.TestSpace {
                 }
                 if (String.Equals(this.ConfigTest.Tests[testMeasurementID].Result, EventCodes.FAIL) && this.ConfigTest.Tests[testMeasurementID].CancelOnFailure) break;
             }
-            this.PostRun();
         }
 
         private void StopRun(String testMeasurementID, String exceptionString) {
