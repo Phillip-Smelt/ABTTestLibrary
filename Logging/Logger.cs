@@ -159,7 +159,7 @@ namespace ABT.TestSpace.Logging {
             }
         }
 
-        public static void UnexpectedErrorHandler(String logMessage) {
+        public static void LogError(String logMessage) {
             Log.Error(logMessage);
             MessageBox.Show(Form.ActiveForm, $"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
                             $"If reoccurs, please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);

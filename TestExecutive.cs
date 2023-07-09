@@ -42,7 +42,7 @@ namespace ABT.TestSpace {
         internal readonly String _libraryAssemblyVersion;
         private Boolean _cancelled = false;
 
-        protected abstract Task<String> RunTest(String testID);
+        protected abstract Task<String> TestRun(String testID);
 
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();
@@ -84,9 +84,9 @@ namespace ABT.TestSpace {
             String serialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.ConfigUUT.SerialNumber);
             if (String.Equals(serialNumber, String.Empty)) return;
             this.ConfigUUT.SerialNumber = serialNumber;
-            this.PreRun();
-            await this.Run();
-            this.PostRun();
+            this.TestsPreRun();
+            await this.TestsRun();
+            this.TestsPostRun();
         }
 
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
@@ -205,7 +205,7 @@ namespace ABT.TestSpace {
             // Will fail if this.ConfigLogger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
         }
 
-        private void PreRun() {
+        private void TestsPreRun() {
             this.FormReset();
             foreach (KeyValuePair<String, Test> kvp in this.ConfigTest.Tests) {
                 if (String.Equals(kvp.Value.ClassName, TestNumerical.ClassName)) kvp.Value.Measurement = Double.NaN.ToString();
@@ -222,18 +222,13 @@ namespace ABT.TestSpace {
             this.ButtonCancelReset(enabled: true);
         }
 
-        private async Task Run() {
+        private async Task TestsRun() {
             foreach (String testID in this.ConfigTest.TestIDsSequence) {
                 try {
-                    this.ConfigTest.Tests[testID].Measurement = await Task.Run(() => this.RunTest(testID));
+                    this.ConfigTest.Tests[testID].Measurement = await Task.Run(() => this.TestRun(testID));
                     this.ConfigTest.Tests[testID].Result = EvaluateTestResult(this.ConfigTest.Tests[testID]);
                 } catch (Exception e) {
-                    if (e.ToString().Contains(TestCancellationException.ClassName)) {
-                        this.ConfigTest.Tests[testID].Result = EventCodes.CANCEL;
-                        while (!(e is TestCancellationException) && (e.InnerException != null)) e = e.InnerException;
-                        if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Tests[testID].Measurement = e.Message;
-                    }
-                    else this.StopRun(testID, e.ToString());
+                    this.TestsRunExceptionHandler(testID, e);
                     break;
                 } finally {
                     Logger.LogTest(this.ConfigTest.IsOperation, this.ConfigTest.Tests[testID], ref this.rtfResults);
@@ -246,14 +241,20 @@ namespace ABT.TestSpace {
             }
         }
 
-        private void StopRun(String testID, String exceptionString) {
-            SCPI99.ResetAll(this.SVIs);
-            USB_ERB24.Set(RelayForms.C.NC);
-            this.ConfigTest.Tests[testID].Result = EventCodes.ERROR;
-            Logger.UnexpectedErrorHandler(exceptionString);
+        private void TestsRunExceptionHandler(String testID, Exception e) {
+            if (e.ToString().Contains(TestCancellationException.ClassName)) {
+                while (!(e is TestCancellationException) && (e.InnerException != null)) e = e.InnerException;
+                if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Tests[testID].Measurement = e.Message;
+                this.ConfigTest.Tests[testID].Result = EventCodes.CANCEL;
+            } else {
+                SCPI99.ResetAll(this.SVIs);
+                USB_ERB24.Set(RelayForms.C.NC);
+                Logger.LogError(e.ToString());
+                this.ConfigTest.Tests[testID].Result = EventCodes.ERROR;
+            }
         }
 
-        private void PostRun() {
+        private void TestsPostRun() {
             SCPI99.ResetAll(this.SVIs);
             USB_ERB24.Set(RelayForms.C.NC);
             this.ButtonSelectTests.Enabled = true;
@@ -299,24 +300,19 @@ namespace ABT.TestSpace {
             if (GetResultCount(configTest.Tests, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
             // 3rd priority evaluation:
             // - If any test result is CANCEL, and none were ERROR, overall UUT result is CANCEL.
-            if (GetResultCount(configTest.Tests, EventCodes.FAIL) != 0) return EventCodes.FAIL;
+            if (GetResultCount(configTest.Tests, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
             // 4th priority evaluation:
-            // - If any test result is FAIL, and none were ERROR or CANCEL, UUT result is FAIL.
-            if (GetResultCount(configTest.Tests, EventCodes.UNSET) != 0) {
-                // 5th priority evaluation:
-                // - If any test result is UNSET, and none were ERROR, CANCEL or FAIL results, it implies Test(s) didn't complete
-                //   without erroring or cancelling, which shouldn't occur, but in case it does...
-                String s = String.Empty;
-                foreach (KeyValuePair<String, Test> kvp in configTest.Tests) s += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
-                Logger.UnexpectedErrorHandler($"Encountered Test(s) with EventCodes.UNSET:{Environment.NewLine}{Environment.NewLine}{s}");
-                return EventCodes.ERROR;
-            }
-            // Below handles class EventCodes changing (add/delete/rename Codes) without accomodating EvaluateUUTResult() changes. 
+            // - If any test result is UNSET, and none were ERROR or CANCEL, then Test(s) didn't complete.
+            // - Likely occurred because a Test failed that had its App.Config TestMeasurement CancelOnFail flag set to true.
+            if (GetResultCount(configTest.Tests, EventCodes.FAIL) != 0) return EventCodes.FAIL;
+            // 5th priority evaluation:
+            // - If any test result is FAIL, and none were ERROR, CANCEL or UNSET, UUT result is FAIL.
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
             foreach (KeyValuePair<String, Test> kvp in configTest.Tests) if (!validEvents.Contains(kvp.Value.Result)) invalidTests += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
-            Logger.UnexpectedErrorHandler($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
+            Logger.LogError($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
             return EventCodes.ERROR;
+            // Above handles class EventCodes changing (adding/deleting/renaming EventCodes) without accomodating EvaluateUUTResult() changes. 
         }
 
         private static Int32 GetResultCount(Dictionary<String, Test> tests, String eventCode) { return (from test in tests where String.Equals(test.Value.Result, eventCode) select test).Count(); }
