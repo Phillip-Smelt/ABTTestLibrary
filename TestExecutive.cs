@@ -42,7 +42,7 @@ namespace ABT.TestSpace {
         internal readonly String _libraryAssemblyVersion;
         private Boolean _cancelled = false;
 
-        protected abstract Task<String> RunTest(String TestMeasurementIDPresent);
+        protected abstract Task<String> RunTest(String testID);
 
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();
@@ -235,9 +235,8 @@ namespace ABT.TestSpace {
                         this.ConfigTest.Tests[testID].Result = EventCodes.CANCEL;
                         while (!(e is TestCancellationException) && (e.InnerException != null)) e = e.InnerException;
                         if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Tests[testID].Measurement = e.Message;
-                    } else {
-                        this.StopRun(testID, e.ToString());
                     }
+                    else this.StopRun(testID, e.ToString());
                     break;
                 } finally {
                     Logger.LogTest(this.ConfigTest.IsOperation, this.ConfigTest.Tests[testID], ref this.rtfResults);
@@ -303,19 +302,19 @@ namespace ABT.TestSpace {
             if (GetResultCount(configTest.Tests, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
             // 3rd priority evaluation:
             // - If any test result is CANCEL, and none were ERROR, overall UUT result is CANCEL.
+            if (GetResultCount(configTest.Tests, EventCodes.FAIL) != 0) return EventCodes.FAIL;
+            // 4th priority evaluation:
+            // - If any test result is FAIL, and none were ERROR or CANCEL, UUT result is FAIL.
             if (GetResultCount(configTest.Tests, EventCodes.UNSET) != 0) {
-                // 4th priority evaluation:
-                // - If any test result is UNSET, and there are no explicit ERROR or CANCEL results, it implies Test(s) didn't complete
-                //   without erroring or cancelling, which shouldn't occur, but...
+                // 5th priority evaluation:
+                // - If any test result is UNSET, and none were ERROR, CANCEL or FAIL results, it implies Test(s) didn't complete
+                //   without erroring or cancelling, which shouldn't occur, but in case it does...
                 String s = String.Empty;
                 foreach (KeyValuePair<String, Test> kvp in configTest.Tests) s += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
                 Logger.UnexpectedErrorHandler($"Encountered Test(s) with EventCodes.UNSET:{Environment.NewLine}{Environment.NewLine}{s}");
                 return EventCodes.ERROR;
             }
-            if (GetResultCount(configTest.Tests, EventCodes.FAIL) != 0) return EventCodes.FAIL;
-            // 5th priority evaluation:
-            // - If there are no ERROR, CANCEL or UNSET results, but there are FAIL result(s), UUT result is FAIL.
-            // Else, we're really in the Twilight Zone...
+            // Below handles class EventCodes changing (add/delete/rename Codes) without accomodating EvaluateUUTResult() changes. 
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
             foreach (KeyValuePair<String, Test> kvp in configTest.Tests) if (!validEvents.Contains(kvp.Value.Result)) invalidTests += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
