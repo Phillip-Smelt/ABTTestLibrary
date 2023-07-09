@@ -226,34 +226,34 @@ namespace ABT.TestSpace {
         }
 
         private async Task Run() {
-            foreach (String testMeasurementID in this.ConfigTest.TestMeasurementIDsSequence) {
+            foreach (String testID in this.ConfigTest.TestIDsSequence) {
                 try {
-                    this.ConfigTest.Tests[testMeasurementID].Measurement = await Task.Run(() => this.RunTest(testMeasurementID));
-                    this.ConfigTest.Tests[testMeasurementID].Result = EvaluateTestResult(this.ConfigTest.Tests[testMeasurementID]);
+                    this.ConfigTest.Tests[testID].Measurement = await Task.Run(() => this.RunTest(testID));
+                    this.ConfigTest.Tests[testID].Result = EvaluateTestResult(this.ConfigTest.Tests[testID]);
                 } catch (Exception e) {
                     if (e.ToString().Contains(TestCancellationException.ClassName)) {
-                        this.ConfigTest.Tests[testMeasurementID].Result = EventCodes.CANCEL;
+                        this.ConfigTest.Tests[testID].Result = EventCodes.CANCEL;
                         while (!(e is TestCancellationException) && (e.InnerException != null)) e = e.InnerException;
-                        if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Tests[testMeasurementID].Measurement = e.Message;
+                        if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Tests[testID].Measurement = e.Message;
                     } else {
-                        this.StopRun(testMeasurementID, e.ToString());
+                        this.StopRun(testID, e.ToString());
                     }
                     break;
                 } finally {
-                    Logger.LogTest(this.ConfigTest.IsOperation, this.ConfigTest.Tests[testMeasurementID], ref this.rtfResults);
+                    Logger.LogTest(this.ConfigTest.IsOperation, this.ConfigTest.Tests[testID], ref this.rtfResults);
                 }
                 if (this._cancelled) {
-                    this.ConfigTest.Tests[testMeasurementID].Result = EventCodes.CANCEL;
+                    this.ConfigTest.Tests[testID].Result = EventCodes.CANCEL;
                     break;
                 }
-                if (String.Equals(this.ConfigTest.Tests[testMeasurementID].Result, EventCodes.FAIL) && this.ConfigTest.Tests[testMeasurementID].CancelOnFailure) break;
+                if (String.Equals(this.ConfigTest.Tests[testID].Result, EventCodes.FAIL) && this.ConfigTest.Tests[testID].CancelOnFailure) break;
             }
         }
 
-        private void StopRun(String testMeasurementID, String exceptionString) {
+        private void StopRun(String testID, String exceptionString) {
             SCPI99.ResetAll(this.SVIs);
             USB_ERB24.Set(RelayForms.C.NC);
-            this.ConfigTest.Tests[testMeasurementID].Result = EventCodes.ERROR;
+            this.ConfigTest.Tests[testID].Result = EventCodes.ERROR;
             Logger.UnexpectedErrorHandler(exceptionString);
         }
 

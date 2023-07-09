@@ -138,7 +138,8 @@ namespace ABT.TestSpace.AppConfig {
             this.Arguments = arguments;
             if (String.Equals(this.ClassName, TestNumerical.ClassName)) this.Measurement = Double.NaN.ToString();
             Object _ = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
-            // Create throwaway instance of className to validate its arguments; better to throw obvious Exception before testing than cryptic Exception during testing.
+            // Create throwaway instance of className to validate its arguments before testing, rather than during:
+            //  - Better to incur a comprehensible Exception when consequences are minimal than an incomprehensible Exception when consequences are maximal.
         }
 
         public static Dictionary<String, Test> Get() {
@@ -157,7 +158,7 @@ namespace ABT.TestSpace.AppConfig {
         public readonly Boolean IsOperation;
         public readonly String TestElementDescription;
         public readonly String TestElementRevision;
-        public readonly List<String> TestMeasurementIDsSequence;
+        public readonly List<String> TestIDsSequence;
         public readonly Dictionary<String, Test> Tests;
         public readonly Int32 FormattingLengthTestGroup = 0;
         public readonly Int32 FormattingLengthTestMeasurement = 0;
@@ -168,27 +169,27 @@ namespace ABT.TestSpace.AppConfig {
 
             (this.TestElementID, this.IsOperation) = SelectTests.Get(testOperations, testGroups);
 
-            this.TestMeasurementIDsSequence = new List<String>();
+            this.TestIDsSequence = new List<String>();
             if (this.IsOperation) {
                 this.TestElementDescription = testOperations[this.TestElementID].Description;
                 this.TestElementRevision = testOperations[this.TestElementID].Revision;
                 List<String> testGroupIDs = testOperations[this.TestElementID].TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList();
                 foreach (String testGroupID in testGroupIDs) {
-                    this.TestMeasurementIDsSequence.AddRange(testGroups[testGroupID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList());
+                    this.TestIDsSequence.AddRange(testGroups[testGroupID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList());
                     if (testGroupID.Length > this.FormattingLengthTestGroup) this.FormattingLengthTestGroup = testGroupID.Length;
                 }
             } else {
                 this.TestElementDescription = testGroups[this.TestElementID].Description;
                 this.TestElementRevision = testGroups[this.TestElementID].Revision;
-                this.TestMeasurementIDsSequence = testGroups[this.TestElementID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList(); 
+                this.TestIDsSequence = testGroups[this.TestElementID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList(); 
             }
-            IEnumerable<String> duplicateIDs = this.TestMeasurementIDsSequence.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
+            IEnumerable<String> duplicateIDs = this.TestIDsSequence.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
             if (duplicateIDs.Count() !=0) throw new InvalidOperationException($"Duplicated TestMeasurementIDs '{String.Join("', '", duplicateIDs)}'.");
 
             Dictionary<String, Test> testMeasurements = Test.Get();
             this.Tests = new Dictionary<String, Test>();
 
-            foreach (String testMeasurementID in this.TestMeasurementIDsSequence) {
+            foreach (String testMeasurementID in this.TestIDsSequence) {
                 this.Tests.Add(testMeasurementID, testMeasurements[testMeasurementID]); // Add only TestMeasurements correlated to the TestElementID selected by operator.
                 if (testMeasurementID.Length > this.FormattingLengthTestMeasurement) this.FormattingLengthTestMeasurement = testMeasurementID.Length;
             }
