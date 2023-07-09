@@ -92,7 +92,7 @@ namespace ABT.TestSpace {
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             #region Long Test Cancellation Comment
             // NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
-            // Spontaneous Operator Initiated Cancellations:
+            // A) Spontaneous Operator Initiated Cancellations:
             //      1)  Operator Proactive:
             //          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
             //            cancel currently executing Test.
@@ -103,28 +103,28 @@ namespace ABT.TestSpace {
             //          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
             //      2)  Operator Reactive:
             //          - TestExecutive's already implemented, always available & default reactive "Cancel before next Test" technique,
-            //            which simply sets this._cancelled Boolean to true, checked at the end of TestExecutive.Run()'s foreach loop.
-            //          - If this._cancelled is true, TestExeuctive.Run()'s foreach loop is broken, causing reactive cancellation
+            //            which simply sets this._cancelled Boolean to true, checked at the end of TestExecutive.TestsRun()'s foreach loop.
+            //          - If this._cancelled is true, TestExecutive.TestsRun()'s foreach loop is broken, causing reactive cancellation
             //            prior to the next Test's execution.
             //          - Note: This doesn't proactively cancel the *currently* executing Test, which runs to completion.
-            // PrePlanned Developer Programmed Cancellations:
+            // B) PrePlanned Developer Programmed Cancellations:
             //      3)  TestExecutor/Test Developer initiated Cancellations:
             //          - Any TestExecutor's Test can initiate a Cancellation programmatically by simply throwing a TestCancellationException:
-            //          - Let's say we want to immediately abort if specific condition(s) occur in a Test; perhaps to prevent UUT or equipment damage,
+            //          - Permits immediate Cancellation if specific condition(s) occur in a Test; perhaps to prevent UUT or equipment damage,
             //            or simply because futher execution is pointless.
-            //          - Simply throw a TestCancellationException if the condition(s) occcur.
+            //          - Simply throw a TestCancellationException if the specific condition(s) occcur.
             //          - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestExecutor/blob/master/TestProgram/T-Common.cs
             //          - Test Developer must set TestCancellationException's message to the Measured Value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
             //      4)  App.Config's CancelOnFailure:
             //          - App.Config's TestMeasurement element has a Boolean "CancelOnFailure" field:
-            //          - If the current TestExecutor.RunTest() has CancelOnFailure=true and it's resulting EvaluateTestResult() returns EventCodes.FAIL,
-            //            TestExecutive.Run() will break/exit, stopping further testing.
-            //		    - Do not pass Go, do not collect $200, go directly to TestExecutive.PostRun().
+            //          - If the current TestExecutor.TestRun() has CancelOnFailure=true and it's resulting EvaluateTestResult() returns EventCodes.FAIL,
+            //            TestExecutive.TestsRun() will break/exit, stopping further testing.
+            //		    - Do not pass Go, do not collect $200, go directly to TestExecutive.TestsPostRun().
             //
-            // NOTE: The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.RunTest() conpletes, via 
+            // NOTE: The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.TestRun() conpletes, via 
             //       thrown TestCancellationExceptions.
-            // NOTE: The Operator Reactive & App.Config's CancelOnFailure Cancellations both occur after the currently executing TestExecutor.RunTest() completes, via checks
-            //       inside the TestExecutive.Run() loop.
+            // NOTE: The Operator Reactive & App.Config's CancelOnFailure Cancellations both occur after the currently executing TestExecutor.TestRun() completes, via checks
+            //       inside the TestExecutive.TestsRun() loop.
             #endregion Long Test Cancellation Comment
             this.CancelTokenSource.Cancel();
             this._cancelled = true;
