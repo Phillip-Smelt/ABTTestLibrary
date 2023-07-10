@@ -107,8 +107,8 @@ namespace ABT.TestSpace.Logging {
             message.AppendLine($"TestMeasurement ID '{test.ID}'");
             message.AppendLine($"  Revision          : {test.Revision}");
             message.AppendLine($"  Description       : {test.Description}");
-            message.AppendLine($"  Test Type         : {test.ClassName}");
-            message.AppendLine($"  Cancel on Failure : {test.CancelOnFailure}");
+            // TODO: message.AppendLine($"  Test Type         : {test.ClassName}");
+            // TODO: message.AppendLine($"  Cancel on Failure : {test.CancelOnFailure}");
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
                     TestCustomizable testCustomizable = (TestCustomizable)test.ClassObject;
@@ -125,8 +125,9 @@ namespace ABT.TestSpace.Logging {
                     message.AppendLine($"  High Limit        : {testNumerical.High:G}");
                     message.AppendLine($"  Measurement       : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
                     message.AppendLine($"  Low Limit         : {testNumerical.Low:G}");
-                    message.AppendLine($"  SI Units          : {Enum.GetName(typeof(SI_UNITS), testNumerical.SI_Units)}");
-                    if (testNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.AppendLine($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), testNumerical.SI_Units_Modifier)}");
+                    message.Append($"  SI Units          : {Enum.GetName(typeof(SI_UNITS), testNumerical.SI_Units)}");
+                    if (testNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.Append($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), testNumerical.SI_Units_Modifier)}");
+                    message.AppendLine("");
                     break;
                 case TestTextual.ClassName:
                     TestTextual testTextual = (TestTextual)test.ClassObject;
@@ -138,7 +139,7 @@ namespace ABT.TestSpace.Logging {
             }
             message.AppendLine($"  Result            : {test.Result}");
 #if DEBUG
-            message.AppendLine(test.DebugMessage);
+            message.Append(test.DebugMessage);
 #endif
             Log.Information(message.ToString());
             if (isOperation) SetBackColor(ref rtfResults, 0, test.ID, EventCodes.GetColor(test.Result));
@@ -165,7 +166,7 @@ namespace ABT.TestSpace.Logging {
         }
 
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
-            Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord);
+            Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
             if (selectionStart != -1) {
                 richTextBox.SelectionStart = selectionStart;
                 richTextBox.SelectionLength = originalText.Length;
@@ -174,7 +175,7 @@ namespace ABT.TestSpace.Logging {
         }
 
         private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
-            Int32 selectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord);
+            Int32 selectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
             if (selectionStart != -1) {
                 richTextBox.SelectionStart = selectionStart;
                 richTextBox.SelectionLength = findText.Length;
