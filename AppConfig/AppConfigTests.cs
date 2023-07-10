@@ -180,7 +180,6 @@ namespace ABT.TestSpace.AppConfig {
             this.ClassName = className;
             this.ClassObject = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
             this.CancelOnFailure = cancelOnFailure;
-            // this.Arguments = arguments;
             if (String.Equals(this.ClassName, TestNumerical.ClassName)) this.Measurement = Double.NaN.ToString();
         }
 
