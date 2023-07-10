@@ -105,10 +105,12 @@ namespace ABT.TestSpace.Logging {
         public static void LogTest(Boolean isOperation, Test test, ref RichTextBox rtfResults) {
             StringBuilder message = new StringBuilder();
             message.AppendLine($"TestMeasurement ID '{test.ID}'");
+#if DEBUG
             message.AppendLine($"  Revision          : {test.Revision}");
+            message.AppendLine($"  Test Type         : {test.ClassName}");
+            message.AppendLine($"  Cancel on Failure : {test.CancelOnFailure}");
+#endif
             message.AppendLine($"  Description       : {test.Description}");
-            // TODO: message.AppendLine($"  Test Type         : {test.ClassName}");
-            // TODO: message.AppendLine($"  Cancel on Failure : {test.CancelOnFailure}");
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
                     TestCustomizable testCustomizable = (TestCustomizable)test.ClassObject;
