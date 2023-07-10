@@ -122,6 +122,7 @@ namespace ABT.TestSpace.AppConfig {
         }
 
         public override String GetArguments() {
+            // TODO: use foreach & Reflection to get all field names, String.Joins with "=" & Test.SPLIT_ARGUMENTS_CHAR to combine them.
             return $"{_HIGH}={this.High}|{_LOW}={this.Low}|{_SI_UNITS}={this.SI_Units}|{_SI_UNITS_MODIFIER}={this.SI_Units_Modifier}";
         }
     }
@@ -154,24 +155,23 @@ namespace ABT.TestSpace.AppConfig {
         public readonly String Description;
         public readonly String Revision;
         public readonly String ClassName;
+        public readonly Object ClassObject;
         public readonly Boolean CancelOnFailure;
-        public readonly String Arguments;
+        // public readonly String Arguments;
         public String Measurement { get; set; } = String.Empty; // Determined during test.
         public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
 #if DEBUG
-        public String DebugMessage { get; set; } = String.Empty; // Determined during test, only available for Debug compilations.
+        public String DebugMessage { get; set; } = String.Empty; // Determined during test.
 #endif
         private Test(String id, String description, String revision, String className, Boolean cancelOnFailure, String arguments) {
             this.ID = id;
             this.Description = description;
             this.Revision = revision;
             this.ClassName = className;
+            this.ClassObject = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
             this.CancelOnFailure = cancelOnFailure;
-            this.Arguments = arguments;
+            // this.Arguments = arguments;
             if (String.Equals(this.ClassName, TestNumerical.ClassName)) this.Measurement = Double.NaN.ToString();
-            Object _ = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
-            // Create throwaway instance of className to validate its arguments before testing, rather than during:
-            //  - Better to incur a comprehensible Exception when consequences are minimal than an incomprehensible Exception when consequences are maximal.
         }
 
         public static Dictionary<String, Test> Get() {

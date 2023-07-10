@@ -271,16 +271,16 @@ namespace ABT.TestSpace {
                 case TestCustomizable.ClassName:
                     return test.Result;
                 case TestISP.ClassName:
-                    TestISP testISP = new TestISP(test.ID, test.Arguments);
+                    TestISP testISP = (TestISP)test.ClassObject;
                     if (String.Equals(testISP.ISPExpected, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestNumerical.ClassName:
                     if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
-                    TestNumerical testNumerical = new TestNumerical(test.ID, test.Arguments);
+                    TestNumerical testNumerical = (TestNumerical)test.ClassObject;
                     if ((testNumerical.Low <= dMeasurement) && (dMeasurement <= testNumerical.High)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestTextual.ClassName:
-                    TestTextual testTextual = new TestTextual(test.ID, test.Arguments);
+                    TestTextual testTextual = (TestTextual)test.ClassObject;
                     if (String.Equals(testTextual.Text, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 default:

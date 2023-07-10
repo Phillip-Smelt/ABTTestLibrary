@@ -111,17 +111,17 @@ namespace ABT.TestSpace.Logging {
             message.AppendLine($"  Cancel on Failure : {test.CancelOnFailure}");
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
-                    TestCustomizable testCustomizable = new TestCustomizable(test.ID, test.Arguments);
+                    TestCustomizable testCustomizable = (TestCustomizable)test.ClassObject;
                     if (testCustomizable.Arguments != TestCustomizable.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in TestAbstract.SplitArguments(testCustomizable.Arguments)) message.AppendLine($"  Key=Value   : {kvp.Key}={kvp.Value}");
                     message.AppendLine($"  Actual            : {test.Measurement}");
                     break;
                 case TestISP.ClassName:
-                    TestISP testISP = new TestISP(test.ID, test.Arguments);
+                    TestISP testISP = (TestISP)test.ClassObject;
                     message.AppendLine($"  Expected          : {testISP.ISPExpected}");
                     message.AppendLine($"  Actual            : {test.Measurement}");
                     break;
                 case TestNumerical.ClassName:
-                    TestNumerical testNumerical = new TestNumerical(test.ID, test.Arguments);
+                    TestNumerical testNumerical = (TestNumerical)test.ClassObject;
                     message.AppendLine($"  High Limit        : {testNumerical.High:G}");
                     message.AppendLine($"  Measurement       : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
                     message.AppendLine($"  Low Limit         : {testNumerical.Low:G}");
@@ -130,7 +130,7 @@ namespace ABT.TestSpace.Logging {
                     message.AppendLine("");
                     break;
                 case TestTextual.ClassName:
-                    TestTextual testTextual = new TestTextual(test.ID, test.Arguments);
+                    TestTextual testTextual = (TestTextual)test.ClassObject;
                     message.AppendLine($"  Expected          : {testTextual.Text}");
                     message.AppendLine($"  Actual            : {test.Measurement}");
                     break;

@@ -84,13 +84,13 @@ namespace ABT.TestSpace.InterfaceAdapters {
         }
 
         public static String ExitCode(Test test) {
-            TestISP testISP = new TestISP(test.ID, test.Arguments);
+            TestISP testISP = (TestISP)test.ClassObject;
             String exitCode = ProcessExitCode(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder);
             return exitCode;
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(Test test) {
-            TestISP testISP = new TestISP(test.ID, test.Arguments);
+            TestISP testISP = (TestISP)test.ClassObject;
             (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder, testISP.ISPExpected);
             return (StandardError, StandardOutput, ExitCode);
         }
