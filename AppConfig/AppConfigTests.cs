@@ -51,7 +51,7 @@ namespace ABT.TestSpace.AppConfig {
                 $"   Or     : 'Key1{SK}Value1'{Environment.NewLine}" +
                 $"   Or     : 'Key1{SK}Value1{SA}{Environment.NewLine}" +
                 $"             Key2{SK}Value2{SA}{Environment.NewLine}" +
-                $"             Key3{SK}Value3{SA}'{Environment.NewLine}" +
+                $"             Key3{SK}Value3'{Environment.NewLine}" +
                 $"   Actual : '{arguments}'");
         }
 
