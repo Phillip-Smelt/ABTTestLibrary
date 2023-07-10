@@ -112,7 +112,7 @@ namespace ABT.TestSpace.Logging {
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
                     TestCustomizable testCustomizable = new TestCustomizable(test.ID, test.Arguments);
-                    if (testCustomizable.Arguments != null) foreach (KeyValuePair<String, String> kvp in testCustomizable.Arguments) message.AppendLine($"  Key=Value   : {kvp.Key}={kvp.Value}");
+                    if (testCustomizable.Arguments != TestCustomizable.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in TestAbstract.SplitArguments(testCustomizable.Arguments)) message.AppendLine($"  Key=Value   : {kvp.Key}={kvp.Value}");
                     message.AppendLine($"  Actual            : {test.Measurement}");
                     break;
                 case TestISP.ClassName:

@@ -4,7 +4,6 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.Policy;
 
 namespace ABT.TestSpace.AppConfig {
     public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
@@ -12,7 +11,6 @@ namespace ABT.TestSpace.AppConfig {
 
     public abstract class TestAbstract {
         public const String ClassName = nameof(TestAbstract);
-        public const String NOT_APPLICABLE = "NotApplicable";
         private protected TestAbstract() { }
 
         public static Dictionary<String, String> SplitArguments(String Arguments) {
@@ -25,13 +23,26 @@ namespace ABT.TestSpace.AppConfig {
             }
             return argDictionary;
         }
+
+        internal abstract void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict);
+
+        public abstract String GetArguments();
     }
 
     public class TestCustomizable : TestAbstract {
         public new const String ClassName = nameof(TestCustomizable);
-        public readonly Dictionary<String, String> Arguments = null;
+        public readonly String Arguments;                        private const String _ARGUMENTS = nameof(Arguments);
+        public readonly Dictionary<String, String> ArgsDict;     private const String _ARGS_DICT = nameof(ArgsDict);
+        public const String NOT_APPLICABLE = "NotApplicable";
 
-        public TestCustomizable(String _, String Arguments) { if (!String.Equals(Arguments, TestAbstract.NOT_APPLICABLE)) this.Arguments = TestAbstract.SplitArguments(Arguments); }
+        public TestCustomizable(String ID, String Arguments) {
+            this.Arguments = Arguments;
+            if (!String.Equals(Arguments, NOT_APPLICABLE)) this.ArgsDict = TestAbstract.SplitArguments(Arguments);
+        }
+
+        internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) { }
+
+        public override String GetArguments() { return this.Arguments; }
     }
 
     public class TestISP : TestAbstract {
@@ -43,16 +54,14 @@ namespace ABT.TestSpace.AppConfig {
 
         public TestISP(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            ValidateTestISP(ID, Arguments, argsDict);
+            ValidateArguments(ID, Arguments, argsDict);
             this.ISPExecutableFolder = argsDict[_ISP_EXECUTABLE_FOLDER];
             this.ISPExecutable = argsDict[_ISP_EXECUTABLE];
             this.ISPExecutableArguments = argsDict[_ISP_EXECUTABLE_ARGUMENTS];
             this.ISPExpected = argsDict[_ISP_EXPECTED];
         }
 
-        public static void ValidateTestISP(String ID, String Arguments) { ValidateTestISP(ID, Arguments, TestAbstract.SplitArguments(Arguments)); }
-
-        private static void ValidateTestISP(String id, String arguments, Dictionary<String, String> argsDict) {
+        internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $@"   Example: '{_ISP_EXECUTABLE}=ipecmd.exe|{Environment.NewLine}
                                 {_ISP_EXECUTABLE_FOLDER}=C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe\|{Environment.NewLine}
@@ -68,61 +77,74 @@ namespace ABT.TestSpace.AppConfig {
             if (!File.Exists(argsDict[_ISP_EXECUTABLE_FOLDER] + argsDict[_ISP_EXECUTABLE])) throw new ArgumentException($"{ClassName} ID '{id}' {_ISP_EXECUTABLE} '{argsDict[_ISP_EXECUTABLE_FOLDER] + argsDict[_ISP_EXECUTABLE]}' does not exist.");
         }
 
-        public String GetArguments() {
+        public override String GetArguments() {
             return $"{_ISP_EXECUTABLE_FOLDER}={this.ISPExecutableFolder}|{_ISP_EXECUTABLE}={this.ISPExecutable}|{_ISP_EXECUTABLE_ARGUMENTS}={this.ISPExecutableArguments}|{_ISP_EXPECTED}={this.ISPExpected}";
         }
     }
 
     public class TestNumerical : TestAbstract {
         public new const String ClassName = nameof(TestNumerical);
-        public readonly Double High;
-        public readonly Double Low;
-        public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;
-        public readonly SI_UNITS_MODIFIERS SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;
+        public readonly Double Low;                                                                 public const String _LOW = nameof(Low);
+        public readonly Double High;                                                                public const String _HIGH = nameof(High);
+        public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;                                 public const String _SI_UNITS = nameof(SI_Units);
+        public readonly SI_UNITS_MODIFIERS SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;    public const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
 
         public TestNumerical(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            if (argsDict.Count != 4) throw new ArgumentException($"TestNumerical ID '{ID}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
-                $"   Example: 'High=0.004|{Environment.NewLine}" +
-                $"             Low=0.002|{Environment.NewLine}" +
-                $"             SI_Units=volts|{Environment.NewLine}" +
-                $"             SI_Units_Modifier=DC'{Environment.NewLine}" +
-                $"   Actual : '{Arguments}'");
-            if (!argsDict.ContainsKey("High")) throw new ArgumentException($"TestNumerical ID '{ID}' does not contain 'High' key-value pair.");
-            if (!argsDict.ContainsKey("Low")) throw new ArgumentException($"TestNumerical ID '{ID}' does not contain 'Low' key-value pair.");
-            if (!argsDict.ContainsKey("SI_Units")) throw new ArgumentException($"TestNumerical ID '{ID}' does not contain 'SI_Units' key-value pair.");
-            if (!argsDict.ContainsKey("SI_Units_Modifier")) throw new ArgumentException(ID);
-
-            if (Double.TryParse(argsDict["High"], NumberStyles.Float, CultureInfo.CurrentCulture, out Double high)) this.High = high;
-            else throw new ArgumentException($"TestNumerical ID '{ID}' High '{argsDict["High"]}' ≠ System.Double.");
-
-            if (Double.TryParse(argsDict["Low"], NumberStyles.Float, CultureInfo.CurrentCulture, out Double low)) this.Low = low;
-            else throw new ArgumentException($"TestNumerical ID '{ID}' Low '{argsDict["Low"]}' ≠ System.Double.");
-
-            if (low > high) throw new ArgumentException($"TestNumerical ID '{ID}' Low '{low}' > High '{high}'.");
+            ValidateArguments(ID, Arguments, argsDict);
+            this.High = Double.Parse(argsDict[_HIGH], NumberStyles.Float, CultureInfo.CurrentCulture);
+            this.Low = Double.Parse(argsDict[_LOW], NumberStyles.Float, CultureInfo.CurrentCulture);
 
             String[] si_units = Enum.GetNames(typeof(SI_UNITS)).Select(s => s.ToLower()).ToArray();
-            if (si_units.Any(argsDict["SI_Units"].ToLower().Contains)) {
-                this.SI_Units = (SI_UNITS)Enum.Parse(typeof(SI_UNITS), argsDict["SI_Units"], ignoreCase: true);
+            if (si_units.Any(argsDict[_SI_UNITS].ToLower().Contains)) {
+                this.SI_Units = (SI_UNITS)Enum.Parse(typeof(SI_UNITS), argsDict[_SI_UNITS], ignoreCase: true);
                 String[] si_units_modifiers = Enum.GetNames(typeof(SI_UNITS_MODIFIERS)).Select(s => s.ToLower()).ToArray();
-                if (si_units_modifiers.Any(argsDict["SI_Units_Modifier"].ToLower().Contains)) {
-                    this.SI_Units_Modifier = (SI_UNITS_MODIFIERS)Enum.Parse(typeof(SI_UNITS_MODIFIERS), argsDict["SI_Units_Modifier"], ignoreCase: true);
+                if (si_units_modifiers.Any(argsDict[_SI_UNITS_MODIFIER].ToLower().Contains)) {
+                    this.SI_Units_Modifier = (SI_UNITS_MODIFIERS)Enum.Parse(typeof(SI_UNITS_MODIFIERS), argsDict[_SI_UNITS_MODIFIER], ignoreCase: true);
                 }
             }
+        }
+
+        internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) {
+            if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
+                $"   Example: '{_HIGH}=0.004|{Environment.NewLine}" +
+                $"             {_LOW}=0.002|{Environment.NewLine}" +
+                $"             {_SI_UNITS}=volts|{Environment.NewLine}" +
+                $"             {_SI_UNITS_MODIFIER}=DC'{Environment.NewLine}" +
+                $"   Actual : '{arguments}'");
+            if (!argsDict.ContainsKey(_HIGH)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_HIGH}' key-value pair.");
+            if (!argsDict.ContainsKey(_LOW)) throw new ArgumentException($"{ClassName} ID '{id  }' does not contain '{_LOW}' key-value pair.");
+            if (!argsDict.ContainsKey(_SI_UNITS)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_SI_UNITS}' key-value pair.");
+            if (!argsDict.ContainsKey(_SI_UNITS_MODIFIER)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_SI_UNITS_MODIFIER}' key-value pair.");
+            if (!Double.TryParse(argsDict[_HIGH], NumberStyles.Float, CultureInfo.CurrentCulture, out Double high)) throw new ArgumentException($"{ClassName} ID '{id}' {_HIGH} '{argsDict[_HIGH]}' ≠ System.Double.");
+            if (!Double.TryParse(argsDict[_LOW], NumberStyles.Float, CultureInfo.CurrentCulture, out Double low)) throw new ArgumentException($"{ClassName} ID '{id}' {_LOW} '{argsDict[_LOW]}' ≠ System.Double.");
+            if (low > high) throw new ArgumentException($"{ClassName} ID '{id}' {_LOW} '{low}' > {_HIGH} '{high}'.");
+        }
+
+        public override String GetArguments() {
+            return $"{_HIGH}={this.High}|{_LOW}={this.Low}|{_SI_UNITS}={this.SI_Units}|{_SI_UNITS_MODIFIER}={this.SI_Units_Modifier}";
         }
     }
 
     public class TestTextual : TestAbstract {
         public new const String ClassName = nameof(TestTextual);
-        public readonly String Text;
+        public readonly String Text;                                public const String _TEXT = nameof(_TEXT);
 
         public TestTextual(String ID, String Arguments) {
             Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
-            if (argsDict.Count != 1) throw new ArgumentException($"TestTextual ID '{ID}' with ClassName '{ClassName}' requires 1 case-sensitive argument:{Environment.NewLine}" +
-                    $"   Example: 'Text=The quick brown fox jumps over the lazy dog.'{Environment.NewLine}" +
-                    $"   Actual : '{Arguments}'");
-            if (!argsDict.ContainsKey("Text")) throw new ArgumentException($"TestTextual ID '{ID}' does not contain 'Text' key-value pair.");
-            this.Text = argsDict["Text"];
+            ValidateArguments(ID, Arguments, argsDict);
+            this.Text = argsDict[_TEXT];
+        }
+
+        internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) {
+            if (argsDict.Count != 1) throw new ArgumentException($"{ClassName} ID '{id}' requires 1 case-sensitive argument:{Environment.NewLine}" +
+                $"   Example: '{_TEXT}=The quick brown fox jumps over the lazy dog.'{Environment.NewLine}" +
+                $"   Actual : '{arguments}'");
+            if (!argsDict.ContainsKey(_TEXT)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_TEXT}' key-value pair.");
+        }
+
+        public override String GetArguments() {
+            return $"{_TEXT}={this.Text}";
         }
     }
 
