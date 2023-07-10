@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 
 namespace ABT.TestSpace.AppConfig {
     public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
@@ -14,8 +15,8 @@ namespace ABT.TestSpace.AppConfig {
         public const String NOT_APPLICABLE = "NotApplicable";
         private protected TestAbstract() { }
 
-        public static Dictionary<String, String> SplitArguments(String arguments) {
-            String[] args = arguments.Split(Test.SPLIT_ARGUMENTS_CHAR);
+        public static Dictionary<String, String> SplitArguments(String Arguments) {
+            String[] args = Arguments.Split(Test.SPLIT_ARGUMENTS_CHAR);
             String[] kvp;
             Dictionary<String, String> argDictionary = new Dictionary<String, String>();
             for (Int32 i = 0; i < args.Length; i++) {
@@ -30,36 +31,45 @@ namespace ABT.TestSpace.AppConfig {
         public new const String ClassName = nameof(TestCustomizable);
         public readonly Dictionary<String, String> Arguments = null;
 
-        public TestCustomizable(String _, String arguments) { if (!String.Equals(arguments, TestAbstract.NOT_APPLICABLE)) this.Arguments = TestAbstract.SplitArguments(arguments); }
+        public TestCustomizable(String _, String Arguments) { if (!String.Equals(Arguments, TestAbstract.NOT_APPLICABLE)) this.Arguments = TestAbstract.SplitArguments(Arguments); }
     }
 
     public class TestISP : TestAbstract {
         public new const String ClassName = nameof(TestISP);
-        public readonly String ISPExecutableFolder;
-        public readonly String ISPExecutable;
-        public readonly String ISPExecutableArguments;
-        public readonly String ISPExpected;
+        public readonly String ISPExecutableFolder;         private const String _ISP_EXECUTABLE_FOLDER = nameof(ISPExecutableFolder);
+        public readonly String ISPExecutable;               private const String _ISP_EXECUTABLE = nameof(ISPExecutable);
+        public readonly String ISPExecutableArguments;      private const String _ISP_EXECUTABLE_ARGUMENTS = nameof(ISPExecutableArguments);
+        public readonly String ISPExpected;                 private const String _ISP_EXPECTED = nameof(ISPExpected);
 
-        public TestISP(String id, String arguments) {
-            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(arguments);
-            if (argsDict.Count != 4) throw new ArgumentException($"TestISP ID '{id}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
-                $@"   Example: 'ISPExecutable=ipecmd.exe|{Environment.NewLine}
-                                ISPExecutableFolder=C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe|{Environment.NewLine}
-                                ISPExecutableArguments=C:\TBD\U1_Firmware.hex|{Environment.NewLine}
-                                ISPExpected=0xAC0E'{Environment.NewLine}" +
+        public TestISP(String ID, String Arguments) {
+            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
+            ValidateTestISP(ID, Arguments, argsDict);
+            this.ISPExecutableFolder = argsDict[_ISP_EXECUTABLE_FOLDER];
+            this.ISPExecutable = argsDict[_ISP_EXECUTABLE];
+            this.ISPExecutableArguments = argsDict[_ISP_EXECUTABLE_ARGUMENTS];
+            this.ISPExpected = argsDict[_ISP_EXPECTED];
+        }
+
+        public static void ValidateTestISP(String ID, String Arguments) { ValidateTestISP(ID, Arguments, TestAbstract.SplitArguments(Arguments)); }
+
+        private static void ValidateTestISP(String id, String arguments, Dictionary<String, String> argsDict) {
+            if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
+                $@"   Example: '{_ISP_EXECUTABLE}=ipecmd.exe|{Environment.NewLine}
+                                {_ISP_EXECUTABLE_FOLDER}=C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe\|{Environment.NewLine}
+                                {_ISP_EXECUTABLE_ARGUMENTS}=C:\TBD\U1_Firmware.hex|{Environment.NewLine}
+                                {_ISP_EXPECTED}=0xAC0E'{Environment.NewLine}" +
                 $"   Actual : '{arguments}'");
-            if (!argsDict.ContainsKey("ISPExecutableFolder")) throw new ArgumentException($"TestISP ID '{id}' does not contain 'ISPExecutableFolder' key-value pair.");
-            if (!argsDict.ContainsKey("ISPExecutable")) throw new ArgumentException($"TestISP ID '{id}' does not contain 'ISPExecutable' key-value pair.");
-            if (!argsDict.ContainsKey("ISPExecutableArguments")) throw new ArgumentException($"TestISP ID '{id}' does not contain 'ISPExecutableArguments' key-value pair.");
-            if (!argsDict.ContainsKey("ISPExpected")) throw new ArgumentException($"TestISP ID '{id}' does not contain 'ISPExpected' key-value pair.");
-            if (!argsDict["ISPExecutableFolder"].EndsWith(@"\")) argsDict["ISPExecutableFolder"] += @"\";
-            if (!Directory.Exists(argsDict["ISPExecutableFolder"])) throw new ArgumentException($"TestISP ID '{id}' ISPExecutableFolder '{argsDict["ISPExecutableFolder"]}' does not exist.");
-            if (!File.Exists(argsDict["ISPExecutableFolder"] + argsDict["ISPExecutable"])) throw new ArgumentException($"TestISP ID '{id}' ISPExecutable '{argsDict["ISPExecutableFolder"] + argsDict["ISPExecutable"]}' does not exist.");
+            if (!argsDict.ContainsKey(_ISP_EXECUTABLE_FOLDER)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXECUTABLE_FOLDER}' key-value pair.");
+            if (!argsDict.ContainsKey(_ISP_EXECUTABLE)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXECUTABLE}' key-value pair.");
+            if (!argsDict.ContainsKey(_ISP_EXECUTABLE_ARGUMENTS)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXECUTABLE_ARGUMENTS}' key-value pair.");
+            if (!argsDict.ContainsKey(_ISP_EXPECTED)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXPECTED}' key-value pair.");
+            if (!argsDict[_ISP_EXECUTABLE_FOLDER].EndsWith(@"\")) throw new ArgumentException($"{ClassName} ID '{id}' {_ISP_EXECUTABLE_FOLDER} '{argsDict[_ISP_EXECUTABLE_FOLDER]}' does not end with '\\'.");
+            if (!Directory.Exists(argsDict[_ISP_EXECUTABLE_FOLDER])) throw new ArgumentException($"{ClassName} ID '{id}' {_ISP_EXECUTABLE_FOLDER} '{argsDict[_ISP_EXECUTABLE_FOLDER]}' does not exist.");
+            if (!File.Exists(argsDict[_ISP_EXECUTABLE_FOLDER] + argsDict[_ISP_EXECUTABLE])) throw new ArgumentException($"{ClassName} ID '{id}' {_ISP_EXECUTABLE} '{argsDict[_ISP_EXECUTABLE_FOLDER] + argsDict[_ISP_EXECUTABLE]}' does not exist.");
+        }
 
-            this.ISPExecutableFolder = argsDict["ISPExecutableFolder"];
-            this.ISPExecutable = argsDict["ISPExecutable"];
-            this.ISPExecutableArguments = argsDict["ISPExecutableArguments"];
-            this.ISPExpected = argsDict["ISPExpected"];
+        public String GetArguments() {
+            return $"{_ISP_EXECUTABLE_FOLDER}={this.ISPExecutableFolder}|{_ISP_EXECUTABLE}={this.ISPExecutable}|{_ISP_EXECUTABLE_ARGUMENTS}={this.ISPExecutableArguments}|{_ISP_EXPECTED}={this.ISPExpected}";
         }
     }
 
@@ -70,26 +80,26 @@ namespace ABT.TestSpace.AppConfig {
         public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;
         public readonly SI_UNITS_MODIFIERS SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;
 
-        public TestNumerical(String id, String arguments) {
-            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(arguments);
-            if (argsDict.Count != 4) throw new ArgumentException($"TestNumerical ID '{id}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
+        public TestNumerical(String ID, String Arguments) {
+            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
+            if (argsDict.Count != 4) throw new ArgumentException($"TestNumerical ID '{ID}' with ClassName '{ClassName}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $"   Example: 'High=0.004|{Environment.NewLine}" +
                 $"             Low=0.002|{Environment.NewLine}" +
                 $"             SI_Units=volts|{Environment.NewLine}" +
                 $"             SI_Units_Modifier=DC'{Environment.NewLine}" +
-                $"   Actual : '{arguments}'");
-            if (!argsDict.ContainsKey("High")) throw new ArgumentException($"TestNumerical ID '{id}' does not contain 'High' key-value pair.");
-            if (!argsDict.ContainsKey("Low")) throw new ArgumentException($"TestNumerical ID '{id}' does not contain 'Low' key-value pair.");
-            if (!argsDict.ContainsKey("SI_Units")) throw new ArgumentException($"TestNumerical ID '{id}' does not contain 'SI_Units' key-value pair.");
-            if (!argsDict.ContainsKey("SI_Units_Modifier")) throw new ArgumentException($"TestNumerical ID '{id}' does not contain 'SI_Units_Modifier' key-value pair.");
+                $"   Actual : '{Arguments}'");
+            if (!argsDict.ContainsKey("High")) throw new ArgumentException($"TestNumerical ID '{ID}' does not contain 'High' key-value pair.");
+            if (!argsDict.ContainsKey("Low")) throw new ArgumentException($"TestNumerical ID '{ID}' does not contain 'Low' key-value pair.");
+            if (!argsDict.ContainsKey("SI_Units")) throw new ArgumentException($"TestNumerical ID '{ID}' does not contain 'SI_Units' key-value pair.");
+            if (!argsDict.ContainsKey("SI_Units_Modifier")) throw new ArgumentException(ID);
 
             if (Double.TryParse(argsDict["High"], NumberStyles.Float, CultureInfo.CurrentCulture, out Double high)) this.High = high;
-            else throw new ArgumentException($"TestNumerical ID '{id}' High '{argsDict["High"]}' ≠ System.Double.");
+            else throw new ArgumentException($"TestNumerical ID '{ID}' High '{argsDict["High"]}' ≠ System.Double.");
 
             if (Double.TryParse(argsDict["Low"], NumberStyles.Float, CultureInfo.CurrentCulture, out Double low)) this.Low = low;
-            else throw new ArgumentException($"TestNumerical ID '{id}' Low '{argsDict["Low"]}' ≠ System.Double.");
+            else throw new ArgumentException($"TestNumerical ID '{ID}' Low '{argsDict["Low"]}' ≠ System.Double.");
 
-            if (low > high) throw new ArgumentException($"TestNumerical ID '{id}' Low '{low}' > High '{high}'.");
+            if (low > high) throw new ArgumentException($"TestNumerical ID '{ID}' Low '{low}' > High '{high}'.");
 
             String[] si_units = Enum.GetNames(typeof(SI_UNITS)).Select(s => s.ToLower()).ToArray();
             if (si_units.Any(argsDict["SI_Units"].ToLower().Contains)) {
@@ -106,12 +116,12 @@ namespace ABT.TestSpace.AppConfig {
         public new const String ClassName = nameof(TestTextual);
         public readonly String Text;
 
-        public TestTextual(String id, String arguments) {
-            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(arguments);
-            if (argsDict.Count != 1) throw new ArgumentException($"TestTextual ID '{id}' with ClassName '{ClassName}' requires 1 case-sensitive argument:{Environment.NewLine}" +
+        public TestTextual(String ID, String Arguments) {
+            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
+            if (argsDict.Count != 1) throw new ArgumentException($"TestTextual ID '{ID}' with ClassName '{ClassName}' requires 1 case-sensitive argument:{Environment.NewLine}" +
                     $"   Example: 'Text=The quick brown fox jumps over the lazy dog.'{Environment.NewLine}" +
-                    $"   Actual : '{arguments}'");
-            if (!argsDict.ContainsKey("Text")) throw new ArgumentException($"TestTextual ID '{id}' does not contain 'Text' key-value pair.");
+                    $"   Actual : '{Arguments}'");
+            if (!argsDict.ContainsKey("Text")) throw new ArgumentException($"TestTextual ID '{ID}' does not contain 'Text' key-value pair.");
             this.Text = argsDict["Text"];
         }
     }
