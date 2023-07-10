@@ -125,9 +125,8 @@ namespace ABT.TestSpace.Logging {
                     message.AppendLine($"  High Limit        : {testNumerical.High:G}");
                     message.AppendLine($"  Measurement       : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
                     message.AppendLine($"  Low Limit         : {testNumerical.Low:G}");
-                    message.Append($"  SI Units              : {Enum.GetName(typeof(SI_UNITS), testNumerical.SI_Units)}");
-                    if (testNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.Append($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), testNumerical.SI_Units_Modifier)}");
-                    message.AppendLine("");
+                    message.AppendLine($"  SI Units          : {Enum.GetName(typeof(SI_UNITS), testNumerical.SI_Units)}");
+                    if (testNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.AppendLine($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), testNumerical.SI_Units_Modifier)}");
                     break;
                 case TestTextual.ClassName:
                     TestTextual testTextual = (TestTextual)test.ClassObject;
