@@ -90,11 +90,11 @@ namespace ABT.TestSpace.Logging {
 
             StringBuilder s = new StringBuilder();
             Operation operation = Operation.Get(testExecutive.ConfigTest.TestElementID);
-            List<String> testGroupIDs = operation.TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList();
+            List<String> testGroupIDs = operation.TestGroupIDs.Split(TestAbstract.SA).Select(id => id.Trim()).ToList();
             foreach (String testGroupID in testGroupIDs) {
                 Group group = Group.Get(testGroupID);
                 s.Append(String.Format("\t{0,-" + testExecutive.ConfigTest.FormattingLengthTestGroup + "} : {1}\n", group.ID, group.Description));
-                List<String> testMeasurementIDs = group.TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList();
+                List<String> testMeasurementIDs = group.TestMeasurementIDs.Split(TestAbstract.SA).Select(id => id.Trim()).ToList();
                 foreach (String testMeasurementID in testMeasurementIDs) {
                     s.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthTestMeasurement + "} : {1}\n", testExecutive.ConfigTest.Tests[testMeasurementID].ID, testExecutive.ConfigTest.Tests[testMeasurementID].Description));
                 }

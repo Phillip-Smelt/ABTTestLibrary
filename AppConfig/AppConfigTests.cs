@@ -11,15 +11,20 @@ namespace ABT.TestSpace.AppConfig {
 
     public abstract class TestAbstract {
         public const String ClassName = nameof(TestAbstract);
+        public const Char SA = '|'; // Arguments separator character.  Must match Arguments separator character used in TestExecutor's App.Config.
+        public const Char SK = '='; // Key/Values separator character.  Must match Key/Values separator character used in TestExecutor's App.Config.
         private protected TestAbstract() { }
 
         public static Dictionary<String, String> SplitArguments(String Arguments) {
-            String[] args = Arguments.Split(Test.SPLIT_ARGUMENTS_CHAR);
-            String[] kvp;
             Dictionary<String, String> argDictionary = new Dictionary<String, String>();
-            for (Int32 i = 0; i < args.Length; i++) {
-                kvp = args[i].Split('=');
-                argDictionary.Add(kvp[0].Trim(), kvp[1].Trim());
+            if (String.Equals(Arguments, TestCustomizable.NOT_APPLICABLE)) argDictionary.Add(TestCustomizable.NOT_APPLICABLE, TestCustomizable.NOT_APPLICABLE);
+            else {
+                String[] args = Arguments.Split(SA);
+                String[] kvp;
+                for (Int32 i = 0; i < args.Length; i++) {
+                    kvp = args[i].Split(SK);
+                    argDictionary.Add(kvp[0].Trim(), kvp[1].Trim());
+                }
             }
             return argDictionary;
         }
@@ -31,16 +36,24 @@ namespace ABT.TestSpace.AppConfig {
 
     public class TestCustomizable : TestAbstract {
         public new const String ClassName = nameof(TestCustomizable);
-        public readonly String Arguments;                        private const String _ARGUMENTS = nameof(Arguments);
-        public readonly Dictionary<String, String> ArgsDict;     private const String _ARGS_DICT = nameof(ArgsDict);
+        public readonly String Arguments;
         public const String NOT_APPLICABLE = "NotApplicable";
 
         public TestCustomizable(String ID, String Arguments) {
+            Dictionary<String, String> argsDict = SplitArguments(Arguments);
+            ValidateArguments(ID, Arguments, argsDict);
             this.Arguments = Arguments;
-            if (!String.Equals(Arguments, NOT_APPLICABLE)) this.ArgsDict = TestAbstract.SplitArguments(Arguments);
         }
 
-        internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) { }
+        internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) {
+            if (argsDict.Count == 0) throw new ArgumentException($"{ClassName} ID '{id}' requires 1 or more case-sensitive arguments:{Environment.NewLine}" +
+                $"   Example: '{NOT_APPLICABLE}'{Environment.NewLine}" +
+                $"   Or     : 'Key1{SK}Value1'{Environment.NewLine}" +
+                $"   Or     : 'Key1{SK}Value1{SA}{Environment.NewLine}" +
+                $"             Key2{SK}Value2{SA}{Environment.NewLine}" +
+                $"             Key3{SK}Value3{SA}'{Environment.NewLine}" +
+                $"   Actual : '{arguments}'");
+        }
 
         public override String GetArguments() { return this.Arguments; }
     }
@@ -53,7 +66,7 @@ namespace ABT.TestSpace.AppConfig {
         public readonly String ISPExpected;                 private const String _ISP_EXPECTED = nameof(ISPExpected);
 
         public TestISP(String ID, String Arguments) {
-            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
+            Dictionary<String, String> argsDict = SplitArguments(Arguments);
             ValidateArguments(ID, Arguments, argsDict);
             this.ISPExecutableFolder = argsDict[_ISP_EXECUTABLE_FOLDER];
             this.ISPExecutable = argsDict[_ISP_EXECUTABLE];
@@ -63,10 +76,10 @@ namespace ABT.TestSpace.AppConfig {
 
         internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
-                $@"   Example: '{_ISP_EXECUTABLE}=ipecmd.exe|{Environment.NewLine}
-                                {_ISP_EXECUTABLE_FOLDER}=C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe\|{Environment.NewLine}
-                                {_ISP_EXECUTABLE_ARGUMENTS}=C:\TBD\U1_Firmware.hex|{Environment.NewLine}
-                                {_ISP_EXPECTED}=0xAC0E'{Environment.NewLine}" +
+                $@"   Example: '{_ISP_EXECUTABLE}{SK}ipecmd.exe{SA}{Environment.NewLine}
+                                {_ISP_EXECUTABLE_FOLDER}{SK}C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe\{SA}{Environment.NewLine}
+                                {_ISP_EXECUTABLE_ARGUMENTS}{SK}C:\TBD\U1_Firmware.hex{SA}{Environment.NewLine}
+                                {_ISP_EXPECTED}{SK}0xAC0E'{Environment.NewLine}" +
                 $"   Actual : '{arguments}'");
             if (!argsDict.ContainsKey(_ISP_EXECUTABLE_FOLDER)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXECUTABLE_FOLDER}' key-value pair.");
             if (!argsDict.ContainsKey(_ISP_EXECUTABLE)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXECUTABLE}' key-value pair.");
@@ -78,7 +91,7 @@ namespace ABT.TestSpace.AppConfig {
         }
 
         public override String GetArguments() {
-            return $"{_ISP_EXECUTABLE_FOLDER}={this.ISPExecutableFolder}|{_ISP_EXECUTABLE}={this.ISPExecutable}|{_ISP_EXECUTABLE_ARGUMENTS}={this.ISPExecutableArguments}|{_ISP_EXPECTED}={this.ISPExpected}";
+            return $"{_ISP_EXECUTABLE_FOLDER}{SK}{this.ISPExecutableFolder}{SA}{_ISP_EXECUTABLE}{SK}{this.ISPExecutable}{SA}{_ISP_EXECUTABLE_ARGUMENTS}{SK}{this.ISPExecutableArguments}{SA}{_ISP_EXPECTED}{SK}{this.ISPExpected}";
         }
     }
 
@@ -90,7 +103,7 @@ namespace ABT.TestSpace.AppConfig {
         public readonly SI_UNITS_MODIFIERS SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;    public const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
 
         public TestNumerical(String ID, String Arguments) {
-            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
+            Dictionary<String, String> argsDict = SplitArguments(Arguments);
             ValidateArguments(ID, Arguments, argsDict);
             this.High = Double.Parse(argsDict[_HIGH], NumberStyles.Float, CultureInfo.CurrentCulture);
             this.Low = Double.Parse(argsDict[_LOW], NumberStyles.Float, CultureInfo.CurrentCulture);
@@ -107,10 +120,10 @@ namespace ABT.TestSpace.AppConfig {
 
         internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
-                $"   Example: '{_HIGH}=0.004|{Environment.NewLine}" +
-                $"             {_LOW}=0.002|{Environment.NewLine}" +
-                $"             {_SI_UNITS}=volts|{Environment.NewLine}" +
-                $"             {_SI_UNITS_MODIFIER}=DC'{Environment.NewLine}" +
+                $"   Example: '{_HIGH}{SK}0.004{SA}{Environment.NewLine}" +
+                $"             {_LOW}{SK}0.002{SA}{Environment.NewLine}" +
+                $"             {_SI_UNITS}{SK}volts{SA}{Environment.NewLine}" +
+                $"             {_SI_UNITS_MODIFIER}{SK}DC'{Environment.NewLine}" +
                 $"   Actual : '{arguments}'");
             if (!argsDict.ContainsKey(_HIGH)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_HIGH}' key-value pair.");
             if (!argsDict.ContainsKey(_LOW)) throw new ArgumentException($"{ClassName} ID '{id  }' does not contain '{_LOW}' key-value pair.");
@@ -122,8 +135,7 @@ namespace ABT.TestSpace.AppConfig {
         }
 
         public override String GetArguments() {
-            // TODO: use foreach & Reflection to get all field names, String.Joins with "=" & Test.SPLIT_ARGUMENTS_CHAR to combine them.
-            return $"{_HIGH}={this.High}|{_LOW}={this.Low}|{_SI_UNITS}={this.SI_Units}|{_SI_UNITS_MODIFIER}={this.SI_Units_Modifier}";
+            return $"{_HIGH}{SK}{this.High}{SA}{_LOW}{SK}{this.Low}{SA}{_SI_UNITS}{SK}{this.SI_Units}{SA}{_SI_UNITS_MODIFIER}{SK}{this.SI_Units_Modifier}";
         }
     }
 
@@ -132,32 +144,30 @@ namespace ABT.TestSpace.AppConfig {
         public readonly String Text;                                public const String _TEXT = nameof(_TEXT);
 
         public TestTextual(String ID, String Arguments) {
-            Dictionary<String, String> argsDict = TestAbstract.SplitArguments(Arguments);
+            Dictionary<String, String> argsDict = SplitArguments(Arguments);
             ValidateArguments(ID, Arguments, argsDict);
             this.Text = argsDict[_TEXT];
         }
 
         internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count != 1) throw new ArgumentException($"{ClassName} ID '{id}' requires 1 case-sensitive argument:{Environment.NewLine}" +
-                $"   Example: '{_TEXT}=The quick brown fox jumps over the lazy dog.'{Environment.NewLine}" +
+                $"   Example: '{_TEXT}{SK}The quick brown fox jumps over the lazy dog.'{Environment.NewLine}" +
                 $"   Actual : '{arguments}'");
             if (!argsDict.ContainsKey(_TEXT)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_TEXT}' key-value pair.");
         }
 
         public override String GetArguments() {
-            return $"{_TEXT}={this.Text}";
+            return $"{_TEXT}{SK}{this.Text}";
         }
     }
 
     public class Test {
-        internal const Char SPLIT_ARGUMENTS_CHAR = '|';
         public readonly String ID;
         public readonly String Description;
         public readonly String Revision;
         public readonly String ClassName;
         public readonly Object ClassObject;
         public readonly Boolean CancelOnFailure;
-        // public readonly String Arguments;
         public String Measurement { get; set; } = String.Empty; // Determined during test.
         public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
 #if DEBUG
@@ -205,15 +215,15 @@ namespace ABT.TestSpace.AppConfig {
             if (this.IsOperation) {
                 this.TestElementDescription = testOperations[this.TestElementID].Description;
                 this.TestElementRevision = testOperations[this.TestElementID].Revision;
-                List<String> testGroupIDs = testOperations[this.TestElementID].TestGroupIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList();
+                List<String> testGroupIDs = testOperations[this.TestElementID].TestGroupIDs.Split(TestAbstract.SA).Select(id => id.Trim()).ToList();
                 foreach (String testGroupID in testGroupIDs) {
-                    this.TestIDsSequence.AddRange(testGroups[testGroupID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList());
+                    this.TestIDsSequence.AddRange(testGroups[testGroupID].TestMeasurementIDs.Split(TestAbstract.SA).Select(id => id.Trim()).ToList());
                     if (testGroupID.Length > this.FormattingLengthTestGroup) this.FormattingLengthTestGroup = testGroupID.Length;
                 }
             } else {
                 this.TestElementDescription = testGroups[this.TestElementID].Description;
                 this.TestElementRevision = testGroups[this.TestElementID].Revision;
-                this.TestIDsSequence = testGroups[this.TestElementID].TestMeasurementIDs.Split(Test.SPLIT_ARGUMENTS_CHAR).Select(id => id.Trim()).ToList(); 
+                this.TestIDsSequence = testGroups[this.TestElementID].TestMeasurementIDs.Split(TestAbstract.SA).Select(id => id.Trim()).ToList(); 
             }
             IEnumerable<String> duplicateIDs = this.TestIDsSequence.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
             if (duplicateIDs.Count() !=0) throw new InvalidOperationException($"Duplicated TestMeasurementIDs '{String.Join("', '", duplicateIDs)}'.");
