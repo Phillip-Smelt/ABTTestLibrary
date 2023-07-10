@@ -80,7 +80,7 @@ namespace ABT.TestSpace.AppConfig {
                                 {_ISP_EXECUTABLE_FOLDER}{SK}C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe\{SA}{Environment.NewLine}
                                 {_ISP_EXECUTABLE_ARGUMENTS}{SK}C:\TBD\U1_Firmware.hex{SA}{Environment.NewLine}
                                 {_ISP_EXPECTED}{SK}0xAC0E'{Environment.NewLine}" +
-                $"   Actual : '{arguments}'");
+                 $"   Actual : '{arguments}'");
             if (!argsDict.ContainsKey(_ISP_EXECUTABLE_FOLDER)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXECUTABLE_FOLDER}' key-value pair.");
             if (!argsDict.ContainsKey(_ISP_EXECUTABLE)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXECUTABLE}' key-value pair.");
             if (!argsDict.ContainsKey(_ISP_EXECUTABLE_ARGUMENTS)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXECUTABLE_ARGUMENTS}' key-value pair.");
