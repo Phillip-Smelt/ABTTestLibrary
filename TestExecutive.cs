@@ -117,7 +117,7 @@ namespace ABT.TestSpace {
             //          - Test Developer must set TestCancellationException's message to the Measured Value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
             //      4)  App.Config's CancelOnFailure:
             //          - App.Config's TestMeasurement element has a Boolean "CancelOnFailure" field:
-            //          - If the current TestExecutor.TestRun() has CancelOnFailure=true and it's resulting EvaluateTestResult() returns EventCodes.FAIL,
+            //          - If the current TestExecutor.TestRun() has CancelOnFailure=true and it's resulting EvaluateResultTest() returns EventCodes.FAIL,
             //            TestExecutive.TestsRun() will break/exit, stopping further testing.
             //		    - Do not pass Go, do not collect $200, go directly to TestExecutive.TestsPostRun().
             //
@@ -226,7 +226,7 @@ namespace ABT.TestSpace {
             foreach (String testID in this.ConfigTest.TestIDsSequence) {
                 try {
                     this.ConfigTest.Tests[testID].Measurement = await Task.Run(() => this.TestRun(testID));
-                    this.ConfigTest.Tests[testID].Result = EvaluateTestResult(this.ConfigTest.Tests[testID]);
+                    this.ConfigTest.Tests[testID].Result = EvaluateResultTest(this.ConfigTest.Tests[testID]);
                 } catch (Exception e) {
                     this.TestsRunExceptionHandler(testID, e);
                     break;
@@ -260,13 +260,14 @@ namespace ABT.TestSpace {
             this.ButtonSelectTests.Enabled = true;
             this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);
-            this.ConfigUUT.EventCode = EvaluateUUTResult(this.ConfigTest);
+            if (this.ConfigTest.IsOperation) this.ConfigUUT.EventCode = EvaluateResultOperation(this.ConfigTest);
+            else this.ConfigUUT.EventCode = EvaluateResultGroup(this.ConfigTest);
             this.TextUUTResult.Text = this.ConfigUUT.EventCode;
             this.TextUUTResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
             Logger.Stop(this, ref this.rtfResults);
         }
 
-        internal static String EvaluateTestResult(Test test) {
+        internal static String EvaluateResultTest(Test test) {
             switch (test.ClassName) {
                 case TestCustomizable.ClassName:
                     return test.Result;
@@ -288,9 +289,9 @@ namespace ABT.TestSpace {
             }
         }
 
-        internal static String EvaluateUUTResult(AppConfigTest configTest) {
-            if (!configTest.IsOperation) return EventCodes.UNSET;
-            // 0th priority evaluation that precedes all others.
+        internal static String EvaluateResultGroup(AppConfigTest configTest) { return EventCodes.UNSET; } // TODO:
+
+        internal static String EvaluateResultOperation(AppConfigTest configTest) {
             if (GetResultCount(configTest.Tests, EventCodes.PASS) == configTest.Tests.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All test results are PASS, so overall UUT result is PASS.
@@ -312,10 +313,12 @@ namespace ABT.TestSpace {
             foreach (KeyValuePair<String, Test> kvp in configTest.Tests) if (!validEvents.Contains(kvp.Value.Result)) invalidTests += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
             Logger.LogError($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
             return EventCodes.ERROR;
-            // Above handles class EventCodes changing (adding/deleting/renaming EventCodes) without accomodating EvaluateUUTResult() changes. 
+            // Above handles class EventCodes changing (adding/deleting/renaming EventCodes) without accomodating EvaluateResultOperation() changes. 
         }
 
         private static Int32 GetResultCount(Dictionary<String, Test> tests, String eventCode) { return (from test in tests where String.Equals(test.Value.Result, eventCode) select test).Count(); }
+
+        public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
     }
 
     public class TestCancellationException : Exception {

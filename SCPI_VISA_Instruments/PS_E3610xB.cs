@@ -41,14 +41,14 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
             return ampsDC;
         }
 
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
             SetVDC(SVI, VoltsDC);
             SetADC(SVI, AmpsDC);
-            SetCurrentProtectionDelay(SVI, DelayCurrentProtectionSeconds);
+            SetCurrentProtectionDelay(SVI, DelaySecondsCurrentProtection);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense));
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false);
             SCPI.SetOutputState(SVI, State);
-            Thread.Sleep((Int32)(DelayMeasurementSeconds * 1000));
+            Thread.Sleep((Int32)(DelaySecondsSettling * 1000));
         }
 
         public static Double GetVDC(SCPI_VISA_Instrument SVI) {

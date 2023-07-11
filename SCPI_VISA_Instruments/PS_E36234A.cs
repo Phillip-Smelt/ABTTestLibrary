@@ -22,7 +22,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             SCPI99.Initialize(SVI);
-            ((AgE36200)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command(SCPI.CHANNELS1ε2);
+            ((AgE36200)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command(SCPI.Channels[CHANNELS.C1ε2]);
             ((AgE36200)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
         }
 
@@ -41,9 +41,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
             return States[(Int32)(Channel)] ? OUTPUT.ON : OUTPUT.off;
         }
 
-        public static Boolean AreSlewRates(SCPI_VISA_Instrument SVI, CHANNELS Channel, Double SlewRateRising, Double SlewRateFalling) {
-            return ((SlewRateRising, SlewRateFalling) == GetSlewRates(SVI, Channel));
-        }
+        public static Boolean AreSlewRates(SCPI_VISA_Instrument SVI, CHANNELS Channel, Double SlewRateRising, Double SlewRateFalling) { return ((SlewRateRising, SlewRateFalling) == GetSlewRates(SVI, Channel)); }
 
         public static void SetSlewRates(SCPI_VISA_Instrument SVI, CHANNELS Channel, Double SlewRateRising, Double SlewRateFalling) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.RISing.IMMediate.Command(SlewRateRising, ConvertChannel(Channel));
@@ -56,15 +54,15 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
             return (srr[(Int32)Channel], srf[(Int32)Channel]);
         }
 
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, CHANNELS Channel, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelayCurrentProtectionSeconds = 0, Double DelayMeasurementSeconds = 0) {
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, CHANNELS Channel, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
             SetVDC(SVI, VoltsDC, Channel);
             SetADC(SVI, AmpsDC, Channel);
-            SetCurrentProtectionDelay(SVI, DelayCurrentProtectionSeconds, Channel);
+            SetCurrentProtectionDelay(SVI, DelaySecondsCurrentProtection, Channel);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), ConvertChannel(Channel));
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false, ConvertChannel(Channel));
             ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command(true, ConvertChannel(Channel));
             SetOutputState(SVI, State, Channel);
-            Thread.Sleep((Int32)(DelayMeasurementSeconds * 1000));
+            Thread.Sleep((Int32)(DelaySecondsSettling * 1000));
         }
 
         public static void SetOutputState(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command((State is OUTPUT.ON), ConvertChannel(Channel)); }
@@ -139,6 +137,50 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
 
         public static void SetCurrentProtectionState(SCPI_VISA_Instrument SVI, OUTPUT State, String Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is OUTPUT.ON), Channel); }
 
-        private static String ConvertChannel(CHANNELS Channel) { return Channel == CHANNELS.C1 ? SCPI.CHANNEL1 : SCPI.CHANNEL2; }
+        public static Double GetVoltageProtection(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Query(null, ConvertChannel(Channel), out Double[] amplitude);
+            return amplitude[(Int32)Channel];
+        }
+
+        public static void SetVoltageProtection(SCPI_VISA_Instrument SVI, Double VoltsDC, CHANNELS Channel) {
+            String s;
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Query("MINimum", ConvertChannel(Channel), out Double[] min);
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Query("MAXimum", ConvertChannel(Channel), out Double[] max);
+            if ((VoltsDC < min[(Int32)Channel]) || (max[(Int32)Channel] < VoltsDC)) {
+                s = $"MINimum/MAXimum Voltage Protection.{Environment.NewLine}"
+                + $" - MINimum   :  Voltage={min[(Int32)Channel]} VDC.{Environment.NewLine}"
+                + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
+                + $" - MAXimum   :  Voltage={max[(Int32)Channel]} VDC.";
+                throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, s));
+            }
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Command(VoltsDC, ConvertChannel(Channel));
+        }
+
+        public static void ClearVoltageProtectionTripped(SCPI_VISA_Instrument SVI, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(ConvertChannel(Channel)); }
+
+        public static Boolean GetVoltageProtectionTripped(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.TRIPped.Query(ConvertChannel(Channel), out Int32[] tripped);
+            return (tripped[(Int32)Channel] == 1);
+        }
+
+        public static Boolean GetVoltageProtectionState(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Query(ConvertChannel(Channel), out Boolean state);
+            return state;
+        }
+
+        public static void SetVoltageProtectionState(SCPI_VISA_Instrument SVI, OUTPUT State, String Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command((State is OUTPUT.ON), Channel); }
+
+        private static String ConvertChannel(CHANNELS Channel) {
+            switch(Channel) {
+                case CHANNELS.C1:
+                    return SCPI.Channels[CHANNELS.C1];
+                case CHANNELS.C2:
+                    return SCPI.Channels[CHANNELS.C2];
+                case CHANNELS.C1ε2:
+                    return SCPI.Channels[CHANNELS.C1ε2];
+                default:
+                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(CHANNELS)));
+            }
+        }
     }
 }

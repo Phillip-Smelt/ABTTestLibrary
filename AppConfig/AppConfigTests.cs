@@ -184,7 +184,7 @@ namespace ABT.TestSpace.AppConfig {
         }
 
         public static Dictionary<String, Test> Get() {
-            TestMeasurementsSection testMeasurementsSection = (TestMeasurementsSection)ConfigurationManager.GetSection("TestMeasurementsSection");
+            TestMeasurementsSection testMeasurementsSection = (TestMeasurementsSection)ConfigurationManager.GetSection(TestMeasurementsSection.ClassName);
             TestMeasurements testMeasurements = testMeasurementsSection.TestMeasurements;
             Dictionary<String, Test> dictionary = new Dictionary<String, Test>();
             foreach (TestMeasurement tm in testMeasurements) { dictionary.Add(tm.ID, new Test(tm.ID, tm.Description, tm.Revision, tm.ClassName, tm.CancelOnFailure, tm.Arguments)); }

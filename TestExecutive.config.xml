@@ -9,8 +9,9 @@
 		  
 			internal sealed class ID : SCPI_VISA_InstrumentElement_IDs {
 				// String constants for SCPI_VISA_InstrumentElement IDs from TestExecutive's TestExecutive.config.xml configuration file.
-				internal const String P3V3 = "PS1";
-				internal const String P5V = "PS2";
+				internal const String P2V5 = "PS1";
+				internal const String P3V3 = "PS2";
+				internal const String P5V = "PS3";
 				internal const String P12V_N12V = "PS4ε5";
 				internal const String VOUT_LOAD = "EL1";
 				internal const String MM = "MM1";
@@ -41,7 +42,7 @@
 						- PS1, PS2, PS4ε5...	Single-output Power Supplies 1 & 2 and Dual-output 3ε4.
 						- WG1, WG2, WG3ε4...	Single-output Waveform Generators 1 & 2 and Dual-output 3ε4.
 						- MF1, MF2, MF3...    MainFrames 1, 2 & 3.
-                                  MainFrames can contain multiple dissimilar and/or multiple similar instruments.
+                                  MainFrames can contain multiple dissimilar and/or similar instruments.
                                   - Keysight's HP34970A accomodates multiple heterogenous modules; switching, multi-function (digital IO, totalizer & analog output) & multiplexing.
                                     Or it can be configured with multiple homogenous modules; all switching for example.
                                   - Chroma's 6314 Electronic Load accomodates multiple homogenous load modules.

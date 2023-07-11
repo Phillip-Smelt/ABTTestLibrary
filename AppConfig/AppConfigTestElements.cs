@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Runtime.CompilerServices;
 
 namespace ABT.TestSpace.AppConfig {
-    public class TestOperationsSection : ConfigurationSection { [ConfigurationProperty("TestOperations")] public TestOperations TestOperations { get { return ((TestOperations)(base["TestOperations"])); } } }
+    public class TestOperationsSection : ConfigurationSection {
+        public const String ClassName = nameof(TestOperationsSection);
+        [ConfigurationProperty("TestOperations")] public TestOperations TestOperations { get { return ((TestOperations)(base["TestOperations"])); } }
+    }
     [ConfigurationCollection(typeof(TestOperation))]
     public class TestOperations : ConfigurationElementCollection {
         public const String PropertyName = "TestOperation";
@@ -23,7 +25,10 @@ namespace ABT.TestSpace.AppConfig {
         [ConfigurationProperty("TestGroupIDs", IsKey = false, IsRequired = true)] public String TestGroupIDs { get { return ((String)base["TestGroupIDs"]).Trim(); } }
     }
 
-    public class TestGroupsSection : ConfigurationSection { [ConfigurationProperty("TestGroups")] public TestGroups TestGroups { get { return ((TestGroups)(base["TestGroups"])); } } }
+    public class TestGroupsSection : ConfigurationSection {
+        public const String ClassName = nameof(TestGroupsSection);
+        [ConfigurationProperty("TestGroups")] public TestGroups TestGroups { get { return ((TestGroups)(base["TestGroups"])); } }
+    }
     [ConfigurationCollection(typeof(TestGroup))]
     public class TestGroups : ConfigurationElementCollection {
         public const String PropertyName = "TestGroup";
@@ -42,7 +47,10 @@ namespace ABT.TestSpace.AppConfig {
         [ConfigurationProperty("TestMeasurementIDs", IsKey = false, IsRequired = true)] public String TestMeasurementIDs { get { return ((String)base["TestMeasurementIDs"]).Trim(); } }
     }
 
-    public class TestMeasurementsSection : ConfigurationSection { [ConfigurationProperty("TestMeasurements")] public TestMeasurements TestMeasurements { get { return ((TestMeasurements)(base["TestMeasurements"])); } } }
+    public class TestMeasurementsSection : ConfigurationSection {
+        public const String ClassName = nameof(TestMeasurementsSection);
+        [ConfigurationProperty("TestMeasurements")] public TestMeasurements TestMeasurements { get { return ((TestMeasurements)(base["TestMeasurements"])); } }
+    }
     [ConfigurationCollection(typeof(TestMeasurement))]
     public class TestMeasurements : ConfigurationElementCollection {
         public const String PropertyName = "TestMeasurement";
@@ -64,7 +72,7 @@ namespace ABT.TestSpace.AppConfig {
     }
 
     public class ConfigTests {
-        public TestMeasurementsSection TestMeasurementsSection { get { return (TestMeasurementsSection)ConfigurationManager.GetSection("TestMeasurementsSection"); } }
+        public TestMeasurementsSection TestMeasurementsSection { get { return (TestMeasurementsSection)ConfigurationManager.GetSection(TestMeasurementsSection.ClassName); } }
         public TestMeasurements TestMeasurements { get { return this.TestMeasurementsSection.TestMeasurements; } }
         public IEnumerable<TestMeasurement> TestMeasurement { get { foreach (TestMeasurement tm in this.TestMeasurements) if (tm != null) yield return tm; } }
     }
@@ -83,7 +91,7 @@ namespace ABT.TestSpace.AppConfig {
         }
 
         public static Dictionary<String, Operation> Get() {
-            TestOperationsSection testOperationsSection = (TestOperationsSection)ConfigurationManager.GetSection("TestOperationsSection");
+            TestOperationsSection testOperationsSection = (TestOperationsSection)ConfigurationManager.GetSection(TestOperationsSection.ClassName);
             TestOperations testOperations = testOperationsSection.TestOperations;
             Dictionary<String, Operation> dictionary = new Dictionary<String, Operation>();
             foreach (TestOperation to in testOperations) dictionary.Add(to.ID, new Operation(to.ID, to.Revision, to.Description, to.TestGroupIDs));
@@ -99,7 +107,6 @@ namespace ABT.TestSpace.AppConfig {
         public readonly String Description;
         public readonly String TestMeasurementIDs;
 
-
         private Group(String id, String revision, String description, String testMeasurementIDs) {
             this.ID = id;
             this.Revision = revision;
@@ -108,7 +115,7 @@ namespace ABT.TestSpace.AppConfig {
         }
 
         public static Dictionary<String, Group> Get() {
-            TestGroupsSection testGroupSection = (TestGroupsSection)ConfigurationManager.GetSection("TestGroupsSection");
+            TestGroupsSection testGroupSection = (TestGroupsSection)ConfigurationManager.GetSection(TestGroupsSection.ClassName);
             TestGroups testGroups = testGroupSection.TestGroups;
             Dictionary<String, Group> dictionary = new Dictionary<String, Group>();
             foreach (TestGroup tg in testGroups) dictionary.Add(tg.ID, new Group(tg.ID, tg.Revision, tg.Description, tg.TestMeasurementIDs));

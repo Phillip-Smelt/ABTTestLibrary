@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
@@ -15,7 +16,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
     public enum BINARY { zero, ONE }
     public enum SENSE_MODE { EXTernal, INTernal }
     [Flags]
-    public enum CHANNELS { C1, C2 }
+    public enum CHANNELS { C1, C2, C1ε2 }
 
     // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
 
@@ -34,6 +35,12 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
         public const String CHANNEL1 = "(@1)";
         public const String CHANNEL2 = "(@2)";
         public const String CHANNELS1ε2 = "(@1:2)";
+
+        public static readonly Dictionary<CHANNELS, String> Channels = new Dictionary<CHANNELS, String> {
+            { CHANNELS.C1,   "(@1)" },
+            { CHANNELS.C2,   "(@2)" },
+            { CHANNELS.C1ε2, "(@1:2)" }
+        };
 
         public static OUTPUT GetOutputState(SCPI_VISA_Instrument SVI) {
             if (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) return OUTPUT.off;
