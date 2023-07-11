@@ -30,7 +30,7 @@ namespace ABT.TestSpace.Logging {
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) {
                 eventCode = (String)fi.GetValue(null);
                 if (logMessage.Contains(eventCode)) {
-                    selectionStart = richTextBox.Find(eventCode, startFind, RichTextBoxFinds.MatchCase & RichTextBoxFinds.WholeWord);
+                    selectionStart = richTextBox.Find(eventCode, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
                     richTextBox.SelectionStart = selectionStart;
                     richTextBox.SelectionLength = eventCode.Length;
                     richTextBox.SelectionBackColor = EventCodes.GetColor(eventCode);
