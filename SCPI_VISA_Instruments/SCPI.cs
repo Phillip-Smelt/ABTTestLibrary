@@ -15,7 +15,6 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
     public enum LOGIC { low, HIGH }
     public enum BINARY { zero, ONE }
     public enum SENSE_MODE { EXTernal, INTernal }
-    [Flags]
     public enum CHANNELS { C1, C2, C1ε2 }
 
     // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
@@ -32,10 +31,6 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
         //      - Given: public dynamic Instrument { get; private set; }
         //      - Then:  Instrument.SCPI.OUTPut.STATe.Query(out Boolean state); should work for E3610xB & E36234A Power Supplies & EL34143A Electronic Load.
         // - May ultimately implement this, obviating below methods and need to cast public Object Instrument to specific instrument, ala ((AgE3610XB)SVI.Instrument).
-        public const String CHANNEL1 = "(@1)";
-        public const String CHANNEL2 = "(@2)";
-        public const String CHANNELS1ε2 = "(@1:2)";
-
         public static readonly Dictionary<CHANNELS, String> Channels = new Dictionary<CHANNELS, String> {
             { CHANNELS.C1,   "(@1)" },
             { CHANNELS.C2,   "(@2)" },
