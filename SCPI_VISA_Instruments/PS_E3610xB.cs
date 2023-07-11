@@ -112,6 +112,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
                 throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, s));
             }
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds);
+            SetCurrentProtectionState(SVI, OUTPUT.ON);
         }
 
         public static Boolean GetCurrentProtectionState(SCPI_VISA_Instrument SVI) {
@@ -130,7 +131,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
             String s;
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query("MINimum", out Double min);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query("MAXimum", out Double max);
-            if ((VoltsDC < min || (max < VoltsDC)) {
+            if (VoltsDC < min || max < VoltsDC) {
                 s = $"MINimum/MAXimum Voltage Protection.{Environment.NewLine}"
                 + $" - MINimum   :  Voltage={min} VDC.{Environment.NewLine}"
                 + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"

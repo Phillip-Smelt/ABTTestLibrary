@@ -130,6 +130,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
                 throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, s));
             }
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds, SCPI.Channels[Channel]);
+            SetCurrentProtectionState(SVI, OUTPUT.ON, Channel);
         }
 
         public static Boolean GetCurrentProtectionState(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
