@@ -97,10 +97,10 @@ namespace ABT.TestSpace.AppConfig {
 
     public class TestNumerical : TestAbstract {
         public new const String ClassName = nameof(TestNumerical);
-        public readonly Double Low;                                                                 public const String _LOW = nameof(Low);
-        public readonly Double High;                                                                public const String _HIGH = nameof(High);
-        public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;                                 public const String _SI_UNITS = nameof(SI_Units);
-        public readonly SI_UNITS_MODIFIERS SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;    public const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
+        public readonly Double Low;                                                                 private const String _LOW = nameof(Low);
+        public readonly Double High;                                                                private const String _HIGH = nameof(High);
+        public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;                                 private const String _SI_UNITS = nameof(SI_Units);
+        public readonly SI_UNITS_MODIFIERS SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;    private const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
 
         public TestNumerical(String ID, String Arguments) {
             Dictionary<String, String> argsDict = SplitArguments(Arguments);
@@ -141,7 +141,7 @@ namespace ABT.TestSpace.AppConfig {
 
     public class TestTextual : TestAbstract {
         public new const String ClassName = nameof(TestTextual);
-        public readonly String Text;                                public const String _TEXT = nameof(_TEXT);
+        public readonly String Text;                                private const String _TEXT = nameof(_TEXT);
 
         public TestTextual(String ID, String Arguments) {
             Dictionary<String, String> argsDict = SplitArguments(Arguments);
