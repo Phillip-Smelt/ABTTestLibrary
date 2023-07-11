@@ -57,6 +57,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
 
         public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, CHANNELS Channel, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
             SetVDC(SVI, VoltsDC, Channel);
+            SetVoltageProtection(SVI, VoltsDC * 1.10, Channel);
             SetADC(SVI, AmpsDC, Channel);
             SetCurrentProtectionDelay(SVI, DelaySecondsCurrentProtection, Channel);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), SCPI.Channels[Channel]);
@@ -136,7 +137,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
             return state[(Int32)Channel];
         }
 
-        public static void SetCurrentProtectionState(SCPI_VISA_Instrument SVI, OUTPUT State, String Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is OUTPUT.ON), Channel); }
+        public static void SetCurrentProtectionState(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is OUTPUT.ON), SCPI.Channels[Channel]); }
 
         public static Double GetVoltageProtection(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Query(null, SCPI.Channels[Channel], out Double[] amplitude);
@@ -155,6 +156,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
                 throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, s));
             }
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Command(VoltsDC, SCPI.Channels[Channel]);
+            SetVoltageProtectionState(SVI, OUTPUT.ON, Channel);
         }
 
         public static void ClearVoltageProtectionTripped(SCPI_VISA_Instrument SVI, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(SCPI.Channels[Channel]); }
@@ -169,6 +171,6 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
             return state;
         }
 
-        public static void SetVoltageProtectionState(SCPI_VISA_Instrument SVI, OUTPUT State, String Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command((State is OUTPUT.ON), Channel); }
+        public static void SetVoltageProtectionState(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command((State is OUTPUT.ON), SCPI.Channels[Channel]); }
     }
 }

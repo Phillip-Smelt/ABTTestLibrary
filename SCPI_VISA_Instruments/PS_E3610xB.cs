@@ -3,6 +3,7 @@ using System.Runtime.Remoting.Channels;
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
+using static System.Windows.Forms.AxHost;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -43,6 +44,7 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
 
         public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
             SetVDC(SVI, VoltsDC);
+            SetVoltageProtection(SVI, VoltsDC * 1.10);
             SetADC(SVI, AmpsDC);
             SetCurrentProtectionDelay(SVI, DelaySecondsCurrentProtection);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense));
@@ -118,5 +120,39 @@ namespace ABT.TestSpace.SCPI_VISA_Instruments {
         }
 
         public static void SetCurrentProtectionState(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is OUTPUT.ON)); }
+
+        public static Double GetVoltageProtection(SCPI_VISA_Instrument SVI) {
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query(null, out Double amplitude);
+            return amplitude;
+        }
+
+        public static void SetVoltageProtection(SCPI_VISA_Instrument SVI, Double VoltsDC) {
+            String s;
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query("MINimum", out Double min);
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query("MAXimum", out Double max);
+            if ((VoltsDC < min || (max < VoltsDC)) {
+                s = $"MINimum/MAXimum Voltage Protection.{Environment.NewLine}"
+                + $" - MINimum   :  Voltage={min} VDC.{Environment.NewLine}"
+                + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
+                + $" - MAXimum   :  Voltage={max} VDC.";
+                throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, s));
+            }
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Command(VoltsDC);
+            SetVoltageProtectionState(SVI, OUTPUT.ON);
+        }
+
+        public static void ClearVoltageProtectionTripped(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(); }
+
+        public static Boolean GetVoltageProtectionTripped(SCPI_VISA_Instrument SVI) {
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.TRIPped.Query(out Boolean tripped);
+            return tripped;
+        }
+
+        public static Boolean GetVoltageProtectionState(SCPI_VISA_Instrument SVI) {
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Query(out Boolean state);
+            return state;
+        }
+
+        public static void SetVoltageProtectionState(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(State is OUTPUT.ON); }
     }
 }
