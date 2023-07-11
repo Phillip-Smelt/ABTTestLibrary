@@ -54,6 +54,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Switching\RelayForms.cs" />
+    <Compile Include="Switching\USB_ERB24.cs" />
     <Compile Include="TestExecutive.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -108,6 +110,10 @@
     <Reference Include="AgSCPI99_1_0">
       <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgSCPI99_1_0.dll</HintPath>
     </Reference>
+    <Reference Include="MccDaq, Version=2.9.0.0, Culture=neutral, PublicKeyToken=a37eefcf5c6ca10a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Measurement Computing\DAQ\MccDaq.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Serilog">
@@ -134,12 +140,6 @@
     <Content Include="TestExecutive.config.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\USB-ERB24\USB-ERB24.csproj">
-      <Project>{0a47615c-b80a-4467-b4d1-43be4802169d}</Project>
-      <Name>USB-ERB24</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
