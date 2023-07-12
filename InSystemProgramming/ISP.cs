@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ABT.TestSpace.AppConfig;
 
-namespace ABT.TestSpace.InterfaceAdapters {
-    public enum ISP_METHOD { ExitCode, Redirect }
+public enum ISP_METHOD { ExitCode, Redirect }
 
+namespace ABT.TestSpace.InSystemProgramming {
     public static class ISP {
-
         public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect, Boolean AutoContinue = false) { 
             PreConnect?.Invoke();
             String message = $"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +

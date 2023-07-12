@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="AppConfig\AppConfigLogger.cs" />
     <Compile Include="AppConfig\AppConfigUUT.cs" />
-    <Compile Include="InterfaceAdapters\ISP.cs" />
+    <Compile Include="InSystemProgramming\ISP.cs" />
     <Compile Include="SCPI_VISA_Instruments\ConfigSCPI_VISA_Instruments.cs" />
     <Compile Include="SCPI_VISA_Instruments\PS_E3610xB.cs" />
     <Compile Include="SCPI_VISA_Instruments\SCPI.cs" />
