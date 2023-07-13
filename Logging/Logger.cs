@@ -173,7 +173,7 @@ namespace ABT.TestSpace.Logging {
                 richTextBox.SelectionStart = selectionStart;
                 richTextBox.SelectionLength = originalText.Length;
                 richTextBox.SelectedText = replacementText;
-            }
+            } else Log.Error($"Rich Text '{originalText}' not found after character '{startFind}', cannot replace with '{replacementText}'.");
         }
 
         private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
@@ -182,7 +182,7 @@ namespace ABT.TestSpace.Logging {
                 richTextBox.SelectionStart = selectionStart;
                 richTextBox.SelectionLength = findText.Length;
                 richTextBox.SelectionBackColor = backColor;
-            }
+            } else Log.Error($"Rich Text '{findText}' not found after character '{startFind}', cannot highlight with '{backColor.Name}'.");
         }
 
         private static void FileStop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
