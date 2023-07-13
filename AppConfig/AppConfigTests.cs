@@ -141,7 +141,7 @@ namespace ABT.TestSpace.AppConfig {
 
     public class TestTextual : TestAbstract {
         public new const String ClassName = nameof(TestTextual);
-        public readonly String Text;                                public const String _TEXT = nameof(_TEXT);
+        public readonly String Text;                                private const String _TEXT = nameof(Text);
 
         public TestTextual(String ID, String Arguments) {
             Dictionary<String, String> argsDict = SplitArguments(Arguments);
