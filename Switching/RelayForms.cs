@@ -1,5 +1,4 @@
 ﻿namespace ABT.TestSpace.TestExec.Switching {
-    public static class RelayForms {
         // https://forum.digikey.com/t/understanding-form-a-form-b-form-c-contact-configuration/811
 
         public enum A { NO, C }
@@ -45,10 +44,9 @@
         //    public abstract Boolean IsState(C State);
         //}
 
-        public sealed class FormC {
-            public readonly USB_ERB24.UE24 RB;
-            public readonly USB_ERB24.R R;
-            public FormC(USB_ERB24.UE24 RB, USB_ERB24.R R) { this.RB = RB; this.R = R; }
-        }
+    public sealed class FormC {
+        public readonly USB_ERB24.UE24 RB;
+        public readonly USB_ERB24.R R;
+        public FormC(USB_ERB24.UE24 RB, USB_ERB24.R R) { this.RB = RB; this.R = R; }
     }
 }
