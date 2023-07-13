@@ -8,7 +8,7 @@ using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 //
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
-namespace ABT.TestSpace.SCPI_VISA_Instruments {
+namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class PS_E36234A {
         public const String MODEL = "E36234A";
 

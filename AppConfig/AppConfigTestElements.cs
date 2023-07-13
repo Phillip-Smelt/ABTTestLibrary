@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 
-namespace ABT.TestSpace.AppConfig {
+namespace ABT.TestSpace.TestExec.AppConfig {
     public class TestOperationsSection : ConfigurationSection {
         public const String ClassName = nameof(TestOperationsSection);
         [ConfigurationProperty("TestOperations")] public TestOperations TestOperations { get { return ((TestOperations)(base["TestOperations"])); } }

@@ -9,7 +9,7 @@ using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
-namespace ABT.TestSpace.SCPI_VISA_Instruments {
+namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class WG_33509B {
         public const String MODEL = "33509B";
 

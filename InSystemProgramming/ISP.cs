@@ -4,11 +4,11 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ABT.TestSpace.AppConfig;
+using ABT.TestSpace.TestExec.AppConfig;
 
 public enum ISP_METHOD { ExitCode, Redirect }
 
-namespace ABT.TestSpace.InSystemProgramming {
+namespace ABT.TestSpace.TestExec.InSystemProgramming {
     public static class ISP {
         public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect, Boolean AutoContinue = false) { 
             PreConnect?.Invoke();

@@ -8,7 +8,8 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
-using ABT.TestSpace.AppConfig;
+using ABT.TestSpace.TestExec;
+using ABT.TestSpace.TestExec.AppConfig;
 using System.Drawing;
 
 // TODO: SQL Server Express: Persist test data into Microsoft SQL Server Express.
@@ -21,7 +22,7 @@ using System.Drawing;
 //   the need to reference TestExecutive's various DLLs directly from TestExecutor client apps.
 // - As long as suitable wrapper methods exists in Logger, needn't directly reference Serilog from TestExecutor client apps,
 //   as referencing TestExecutive suffices.
-namespace ABT.TestSpace.Logging {
+namespace ABT.TestSpace.TestExec.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_21 = "                     ";
@@ -169,20 +170,22 @@ namespace ABT.TestSpace.Logging {
 
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
             Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
-            if (selectionStart != -1) {
+            if (selectionStart == -1) Log.Error($"Rich Text '{originalText}' not found after character '{startFind}', cannot replace with '{replacementText}'.");
+            else {
                 richTextBox.SelectionStart = selectionStart;
                 richTextBox.SelectionLength = originalText.Length;
                 richTextBox.SelectedText = replacementText;
-            } else Log.Error($"Rich Text '{originalText}' not found after character '{startFind}', cannot replace with '{replacementText}'.");
+            }
         }
 
         private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
             Int32 selectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
-            if (selectionStart != -1) {
+            if (selectionStart == -1) Log.Error($"Rich Text '{findText}' not found after character '{startFind}', cannot highlight with '{backColor.Name}'.");
+            else {
                 richTextBox.SelectionStart = selectionStart;
                 richTextBox.SelectionLength = findText.Length;
                 richTextBox.SelectionBackColor = backColor;
-            } else Log.Error($"Rich Text '{findText}' not found after character '{startFind}', cannot highlight with '{backColor.Name}'.");
+            }
         }
 
         private static void FileStop(TestExecutive testExecutive, ref RichTextBox rtfResults) {

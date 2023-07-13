@@ -5,7 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace ABT.TestSpace.AppConfig {
+namespace ABT.TestSpace.TestExec.AppConfig {
     public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
     public enum SI_UNITS_MODIFIERS { AC, DC, Peak, PP, NotApplicable, RMS }
 

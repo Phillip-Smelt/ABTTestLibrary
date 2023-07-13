@@ -4,9 +4,9 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
-using static ABT.TestSpace.Switching.RelayForms;
+using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
-namespace ABT.TestSpace.Switching {
+namespace ABT.TestSpace.TestExec.Switching {
     public sealed class USB_ERB24 {
         // NOTE: This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
         // NOTE: USB-ERB24 relays are configurable for either Non-Inverting or Inverting logic, via hardware DIP switch S1.

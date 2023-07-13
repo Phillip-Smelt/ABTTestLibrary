@@ -8,9 +8,9 @@ using System.Collections.Generic;
 //
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
-// NOTE: Unlike all other classes in namespace ABT.TestSpace.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
+// NOTE: Unlike all other classes in namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
-namespace ABT.TestSpace.SCPI_VISA_Instruments {
+namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public enum OUTPUT { off, ON }
     public enum LOGIC { low, HIGH }
     public enum BINARY { zero, ONE }

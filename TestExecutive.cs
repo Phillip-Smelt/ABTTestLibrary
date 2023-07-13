@@ -10,10 +10,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
-using ABT.TestSpace.AppConfig;
-using ABT.TestSpace.SCPI_VISA_Instruments;
-using ABT.TestSpace.Logging;
-using ABT.TestSpace.Switching;
+using ABT.TestSpace.TestExec.AppConfig;
+using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
+using ABT.TestSpace.TestExec.Logging;
+using ABT.TestSpace.TestExec.Switching;
 
 // TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 // NOTE: For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
@@ -31,7 +31,7 @@ using ABT.TestSpace.Switching;
 //  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
 //  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
 //  - https://github.com/Amphenol-Borisch-Technologies/TestExecutiveTests
-namespace ABT.TestSpace {
+namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<String, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get();

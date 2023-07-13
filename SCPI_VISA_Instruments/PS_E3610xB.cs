@@ -12,7 +12,7 @@ using static System.Windows.Forms.AxHost;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
-namespace ABT.TestSpace.SCPI_VISA_Instruments {
+namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class PS_E36103B { public const String MODEL = "E36103B"; } // PS_E36103B needed only in class TestExecutive.AppConfig.SCPI_VISA_Instrument.
 
     public static class PS_E36105B { public const String MODEL = "E36105B"; } // PS_E36105B needed only in class TestExecutive.AppConfig.SCPI_VISA_Instrument.

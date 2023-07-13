@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Configuration;
 
-namespace ABT.TestSpace.AppConfig {
+namespace ABT.TestSpace.TestExec.AppConfig {
     public class AppConfigUUT {
         public readonly String Customer = ConfigurationManager.AppSettings["UUT_Customer"].Trim();
         public readonly String Type = ConfigurationManager.AppSettings["UUT_Type"].Trim();

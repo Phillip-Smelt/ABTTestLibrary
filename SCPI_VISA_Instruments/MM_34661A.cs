@@ -1,6 +1,6 @@
 ﻿using System;
 using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
-using ABT.TestSpace.AppConfig;
+using ABT.TestSpace.TestExec.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -9,7 +9,7 @@ using ABT.TestSpace.AppConfig;
 // Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
-namespace ABT.TestSpace.SCPI_VISA_Instruments {
+namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class MM_34661A {
         public const String MODEL = "34461A";
 

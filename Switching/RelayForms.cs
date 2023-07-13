@@ -1,4 +1,4 @@
-﻿namespace ABT.TestSpace.Switching {
+﻿namespace ABT.TestSpace.TestExec.Switching {
     public static class RelayForms {
         // https://forum.digikey.com/t/understanding-form-a-form-b-form-c-contact-configuration/811
 
