@@ -6,6 +6,9 @@ using System.Linq;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
 
 namespace ABT.TestSpace.TestExec.Switching {
+    public enum UE24 { RB0, RB1 }
+    public enum R : Byte { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19, C20, C21, C22, C23, C24 }
+
     public sealed class USB_ERB24 {
         // NOTE: This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
         // NOTE: USB-ERB24 relays are configurable for either Non-Inverting or Inverting logic, via hardware DIP switch S1.
@@ -23,8 +26,6 @@ namespace ABT.TestSpace.TestExec.Switching {
         // NOTE: MCC's InstaCal USB-ERB24's UE24 number indexing begins at 0, guessing because USB device indexing is likely also zero based.
         // - So UE24.RB0's numerical value is 0, which is used when constructing a new MccBoard UE24.RB0 object:
         // - Instantiation 'new MccBoard((Int32)UE24.RB0)' is equivalent to 'new MccBoard(0)'.
-        public enum UE24 { RB0, RB1 }
-        public enum R : Byte { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19, C20, C21, C22, C23, C24 }
         // NOTE: enum named R instead of RELAYS for concision; consider below:
         //  - Set(UE24.RB0, new Dictionary<R, C>() {{R.C01,C.NC}, {R.C02,C.NO}, ... {R.C24,C.NC} });
         //  - Set(UE24.RB0, new Dictionary<R, C>() {{RELAYS.C01,C.NC}, {RELAYS.C02,C.NO}, ... {RELAYS.C24,C.NC} });
