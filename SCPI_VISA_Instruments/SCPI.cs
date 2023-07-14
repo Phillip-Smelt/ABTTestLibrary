@@ -16,6 +16,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public enum BINARY { zero, ONE }
     public enum SENSE_MODE { EXTernal, INTernal }
     public enum CHANNELS { C1, C2 }
+    public enum TERMINALS_SVI { Plus, Minus }
 
     // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
 

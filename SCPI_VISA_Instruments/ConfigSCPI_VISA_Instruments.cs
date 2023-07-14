@@ -13,7 +13,6 @@ using ABT.TestSpace.TestExec.Logging;
 
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     // NOTE: https://forums.ni.com/t5/Instrument-Control-GPIB-Serial/IVI-Drivers-Pros-and-Cons/td-p/4165671.
-
     public enum SCPI_IDENTITY { Manufacturer, Model, SerialNumber, FirmwareRevision }
     // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".
 
@@ -80,4 +79,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return info;
         }
     }
+
+    public abstract class SCPI_VISA_InstrumentElement_IDs { } // Maps TestExecutive.config.xml's canonical SCPI_VISA_InstrumentElement IDs to meaningful TestExecutor.ID's specific domain/test/UUT.
 }
