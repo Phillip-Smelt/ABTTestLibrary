@@ -486,7 +486,7 @@ namespace ABT.TestSpace.TestExec.Switching {
 
         public static Dictionary<UE24_NETS, HashSet<UE24_NETS>> GetConnections(UE24_NETS N1) {
             return new Dictionary<UE24_NETS, HashSet<UE24_NETS>>();
-            // Use Get() function, returning Dictionary<UE24, Dictionary<R, FC.S>>, and convert to Dictionary<UE24_NETS, HashSet<UE24_NETS>>.
+            // Use Get() function, returning Dictionary<B, Dictionary<R, FC.S>>, and convert to Dictionary<UE24_NETS, HashSet<UE24_NETS>>.
         }
         // If can convert:
         //      - Dictionary<UE24_NETS, HashSet<BRT>>
@@ -497,6 +497,6 @@ namespace ABT.TestSpace.TestExec.Switching {
         //       - Are(Dictionary<B, Dictionary<R, C.SC>> BεRεS)
         //       - Get()
         //
-        // Initially support UE24's Set(), Is() & Get() functions for discrete/single (B, R, S)
+        // Initially support UE24's Set(), Is() & Get() functions for discrete/single (B, R, FC.S)
     }
 }
