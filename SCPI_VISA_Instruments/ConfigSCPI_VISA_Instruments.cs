@@ -80,5 +80,5 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
     }
 
-    public abstract class SCPI_VISA_InstrumentElement_IDs { } // Maps TestExecutive.config.xml's canonical SCPI_VISA_InstrumentElement IDs to meaningful TestExecutor.ID's specific domain/test/UUT.
+    public abstract class SCPI_VISA_InstrumentElement_IDs { } // Maps TestExecutive.config.xml's canonical SCPI_VISA_InstrumentElement IDs to meaningful TestExecutor specific domain/test/UUT.
 }
