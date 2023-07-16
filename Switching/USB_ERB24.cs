@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
 using static ABT.TestSpace.TestExec.Switching.UE24;
 
 namespace ABT.TestSpace.TestExec.Switching {
     public sealed class UE24 {
-        // UE24 is abbreviation of USB_ERB24 initialisation (Universal Serial Bus Electronic Relay Board with 24 Form C relays).
+        // UE24 is an abbreviation of the USB_ERB24 initialisation (Universal Serial Bus Electronic Relay Board with 24 Form C relays).
         public Dictionary<B, MccBoard> UE24s;
         private readonly static UE24 _only = new UE24();
         public static UE24 Only { get { return _only; } }
@@ -22,9 +23,8 @@ namespace ABT.TestSpace.TestExec.Switching {
             };
         }
 
-        public enum B { B0, B1 } // Relay Boards.
-        public enum R { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19, C20, C21, C22, C23, C24 }
-        // Relays Form C
+        public enum B { B0, B1 } // USB_ERB24 Boards.
+        public enum R : Byte { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19, C20, C21, C22, C23, C24 } // USB_ERB24 Relays, all Form C.
         // NOTE: This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
         // NOTE: USB-ERB24 relays are configurable for either Non-Inverting or Inverting logic, via hardware DIP switch S1.
         //  - Non-Inverting:  Logic low de-energizes the relays, logic high energizes them.
@@ -38,16 +38,18 @@ namespace ABT.TestSpace.TestExec.Switching {
         //  - Read them from MCC InstaCal's cb.cfg file.
         //  - Dynamically discover them programmatically: https://www.mccdaq.com/pdfs/manuals/Mcculw_WebHelp/ULStart.htm.
         //  - Specify MCC USB-ERB24s in TestExecutive.config.xml.
-        // NOTE: MCC's InstaCal USB-ERB24's B indexing begins at 0, guessing because USB device indexing is likely also zero based.
-        // - So B.B0's numerical value is 0, which is used when constructing a new MccBoard RB0 object:
+        // NOTE: MCC's InstaCal USB-ERB24 indexing begins at 0, guessing because USB device indexing is likely also zero based.
+        // - So B.B0's numerical value is 0, which is used when constructing a new MccBoard B.B0 object:
         // - Instantiation 'new MccBoard((Int32)B.B0)' is equivalent to 'new MccBoard(0)'.
         // NOTE: enum named R instead of RELAYS for concision; consider below:
         //  - Set(B.B0, new Dictionary<R, FC.S>() {{R.C01,FC.S.NC}, {R.C02,FC.S.NO}, ... {R.C24,FC.S.NC} });
         //  - Set(B.B0, new Dictionary<RELAYS, FC.S>() {{RELAYS.C01,FC.S.NC}, {RELAYS.C02,FC.S.NO}, ... {RELAYS.C24,FC.S.NC} });
-        // NOTE: R's elements named C## because USB-ERB24's relays are all Form C.
-        //  - Also because can't name them R.01, R.02...R.24; identifiers cannot begin with numbers.
         // NOTE: Enumerate Form A relays as public enum R { A01, A02, A03... }
         // NOTE: Enumerate Form B relays as public enum R { B01, B02, B03... }
+        // NOTE: R's items named C## because USB-ERB24's relays are all Form C.
+        // NOTE: Some manufacturer's Relay Boards contain heterogenous assortments of Form A, and/or Form B, and/or Form C relays.
+        //  - In such case, R would be enumerated as { A01, A02, A03, A04, A05, A06, A07, A08, B09, B10, B11, B12, B13, B14, B15, B16, C17, C18, C19, C20, C21, C22, C23, C24 }
+        //    if the first 8 of 24 relays are Form A, the 2nd 8 are Form B, and the last 8 Form C.
 
         internal enum PORTS { A, B, CL, CH }
         internal static Int32[] _ue24bitVector32Masks = GetUE24BitVector32Masks();
@@ -229,7 +231,7 @@ namespace ABT.TestSpace.TestExec.Switching {
             foreach (KeyValuePair<R, FC.S> kvp in RεS) {
                 relayBit = (UInt32)1 << (Byte)kvp.Key;
                 if (kvp.Value == FC.S.NC) bits_NC ^= relayBit; // Sets a 0 in bits_NC for each explicitly assigned NC state in RεS.
-                else bits_NO |= relayBit;                    // Sets a 1 in bits_NO for each explicitly assigned NO state in RεS.
+                else bits_NO |= relayBit;                      // Sets a 1 in bits_NO for each explicitly assigned NO state in RεS.
             }
 
             BitVector32 bv32_NC = new BitVector32((Int32)bits_NC);
@@ -391,14 +393,34 @@ namespace ABT.TestSpace.TestExec.Switching {
         }
 
         private void Validate() {
-            // Validate this.NT:
-            // - Verify the union of all this.NT HashSet<BRT> has no duplicated BRT objects.
-            // - Verify every unique B & Rhas at least a BRT for T.C and one/both for { T.NC and/or T.NO }
+            HashSet<UE24_NETS> missing = new HashSet<UE24_NETS>();
+            foreach (UE24_NETS n in Enum.GetValues(typeof(UE24_NETS))) if (!this.NBRT.ContainsKey(n)) missing.Add(n);
+            if (missing.Count != 0) throw new InvalidOperationException($"Dictionary UE24_NetsToBRTs.NBRT does not contain UE24_NETS '{String.Join(", ", missing)}'.");
+            
+            foreach (KeyValuePair<UE24_NETS, HashSet<BRT>> kvp in this.NBRT) if (kvp.Value.Count == 0) missing.Add(kvp.Key);
+            if (missing.Count != 0) throw new InvalidOperationException($"Dictionary UE24_NetsToBRTs.NBRT UE24_NETS correlate to empty HashSet<BRT> '{String.Join(", ", missing)}'.");
+
+            Dictionary<UE24_NETS, HashSet<BRT>> duplicates = new Dictionary<UE24_NETS, HashSet<BRT>>();
+            HashSet <BRT> brts = new HashSet<BRT>();
+            foreach (KeyValuePair<UE24_NETS, HashSet<BRT>> kvp in this.NBRT) {
+                foreach (BRT brt in kvp.Value) {
+                    if (brts.Contains(brt)) {
+                        if (duplicates.ContainsKey(kvp.Key)) duplicates[kvp.Key].Add(brt);
+                        else duplicates.Add(kvp.Key, new HashSet<BRT> { brt });
+                    }
+                    brts.Add(brt);
+                }
+            }
+            if (duplicates.Count != 0) {
+                StringBuilder sb = new StringBuilder($"Dictionary UE24_NetsToBRTs.NBRT has duplicated BRTs:{Environment.NewLine}");
+                foreach (KeyValuePair<UE24_NETS, HashSet<BRT>> kvp in duplicates) sb.AppendLine($"Key '{kvp.Key}' BRT '{kvp.Value}'.");
+                throw new InvalidOperationException(sb.ToString());
+            }
+            // - Verify every unique B & R has at least a BRT for T.C and one/both for { T.NC and/or T.NO }
             //   - That is, every FormC relay Common terminal is connected to a UE24_NETS, and one/both of it's Normally Closed/Normally Open terminals
             //     are connected to UE24_NETS.
             // - Verify every BRT per unique B & Rpair has different UE24_NETS on each T.
             //   - That is, verify the Common, Normally Open & Normally Closed terminals are all different UE24_NETS.
-            // - Verify every UE24_NETS exists in this.NT
         }
 
         public static void Connect(UE24_NETS N1, UE24_NETS N2) {
