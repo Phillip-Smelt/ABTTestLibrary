@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
-using static ABT.TestSpace.TestExec.Switching.UE24;
 
 namespace ABT.TestSpace.TestExec.Switching {
     public sealed class UE24 {
@@ -149,8 +147,8 @@ namespace ABT.TestSpace.TestExec.Switching {
             UInt32 relayBits = 0x0000;
             relayBits |= biggerPortBits[(UInt32)PORTS.CH] << 00;
             relayBits |= biggerPortBits[(UInt32)PORTS.CL] << 04;
-            relayBits |= biggerPortBits[(UInt32)PORTS.B]  << 08;
-            relayBits |= biggerPortBits[(UInt32)PORTS.A]  << 16;
+            relayBits |= biggerPortBits[(UInt32)PORTS.B] << 08;
+            relayBits |= biggerPortBits[(UInt32)PORTS.A] << 16;
             BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
 
             R r; FC.S s; Dictionary<R, FC.S> RεS = new Dictionary<R, FC.S>();
@@ -236,20 +234,20 @@ namespace ABT.TestSpace.TestExec.Switching {
 
             BitVector32 bv32_NC = new BitVector32((Int32)bits_NC);
             BitVector32 bv32_NO = new BitVector32((Int32)bits_NO);
-            BitVector32.Section sectionPortA  = BitVector32.CreateSection(0b1111_1111);
-            BitVector32.Section sectionPortB  = BitVector32.CreateSection(0b1111_1111, sectionPortA);
+            BitVector32.Section sectionPortA = BitVector32.CreateSection(0b1111_1111);
+            BitVector32.Section sectionPortB = BitVector32.CreateSection(0b1111_1111, sectionPortA);
             BitVector32.Section sectionPortCL = BitVector32.CreateSection(0b1111, sectionPortB);
             BitVector32.Section sectionPortCH = BitVector32.CreateSection(0b1111, sectionPortCL);
 
             UInt16[] portStates = PortsRead(Only.UE24s[b]);
 
-            portStates[(Int32)PORTS.A]  &= (UInt16)bv32_NC[sectionPortA]; // &= sets portStates bits low for each explicitly assigned NC state in RεS.
-            portStates[(Int32)PORTS.B]  &= (UInt16)bv32_NC[sectionPortB];
+            portStates[(Int32)PORTS.A] &= (UInt16)bv32_NC[sectionPortA]; // &= sets portStates bits low for each explicitly assigned NC state in RεS.
+            portStates[(Int32)PORTS.B] &= (UInt16)bv32_NC[sectionPortB];
             portStates[(Int32)PORTS.CL] &= (UInt16)bv32_NC[sectionPortCL];
             portStates[(Int32)PORTS.CH] &= (UInt16)bv32_NC[sectionPortCH];
 
-            portStates[(Int32)PORTS.A]  |= (UInt16)bv32_NO[sectionPortA]; // |= sets portStates bits high for each explicitly assigned NO state in RεS.
-            portStates[(Int32)PORTS.B]  |= (UInt16)bv32_NO[sectionPortB];
+            portStates[(Int32)PORTS.A] |= (UInt16)bv32_NO[sectionPortA]; // |= sets portStates bits high for each explicitly assigned NO state in RεS.
+            portStates[(Int32)PORTS.B] |= (UInt16)bv32_NO[sectionPortB];
             portStates[(Int32)PORTS.CL] |= (UInt16)bv32_NO[sectionPortCL];
             portStates[(Int32)PORTS.CH] |= (UInt16)bv32_NO[sectionPortCH];
 
@@ -332,193 +330,5 @@ namespace ABT.TestSpace.TestExec.Switching {
             return ue24BitVector32Masks;
         }
         #endregion internal methods
-    }
-
-    public enum UE24_NETS {
-        CTL_1_3, CTL_4_6,
-        DMM_IN_P, DMM_IN_N, DMM_I,
-        ENABLE_N,
-        FAN_PWR,
-        POWER_GOOD,
-        PRE_BIAS_OUT_P, PRE_BIAS_OUT_N, PRE_BIAS_PS, PRE_BIAS_PS_RTN,
-        PRI_3V3, PRI_BIAS, PRI_BIAS_OUT_P, PRI_BIAS_OUT_N, PRI_BIAS_PS, PRI_BIAS_PS_RTN,
-        SCL, SDA,
-        SEC_3V3, SEC_BIAS, SEC_BIAS_OUT_P, SEC_BIAS_OUT_N, SEC_BIAS_PS, SEC_BIAS_PS_RTN,
-        START_SYNC, SYNC,
-        VDC_5, VDC_5_RTN,
-        VIN_Sense, VIN_RTN_Sense,
-        VOUT_RTN_Sense
-    }
-
-        public abstract class UE24_NetsToBRTs {
-            public readonly Dictionary<UE24_NETS, HashSet<BRT>> NBRT;
-            UE24_NetsToBRTs() {
-                this.NBRT = new Dictionary<UE24_NETS, HashSet<BRT>>() {
-                    {UE24_NETS.CTL_1_3, new HashSet<BRT>() {new BRT(B.B1, R.C04, FC.T.NO)}},
-                    {UE24_NETS.CTL_4_6, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.DMM_IN_P, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.DMM_IN_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.DMM_I, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.ENABLE_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.FAN_PWR, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.POWER_GOOD, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.PRE_BIAS_OUT_P, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.PRE_BIAS_OUT_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.PRE_BIAS_PS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.PRE_BIAS_PS_RTN, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.PRI_3V3, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.PRI_BIAS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.PRI_BIAS_OUT_P, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.PRI_BIAS_OUT_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.PRI_BIAS_PS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.PRI_BIAS_PS_RTN, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.SCL, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.SDA, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.SEC_3V3, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.SEC_BIAS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.SEC_BIAS_OUT_P, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.SEC_BIAS_OUT_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.SEC_BIAS_PS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.SEC_BIAS_PS_RTN, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.START_SYNC, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.SYNC, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.VDC_5, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.VDC_5_RTN, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.VIN_Sense, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.VIN_RTN_Sense, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                    {UE24_NETS.VOUT_RTN_Sense, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}}
-                };
-
-            Validate();
-        }
-
-        private void Validate() {
-            HashSet<UE24_NETS> missing = new HashSet<UE24_NETS>();
-            foreach (UE24_NETS n in Enum.GetValues(typeof(UE24_NETS))) if (!this.NBRT.ContainsKey(n)) missing.Add(n);
-            if (missing.Count != 0) throw new InvalidOperationException($"Dictionary UE24_NetsToBRTs.NBRT does not contain UE24_NETS '{String.Join(", ", missing)}'.");
-            
-            foreach (KeyValuePair<UE24_NETS, HashSet<BRT>> kvp in this.NBRT) if (kvp.Value.Count == 0) missing.Add(kvp.Key);
-            if (missing.Count != 0) throw new InvalidOperationException($"Dictionary UE24_NetsToBRTs.NBRT UE24_NETS correlate to empty HashSet<BRT> '{String.Join(", ", missing)}'.");
-
-            Dictionary<UE24_NETS, HashSet<BRT>> duplicates = new Dictionary<UE24_NETS, HashSet<BRT>>();
-            HashSet <BRT> brts = new HashSet<BRT>();
-            foreach (KeyValuePair<UE24_NETS, HashSet<BRT>> kvp in this.NBRT) {
-                foreach (BRT brt in kvp.Value) {
-                    if (brts.Contains(brt)) {
-                        if (duplicates.ContainsKey(kvp.Key)) duplicates[kvp.Key].Add(brt);
-                        else duplicates.Add(kvp.Key, new HashSet<BRT> { brt });
-                    }
-                    brts.Add(brt);
-                }
-            }
-            if (duplicates.Count != 0) {
-                StringBuilder sb = new StringBuilder($"Dictionary UE24_NetsToBRTs.NBRT has duplicated BRTs:{Environment.NewLine}");
-                foreach (KeyValuePair<UE24_NETS, HashSet<BRT>> kvp in duplicates) sb.AppendLine($"Key '{kvp.Key}' BRT '{kvp.Value}'.");
-                throw new InvalidOperationException(sb.ToString());
-            }
-            // - Verify every unique B & R has at least a BRT for T.C and one/both for { T.NC and/or T.NO }
-            //   - That is, every FormC relay Common terminal is connected to a UE24_NETS, and one/both of it's Normally Closed/Normally Open terminals
-            //     are connected to UE24_NETS.
-            // - Verify every BRT per unique B & Rpair has different UE24_NETS on each T.
-            //   - That is, verify the Common, Normally Open & Normally Closed terminals are all different UE24_NETS.
-        }
-
-        public static void Connect(UE24_NETS N1, UE24_NETS N2) {
-            // Intersect, Verify & Connect:
-            // - Index this.NT to get the HashSet<BRT> correlated to N1; call it HashSet<BRT1>.
-            // - Index this.NT to get the HashSet<BRT> correlated to N2; call it HashSet<BTT2>.
-            // - HashSet.Intersect(BRT1, BRT2) to get resulting HashSet<BRT> that have matching B & Rpairs.
-            //   - If there are no BRT intersections with matching B & Rpairs, throw ArgumentException.
-            // - Verify "You can get there from here":
-            //   - Verify for each relay B & Rpairs one is a Common terminal, the other a Normally Closed or Open terminal.
-            //   - If not throw ArgumentException.
-            //   - There should be at least one B & Rmatching BRT pair that can connect N1 to N2.
-            //   - There may be multiple B & Rmatching BRT pairs that can can connect N1 to N2.
-            //     - Possibly for current capacity/ampacity, 4 wire Kelvin sensing or intentional duplications.  Or unintentional duplications :-)
-            // - Connect all available BRTs to Ns N1 & N2 using UE24 class:
-            //   - Will always be either C to NC or C to NO path to connect N1 to N2.
-            //   - If C to NC connects N1 to N2, invoke Set(B, R, FC.S.NC).
-            //   - If C to NO connects N1 to N2, invoke Set(B, R, FC.S.NO).
-        }
-
-        public static void Connect(HashSet<UE24_NETS> Ns) {
-            // Connect all HashSet<UE24_NETS> Ns simultaneously to one another.
-            // Superset of Connect(UE24_NETS N1, UE24_NETS N2).
-            // Sequentially invoke Connect(UE24_NETS N1, UE24_NETS N2) with foreach UE24_NETS in Ns.
-            // Then invoke AreConnected((HashSet<UE24_NETS> Ns) to verify all are still *simultaneously* connected.
-            // - Possible to wire N1 to BRT.C, N2 to BRT.NO & Net3 to BRT.NC all having matching Relay addresses (RB, R).
-            // - Invoking Connect(HashSet<N1, N2, Net3>) is impossible to simultaneously achieve.
-            // - But will easily be sequentially achieved by Connect(N1, N2) & Connect(N2, Net3).
-            // Used for Shorts/Opens testing.
-        }
-
-        public static void DisConnect(UE24_NETS N1, UE24_NETS N2) {
-            // Same as Connect, except disconnect N1 from N2 with opposite C state:
-            // - If C to NC connects N1 to N2, invoke invoke Set(RB, C, C.NO).
-            // - If C to NO connects N1 to N2, invoke invoke Set(RB, C, C.NC).
-        }
-
-        public static void DisConnect(HashSet<UE24_NETS> Ns) {
-            // Disonnect all HashSet<UE24_NETS> Ns Ns simultaneously from one another.
-            // Superset of DisConnect(UE24_NETS N1, UE24_NETS N2).
-            // Sequentially invoke DisConnect(UE24_NETS N1, UE24_NETS N2) with foreach UE24_NETS in Ns.
-            // Then invoke AreDisConnected((HashSet<UE24_NETS> Ns) to verify all are still *simultaneously* disconnected.
-            // - Possible to wire N1 to BRT.C, N2 to BRT.NO & Net3 to BRT.NC all having matching Relay addresses (RB, R).
-            // - Invoking DisConnect(HashSet<N1, N2, Net3>) is impossible to simultaneously achieve.
-            // - But will easily be sequentially achieved by DisConnect(N1, N2) & Connect(N2, Net3).
-            // Used for Shorts/Opens testing.
-        }
-
-        public static Boolean AreConnected(UE24_NETS N1, UE24_NETS N2) {
-            // Verify/refute N1 currently connected to N2.
-            // Use GetConnections(N1) returning HashSet<UE24_NETS>.Intersect<N2> to verify/refute if N1 currently connected to N2.
-            // For Debug.Assert() statements.
-            return false;
-        }
-
-        public static Boolean AreDisConnected(UE24_NETS N1, UE24_NETS N2) { return !AreConnected(N1, N2); }
-
-        public static Boolean AreConnected(HashSet<UE24_NETS> Ns) {
-            // Verify/refute all Ns in HashSet<UE24_NETS> are interconnected to one another.
-            // Superset of AreConnected(UE24_NETS N1, UE24_NETS N2).
-            // Can recursively invoke AreConnected(UE24_NETS N1, UE24_NETS N2) with foreach UE24_NETS in Ns.
-            // For Debug.Assert() statements.
-            return false;
-        }
-
-        public static Boolean AreDisConnected(HashSet<UE24_NETS> Ns) {
-            return false;
-        }
-
-        private static Boolean AreConnectable(UE24_NETS N1, UE24_NETS N2) {
-            // Verify/refute N1 can be connected to N2.
-            // Use GetConnections(N1) returning HashSet<UE24_NETS>.Intersect<N2> to verify/refute if N1 currently connected to N2.
-            // Reccommend programming 
-            // For Debug.Assert() statements.
-            return false;
-        }
-
-        private static Boolean AreConnectable(HashSet<UE24_NETS> Ns) {
-            // Verify/refute HashSet<UE24_NETS> Ns can be interconnected to one another.
-            // Use AreConnectable(N1) returning HashSet<UE24_NETS>.Intersect<N2> to verify/refute if N1 connected to N2.
-            // Reccommend programming 
-            // For Debug.Assert() statements.
-            return false;
-        }
-
-        public static Dictionary<UE24_NETS, HashSet<UE24_NETS>> GetConnections(UE24_NETS N1) {
-            return new Dictionary<UE24_NETS, HashSet<UE24_NETS>>();
-            // Use Get() function, returning Dictionary<B, Dictionary<R, FC.S>>, and convert to Dictionary<UE24_NETS, HashSet<UE24_NETS>>.
-        }
-        // If can convert:
-        //      - Dictionary<UE24_NETS, HashSet<BRT>>
-        // to/from:
-        //      - Dictionary<B, Dictionary<R, FC.S>>
-        // Can invoke:
-        //       - Set(Dictionary<B, Dictionary<R, FC.S>> BεRεS)
-        //       - Are(Dictionary<B, Dictionary<R, C.SC>> BεRεS)
-        //       - Get()
-        //
-        // Initially support UE24's Set(), Is() & Get() functions for discrete/single (B, R, FC.S)
     }
 }

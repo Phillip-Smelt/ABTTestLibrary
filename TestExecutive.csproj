@@ -54,7 +54,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Switching\Relays.cs" />
+    <Compile Include="Switching\USB_ERB24_Initialization.cs" />
+    <Compile Include="Switching\USB_ERB24_Relay.cs" />
+    <Compile Include="Switching\RelayForms.cs" />
     <Compile Include="Switching\USB_ERB24.cs" />
     <Compile Include="TestExecutive.cs">
       <SubType>Form</SubType>

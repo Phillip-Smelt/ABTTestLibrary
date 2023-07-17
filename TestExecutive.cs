@@ -319,6 +319,8 @@ namespace ABT.TestSpace.TestExec {
         private static Int32 GetResultCount(Dictionary<String, Test> tests, String eventCode) { return (from test in tests where String.Equals(test.Value.Result, eventCode) select test).Count(); }
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
+
+        public static String ArgumentExceptionMessageEnum(Type enumType, ) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
     }
 
     public class TestCancellationException : Exception {
