@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using static ABT.TestSpace.TestExec.Switching.UE24;
 
 namespace ABT.TestSpace.TestExec.Switching {
@@ -24,6 +23,7 @@ namespace ABT.TestSpace.TestExec.Switching {
 
     public abstract class UE24_Rs {
         public readonly HashSet<UE24_R> Rs;
+        public readonly Dictionary<N, HashSet<BRT>> NTs = new Dictionary<N, HashSet<BRT>>();
 
         public UE24_Rs() {
             this.Rs = new HashSet<UE24_R>() {
@@ -63,81 +63,102 @@ namespace ABT.TestSpace.TestExec.Switching {
                 { new UE24_R(B.B1, R.C10, C: N.DMM_IN_N, NC: N.NULL, NO: N.DMM_IN_N) },
                 { new UE24_R(B.B1, R.C11, C: N.DMM_IN_N, NC: N.NULL, NO: N.DMM_IN_N) },
             };
-        }
-    }
 
-    public abstract class UE24_NetsToBRTs {
-        public readonly Dictionary<N, HashSet<BRT>> NBRT;
-        UE24_NetsToBRTs() {
-            this.NBRT = new Dictionary<N, HashSet<BRT>>() {
-                {N.CTL_1_3, new HashSet<BRT>() {new BRT(B.B1, R.C04, FC.T.NO)}},
-                {N.CTL_4_6, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.DMM_IN_P, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.DMM_IN_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.DMM_I, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.ENABLE_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.FAN_PWR, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.POWER_GOOD, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.PRE_BIAS_OUT_P, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.PRE_BIAS_OUT_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.PRE_BIAS_PS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.PRE_BIAS_PS_RTN, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.PRI_3V3, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.PRI_BIAS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.PRI_BIAS_OUT_P, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.PRI_BIAS_OUT_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.PRI_BIAS_PS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.PRI_BIAS_PS_RTN, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.SCL, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.SDA, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.SEC_3V3, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.SEC_BIAS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.SEC_BIAS_OUT_P, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.SEC_BIAS_OUT_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.SEC_BIAS_PS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.SEC_BIAS_PS_RTN, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.START_SYNC, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.SYNC, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.VDC_5, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.VDC_5_RTN, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.VIN_Sense, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.VIN_RTN_Sense, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
-                {N.VOUT_RTN_Sense, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}}
-            };
+            ValidateRs();
 
-            Validate();
-        }
+            foreach (UE24_R outer in this.Rs) {
+                foreach (UE24_R inner in this.Rs) {
 
-        private void Validate() {
-            HashSet<N> missing = new HashSet<N>();
-            foreach (N n in Enum.GetValues(typeof(N))) if (!this.NBRT.ContainsKey(n)) missing.Add(n);
-            if (missing.Count != 0) throw new InvalidOperationException($"Dictionary UE24_NetsToBRTs.NBRT does not contain N '{String.Join(", ", missing)}'.");
-
-            foreach (KeyValuePair<N, HashSet<BRT>> kvp in this.NBRT) if (kvp.Value.Count == 0) missing.Add(kvp.Key);
-            if (missing.Count != 0) throw new InvalidOperationException($"Dictionary UE24_NetsToBRTs.NBRT N correlate to empty HashSet<BRT> '{String.Join(", ", missing)}'.");
-
-            Dictionary<N, HashSet<BRT>> duplicates = new Dictionary<N, HashSet<BRT>>();
-            HashSet<BRT> brts = new HashSet<BRT>();
-            foreach (KeyValuePair<N, HashSet<BRT>> kvp in this.NBRT) {
-                foreach (BRT brt in kvp.Value) {
-                    if (brts.Contains(brt)) {
-                        if (duplicates.ContainsKey(kvp.Key)) duplicates[kvp.Key].Add(brt);
-                        else duplicates.Add(kvp.Key, new HashSet<BRT> { brt });
-                    }
-                    brts.Add(brt);
                 }
             }
-            if (duplicates.Count != 0) {
-                StringBuilder sb = new StringBuilder($"Dictionary UE24_NetsToBRTs.NBRT has duplicated BRTs:{Environment.NewLine}");
-                foreach (KeyValuePair<N, HashSet<BRT>> kvp in duplicates) sb.AppendLine($"Key '{kvp.Key}' BRT '{kvp.Value}'.");
-                throw new InvalidOperationException(sb.ToString());
-            }
-            // - Verify every unique B & R has at least a BRT for T.C and one/both for { T.NC and/or T.NO }
-            //   - That is, every FormC relay Common terminal is connected to a N, and one/both of it's Normally Closed/Normally Open terminals
-            //     are connected to N.
-            // - Verify every BRT per unique B & Rpair has different N on each T.
-            //   - That is, verify the Common, Normally Open & Normally Closed terminals are all different N.
         }
+
+        private void ValidateRs() {
+            String s = $"Cannot accomodate USB-ERB24 Relays connected serially:{Environment.NewLine}Boards/Relays";
+            foreach (UE24_R outer in this.Rs) {
+                foreach (UE24_R inner in this.Rs) {
+                    if (outer.C == inner.NC) C_NC(s, outer, inner);
+                    if (outer.C == inner.NO) C_NO(s, outer, inner);
+                }
+            }
+        }
+
+        private void C_NC(String s, UE24_R o, UE24_R i) { throw new InvalidOperationException($"{s} '{UE24_R.GetB(o.B)}/{UE24_R.GetR(o.R)}' C connected to '{UE24_R.GetB(i.B)}/{UE24_R.GetR(i.R)}' NC."); }
+
+        private void C_NO(String s, UE24_R o, UE24_R i) { throw new InvalidOperationException($"{s} '{UE24_R.GetB(o.B)}/{UE24_R.GetR(o.R)}' C connected to '{UE24_R.GetB(i.B)}/{UE24_R.GetR(i.R)}' NO."); }
+
+        //public abstract class UE24_NetsToBRTs {
+        //    public readonly Dictionary<N, HashSet<BRT>> NBRT;
+        //    UE24_NetsToBRTs() {
+        //        this.NBRT = new Dictionary<N, HashSet<BRT>>() {
+        //            {N.CTL_1_3, new HashSet<BRT>() {new BRT(B.B1, R.C04, FC.T.NO)}},
+        //            {N.CTL_4_6, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.DMM_IN_P, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.DMM_IN_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.DMM_I, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.ENABLE_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.FAN_PWR, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.POWER_GOOD, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.PRE_BIAS_OUT_P, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.PRE_BIAS_OUT_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.PRE_BIAS_PS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.PRE_BIAS_PS_RTN, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.PRI_3V3, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.PRI_BIAS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.PRI_BIAS_OUT_P, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.PRI_BIAS_OUT_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.PRI_BIAS_PS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.PRI_BIAS_PS_RTN, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.SCL, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.SDA, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.SEC_3V3, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.SEC_BIAS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.SEC_BIAS_OUT_P, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.SEC_BIAS_OUT_N, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.SEC_BIAS_PS, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.SEC_BIAS_PS_RTN, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.START_SYNC, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.SYNC, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.VDC_5, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.VDC_5_RTN, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.VIN_Sense, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.VIN_RTN_Sense, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}},
+        //            {N.VOUT_RTN_Sense, new HashSet<BRT>() {new BRT(B.B0, R.C01, FC.T.C)}}
+        //        };
+
+        //        Validate();
+        //    }
+
+        //private void Validate() {
+        //    HashSet<N> missing = new HashSet<N>();
+        //    foreach (N n in Enum.GetValues(typeof(N))) if (!this.NBRT.ContainsKey(n)) missing.Add(n);
+        //    if (missing.Count != 0) throw new InvalidOperationException($"Dictionary UE24_NetsToBRTs.NBRT does not contain N '{String.Join(", ", missing)}'.");
+
+        //    foreach (KeyValuePair<N, HashSet<BRT>> kvp in this.NBRT) if (kvp.Value.Count == 0) missing.Add(kvp.Key);
+        //    if (missing.Count != 0) throw new InvalidOperationException($"Dictionary UE24_NetsToBRTs.NBRT N correlate to empty HashSet<BRT> '{String.Join(", ", missing)}'.");
+
+        //    Dictionary<N, HashSet<BRT>> duplicates = new Dictionary<N, HashSet<BRT>>();
+        //    HashSet<BRT> brts = new HashSet<BRT>();
+        //    foreach (KeyValuePair<N, HashSet<BRT>> kvp in this.NBRT) {
+        //        foreach (BRT brt in kvp.Value) {
+        //            if (brts.Contains(brt)) {
+        //                if (duplicates.ContainsKey(kvp.Key)) duplicates[kvp.Key].Add(brt);
+        //                else duplicates.Add(kvp.Key, new HashSet<BRT> { brt });
+        //            }
+        //            brts.Add(brt);
+        //        }
+        //    }
+        //    if (duplicates.Count != 0) {
+        //        StringBuilder sb = new StringBuilder($"Dictionary UE24_NetsToBRTs.NBRT has duplicated BRTs:{Environment.NewLine}");
+        //        foreach (KeyValuePair<N, HashSet<BRT>> kvp in duplicates) sb.AppendLine($"Key '{kvp.Key}' BRT '{kvp.Value}'.");
+        //        throw new InvalidOperationException(sb.ToString());
+        //    }
+        //    // - Verify every unique B & R has at least a BRT for T.C and one/both for { T.NC and/or T.NO }
+        //    //   - That is, every FormC relay Common terminal is connected to a N, and one/both of it's Normally Closed/Normally Open terminals
+        //    //     are connected to N.
+        //    // - Verify every BRT per unique B & Rpair has different N on each T.
+        //    //   - That is, verify the Common, Normally Open & Normally Closed terminals are all different N.
+        //}
 
         public static void Connect(N N1, N N2) {
             // Intersect, Verify & Connect:
