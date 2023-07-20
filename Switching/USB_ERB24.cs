@@ -52,14 +52,6 @@ namespace ABT.TestSpace.TestExec.Switching {
         internal enum PORTS { A, B, CL, CH }
         internal static Int32[] _ue24bitVector32Masks = GetUE24BitVector32Masks();
 
-        public sealed class BRT {
-            public readonly B B;
-            public readonly R R;
-            public readonly FC.T T;
-
-            public BRT(B b, R r, FC.T t) { this.B = b; this.R = r; this.T = t; }
-        }
-
         #region Is/Are
         public static Boolean Is(B b, R r, FC.S s) { return Get(b, r) == s; }
 

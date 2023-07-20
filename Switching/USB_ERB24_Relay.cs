@@ -1,7 +1,25 @@
 ﻿using System;
+using static ABT.TestSpace.TestExec.Switching.UE24;
 
 namespace ABT.TestSpace.TestExec.Switching {
     // UE24 is an abbreviation of the USB_ERB24 initialisation (Universal Serial Bus Electronic Relay Board with 24 Form C relays).
+
+    public sealed class UE24_T {
+        public readonly B B;
+        public readonly R R;
+        public readonly FC.T T;
+
+        public UE24_T(B b, R r, FC.T t) { this.B = b; this.R = r; this.T = t; }
+
+        public override Boolean Equals(Object obj) {
+            UE24_T ue24_t = obj as UE24_T;
+            if (ReferenceEquals(this, ue24_t)) return true;
+            return ue24_t != null && ue24_t.B == this.B && ue24_t.R == this.R && this.T == ue24_t.T;
+        }
+
+        public override Int32 GetHashCode() { return 3 * this.B.GetHashCode() + this.R.GetHashCode() + this.T.GetHashCode(); }
+    }
+
     public class UE24_R {
         public readonly UE24.B B;
         public readonly UE24.R R;
@@ -33,6 +51,7 @@ namespace ABT.TestSpace.TestExec.Switching {
 
         public override Boolean Equals(Object obj) {
             UE24_R ue24_r = obj as UE24_R;
+            if (ReferenceEquals(this, ue24_r)) return true;
             return ue24_r != null && ue24_r.B == this.B && ue24_r.R == this.R;
         }
 

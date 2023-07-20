@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using static ABT.TestSpace.TestExec.Switching.UE24;
+using static ABT.TestSpace.TestExec.Switching.UE24_R;
 
 namespace ABT.TestSpace.TestExec.Switching {
     // UE24 is an abbreviation of the USB_ERB24 initialisation (Universal Serial Bus Electronic Relay Board with 24 Form C relays).
@@ -23,7 +27,7 @@ namespace ABT.TestSpace.TestExec.Switching {
 
     public abstract class UE24_Rs {
         public readonly HashSet<UE24_R> Rs;
-        public readonly Dictionary<N, HashSet<BRT>> NTs = new Dictionary<N, HashSet<BRT>>();
+        public readonly Dictionary<N, HashSet<UE24_T>> NTs = new Dictionary<N, HashSet<UE24_T>>();
 
         public UE24_Rs() {
             this.Rs = new HashSet<UE24_R>() {
@@ -66,26 +70,28 @@ namespace ABT.TestSpace.TestExec.Switching {
 
             ValidateRs();
 
-            foreach (UE24_R outer in this.Rs) {
-                foreach (UE24_R inner in this.Rs) {
-
-                }
+            foreach (UE24_R r in this.Rs) {
+                if (!this.NTs.ContainsKey(r.C)) 
             }
         }
 
         private void ValidateRs() {
-            String s = $"Cannot accomodate USB-ERB24 Relays connected serially:{Environment.NewLine}Boards/Relays";
-            foreach (UE24_R outer in this.Rs) {
-                foreach (UE24_R inner in this.Rs) {
-                    if (outer.C == inner.NC) C_NC(s, outer, inner);
-                    if (outer.C == inner.NO) C_NO(s, outer, inner);
+            StringBuilder sb = new StringBuilder($"Cannot currently accomodate USB-ERB24 Relays connected serially:{Environment.NewLine}Boards/Relays");
+            List<(UE24_R, UE24_R)> rs = 
+                (from r1 in this.Rs
+                 from r2 in this.Rs
+                 where (r1.C == r2.NC || r1.C == r2.NO)
+                 select (r1, r2)).ToList();
+            if (rs.Count() != 0) {
+                foreach ((UE24_R r1, UE24_R r2) rr in rs) {
+                    sb.AppendLine("Below relay pair {R1, R2} serially connected, C1 to (NC2 ⨁ NO2)");
+                    sb.AppendLine($"   B1='{GetB(rr.r1.B)}', R1='{GetR(rr.r1.R)}', C1='{GetN(rr.r1.C)}', NC1='{GetN(rr.r1.NC)}', NO1='{GetN(rr.r1.NO)}'.");
+                    sb.AppendLine($"   B2='{GetB(rr.r2.B)}', R2='{GetR(rr.r2.R)}', C2='{GetN(rr.r2.C)}', NC2='{GetN(rr.r2.NC)}', NO2='{GetN(rr.r2.NO)}'.");
+                    sb.AppendLine("");
                 }
+                throw new InvalidOperationException(sb.ToString());
             }
         }
-
-        private void C_NC(String s, UE24_R o, UE24_R i) { throw new InvalidOperationException($"{s} '{UE24_R.GetB(o.B)}/{UE24_R.GetR(o.R)}' C connected to '{UE24_R.GetB(i.B)}/{UE24_R.GetR(i.R)}' NC."); }
-
-        private void C_NO(String s, UE24_R o, UE24_R i) { throw new InvalidOperationException($"{s} '{UE24_R.GetB(o.B)}/{UE24_R.GetR(o.R)}' C connected to '{UE24_R.GetB(i.B)}/{UE24_R.GetR(i.R)}' NO."); }
 
         //public abstract class UE24_NetsToBRTs {
         //    public readonly Dictionary<N, HashSet<BRT>> NBRT;
