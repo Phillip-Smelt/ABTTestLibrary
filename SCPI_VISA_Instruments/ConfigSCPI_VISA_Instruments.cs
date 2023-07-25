@@ -16,6 +16,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public enum SCPI_IDENTITY { Manufacturer, Model, SerialNumber, FirmwareRevision }
     // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".
 
+    public abstract class SCPI_VISA_InstrumentElement_IDs { } // Maps TestExecutive.config.xml's canonical SCPI_VISA_InstrumentElement IDs to meaningful TestExecutor specific domain/test/UUT.
+
     public class SCPI_VISA_Instrument {
         public readonly String ID;
         public readonly String Description;
@@ -79,6 +81,4 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return info;
         }
     }
-
-    public abstract class SCPI_VISA_InstrumentElement_IDs { } // Maps TestExecutive.config.xml's canonical SCPI_VISA_InstrumentElement IDs to meaningful TestExecutor specific domain/test/UUT.
 }
