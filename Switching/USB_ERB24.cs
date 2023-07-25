@@ -9,6 +9,8 @@ using static ABT.TestSpace.TestExec.Switching.Forms;
 using static ABT.TestSpace.TestExec.Switching.UE24;
 
 namespace ABT.TestSpace.TestExec.Switching {
+    public abstract class Switching_Nets { }
+
     public sealed class UE24 {
         // NOTE: UE24 is an abbreviation of Measurement Computing Corporation's USB-ERB24 initialisation (Universal Serial Bus Electronic Relay Board with 24 Form C relays).
         // NOTE: Most of this class is compatible with MCC's USB-ERB08 Relay Board, essentially a USB-ERB24 but with only 8 Form C relays instead of the USB-ERB24's 24.
@@ -324,25 +326,7 @@ namespace ABT.TestSpace.TestExec.Switching {
         #endregion internal methods
     }
 
-    public abstract class Switching_Nets { }
-
-    public class UE24_T {
-        public readonly UE24.UE UE;
-        public readonly R R;
-        public readonly C.T T;
-
-        public UE24_T(UE24.UE UE, R R, C.T T) { this.UE = UE; this.R = R; this.T = T; }
-
-        public override Boolean Equals(Object obj) {
-            UE24_T ue24_t = obj as UE24_T;
-            if (ReferenceEquals(this, ue24_t)) return true;
-            return ue24_t != null && ue24_t.UE == this.UE && ue24_t.R == this.R && this.T == ue24_t.T;
-        }
-
-        public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode() + this.T.GetHashCode(); }
-    }
-
-    public class UE24_R {
+    public sealed class UE24_R {
         public readonly UE UE;
         public readonly R R;
         public readonly String C;
@@ -355,7 +339,7 @@ namespace ABT.TestSpace.TestExec.Switching {
         }
 
         private void Validate() {
-            if (String.Equals(C, String.Empty)) throw new ArgumentException($"Relay terminal Common '{this.C}' cannot be NULL.");
+            if (String.Equals(C, String.Empty)) throw new ArgumentException($"Relay terminal Common '{this.C}' cannot be String.Empty.");
             if (String.Equals(C, NO)) throw new ArgumentException($"Relay terminals Common '{this.C}' & Normally Open '{this.NO}' cannot be identical.");
             if (String.Equals(C, NC)) throw new ArgumentException($"Relay terminals Common '{this.C}' & Normally Closed '{this.NC}' cannot be identical.");
             if (String.Equals(NC, NO)) throw new ArgumentException($"Relay terminals Normally Closed '{this.NC}' & Normally Open '{this.NO}' cannot be identical.");
@@ -377,6 +361,50 @@ namespace ABT.TestSpace.TestExec.Switching {
         }
 
         public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode(); }
+    }
+
+    public sealed class UE24_S {
+        public readonly UE UE;
+        public readonly R R;
+        public readonly C.S S;
+
+        public UE24_S(UE24.UE UE, R R, C.S S) { this.UE = UE; this.R = R; this.S = S; }
+
+        public override Boolean Equals(Object obj) {
+            UE24_S ue24_s = obj as UE24_S;
+            if (ReferenceEquals(this, ue24_s)) return true;
+            return ue24_s != null && ue24_s.UE == this.UE && ue24_s.R == this.R;
+        }
+
+        public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode() + this.S.GetHashCode(); }
+    }
+
+    public sealed class UE24_T {
+        public readonly UE UE;
+        public readonly R R;
+        public readonly C.T T;
+
+        public UE24_T(UE24.UE UE, R R, C.T T) { this.UE = UE; this.R = R; this.T = T; }
+
+        public override Boolean Equals(Object obj) {
+            UE24_T ue24_t = obj as UE24_T;
+            if (ReferenceEquals(this, ue24_t)) return true;
+            return ue24_t != null && ue24_t.UE == this.UE && ue24_t.R == this.R && this.T == ue24_t.T;
+        }
+
+        public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode() + this.T.GetHashCode(); }
+    }
+
+
+    public sealed class UE24_Route {
+        public readonly (String SN1, String SN2) Route;
+        public UE24_Route((String SN1, String SN2) route) { this.Route = route; }
+    }
+
+    public sealed class UE24_Routes {
+        public readonly Dictionary<UE24_Route, HashSet<UE24_S>> Routes;
+
+        public UE24_Routes(Dictionary<UE24_Route, HashSet<UE24_S>> routes) { this.Routes = routes; }   
     }
 
     public sealed class UE24_Rs {
@@ -579,6 +607,5 @@ namespace ABT.TestSpace.TestExec.Switching {
         //       - Get()
         //
         // Initially support UE24's Set(), Is() & Get() functions for discrete/single (UE, R, C.S)
-
     }
 }
