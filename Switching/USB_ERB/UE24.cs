@@ -4,25 +4,13 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
+using static ABT.TestSpace.TestExec.Switching.Forms;
 
-namespace ABT.TestSpace.TestExec.Switching {
+namespace ABT.TestSpace.TestExec.Switching.USB_ERB {
     public sealed class UE24 {
-        // UE24 is an abbreviation of the USB_ERB24 initialisation (Universal Serial Bus Electronic Relay Board with 24 Form C relays).
-        public Dictionary<B, MccBoard> UE24s;
-        private readonly static UE24 _only = new UE24();
-        public static UE24 Only { get { return _only; } }
-        static UE24() { }
-        // Singleton pattern requires explicit static constructor to tell C# compiler not to mark type as beforefieldinit.
-        // https://csharpindepth.com/articles/singleton
-        private UE24() {
-            this.UE24s = new Dictionary<B, MccBoard>() {
-                {B.B0, new MccBoard((Int32)B.B0)},
-                {B.B1, new MccBoard((Int32)B.B1)}
-            };
-        }
-
-        public enum B { B0, B1 } // USB_ERB24 Boards.
-        public enum R : Byte { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19, C20, C21, C22, C23, C24 } // USB_ERB24 Relays, all Form C.
+        // NOTE: UE24 is an abbreviation of Measurement Computing Corporation's USB-ERB24 initialisation (Universal Serial Bus Electronic Relay Board with 24 Form C relays).
+        // NOTE: Most of this class is compatible with MCC's USB-ERB08 Relay Board, essentially a USB-ERB24 but with only 8 Form C relays instead of the USB-ERB24's 24.
+        // - Some portions are specific to the USB-ERB24 however; examples are enum R containing 24 relays & enum PORTS containing 24 bits.
         // NOTE: This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
         // NOTE: USB-ERB24 relays are configurable for either Non-Inverting or Inverting logic, via hardware DIP switch S1.
         //  - Non-Inverting:  Logic low de-energizes the relays, logic high energizes them.
@@ -31,88 +19,98 @@ namespace ABT.TestSpace.TestExec.Switching {
         //  - Pull-Up:        Relays are energized at power-up.
         //  - Pull-Down:      Relays are de-energized at power-up.
         //  - https://www.mccdaq.com/PDFs/Manuals/usb-erb24.pdf.
-        // NOTE: B enum is a static definition of TestExecutive's MCC USB-ERB24(s).
+        public Dictionary<UE, MccBoard> UE24s;
+        private readonly static UE24 _only = new UE24();
+        public static UE24 Only { get { return _only; } }
+        static UE24() { }
+        // Singleton pattern requires explicit static constructor to tell C# compiler not to mark type as beforefieldinit.
+        // https://csharpindepth.com/articles/singleton
+        private UE24() {
+            this.UE24s = new Dictionary<UE, MccBoard>() {
+                {UE.B0, new MccBoard((Int32)UE.B0)},
+                {UE.B1, new MccBoard((Int32)UE.B1)}
+            };
+        }
+
+        public enum UE { B0, B1 } // USB-ERB24 Boards.
+        public enum R : Byte { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19, C20, C21, C22, C23, C24 } // USB_ERB24 Relays, all Form C.
+        // NOTE: UE enum is a static definition of TestExecutive's MCC USB-ERB24(s).
         // Potential dynamic definition methods for UE24s:
         //  - Read them from MCC InstaCal's cb.cfg file.
         //  - Dynamically discover them programmatically: https://www.mccdaq.com/pdfs/manuals/Mcculw_WebHelp/ULStart.htm.
         //  - Specify MCC USB-ERB24s in TestExecutive.config.xml.
         // NOTE: MCC's InstaCal USB-ERB24 indexing begins at 0, guessing because USB device indexing is likely also zero based.
-        // - So B.B0's numerical value is 0, which is used when constructing a new MccBoard B.B0 object:
-        // - Instantiation 'new MccBoard((Int32)B.B0)' is equivalent to 'new MccBoard(0)'.
+        // - So UE.B0's numerical value is 0, which is used when constructing a new MccBoard UE.B0 object:
+        // - Instantiation 'new MccBoard((Int32)UE.B0)' is equivalent to 'new MccBoard(0)'.
         // NOTE: enum named R instead of RELAYS for concision; consider below:
-        //  - Set(B.B0, new Dictionary<R, FC.S>() {{R.C01,FC.S.NC}, {R.C02,FC.S.NO}, ... {R.C24,FC.S.NC} });
-        //  - Set(B.B0, new Dictionary<RELAYS, FC.S>() {{RELAYS.C01,FC.S.NC}, {RELAYS.C02,FC.S.NO}, ... {RELAYS.C24,FC.S.NC} });
-        // NOTE: Enumerate Form A relays as public enum R { A01, A02, A03... }
-        // NOTE: Enumerate Form B relays as public enum R { B01, B02, B03... }
+        //  - Set(UE.B0, new Dictionary<R, C.S>() {{R.C01,C.S.NC}, {R.C02,C.S.NO}, ... {R.C24,C.S.NC} });
+        //  - Set(UE.B0, new Dictionary<RELAYS, C.S>() {{RELAYS.C01,C.S.NC}, {RELAYS.C02,C.S.NO}, ... {RELAYS.C24,C.S.NC} });
         // NOTE: R's items named C## because USB-ERB24's relays are all Form C.
-        // NOTE: Some manufacturer's Relay Boards contain heterogenous assortments of Form A, and/or Form B, and/or Form C relays.
-        //  - In such case, R would be enumerated as { A01, A02, A03, A04, A05, A06, A07, A08, B09, B10, B11, B12, B13, B14, B15, B16, C17, C18, C19, C20, C21, C22, C23, C24 }
-        //    if the first 8 of 24 relays are Form A, the 2nd 8 are Form B, and the last 8 Form C.
 
         internal enum PORTS { A, B, CL, CH }
         internal static Int32[] _ue24bitVector32Masks = GetUE24BitVector32Masks();
 
         #region Is/Are
-        public static Boolean Is(B b, R r, FC.S s) { return Get(b, r) == s; }
+        public static Boolean Is(UE ue, R r, C.S s) { return Get(ue, r) == s; }
 
-        public static Boolean Are(B b, HashSet<R> rs, FC.S s) {
-            Dictionary<R, FC.S> RεS = rs.ToDictionary(r => r, r => s);
-            Dictionary<R, FC.S> Are = Get(b, rs);
+        public static Boolean Are(UE ue, HashSet<R> rs, C.S s) {
+            Dictionary<R, C.S> RεS = rs.ToDictionary(r => r, r => s);
+            Dictionary<R, C.S> Are = Get(ue, rs);
             return RεS.Count == Are.Count && !RεS.Except(Are).Any();
         }
 
-        public static Boolean Are(B b, Dictionary<R, FC.S> RεS) {
-            Dictionary<R, FC.S> Are = Get(b, new HashSet<R>(RεS.Keys));
+        public static Boolean Are(UE ue, Dictionary<R, C.S> RεS) {
+            Dictionary<R, C.S> Are = Get(ue, new HashSet<R>(RεS.Keys));
             return RεS.Count == Are.Count && !RεS.Except(Are).Any();
         }
 
-        public static Boolean Are(B b, FC.S s) {
-            Dictionary<R, FC.S> Are = Get(b);
+        public static Boolean Are(UE ue, C.S s) {
+            Dictionary<R, C.S> Are = Get(ue);
             Boolean areEqual = true;
-            foreach (KeyValuePair<R, FC.S> kvp in Are) areEqual &= kvp.Value == s;
+            foreach (KeyValuePair<R, C.S> kvp in Are) areEqual &= kvp.Value == s;
             return areEqual;
         }
 
         // Below 3 methods mainly useful for parallelism, when testing multiple UUTs concurrently, with each B wired identically to test 1 UUT.
-        public static Boolean Are(HashSet<B> bs, FC.S s) {
+        public static Boolean Are(HashSet<UE> ues, C.S s) {
             Boolean areEqual = true;
-            foreach (B b in bs) areEqual &= Are(b, s);
+            foreach (UE ue in ues) areEqual &= Are(ue, s);
             return areEqual;
         }
 
-        public static Boolean Are(HashSet<B> bs, HashSet<R> rs, FC.S s) {
+        public static Boolean Are(HashSet<UE> ues, HashSet<R> rs, C.S s) {
             Boolean areEqual = true;
-            foreach (B b in bs) areEqual &= Are(b, rs, s);
+            foreach (UE ue in ues) areEqual &= Are(ue, rs, s);
             return areEqual;
         }
 
-        public static Boolean Are(Dictionary<B, Dictionary<R, FC.S>> BεRεS) {
+        public static Boolean Are(Dictionary<UE, Dictionary<R, C.S>> UEεRεS) {
             Boolean areEqual = true;
-            foreach (KeyValuePair<B, Dictionary<R, FC.S>> kvp in BεRεS) areEqual &= Are(kvp.Key, kvp.Value);
+            foreach (KeyValuePair<UE, Dictionary<R, C.S>> kvp in UEεRεS) areEqual &= Are(kvp.Key, kvp.Value);
             return areEqual;
         }
 
-        public static Boolean Are(FC.S s) {
+        public static Boolean Are(C.S s) {
             Boolean areEqual = true;
-            foreach (B b in Enum.GetValues(typeof(B))) areEqual &= Are(b, s);
+            foreach (UE ue in Enum.GetValues(typeof(UE))) areEqual &= Are(ue, s);
             return areEqual;
         }
         #endregion Is/Are
 
         #region Get
-        public static FC.S Get(B b, R r) {
-            ErrorInfo errorInfo = Only.UE24s[b].DBitIn(DigitalPortType.FirstPortA, (Int32)r, out DigitalLogicState digitalLogicState);
-            ProcessErrorInfo(Only.UE24s[b], errorInfo);
-            return digitalLogicState == DigitalLogicState.Low ? FC.S.NC : FC.S.NO;
+        public static C.S Get(UE ue, R r) {
+            ErrorInfo errorInfo = Only.UE24s[ue].DBitIn(DigitalPortType.FirstPortA, (Int32)r, out DigitalLogicState digitalLogicState);
+            ProcessErrorInfo(Only.UE24s[ue], errorInfo);
+            return digitalLogicState == DigitalLogicState.Low ? C.S.NC : C.S.NO;
         }
 
-        public static Dictionary<R, FC.S> Get(B b, HashSet<R> rs) {
-            Dictionary<R, FC.S> RεS = Get(b);
+        public static Dictionary<R, C.S> Get(UE ue, HashSet<R> rs) {
+            Dictionary<R, C.S> RεS = Get(ue);
             foreach (R r in rs) if (!RεS.ContainsKey(r)) RεS.Remove(r);
             return RεS;
         }
 
-        public static Dictionary<R, FC.S> Get(B b) {
+        public static Dictionary<R, C.S> Get(UE ue) {
             // Obviously, can utilize MccBoard.DBitIn to read individual bits, instead of MccBoard.DIn to read multiple bits:
             // - But, the USB-ERB24's reads it's relay states by reading its internal 82C55's ports.
             // - These ports appear to operate similarly to MccBoard's DIn function, that is, they read the 82C55's 
@@ -123,18 +121,18 @@ namespace ABT.TestSpace.TestExec.Switching {
             // - Regardless, if preferred, below /*,*/commented code can replace the entirety of this method.
             /*
             ErrorInfo errorInfo;  DigitalLogicState digitalLogicState;
-            R r;  FC.S s;  Dictionary<R, FC.S> RεS = new Dictionary<R, FC.S>();
+            R r;  C.S s;  Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
             for (Int32 i = 0; i < Enum.GetValues(typeof(R)).Length; i++) {
-                errorInfo = Only.UE24s[b].DBitIn(DigitalPortType.FirstPortA, i, out digitalLogicState);
-                ProcessErrorInfo (Only.UE24s[b], errorInfo);
+                errorInfo = Only.UE24s[ue].DBitIn(DigitalPortType.FirstPortA, i, out digitalLogicState);
+                ProcessErrorInfo (Only.UE24s[ue], errorInfo);
                 r = (R)Enum.ToObject(typeof(R), i);
-                s = digitalLogicState == DigitalLogicState.Low ? FC.S.NC : FC.S.NO;
+                s = digitalLogicState == DigitalLogicState.Low ? C.S.NC : C.S.NO;
                 RεS.Add(r, s);
             }
             return RεS;
             */
 
-            UInt16[] portBits = PortsRead(Only.UE24s[b]);
+            UInt16[] portBits = PortsRead(Only.UE24s[ue]);
             UInt32[] biggerPortBits = Array.ConvertAll(portBits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
             UInt32 relayBits = 0x0000;
             relayBits |= biggerPortBits[(UInt32)PORTS.CH] << 00;
@@ -143,56 +141,56 @@ namespace ABT.TestSpace.TestExec.Switching {
             relayBits |= biggerPortBits[(UInt32)PORTS.A] << 16;
             BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
 
-            R r; FC.S s; Dictionary<R, FC.S> RεS = new Dictionary<R, FC.S>();
+            R r; C.S s; Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
             for (Int32 i = 0; i < _ue24bitVector32Masks.Length; i++) {
                 r = (R)Enum.ToObject(typeof(R), i);
-                s = bitVector32[_ue24bitVector32Masks[i]] ? FC.S.NO : FC.S.NC;
+                s = bitVector32[_ue24bitVector32Masks[i]] ? C.S.NO : C.S.NC;
                 RεS.Add(r, s);
             }
             return RεS;
         }
 
         // Below 3 methods mainly useful for parallelism, when testing multiple UUTs concurrently, with each B wired identically to test 1 UUT.
-        public static Dictionary<B, Dictionary<R, FC.S>> Get(HashSet<B> bs) {
-            Dictionary<B, Dictionary<R, FC.S>> BεRεS = Get();
-            foreach (B b in bs) if (!BεRεS.ContainsKey(b)) BεRεS.Remove(b);
-            return BεRεS;
+        public static Dictionary<UE, Dictionary<R, C.S>> Get(HashSet<UE> ues) {
+            Dictionary<UE, Dictionary<R, C.S>> UEεRεS = Get();
+            foreach (UE ue in ues) if (!UEεRεS.ContainsKey(ue)) UEεRεS.Remove(ue);
+            return UEεRεS;
         }
 
-        public static Dictionary<B, Dictionary<R, FC.S>> Get(HashSet<B> bs, HashSet<R> rs) {
-            Dictionary<B, Dictionary<R, FC.S>> BεRεS = new Dictionary<B, Dictionary<R, FC.S>>();
-            foreach (B b in bs) BεRεS.Add(b, Get(b, rs));
-            return BεRεS;
+        public static Dictionary<UE, Dictionary<R, C.S>> Get(HashSet<UE> ues, HashSet<R> rs) {
+            Dictionary<UE, Dictionary<R, C.S>> UEεRεS = new Dictionary<UE, Dictionary<R, C.S>>();
+            foreach (UE ue in ues) UEεRεS.Add(ue, Get(ue, rs));
+            return UEεRεS;
         }
 
-        public static Dictionary<B, Dictionary<R, FC.S>> Get(Dictionary<B, R> BεR) {
-            Dictionary<B, Dictionary<R, FC.S>> BεRεS = new Dictionary<B, Dictionary<R, FC.S>>();
-            Dictionary<R, FC.S> RεS = new Dictionary<R, FC.S>();
-            foreach (KeyValuePair<B, R> kvp in BεR) {
+        public static Dictionary<UE, Dictionary<R, C.S>> Get(Dictionary<UE, R> UEεR) {
+            Dictionary<UE, Dictionary<R, C.S>> UEεRεS = new Dictionary<UE, Dictionary<R, C.S>>();
+            Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
+            foreach (KeyValuePair<UE, R> kvp in UEεR) {
                 RεS.Add(kvp.Value, Get(kvp.Key, kvp.Value));
-                BεRεS.Add(kvp.Key, RεS);
+                UEεRεS.Add(kvp.Key, RεS);
             }
-            return BεRεS;
+            return UEεRεS;
         }
 
-        public static Dictionary<B, Dictionary<R, FC.S>> Get() {
-            Dictionary<B, Dictionary<R, FC.S>> BεRεS = new Dictionary<B, Dictionary<R, FC.S>>();
-            foreach (B b in Enum.GetValues(typeof(B))) BεRεS.Add(b, Get(b));
-            return BεRεS;
+        public static Dictionary<UE, Dictionary<R, C.S>> Get() {
+            Dictionary<UE, Dictionary<R, C.S>> UEεRεS = new Dictionary<UE, Dictionary<R, C.S>>();
+            foreach (UE ue in Enum.GetValues(typeof(UE))) UEεRεS.Add(ue, Get(ue));
+            return UEεRεS;
         }
         #endregion Get
 
         #region Set
-        public static void Set(B b, R r, FC.S s) {
-            ErrorInfo errorInfo = Only.UE24s[b].DBitOut(DigitalPortType.FirstPortA, (Int32)r, s is FC.S.NC ? DigitalLogicState.Low : DigitalLogicState.High);
-            ProcessErrorInfo(Only.UE24s[b], errorInfo);
+        public static void Set(UE ue, R r, C.S s) {
+            ErrorInfo errorInfo = Only.UE24s[ue].DBitOut(DigitalPortType.FirstPortA, (Int32)r, s is C.S.NC ? DigitalLogicState.Low : DigitalLogicState.High);
+            ProcessErrorInfo(Only.UE24s[ue], errorInfo);
         }
 
-        public static void Set(B b, HashSet<R> rs, FC.S s) { Set(b, rs.ToDictionary(r => r, r => s)); }
+        public static void Set(UE ue, HashSet<R> rs, C.S s) { Set(ue, rs.ToDictionary(r => r, r => s)); }
 
-        public static void Set(B b, Dictionary<R, FC.S> RεS) {
+        public static void Set(UE ue, Dictionary<R, C.S> RεS) {
             // This method only sets relay states for relays explicitly declared in RεS.
-            //  - That is, if RεS = {{R.C01, FC.S.NO}, {R.C02, FC.S.NC}}, then only relays R.C01 & R.C02 will have their states actively set, respectively to NO & NC.
+            //  - That is, if RεS = {{R.C01, C.S.NO}, {R.C02, C.S.NC}}, then only relays R.C01 & R.C02 will have their states actively set, respectively to NO & NC.
             //  - Relay states R.C03, R.C04...R.C24 remain as they were:
             //      - Relays that were NC remain NC.
             //      - Relays that were NO remain NO.
@@ -208,9 +206,9 @@ namespace ABT.TestSpace.TestExec.Switching {
             // - Regardless, if preferred, below /*,*/commented code can replace the entirety of this method.
             /*
             ErrorInfo errorInfo;
-            foreach (KeyValuePair<R, FC.S> kvp in RεS) {
-                errorInfo = Only.UE24s[b].DBitOut(DigitalPortType.FirstPortA, (Int32)kvp.Key, kvp.Value == FC.S.NC ? DigitalLogicState.Low: DigitalLogicState.High);
-                ProcessErrorInfo(Only.UE24s[b], errorInfo);
+            foreach (KeyValuePair<R, C.S> kvp in RεS) {
+                errorInfo = Only.UE24s[ue].DBitOut(DigitalPortType.FirstPortA, (Int32)kvp.Key, kvp.Value == C.S.NC ? DigitalLogicState.Low: DigitalLogicState.High);
+                ProcessErrorInfo(Only.UE24s[ue], errorInfo);
             }
             */
 
@@ -218,9 +216,9 @@ namespace ABT.TestSpace.TestExec.Switching {
             UInt32 bits_NC = 0xFFFF_FFFF; // bits_NC utilize Boolean And logic.
             UInt32 bits_NO = 0x0000_0000; // bits_NO utilize Boolean Or logic.
 
-            foreach (KeyValuePair<R, FC.S> kvp in RεS) {
+            foreach (KeyValuePair<R, C.S> kvp in RεS) {
                 relayBit = (UInt32)1 << (Byte)kvp.Key;
-                if (kvp.Value == FC.S.NC) bits_NC ^= relayBit; // Sets a 0 in bits_NC for each explicitly assigned NC state in RεS.
+                if (kvp.Value == C.S.NC) bits_NC ^= relayBit; // Sets a 0 in bits_NC for each explicitly assigned NC state in RεS.
                 else bits_NO |= relayBit;                      // Sets a 1 in bits_NO for each explicitly assigned NO state in RεS.
             }
 
@@ -231,7 +229,7 @@ namespace ABT.TestSpace.TestExec.Switching {
             BitVector32.Section sectionPortCL = BitVector32.CreateSection(0b1111, sectionPortB);
             BitVector32.Section sectionPortCH = BitVector32.CreateSection(0b1111, sectionPortCL);
 
-            UInt16[] portStates = PortsRead(Only.UE24s[b]);
+            UInt16[] portStates = PortsRead(Only.UE24s[ue]);
 
             portStates[(Int32)PORTS.A] &= (UInt16)bv32_NC[sectionPortA]; // &= sets portStates bits low for each explicitly assigned NC state in RεS.
             portStates[(Int32)PORTS.B] &= (UInt16)bv32_NC[sectionPortB];
@@ -243,23 +241,23 @@ namespace ABT.TestSpace.TestExec.Switching {
             portStates[(Int32)PORTS.CL] |= (UInt16)bv32_NO[sectionPortCL];
             portStates[(Int32)PORTS.CH] |= (UInt16)bv32_NO[sectionPortCH];
 
-            PortsWrite(Only.UE24s[b], portStates);
+            PortsWrite(Only.UE24s[ue], portStates);
         }
 
-        public static void Set(B b, FC.S s) {
-            Dictionary<R, FC.S> RεS = new Dictionary<R, FC.S>();
+        public static void Set(UE ue, C.S s) {
+            Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
             foreach (R r in Enum.GetValues(typeof(R))) RεS.Add(r, s);
-            Set(b, RεS);
+            Set(ue, RεS);
         }
 
         // Below 3 methods mainly useful for parallelism, when testing multiple UUTs concurrently, with each B wired identically to test 1 UUT.
-        public static void Set(HashSet<B> bs, FC.S s) { foreach (B b in bs) { Set(b, s); } }
+        public static void Set(HashSet<UE> ues, C.S s) { foreach (UE ue in ues) { Set(ue, s); } }
 
-        public static void Set(HashSet<B> bs, HashSet<R> rs, FC.S s) { foreach (B b in bs) Set(b, rs, s); }
+        public static void Set(HashSet<UE> ues, HashSet<R> rs, C.S s) { foreach (UE ue in ues) Set(ue, rs, s); }
 
-        public static void Set(Dictionary<B, Dictionary<R, FC.S>> BεRεS) { foreach (KeyValuePair<B, Dictionary<R, FC.S>> kvp in BεRεS) Set(kvp.Key, kvp.Value); }
+        public static void Set(Dictionary<UE, Dictionary<R, C.S>> UEεRεS) { foreach (KeyValuePair<UE, Dictionary<R, C.S>> kvp in UEεRεS) Set(kvp.Key, kvp.Value); }
 
-        public static void Set(FC.S s) { foreach (B b in Enum.GetValues(typeof(B))) Set(b, s); }
+        public static void Set(C.S s) { foreach (UE ue in Enum.GetValues(typeof(UE))) Set(ue, s); }
         #endregion Set
 
         #region internal methods
