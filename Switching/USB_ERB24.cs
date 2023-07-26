@@ -72,14 +72,14 @@ namespace ABT.TestSpace.TestExec.Switching {
         ///     }
         /// </summary>
 
-        public sealed class UE24_R {
+        public sealed class Relay {
             public readonly UE UE;
             public readonly R R;
             public readonly String C;
             public readonly String NC;
             public readonly String NO;
 
-            public UE24_R(UE UE, R R, String C, String NC, String NO) {
+            public Relay(UE UE, R R, String C, String NC, String NO) {
                 this.UE = UE; this.R = R; this.C = C; this.NC = NC; this.NO = NO;
                 Validate();
             }
@@ -101,83 +101,82 @@ namespace ABT.TestSpace.TestExec.Switching {
             public Boolean Is(C.S state) { return USB_ERB24.Is(this.UE, this.R, state); }
 
             public override Boolean Equals(Object obj) {
-                UE24_R ue24_r = obj as UE24_R;
-                if (ReferenceEquals(this, ue24_r)) return true;
-                return ue24_r != null && ue24_r.UE == this.UE && ue24_r.R == this.R;
+                Relay r = obj as Relay;
+                if (ReferenceEquals(this, r)) return true;
+                return r != null && r.UE == this.UE && r.R == this.R;
             }
 
             public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode(); }
         }
 
-        public sealed class UE24_S {
+        public sealed class State {
             public readonly UE UE;
             public readonly R R;
             public readonly C.S S;
 
-            public UE24_S(USB_ERB24.UE UE, R R, C.S S) { this.UE = UE; this.R = R; this.S = S; }
+            public State(USB_ERB24.UE UE, R R, C.S S) { this.UE = UE; this.R = R; this.S = S; }
 
             public override Boolean Equals(Object obj) {
-                UE24_S ue24_s = obj as UE24_S;
-                if (ReferenceEquals(this, ue24_s)) return true;
-                return ue24_s != null && ue24_s.UE == this.UE && ue24_s.R == this.R;
+                State s = obj as State;
+                if (ReferenceEquals(this, s)) return true;
+                return s != null && s.UE == this.UE && s.R == this.R;
             }
 
             public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode() + this.S.GetHashCode(); }
         }
 
-        public sealed class UE24_T {
+        public sealed class Terminal {
             public readonly UE UE;
             public readonly R R;
             public readonly C.T T;
 
-            public UE24_T(USB_ERB24.UE UE, R R, C.T T) { this.UE = UE; this.R = R; this.T = T; }
+            public Terminal(USB_ERB24.UE UE, R R, C.T T) { this.UE = UE; this.R = R; this.T = T; }
 
             public override Boolean Equals(Object obj) {
-                UE24_T ue24_t = obj as UE24_T;
-                if (ReferenceEquals(this, ue24_t)) return true;
-                return ue24_t != null && ue24_t.UE == this.UE && ue24_t.R == this.R && this.T == ue24_t.T;
+                Terminal t = obj as Terminal;
+                if (ReferenceEquals(this, t)) return true;
+                return t != null && t.UE == this.UE && t.R == this.R && this.T == t.T;
             }
 
             public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode() + this.T.GetHashCode(); }
         }
 
-
-        public sealed class UE24_Route {
-            public readonly (String SN1, String SN2) Route;
-            public UE24_Route((String SN1, String SN2) route) { this.Route = route; }
+        public sealed class Route {
+            public readonly (String SN1, String SN2) SwitchedNets;
+            public Route((String SN1, String SN2) switchedNets) { this.SwitchedNets = switchedNets; }
         }
 
-        public sealed class UE24_Routes {
-            public readonly Dictionary<UE24_Route, HashSet<UE24_S>> Routes;
+        public sealed class RouteStates {
+            public readonly Dictionary<Route, HashSet<State>> SwitchedNetStates;
 
-            public UE24_Routes(Dictionary<UE24_Route, HashSet<UE24_S>> routes) { this.Routes = routes; }
+            public RouteStates(Dictionary<Route, HashSet<State>> switchedNetStates) { this.SwitchedNetStates = switchedNetStates; }
         }
 
         public sealed class UE24_Rs {
-            public readonly HashSet<UE24_R> Rs;
-            public readonly Dictionary<String, HashSet<UE24_T>> NTs = new Dictionary<String, HashSet<UE24_T>>();
+            public readonly HashSet<Relay> Rs;
+            public readonly Dictionary<String, HashSet<Terminal>> NTs = new Dictionary<String, HashSet<Terminal>>();
 
-            public UE24_Rs(HashSet<UE24_R> rs) {
+            public UE24_Rs(HashSet<Relay> rs) {
                 this.Rs = rs;
                 ValidateRs();
 
-                //foreach (UE24_R r in this.Rs) {
+                //foreach (Relay r in this.Rs) {
                 //    if (!this.NTs.ContainsKey(r.C)) 
                 //}
             }
 
             private void ValidateRs() {
                 StringBuilder sb = new StringBuilder($"Cannot currently accomodate USB-ERB24 Relays connected serially:{Environment.NewLine}Boards/Relays");
-                List<(UE24_R, UE24_R)> rs =
+                List<(Relay, Relay)> rs =
                     (from r1 in this.Rs
                      from r2 in this.Rs
                      where (r1.C == r2.NC || r1.C == r2.NO)
                      select (r1, r2)).ToList();
                 if (rs.Count() != 0) {
-                    foreach ((UE24_R r1, UE24_R r2) rr in rs) {
+                    foreach ((Relay r1, Relay r2) rr in rs) {
                         sb.AppendLine("Below relay pair {R1, R2} serially connected, C1 to (NC2 ⨁ NO2)");
-                        sb.AppendLine($"   B1='{UE24_R.GetUE(rr.r1.UE)}', R1='{UE24_R.GetR(rr.r1.R)}', C1='{rr.r1.C}', NC1='{rr.r1.NC}', NO1='{rr.r1.NO}'.");
-                        sb.AppendLine($"   B2='{UE24_R.GetUE(rr.r2.UE)}', R2='{UE24_R.GetR(rr.r2.R)}', C2='{rr.r2.C}', NC2='{rr.r2.NC}', NO2='{rr.r2.NO}'.");
+                        sb.AppendLine($"   B1='{Relay.GetUE(rr.r1.UE)}', R1='{Relay.GetR(rr.r1.R)}', C1='{rr.r1.C}', NC1='{rr.r1.NC}', NO1='{rr.r1.NO}'.");
+                        sb.AppendLine($"   B2='{Relay.GetUE(rr.r2.UE)}', R2='{Relay.GetR(rr.r2.R)}', C2='{rr.r2.C}', NC2='{rr.r2.NC}', NO2='{rr.r2.NO}'.");
                         sb.AppendLine("");
                     }
                     throw new InvalidOperationException(sb.ToString());
