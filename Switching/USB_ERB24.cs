@@ -183,167 +183,167 @@ namespace ABT.TestSpace.TestExec.Switching {
                 }
             }
 
-            //public abstract class UE24_NT {
-            //    public readonly Dictionary<N, HashSet<T>> NT;
-            //    UE24_NT() {
-            //        this.NT = new Dictionary<N, HashSet<T>>() {
-            //            {N.CTL_1_3, new HashSet<T>() {new T(UE.B1, R.C04, C.T.NO)}},
-            //            {N.DMM_IN_P, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.DMM_IN_N, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.DMM_I, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.ENABLE_N, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.FAN_PWR, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.POWER_GOOD, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.PRE_BIAS_OUT_P, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.PRE_BIAS_OUT_N, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.PRE_BIAS_PS, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.PRE_BIAS_PS_RTN, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.PRI_3V3, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.PRI_BIAS, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.PRI_BIAS_OUT_P, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.PRI_BIAS_OUT_N, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.PRI_BIAS_PS, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.PRI_BIAS_PS_RTN, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.SCL, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.SDA, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.SEC_3V3, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.SEC_BIAS, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.SEC_BIAS_OUT_P, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.SEC_BIAS_OUT_N, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.SEC_BIAS_PS, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.SEC_BIAS_PS_RTN, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.START_SYNC, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.SYNC, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.VDC_5, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.VDC_5_RTN, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.VIN_Sense, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.VIN_RTN_Sense, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}},
-            //            {N.VOUT_RTN_Sense, new HashSet<T>() {new T(UE.B0, R.C01, C.T.C)}}
+            //public abstract class SwitchedNetTerminals {
+            //    public readonly Dictionary<SN, HashSet<Terminal>> SNT;
+            //    SwitchedNetTerminals() {
+            //        this.SNT = new Dictionary<SN, HashSet<TErminal>>() {
+            //            {N.CTL_1_3, new HashSet<Terminal>() {new Terminal(UE.B1, R.C04, C.T.NO)}},
+            //            {N.DMM_IN_P, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.DMM_IN_N, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.DMM_I, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.ENABLE_N, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.FAN_PWR, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.POWER_GOOD, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.PRE_BIAS_OUT_P, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.PRE_BIAS_OUT_N, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.PRE_BIAS_PS, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.PRE_BIAS_PS_RTN, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.PRI_3V3, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.PRI_BIAS, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.PRI_BIAS_OUT_P, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.PRI_BIAS_OUT_N, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.PRI_BIAS_PS, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.PRI_BIAS_PS_RTN, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.SCL, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.SDA, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.SEC_3V3, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.SEC_BIAS, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.SEC_BIAS_OUT_P, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.SEC_BIAS_OUT_N, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.SEC_BIAS_PS, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.SEC_BIAS_PS_RTN, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.START_SYNC, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.SYNC, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.VDC_5, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.VDC_5_RTN, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.VIN_Sense, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.VIN_RTN_Sense, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}},
+            //            {N.VOUT_RTN_Sense, new HashSet<Terminal>() {new Terminal(UE.B0, R.C01, C.T.C)}}
             //        };
 
             //        Validate();
             //    }
 
             //private void Validate() {
-            //    HashSet<N> missing = new HashSet<N>();
-            //    foreach (N n in Enum.GetValues(typeof(N))) if (!this.NT.ContainsKey(n)) missing.Add(n);
-            //    if (missing.Count != 0) throw new InvalidOperationException($"Dictionary UE24_NTs.NT does not contain N '{String.Join(", ", missing)}'.");
+            //    HashSet<SN> missing = new HashSet<SN>();
+            //    foreach (SN sn in SN) if (!this.SNT.ContainsKey(sn)) missing.Add(sn);
+            //    if (missing.Count != 0) throw new InvalidOperationException($"Dictionary SNT does not contain SN '{String.Join(", ", missing)}'.");
 
-            //    foreach (KeyValuePair<N, HashSet<T>> kvp in this.NT) if (kvp.Value.Count == 0) missing.Add(kvp.Key);
-            //    if (missing.Count != 0) throw new InvalidOperationException($"Dictionary UE24_NetsToTs.NT N correlate to empty HashSet<T> '{String.Join(", ", missing)}'.");
+            //    foreach (KeyValuePair<SN, HashSet<Terminal>> kvp in this.SNT) if (kvp.Value.Count == 0) missing.Add(kvp.Key);
+            //    if (missing.Count != 0) throw new InvalidOperationException($"Dictionary SNT's Switched Net SN correlate to empty HashSet<Terminal> '{String.Join(", ", missing)}'.");
 
-            //    Dictionary<N, HashSet<T>> duplicates = new Dictionary<N, HashSet<T>>();
-            //    HashSet<T> ts = new HashSet<T>();
-            //    foreach (KeyValuePair<N, HashSet<T>> kvp in this.NT) {
-            //        foreach (T t in kvp.Value) {
+            //    Dictionary<SN, HashSet<Terminal>> duplicates = new Dictionary<SN, HashSet<Terminal>>();
+            //    HashSet<Terminal> ts = new HashSet<Terminal>();
+            //    foreach (KeyValuePair<SN, HashSet<Terminal>> kvp in this.SNT) {
+            //        foreach (Terminal t in kvp.Value) {
             //            if (ts.Contains(t)) {
             //                if (duplicates.ContainsKey(kvp.Key)) duplicates[kvp.Key].Add(t);
-            //                else duplicates.Add(kvp.Key, new HashSet<T> { t });
+            //                else duplicates.Add(kvp.Key, new HashSet<Terminal> { t });
             //            }
             //            ts.Add(t);
             //        }
             //    }
             //    if (duplicates.Count != 0) {
-            //        StringBuilder sb = new StringBuilder($"Dictionary UE24_NetsToTs.NT has duplicated Ts:{Environment.NewLine}");
-            //        foreach (KeyValuePair<N, HashSet<T>> kvp in duplicates) sb.AppendLine($"Key '{kvp.Key}' T '{kvp.Value}'.");
+            //        StringBuilder sb = new StringBuilder($"Dictionary SNT has duplicated Ts:{Environment.NewLine}");
+            //        foreach (KeyValuePair<SN, HashSet<Terminal>> kvp in duplicates) sb.AppendLine($"Key '{kvp.Key}' Terminal '{kvp.Value}'.");
             //        throw new InvalidOperationException(sb.ToString());
             //    }
-            //    // - Verify every unique UE & R has at least a T for T.C and one/both for { T.NC and/or T.NO }
-            //    //   - That is, every Form C relay Common terminal is connected to a N, and one/both of it's Normally Closed/Normally Open terminals
-            //    //     are connected to N.
-            //    // - Verify every T per unique B & Rpair has different N on each T.
-            //    //   - That is, verify the Common, Normally Open & Normally Closed terminals are all different N.
+            //    // - Verify every unique UE & R has at least a Terminal for T.C and one/both for { T.NC and/or T.NO }
+            //    //   - That is, every Form C relay Common terminal is connected to a SN, and one/both of it's Normally Closed/Normally Open terminals
+            //    //     are connected to a SN.
+            //    // - Verify every Terminal per unique B & R pair has different SN on each Terminal.
+            //    //   - That is, verify the Common, Normally Open & Normally Closed terminals are all different SN.
             //}
 
-            public static void Switch(String N1, String N2) {
+            public static void Switch(String SN1, String SN2) {
                 // Intersect, Verify & Connect:
-                // - Index this.NT to get the HashSet<T> correlated to N1; call it HashSet<T1>.
-                // - Index this.NT to get the HashSet<T> correlated to N2; call it HashSet<T2>.
-                // - HashSet.Intersect(T1, T2) to get resulting HashSet<T> that have matching UE & R pairs.
-                //   - If there are no T intersections with matching B & Rpairs, throw ArgumentException.
+                // - Index this.SNT to get the HashSet<Terminal> correlated to SN1; call it HashSet<T1>.
+                // - Index this.SNT to get the HashSet<Terminal> correlated to SN2; call it HashSet<T2>.
+                // - HashSet.Intersect(T1, T2) to get resulting HashSet<Terminal> that have matching UE & R pairs.
+                //   - If there are no Terminal intersections with matching B & R pairs, throw ArgumentException.
                 // - Verify "You can get there from here":
-                //   - Verify for each relay UE & Rpairs one is a Common terminal, the other a Normally Closed or Open terminal.
+                //   - Verify for each relay UE & R pairs one is a Common terminal, the other a Normally Closed or Open terminal.
                 //   - If not throw ArgumentException.
-                //   - There should be at least one B & Rmatching T pair that can connect N1 to N2.
-                //   - There may be multiple UE & R matching T pairs that can can connect N1 to N2.
+                //   - There should be at least one B & R matching Terminal pair that can connect SN1 to SN2.
+                //   - There may be multiple UE & R matching Terminal pairs that can can connect SN1 to SN2.
                 //     - Possibly for current capacity/ampacity, 4 wire Kelvin sensing or intentional duplications.  Or unintentional duplications :-)
-                // - Connect all available Ts to Ns N1 & N2 using UE24 class:
-                //   - Will always be either C to NC or C to NO path to connect N1 to N2.
-                //   - If C to NC connects N1 to N2, invoke Set(UE, R, C.S.NC).
-                //   - If C to NO connects N1 to N2, invoke Set(UE, R, C.S.NO).
+                // - Connect all available Terminals to SNs SN1 & SN2 using USB_ERB24 class:
+                //   - Will always be either C to NC or C to NO path to connect SN1 to SN2.
+                //   - If C to NC connects SN1 to SN2, invoke Set(UE, R, C.S.NC).
+                //   - If C to NO connects SN1 to SN2, invoke Set(UE, R, C.S.NO).
             }
 
-            public static void Switch(HashSet<String> Ns) {
-                // Connect all HashSet<N> Ns simultaneously to one another.
-                // Superset of Connect(N N1, N N2).
-                // Sequentially invoke Connect(N N1, N N2) with foreach N in Ns.
-                // Then invoke AreConnected((HashSet<N> Ns) to verify all are still *simultaneously* connected.
-                // - Possible to wire N1 to T.C, N2 to T.NO & Net3 to T.NC all having matching Relay addresses (UE, R).
-                // - Invoking Connect(HashSet<N1, N2, Net3>) is impossible to simultaneously achieve.
-                // - But will easily be sequentially achieved by Connect(N1, N2) & Connect(N2, Net3).
+            public static void Switch(HashSet<String> SNs) {
+                // Connect all HashSet<SN> SNs simultaneously to one another.
+                // Superset of Connect(SN SN1, SN SN2).
+                // Sequentially invoke Connect(SN SN1, SN SN2) with foreach SN in SNs.
+                // Then invoke AreConnected((HashSet<SN> SNs) to verify all are still *simultaneously* connected.
+                // - Possible to wire SN1 to T.C, SN2 to T.NO & Net3 to T.NC all having matching Relay addresses (UE, R).
+                // - Invoking Connect(HashSet<SN1, SN2, Net3>) is impossible to simultaneously achieve.
+                // - But will easily be sequentially achieved by Connect(SN1, SN2) & Connect(SN2, Net3).
                 // Used for Shorts/Opens testing.
             }
 
-            public static void DisConnect(String N1, String N2) {
-                // Same as Connect, except disconnect N1 from N2 with opposite C state:
-                // - If C to NC connects N1 to N2, invoke invoke Set(UE, C, C.NO).
-                // - If C to NO connects N1 to N2, invoke invoke Set(UE, C, C.NC).
+            public static void DisConnect(String SN1, String SN2) {
+                // Same as Connect, except disconnect SN1 from SN2 with opposite C state:
+                // - If C to NC connects SN1 to SN2, invoke Set(UE, C, C.NO).
+                // - If C to NO connects sN1 to SN2, invoke Set(UE, C, C.NC).
             }
 
-            public static void DisConnect(HashSet<String> Ns) {
-                // Disonnect all HashSet<N> Ns Ns simultaneously from one another.
-                // Superset of DisConnect(N N1, N N2).
-                // Sequentially invoke DisConnect(N N1, N N2) with foreach N in Ns.
-                // Then invoke AreDisConnected((HashSet<N> Ns) to verify all are still *simultaneously* disconnected.
-                // - Possible to wire N1 to T.C, N2 to T.NO & Net3 to T.NC all having matching Relay addresses (UE, R).
-                // - Invoking DisConnect(HashSet<N1, N2, Net3>) is impossible to simultaneously achieve.
-                // - But will easily be sequentially achieved by DisConnect(N1, N2) & Connect(N2, Net3).
+            public static void DisConnect(HashSet<String> SNs) {
+                // Disonnect all HashSet<SN> SNs simultaneously from one another.
+                // Superset of DisConnect(SN SN1, SN SN2).
+                // Sequentially invoke DisConnect(SN SN1, SN SN2) with foreach SN in SNs.
+                // Then invoke AreDisConnected((HashSet<SN> SNs) to verify all are still *simultaneously* disconnected.
+                // - Possible to wire SN1 to T.C, SN2 to T.NO & Net3 to T.NC all having matching Relay addresses (UE, R).
+                // - Invoking DisConnect(HashSet<SN1, SN2, Net3>) is impossible to simultaneously achieve.
+                // - But will easily be sequentially achieved by DisConnect(SN1, SN2) & Connect(SN2, Net3).
                 // Used for Shorts/Opens testing.
             }
 
-            public static Boolean AreConnected(String N1, String N2) {
-                // Verify/refute N1 currently connected to N2.
-                // Use GetConnections(N1) returning HashSet<N>.Intersect<N2> to verify/refute if N1 currently connected to N2.
+            public static Boolean AreConnected(String SN1, String SN2) {
+                // Verify/refute SN1 currently connected to SN2.
+                // Use GetConnections(N1) returning HashSet<SN>.Intersect<SN2> to verify/refute if SN1 currently connected to SN2.
                 // For Debug.Assert() statements.
                 return false;
             }
 
-            public static Boolean AreDisConnected(String N1, String N2) { return !AreConnected(N1, N2); }
+            public static Boolean AreDisConnected(String SN1, String SN2) { return !AreConnected(SN1, SN2); }
 
-            public static Boolean AreConnected(HashSet<String> Ns) {
-                // Verify/refute all Ns in HashSet<N> are interconnected to one another.
-                // Superset of AreConnected(N N1, N N2).
-                // Can recursively invoke AreConnected(N N1, N N2) with foreach N in Ns.
+            public static Boolean AreConnected(HashSet<String> SNs) {
+                // Verify/refute all SNs in HashSet<SN> are interconnected to one another.
+                // Superset of AreConnected(SN SN1, SN SN2).
+                // Can recursively invoke AreConnected(SN SN1, SN SN2) with foreach SN in SNs.
                 // For Debug.Assert() statements.
                 return false;
             }
 
-            public static Boolean AreDisConnected(HashSet<String> Ns) {
+            public static Boolean AreDisConnected(HashSet<String> SNs) {
                 return false;
             }
 
-            private static Boolean AreConnectable(String N1, String N2) {
-                // Verify/refute N1 can be connected to N2.
-                // Use GetConnections(N1) returning HashSet<N>.Intersect<N2> to verify/refute if N1 currently connected to N2.
+            private static Boolean AreConnectable(String SN1, String SN2) {
+                // Verify/refute SN1 can be connected to SN2.
+                // Use GetConnections(SN1) returning HashSet<SN>.Intersect<SN2> to verify/refute if SN1 currently connected to SN2.
                 // Reccommend programming 
                 // For Debug.Assert() statements.
                 return false;
             }
 
-            private static Boolean AreConnectable(HashSet<String> Ns) {
-                // Verify/refute HashSet<N> Ns can be interconnected to one another.
-                // Use AreConnectable(N1) returning HashSet<N>.Intersect<N2> to verify/refute if N1 connected to N2.
+            private static Boolean AreConnectable(HashSet<String> SNs) {
+                // Verify/refute HashSet<SN> SNs can be interconnected to one another.
+                // Use AreConnectable(SN1) returning HashSet<SN>.Intersect<SN2> to verify/refute if SN1 connected to SN2.
                 // Reccommend programming 
                 // For Debug.Assert() statements.
                 return false;
             }
 
-            public static Dictionary<String, HashSet<String>> GetConnections(String N1) {
+            public static Dictionary<String, HashSet<String>> GetConnections(String SN1) {
                 return new Dictionary<String, HashSet<String>>();
-                // Use Get() function, returning Dictionary<UE, Dictionary<R, C.S>>, and convert to Dictionary<N, HashSet<N>>.
+                // Use Get() function, returning Dictionary<UE, Dictionary<R, C.S>>, and convert to Dictionary<SN, HashSet<SN>>.
             }
             // If can convert:
-            //      - Dictionary<String, HashSet<T>>
+            //      - Dictionary<String, HashSet<Terminal>>
             // to/from:
             //      - Dictionary<UE, Dictionary<R, C.S>>
             // Can invoke:
