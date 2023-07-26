@@ -16,22 +16,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public enum SCPI_IDENTITY { Manufacturer, Model, SerialNumber, FirmwareRevision }
     // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".
 
-    public abstract class SCPI_VISA_InstrumentElement_IDs { }
-    /// <summary>
-    /// SCPI_VISA_InstrumentElement_IDs correlates TestExecutive.config.xml's canonical SCPI_VISA_InstrumentElement IDs to meaningful TestExecutor Customer UUT specific names.
-    /// In TestExecutor.cs, concrete class SVI inherits abstract class SCPI_VISA_InstrumentElement_IDs and cross-references test system SCPI/VISA instruments to meaningful UUT aliases.
-    /// So, in TestExecutor.cs, UUT power supplies, input stimuli & output signals might be meaningfully correlated to TestExecutive.config.xml's instruments as follows:
-    ///     internal sealed class SVI : SCPI_VISA_InstrumentElement_IDs {
-    ///         internal const String P2V5 = "PS1";         // Single output Power Supply 1
-    ///         internal const String P3V3 = "PS2";         // Single output Power Supply 2
-    ///         internal const String P5V = "PS3";          // Single output Power Supply 3
-    ///         internal const String P12V_N12V = "PS4ε5";  // Dual-output Power Supplies 4 & 5.
-    ///         internal const String VOUT_LOAD = "EL1";    // Electrical Load 1.
-    ///         internal const String MM = "MM1";           // Multi-Meter 1.
-    ///         internal const String CLK = "WG1";          // WaveGenerator 1.
-    ///     }
-    /// </summary>
-
     public class SCPI_VISA_Instrument {
         public readonly String ID;
         public readonly String Description;
