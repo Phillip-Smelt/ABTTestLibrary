@@ -65,6 +65,8 @@ namespace ABT.TestSpace.TestExec.Switching {
             }
 
             public override Int32 GetHashCode() { return 3 * this.Name.GetHashCode(); }
+
+            public override string ToString() { return this.Name; }
         }
 
         public sealed class Relay {
@@ -80,10 +82,10 @@ namespace ABT.TestSpace.TestExec.Switching {
             }
 
             private void Validate() {
-                if (String.Equals(C.Name, String.Empty)) throw new ArgumentException($"Relay terminal Common '{this.C}' cannot be String.Empty.");
-                if (String.Equals(C, NO)) throw new ArgumentException($"Relay terminals Common '{this.C}' & Normally Open '{this.NO}' cannot be identical.");
-                if (String.Equals(C, NC)) throw new ArgumentException($"Relay terminals Common '{this.C}' & Normally Closed '{this.NC}' cannot be identical.");
-                if (String.Equals(NC, NO)) throw new ArgumentException($"Relay terminals Normally Closed '{this.NC}' & Normally Open '{this.NO}' cannot be identical.");
+                if (C.Name == String.Empty) throw new ArgumentException($"Relay terminal Common '{C.Name}' cannot be String.Empty.");
+                if (C == NO) throw new ArgumentException($"Relay terminals Common '{C}' & Normally Open '{NO}' cannot be identical.");
+                if (C == NC) throw new ArgumentException($"Relay terminals Common '{C}' & Normally Closed '{NC}' cannot be identical.");
+                if (NC == NO) throw new ArgumentException($"Relay terminals Normally Closed '{NC}' & Normally Open '{NO}' cannot be identical.");
             }
 
             public static String GetUE(UE ue) { return Enum.GetName(typeof(UE), ue); }
