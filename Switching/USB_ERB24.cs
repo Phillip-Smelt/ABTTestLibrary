@@ -106,17 +106,17 @@ namespace ABT.TestSpace.TestExec.Switching {
             public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode(); }
         }
 
-        public sealed class State {
+        public sealed class RelayState {
             public readonly UE UE;
             public readonly R R;
             public readonly C.S S;
 
-            public State(USB_ERB24.UE UE, R R, C.S S) { this.UE = UE; this.R = R; this.S = S; }
+            public RelayState(USB_ERB24.UE UE, R R, C.S S) { this.UE = UE; this.R = R; this.S = S; }
 
             public override Boolean Equals(Object obj) {
-                State s = obj as State;
-                if (ReferenceEquals(this, s)) return true;
-                return s != null && s.UE == this.UE && s.R == this.R;
+                RelayState rs = obj as RelayState;
+                if (ReferenceEquals(this, rs)) return true;
+                return rs != null && rs.UE == this.UE && rs.R == this.R && rs.S == this.S;
             }
 
             public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode() + this.S.GetHashCode(); }
@@ -132,7 +132,7 @@ namespace ABT.TestSpace.TestExec.Switching {
             public override Boolean Equals(Object obj) {
                 Terminal t = obj as Terminal;
                 if (ReferenceEquals(this, t)) return true;
-                return t != null && t.UE == this.UE && t.R == this.R && this.T == t.T;
+                return t != null && t.UE == this.UE && t.R == this.R && t.T == this.T;
             }
 
             public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode() + this.T.GetHashCode(); }
@@ -144,9 +144,9 @@ namespace ABT.TestSpace.TestExec.Switching {
         }
 
         public sealed class RouteStates {
-            public readonly Dictionary<Route, HashSet<State>> SwitchedNetStates;
+            public readonly Dictionary<Route, HashSet<RelayState>> SwitchedNetStates;
 
-            public RouteStates(Dictionary<Route, HashSet<State>> switchedNetStates) { this.SwitchedNetStates = switchedNetStates; }
+            public RouteStates(Dictionary<Route, HashSet<RelayState>> switchedNetStates) { this.SwitchedNetStates = switchedNetStates; }
 
             public static void Connect(SwitchedNet SN1, SwitchedNet SN2) {
                 // Intersect, Verify & Connect:
