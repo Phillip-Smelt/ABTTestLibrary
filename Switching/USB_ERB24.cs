@@ -35,7 +35,7 @@ namespace ABT.TestSpace.TestExec.Switching {
         }
 
         public enum UE { B0, B1 } // USB-ERB24 Boards.
-        public enum R : Byte { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19, C20, C21, C22, C23, C24 } // USB_ERB24 Relays, all Form C.
+        public enum R : Byte { C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19, C20, C21, C22, C23, C24 } // USB-ERB24 Relays, all Form C.
         // NOTE: UE enum is a static definition of TestExecutive's MCC USB-ERB24(s).
         // Potential dynamic definition methods for USB_ERB24s:
         //  - Read them from MCC InstaCal's cb.cfg file.
@@ -53,39 +53,34 @@ namespace ABT.TestSpace.TestExec.Switching {
         internal static Int32[] _ue24bitVector32Masks = GetUE24BitVector32Masks();
 
         #region Internal classes
-        public abstract class SwitchedNets { }
-        /// <summary>
-        /// SwitchedNets correlates Customer UUT nets to switched ABT test system nets:
-        /// - SwitchedNets exclusively correlates switched nets connected via relays, which can be temporarily connected/disconnected as desired.
-        /// - SwitchedNets specifically excludes unswitched nets connected via permanent circuitry; signal conditioners, wire harness continuities, etc.
-        /// In TestExecutor.cs, concrete class SN inherits abstract class SwitchedNets and cross-references Customer UUT input stimuli & output signals switched into ABT test system inputs/outputs.
-        /// - SN name is Customer UUT's net name, SN value is correlated ABT test system switched net name.
-        /// - If ABT test system has multiple names for nets, prefer utilizing the switched net name over permanently connected name.
-        /// 
-        /// So, in TestExecutor.cs, Customer UUT power supplies, inputs & outputs might be meaningfully correlated to switched ABT test system fixturing & instrumentation as follows:
-        ///     internal sealed class SN : SwitchedNets {
-        ///         internal const String P3V3 = "3.3V";
-        ///         internal const String P5V  = "5V";
-        ///         internal const String P12V = "+12V";
-        ///         internal const String N12V = "-12V";
-        ///         internal const String EnableN = "~Enable";
-        ///     }
-        /// </summary>
+        public class SwitchedNet {
+            public readonly String Name;
+
+            public SwitchedNet(String name) { this.Name = name; }
+
+            public override Boolean Equals(Object obj) {
+                SwitchedNet sn = obj as SwitchedNet;
+                if (ReferenceEquals(this, sn)) return true;
+                return sn != null && this.Name == sn.Name;
+            }
+
+            public override Int32 GetHashCode() { return 3 * this.Name.GetHashCode(); }
+        }
 
         public sealed class Relay {
             public readonly UE UE;
             public readonly R R;
-            public readonly String C;
-            public readonly String NC;
-            public readonly String NO;
+            public readonly SwitchedNet C;
+            public readonly SwitchedNet NC;
+            public readonly SwitchedNet NO;
 
-            public Relay(UE UE, R R, String C, String NC, String NO) {
+            public Relay(UE UE, R R, SwitchedNet C, SwitchedNet NC, SwitchedNet NO) {
                 this.UE = UE; this.R = R; this.C = C; this.NC = NC; this.NO = NO;
                 Validate();
             }
 
             private void Validate() {
-                if (String.Equals(C, String.Empty)) throw new ArgumentException($"Relay terminal Common '{this.C}' cannot be String.Empty.");
+                if (String.Equals(C.Name, String.Empty)) throw new ArgumentException($"Relay terminal Common '{this.C}' cannot be String.Empty.");
                 if (String.Equals(C, NO)) throw new ArgumentException($"Relay terminals Common '{this.C}' & Normally Open '{this.NO}' cannot be identical.");
                 if (String.Equals(C, NC)) throw new ArgumentException($"Relay terminals Common '{this.C}' & Normally Closed '{this.NC}' cannot be identical.");
                 if (String.Equals(NC, NO)) throw new ArgumentException($"Relay terminals Normally Closed '{this.NC}' & Normally Open '{this.NO}' cannot be identical.");
@@ -103,7 +98,7 @@ namespace ABT.TestSpace.TestExec.Switching {
             public override Boolean Equals(Object obj) {
                 Relay r = obj as Relay;
                 if (ReferenceEquals(this, r)) return true;
-                return r != null && r.UE == this.UE && r.R == this.R;
+                return r != null && r.UE == this.UE && r.R == this.R && this.C == r.C && this.NC == r.NC && this.NO == r.NO;
             }
 
             public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode(); }
@@ -142,8 +137,8 @@ namespace ABT.TestSpace.TestExec.Switching {
         }
 
         public sealed class Route {
-            public readonly (String SN1, String SN2) SwitchedNets;
-            public Route((String SN1, String SN2) switchedNets) { this.SwitchedNets = switchedNets; }
+            public readonly Tuple<SwitchedNet, SwitchedNet> SwitchedNetPair;
+            public Route(Tuple<SwitchedNet, SwitchedNet> switchedNetPair) { this.SwitchedNetPair = switchedNetPair; }
         }
 
         public sealed class RouteStates {
@@ -152,20 +147,20 @@ namespace ABT.TestSpace.TestExec.Switching {
             public RouteStates(Dictionary<Route, HashSet<State>> switchedNetStates) { this.SwitchedNetStates = switchedNetStates; }
         }
 
-        public sealed class UE24_Rs {
+        public sealed class Relays {
             public readonly HashSet<Relay> Rs;
-            public readonly Dictionary<String, HashSet<Terminal>> NTs = new Dictionary<String, HashSet<Terminal>>();
+            public readonly Dictionary<String, HashSet<Terminal>> SNTs = new Dictionary<String, HashSet<Terminal>>();
 
-            public UE24_Rs(HashSet<Relay> rs) {
+            public Relays(HashSet<Relay> rs) {
                 this.Rs = rs;
-                ValidateRs();
+                Validate();
 
                 //foreach (Relay r in this.Rs) {
-                //    if (!this.NTs.ContainsKey(r.C)) 
+                //    if (!this.SNTs.ContainsKey(r.C)) 
                 //}
             }
 
-            private void ValidateRs() {
+            private void Validate() {
                 StringBuilder sb = new StringBuilder($"Cannot currently accomodate USB-ERB24 Relays connected serially:{Environment.NewLine}Boards/Relays");
                 List<(Relay, Relay)> rs =
                     (from r1 in this.Rs
