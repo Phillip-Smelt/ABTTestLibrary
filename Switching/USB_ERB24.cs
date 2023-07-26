@@ -141,6 +141,17 @@ namespace ABT.TestSpace.TestExec.Switching {
         public sealed class Route {
             public readonly Tuple<SwitchedNet, SwitchedNet> SwitchedNetPair;
             public Route(Tuple<SwitchedNet, SwitchedNet> switchedNetPair) { this.SwitchedNetPair = switchedNetPair; }
+
+            public override Boolean Equals(Object obj) {
+                Route r = obj as Route;
+                if (r == null) return false;
+                if (ReferenceEquals(this, r)) return true;
+                if(r.SwitchedNetPair.Item1 == this.SwitchedNetPair.Item1 && r.SwitchedNetPair.Item2 == this.SwitchedNetPair.Item2) return true;
+                if(r.SwitchedNetPair.Item1 == this.SwitchedNetPair.Item2 && r.SwitchedNetPair.Item2 == this.SwitchedNetPair.Item1) return true;
+                return false;
+            }
+
+            public override Int32 GetHashCode() { return 3 * this.SwitchedNetPair.GetHashCode(); }
         }
 
         public sealed class RouteStates {
