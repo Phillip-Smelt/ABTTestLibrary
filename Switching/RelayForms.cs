@@ -1,5 +1,5 @@
 ﻿namespace ABT.TestSpace.TestExec.Switching {
-    public static class Forms {
+    public static class RelayForms {
         /// <summary>
         /// Relay Forms A, B & C.
         /// </summary>

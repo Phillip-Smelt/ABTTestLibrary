@@ -5,11 +5,28 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
-using static ABT.TestSpace.TestExec.Switching.Forms;
+using static ABT.TestSpace.TestExec.Switching.RelayForms;
 using static ABT.TestSpace.TestExec.Switching.UE24;
 
 namespace ABT.TestSpace.TestExec.Switching {
-    public abstract class Switching_Nets { }
+    public abstract class SwitchedNets { }
+    /// <summary>
+    /// SwitchedNets correlates Customer UUT nets to switched ABT test system nets.
+    /// - SwitchedNets exclusively correlates nets connected via relays, which can be temporarily connected/disconnected as desired.
+    /// - SwitchedNets specifically excludes nets connected only via permanent circuitry; signal conditioners, wire harness continuities, etc.
+    /// In TestExecutor.cs, concrete class SN inherits abstract class SwitchedNets and cross-references Customer UUT input stimuli & output signals switched into ABT test system inputs/outputs.
+    /// - SN name is Customer UUT's net name, SN value is correlated ABT test system switched net name.
+    /// - If ABT test system has multiple names for nets, prefer utilizing the switched net name over permanently connected name.
+    /// 
+    /// So, in TestExecutor.cs, Customer UUT power supplies, inputs & outputs might be meaningfully correlated to switehced ABT test system fixturing & instrumentation as follows:
+    ///     internal sealed class SN : SwitchedNets {
+    ///         internal const String P3V3 = "3.3V";
+    ///         internal const String P5V  = "5V";
+    ///         internal const String P12V = "+12V";
+    ///         internal const String N12V = "-12V";
+    ///         internal const String EnableN = "~Enable";
+    ///     }
+    /// </summary>
 
     public sealed class UE24 {
         // NOTE: UE24 is an abbreviation of Measurement Computing Corporation's USB-ERB24 initialisation (Universal Serial Bus Electronic Relay Board with 24 Form C relays).
