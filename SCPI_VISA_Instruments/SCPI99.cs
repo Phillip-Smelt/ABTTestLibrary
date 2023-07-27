@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
+using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -27,11 +28,11 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void Reset(SCPI_VISA_Instrument SVI) { new AgSCPI99(SVI.Address).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) Reset(kvp.Value); }
+        public static void ResetAll(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Reset(kvp.Value); }
 
         public static void Clear(SCPI_VISA_Instrument SVI) { new AgSCPI99(SVI.Address).SCPI.CLS.Command(); }
 
-        public static void ClearAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value); }
+        public static void ClearAll(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             try {

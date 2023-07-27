@@ -17,13 +17,13 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".
 
     public class SCPI_VISA_Instrument {
-        public readonly String ID;
+        public readonly Alias ID;
         public readonly String Description;
         public readonly String Address;
         public readonly String Identity;
         public readonly Object Instrument; // NOTE: The assumption, thus far proven correct, is that Keysight's SCPI drivers don't contain state, thus can be readonly.
 
-        private SCPI_VISA_Instrument(String id, String description, String address) {
+        private SCPI_VISA_Instrument(Alias id, String description, String address) {
             this.ID = id;
             this.Description = description;
             this.Address = address;
@@ -64,12 +64,12 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             }
         }
 
-        public static Dictionary<String, SCPI_VISA_Instrument> Get() {
+        public static Dictionary<Alias, SCPI_VISA_Instrument> Get() {
             IEnumerable<SCPI_VISA_Instrument> svis =
                 from svi in XElement.Load("TestExecutive.config.xml").Elements("SCPI_VISA_Instrument")
-                select new SCPI_VISA_Instrument(svi.Element("ID").Value, svi.Element("Description").Value, svi.Element("Address").Value);
-            Dictionary<String, SCPI_VISA_Instrument> SVIs = new Dictionary<String, SCPI_VISA_Instrument>();
-            foreach (SCPI_VISA_Instrument svi in svis) SVIs.Add(svi.ID, svi);
+                select new SCPI_VISA_Instrument(new Alias(svi.Element("ID").Value), svi.Element("Description").Value, svi.Element("Address").Value);
+            Dictionary<Alias, SCPI_VISA_Instrument> SVIs = new Dictionary<Alias, SCPI_VISA_Instrument>();
+            foreach (SCPI_VISA_Instrument svi in svis) SVIs.Add(new Alias(svi.ID.ToString()), svi);
             return SVIs;
         }
 
@@ -77,6 +77,22 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             String info = (optionalHeader == "") ? optionalHeader : optionalHeader += Environment.NewLine;
             foreach (PropertyInfo pi in SVI.GetType().GetProperties()) info += $"{pi.Name.PadLeft(Logger.SPACES_21.Length)}: '{pi.GetValue(SVI)}'{Environment.NewLine}";
             return info;
+        }
+
+        public class Alias {
+            public readonly String ID;
+
+            public Alias(String name) { this.ID = name; }
+
+            public override Boolean Equals(Object obj) {
+                Alias a = obj as Alias;
+                if (ReferenceEquals(this, a)) return true;
+                return a != null && this.ID == a.ID;
+            }
+
+            public override Int32 GetHashCode() { return 3 * this.ID.GetHashCode(); }
+
+            public override string ToString() { return this.ID; }
         }
     }
 }

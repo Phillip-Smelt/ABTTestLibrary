@@ -14,6 +14,7 @@ using ABT.TestSpace.TestExec.AppConfig;
 using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching;
+using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 
 // TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 // NOTE: For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
@@ -35,7 +36,7 @@ using ABT.TestSpace.TestExec.Switching;
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
-        public readonly Dictionary<String, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get();
+        public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get();
         public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by button_click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
@@ -51,7 +52,7 @@ namespace ABT.TestSpace.TestExec {
             this._libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             this.Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            USB_ERB24.Set(RelayForms.C.S.NC);
+            ERB24.Set(RelayForms.C.S.NC);
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
@@ -182,7 +183,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             SCPI99.ResetAll(this.SVIs);
-            USB_ERB24.Set(RelayForms.C.S.NC);
+            ERB24.Set(RelayForms.C.S.NC);
             if (this.ButtonCancel.Enabled) this.ButtonCancel_Clicked(this, null);
        }
 
@@ -217,7 +218,7 @@ namespace ABT.TestSpace.TestExec {
 #endif
             }
             this.ConfigUUT.EventCode = EventCodes.UNSET;
-            USB_ERB24.Set(RelayForms.C.S.NC);
+            ERB24.Set(RelayForms.C.S.NC);
             SCPI99.ResetAll(this.SVIs);
             Logger.Start(this, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
@@ -249,7 +250,7 @@ namespace ABT.TestSpace.TestExec {
                 this.ConfigTest.Tests[testID].Result = EventCodes.CANCEL;
             } else {
                 SCPI99.ResetAll(this.SVIs);
-                USB_ERB24.Set(RelayForms.C.S.NC);
+                ERB24.Set(RelayForms.C.S.NC);
                 Logger.LogError(e.ToString());
                 this.ConfigTest.Tests[testID].Result = EventCodes.ERROR;
             }
@@ -257,7 +258,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void TestsPostRun() {
             SCPI99.ResetAll(this.SVIs);
-            USB_ERB24.Set(RelayForms.C.S.NC);
+            ERB24.Set(RelayForms.C.S.NC);
             this.ButtonSelectTests.Enabled = true;
             this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);
