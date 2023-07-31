@@ -184,9 +184,13 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public static void Set(UE ue, R r, C.S s) {
             ErrorInfo errorInfo = Only.USB_ERB24s[ue].DBitOut(DigitalPortType.FirstPortA, (Int32)r, s is C.S.NC ? DigitalLogicState.Low : DigitalLogicState.High);
             ProcessErrorInfo(Only.USB_ERB24s[ue], errorInfo);
+            Debug.Assert(Is(ue, r, s));
         }
 
-        public static void Set(UE ue, HashSet<R> rs, C.S s) { Set(ue, rs.ToDictionary(r => r, r => s)); }
+        public static void Set(UE ue, HashSet<R> rs, C.S s) {
+            Set(ue, rs.ToDictionary(r => r, r => s));
+            Debug.Assert(Are(ue, rs.ToDictionary(r => r, r => s)));
+        }
 
         public static void Set(UE ue, Dictionary<R, C.S> RεS) {
             // This method only sets relay states for relays explicitly declared in RεS.
@@ -242,22 +246,32 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             portStates[(Int32)PORTS.CH] |= (UInt16)bv32_NO[sectionPortCH];
 
             PortsWrite(Only.USB_ERB24s[ue], portStates);
+            Debug.Assert(PortsRead(Only.USB_ERB24s[ue]).SequenceEqual(portStates));
         }
 
         public static void Set(UE ue, C.S s) {
             Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
             foreach (R r in Enum.GetValues(typeof(R))) RεS.Add(r, s);
             Set(ue, RεS);
+            Debug.Assert(Are(ue, RεS));
         }
 
         // Below 3 methods mainly useful for parallelism, when testing multiple UUTs concurrently, with each B wired identically to test 1 UUT.
         public static void Set(HashSet<UE> ues, C.S s) { foreach (UE ue in ues) { Set(ue, s); } }
 
-        public static void Set(HashSet<UE> ues, HashSet<R> rs, C.S s) { foreach (UE ue in ues) Set(ue, rs, s); }
+        public static void Set(HashSet<UE> ues, HashSet<R> rs, C.S s) {
+            foreach (UE ue in ues) {
+                Set(ue, rs, s);
+                Debug.Assert(Are(ue, rs, s));
+            }
+        }
 
         public static void Set(Dictionary<UE, Dictionary<R, C.S>> UEεRεS) { foreach (KeyValuePair<UE, Dictionary<R, C.S>> kvp in UEεRεS) Set(kvp.Key, kvp.Value); }
 
-        public static void Set(C.S s) { foreach (UE ue in Enum.GetValues(typeof(UE))) Set(ue, s); }
+        public static void Set(C.S s) {
+            foreach (UE ue in Enum.GetValues(typeof(UE))) Set(ue, s);
+            Debug.Assert(Are(s));
+        }
         #endregion Set
 
         #region private methods

@@ -52,6 +52,7 @@ namespace ABT.TestSpace.TestExec {
             this._libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             this.Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
+            UE24.Set(RelayForms.C.S.NO); // Ensure they'll switch.
             UE24.Set(RelayForms.C.S.NC);
         }
 
