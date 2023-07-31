@@ -65,7 +65,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public readonly R R;
         public readonly C.T T;
 
-        public Terminal(UE24.UE UE, R R, C.T T) { this.UE = UE; this.R = R; this.T = T; }
+        public Terminal(UE UE, R R, C.T T) { this.UE = UE; this.R = R; this.T = T; }
 
         public override Boolean Equals(Object obj) {
             Terminal t = obj as Terminal;
@@ -81,7 +81,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public readonly R R;
         public readonly C.S S;
 
-        public State(UE24.UE UE, R R, C.S S) { this.UE = UE; this.R = R; this.S = S; }
+        public State(UE UE, R R, C.S S) { this.UE = UE; this.R = R; this.S = S; }
 
         public override Boolean Equals(Object obj) {
             State s = obj as State;
@@ -116,17 +116,17 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
 
         public RouteStates(Dictionary<Route, HashSet<State>> RouteStates) { this.RS = RouteStates; }
 
-        public void Connect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.RS[GetRoute(SN1, SN2)]) UE24.Set(s.UE, s.R, s.S); }
+        public void Connect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.RS[GetRoute(SN1, SN2)]) Set(s.UE, s.R, s.S); }
 
         public void Connect(SwitchedNet SN, HashSet<SwitchedNet> SNs) { foreach (SwitchedNet sn in SNs) Connect(SN, sn); }
 
-        public void DisConnect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.RS[GetRoute(SN1, SN2)]) UE24.Set(s.UE, s.R, GetStateOpposite(s.S)); }
+        public void DisConnect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.RS[GetRoute(SN1, SN2)]) Set(s.UE, s.R, GetStateOpposite(s.S)); }
 
         public void DisConnect(SwitchedNet SN, HashSet<SwitchedNet> SNs) { foreach (SwitchedNet sn in SNs) DisConnect(SN, sn); }
 
         public Boolean AreConnected(SwitchedNet SN1, SwitchedNet SN2) {
             Boolean ac = true;
-            foreach (State s in this.RS[GetRoute(SN1, SN2)]) ac &= UE24.Is(s.UE, s.R, s.S);
+            foreach (State s in this.RS[GetRoute(SN1, SN2)]) ac &= Is(s.UE, s.R, s.S);
             return ac;
         }
 
