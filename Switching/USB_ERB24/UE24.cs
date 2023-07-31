@@ -7,7 +7,7 @@ using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Soft
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
 namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
-    public sealed class ERB24 {
+    public sealed class UE24 {
         // NOTE: Most of this class is compatible with MCC's USB-ERB08 Relay Board, essentially a USB-ERB24 but with only 8 Form C relays instead of the USB-ERB24's 24.
         // - Some portions are specific to the USB-ERB24 however; examples are enum R containing 24 relays & enum PORTS containing 24 bits.
         // NOTE: This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
@@ -19,12 +19,12 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         //  - Pull-Down:      Relays are de-energized at power-up.
         //  - https://www.mccdaq.com/PDFs/Manuals/usb-erb24.pdf.
         public Dictionary<UE, MccBoard> USB_ERB24s;
-        private readonly static ERB24 _only = new ERB24();
-        public static ERB24 Only { get { return _only; } }
-        static ERB24() { }
+        private readonly static UE24 _only = new UE24();
+        public static UE24 Only { get { return _only; } }
+        static UE24() { }
         // Singleton pattern requires explicit static constructor to tell C# compiler not to mark type as beforefieldinit.
         // https://csharpindepth.com/articles/singleton
-        private ERB24() {
+        private UE24() {
             this.USB_ERB24s = new Dictionary<UE, MccBoard>() {
                 {UE.B0, new MccBoard((Int32)UE.B0)},
                 {UE.B1, new MccBoard((Int32)UE.B1)}
@@ -49,6 +49,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         internal enum PORTS { A, B, CL, CH }
         internal static Int32[] _ue24bitVector32Masks = GetUE24BitVector32Masks();
         #region methods
+
         #region Is/Are
         public static Boolean Is(UE ue, R r, C.S s) { return Get(ue, r) == s; }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.UI.WebControls.Expressions;
-using static ABT.TestSpace.TestExec.Switching.USB_ERB24.ERB24;
+using static ABT.TestSpace.TestExec.Switching.USB_ERB24.UE24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
 namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
@@ -45,11 +45,11 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public static String GetUE(UE ue) { return Enum.GetName(typeof(UE), ue); }
         public static String GetR(R r) { return Enum.GetName(typeof(R), r); }
 
-        public C.S Get() { return ERB24.Get(this.UE, this.R); }
+        public C.S Get() { return UE24.Get(this.UE, this.R); }
 
-        public void Set(C.S state) { ERB24.Set(this.UE, this.R, state); }
+        public void Set(C.S state) { UE24.Set(this.UE, this.R, state); }
 
-        public Boolean Is(C.S state) { return ERB24.Is(this.UE, this.R, state); }
+        public Boolean Is(C.S state) { return UE24.Is(this.UE, this.R, state); }
 
         public override Boolean Equals(Object obj) {
             Relay r = obj as Relay;
@@ -60,28 +60,12 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode(); }
     }
 
-    public sealed class State {
-        public readonly UE UE;
-        public readonly R R;
-        public readonly C.S S;
-
-        public State(ERB24.UE UE, R R, C.S S) { this.UE = UE; this.R = R; this.S = S; }
-
-        public override Boolean Equals(Object obj) {
-            State s = obj as State;
-            if (ReferenceEquals(this, s)) return true;
-            return s != null && s.UE == this.UE && s.R == this.R && s.S == this.S;
-        }
-
-        public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode() + this.S.GetHashCode(); }
-    }
-
     public sealed class Terminal {
         public readonly UE UE;
         public readonly R R;
         public readonly C.T T;
 
-        public Terminal(ERB24.UE UE, R R, C.T T) { this.UE = UE; this.R = R; this.T = T; }
+        public Terminal(UE24.UE UE, R R, C.T T) { this.UE = UE; this.R = R; this.T = T; }
 
         public override Boolean Equals(Object obj) {
             Terminal t = obj as Terminal;
@@ -90,6 +74,22 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         }
 
         public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode() + this.T.GetHashCode(); }
+    }
+
+    public sealed class State {
+        public readonly UE UE;
+        public readonly R R;
+        public readonly C.S S;
+
+        public State(UE24.UE UE, R R, C.S S) { this.UE = UE; this.R = R; this.S = S; }
+
+        public override Boolean Equals(Object obj) {
+            State s = obj as State;
+            if (ReferenceEquals(this, s)) return true;
+            return s != null && s.UE == this.UE && s.R == this.R && s.S == this.S;
+        }
+
+        public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode() + this.S.GetHashCode(); }
     }
 
     public sealed class Route {
@@ -116,17 +116,17 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
 
         public RouteStates(Dictionary<Route, HashSet<State>> RouteStates) { this.RS = RouteStates; }
 
-        public void Connect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.RS[GetRoute(SN1, SN2)]) ERB24.Set(s.UE, s.R, s.S); }
+        public void Connect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.RS[GetRoute(SN1, SN2)]) UE24.Set(s.UE, s.R, s.S); }
 
         public void Connect(SwitchedNet SN, HashSet<SwitchedNet> SNs) { foreach (SwitchedNet sn in SNs) Connect(SN, sn); }
 
-        public void DisConnect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.RS[GetRoute(SN1, SN2)]) ERB24.Set(s.UE, s.R, GetStateOpposite(s.S)); }
+        public void DisConnect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.RS[GetRoute(SN1, SN2)]) UE24.Set(s.UE, s.R, GetStateOpposite(s.S)); }
 
         public void DisConnect(SwitchedNet SN, HashSet<SwitchedNet> SNs) { foreach (SwitchedNet sn in SNs) DisConnect(SN, sn); }
 
         public Boolean AreConnected(SwitchedNet SN1, SwitchedNet SN2) {
             Boolean ac = true;
-            foreach (State s in this.RS[GetRoute(SN1, SN2)]) ac &= ERB24.Is(s.UE, s.R, s.S);
+            foreach (State s in this.RS[GetRoute(SN1, SN2)]) ac &= UE24.Is(s.UE, s.R, s.S);
             return ac;
         }
 
