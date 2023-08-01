@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
@@ -10,6 +11,8 @@ using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class MM_34661A {
+        public enum TERMINALS { Front, Rear };
+
         public const String MODEL = "34461A";
 
         public static Boolean IsMM_34661A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(Ag3466x)); }
@@ -17,7 +20,13 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static void Local(SCPI_VISA_Instrument SVI) { ((Ag3466x)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
+            if (GetTerminals(SVI) == TERMINALS.Front) _ = MessageBox.Show("Please depress Keysight 34661A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             SCPI99.Initialize(SVI);
+        }
+
+        public static TERMINALS GetTerminals(SCPI_VISA_Instrument SVI) {
+            ((Ag3466x)SVI.Instrument).SCPI.ROUTe.TERMinals.Query(out String terminals);
+            return String.Equals(terminals, "REAR") ? TERMINALS.Rear : TERMINALS.Front;
         }
 
         public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
