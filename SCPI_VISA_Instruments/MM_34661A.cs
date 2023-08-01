@@ -1,6 +1,5 @@
 ﻿using System;
 using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
-using ABT.TestSpace.TestExec.AppConfig;
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -22,13 +21,21 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
-            ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone(30D, "MAXimum", out Double voltsDC);
+            ((Ag3466x)SVI.Instrument).SCPI.FORMat.DATA.Command("ASCii", null);
+            ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone("AUTO", "MAXimum", out Double voltsDC);
             return voltsDC;
         }
 
         public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
+            ((Ag3466x)SVI.Instrument).SCPI.FORMat.DATA.Command("ASCii", null);
             ((Ag3466x)SVI.Instrument).SCPI.MEASure.CURRent.DC.QueryAsciiReal("AUTO", "MAXimum", out Double ampsDC);
             return ampsDC;
+        }
+
+        public static Double MeasureΩ(SCPI_VISA_Instrument SVI) {
+            ((Ag3466x)SVI.Instrument).SCPI.FORMat.DATA.Command("ASCii", null);
+            ((Ag3466x)SVI.Instrument).SCPI.MEASure.RESistance.QueryAsciiReal("AUTO", "MAXimum", out Double resistance);
+            return resistance;
         }
     }
 }

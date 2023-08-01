@@ -124,6 +124,11 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
 
         public void DisConnect(SwitchedNet SN, HashSet<SwitchedNet> SNs) { foreach (SwitchedNet sn in SNs) DisConnect(SN, sn); }
 
+        public void Move(SwitchedNet SN, SwitchedNet From, SwitchedNet To) {
+            DisConnect(SN, From);
+            Connect(SN, To);
+        }
+
         public Boolean AreConnected(SwitchedNet SN1, SwitchedNet SN2) {
             Boolean ac = true;
             foreach (State s in this.RS[GetRoute(SN1, SN2)]) ac &= Is(s.UE, s.R, s.S);
