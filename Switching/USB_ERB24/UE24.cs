@@ -60,8 +60,10 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         }
 
         public static Boolean Are(UE ue, Dictionary<R, C.S> RεS) {
-            Dictionary<R, C.S> Are = Get(ue, new HashSet<R>(RεS.Keys));
-            return RεS.Count == Are.Count && !RεS.Except(Are).Any();
+            Dictionary<R, C.S> Actual = Get(ue, new HashSet<R>(RεS.Keys));
+            Boolean are = true;
+            foreach(KeyValuePair<R, C.S> kvp in RεS) are &= (kvp.Value == Actual[kvp.Key]);
+            return are;
         }
 
         public static Boolean Are(UE ue, C.S s) {
