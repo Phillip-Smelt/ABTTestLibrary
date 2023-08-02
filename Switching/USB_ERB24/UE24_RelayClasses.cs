@@ -125,7 +125,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
 
         public void DisConnect(SwitchedNet SN, HashSet<SwitchedNet> SNs) { foreach (SwitchedNet sn in SNs) DisConnect(SN, sn); }
 
-        public void ReConnect(SwitchedNet SN, SwitchedNet From, SwitchedNet To) {
+        public void Switch(SwitchedNet SN, SwitchedNet From, SwitchedNet To) {
             DisConnect(SN, From);
             Connect(SN, To);
         }
