@@ -12,9 +12,9 @@ using ABT.TestSpace.TestExec;
 using ABT.TestSpace.TestExec.AppConfig;
 using System.Drawing;
 
-// TODO: SQL Server Express: Persist test data into Microsoft SQL Server Express.
-// TODO: SQL Server Express: Create a Microsoft C# front-end exporting/report app for persisted SQL Server Express test data.  Export in CSV, report in RTF.
-// TODO: SQL Server Express: Use Logger & RTFSinks to write SQL Server Express' data to RTF then File/Save As RTF.
+// TODO: SQL1: Persist test data into Microsoft SQL Server Express.
+// TODO: SQL2: Create a Microsoft C# front-end exporting/report app for persisted SQL Server Express test data.  Export in CSV, report in RTF.
+// TODO: SQL3: Use Logger & RTFSinks to write SQL Server Express' data to RTF then File/Save As RTF.
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used Serilog commands are conveniences, not necessities.
 // NOTE: Will never fully implement wrapper methods for the complete set of Serilog commands, just some of the most commonly used ones.
