@@ -8,19 +8,20 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
 namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
     public sealed class SwitchedNet {
-        public readonly String Name;
+        public readonly String ID;
+        public readonly String Alias;
 
-        public SwitchedNet(String name) { this.Name = name; }
+        public SwitchedNet(String ID, String Alias) { this.ID = ID; this.Alias = Alias; }
 
         public override Boolean Equals(Object obj) {
             SwitchedNet sn = obj as SwitchedNet;
             if (ReferenceEquals(this, sn)) return true;
-            return sn != null && this.Name == sn.Name;
+            return sn != null && sn.ID == this.ID && sn.Alias == this.Alias;
         }
 
-        public override Int32 GetHashCode() { return 3 * this.Name.GetHashCode(); }
+        public override Int32 GetHashCode() { return 3 * this.ID.GetHashCode() + this.Alias.GetHashCode(); }
 
-        public override string ToString() { return this.Name; }
+        public override String ToString() { return this.ID; }
     }
 
     public sealed class Relay {
@@ -36,7 +37,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         }
 
         private void Validate() {
-            if (C.Name == String.Empty) throw new ArgumentException($"Relay terminal Common '{C.Name}' cannot be String.Empty.");
+            if (C.Alias == String.Empty) throw new ArgumentException($"Relay terminal Common '{C.Alias}' cannot be String.Empty.");
             if (C == NO) throw new ArgumentException($"Relay terminals Common '{C}' & Normally Open '{NO}' cannot be identical.");
             if (C == NC) throw new ArgumentException($"Relay terminals Common '{C}' & Normally Closed '{NC}' cannot be identical.");
             if (NC == NO) throw new ArgumentException($"Relay terminals Normally Closed '{NC}' & Normally Open '{NO}' cannot be identical.");
