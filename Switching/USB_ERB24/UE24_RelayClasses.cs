@@ -112,19 +112,20 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
     }
 
     public sealed class RouteStates {
+        // TODO: Optimize Connect, DisConnect, AreConnected & AreDisConnected to invoke Set(UE ue, Dictionary<R, C.S> RεS) & Are(UE ue, Dictionary<R, C.S> RεS) for optimally simultaneous switching.
         public readonly Dictionary<Route, HashSet<State>> RS;
 
         public RouteStates(Dictionary<Route, HashSet<State>> RouteStates) { this.RS = RouteStates; }
 
         public void Connect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.RS[GetRoute(SN1, SN2)]) Set(s.UE, s.R, s.S); }
-
+        
         public void Connect(SwitchedNet SN, HashSet<SwitchedNet> SNs) { foreach (SwitchedNet sn in SNs) Connect(SN, sn); }
 
         public void DisConnect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.RS[GetRoute(SN1, SN2)]) Set(s.UE, s.R, GetStateOpposite(s.S)); }
 
         public void DisConnect(SwitchedNet SN, HashSet<SwitchedNet> SNs) { foreach (SwitchedNet sn in SNs) DisConnect(SN, sn); }
 
-        public void Move(SwitchedNet SN, SwitchedNet From, SwitchedNet To) {
+        public void ReConnect(SwitchedNet SN, SwitchedNet From, SwitchedNet To) {
             DisConnect(SN, From);
             Connect(SN, To);
         }

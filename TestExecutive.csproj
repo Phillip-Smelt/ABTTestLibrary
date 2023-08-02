@@ -55,7 +55,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Switching\RelayForms.cs" />
-    <Compile Include="Switching\USB_ERB24\UE24_Classes.cs" />
+    <Compile Include="Switching\USB_ERB24\UE24_RelayClasses.cs" />
     <Compile Include="Switching\USB_ERB24\UE24.cs" />
     <Compile Include="TestExecutive.cs">
       <SubType>Form</SubType>
