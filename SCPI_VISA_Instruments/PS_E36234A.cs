@@ -60,7 +60,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             SetVoltageProtection(SVI, VoltsDC * 1.10, Channel);
             SetADC(SVI, AmpsDC, Channel);
             SetCurrentProtectionDelay(SVI, DelaySecondsCurrentProtection, Channel);
-            SetCurrentProtectionState(SVI, OUTPUT.off, Channel);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), SCPI.Channels[Channel]);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false, SCPI.Channels[Channel]);
             ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command(true, SCPI.Channels[Channel]);
@@ -131,7 +130,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, s));
             }
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds, SCPI.Channels[Channel]);
-            SetCurrentProtectionState(SVI, OUTPUT.ON, Channel);
+            SetCurrentProtectionState(SVI, OUTPUT.off, Channel);
+            // TODO: SetCurrentProtectionState(SVI, OUTPUT.ON, Channel);
         }
 
         public static Boolean GetCurrentProtectionState(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
