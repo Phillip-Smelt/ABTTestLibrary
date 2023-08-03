@@ -15,9 +15,8 @@ namespace ABT.TestSpace.TestExec.InSystemProgramming {
             String message = $"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
                              $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                              $"AFTER connecting, click OK to continue.";
-            // TODO: if (AutoContinue) _ = MessageBox.Show(GetInterconnectForm(), message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            // else _ = MessageBox.Show(message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            if (!AutoContinue) _ = MessageBox.Show(message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (AutoContinue) _ = MessageBox.Show(GetInterconnectForm(), message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else _ = MessageBox.Show(message, $"Connect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
             PostConnect?.Invoke();
         }
 
@@ -26,8 +25,8 @@ namespace ABT.TestSpace.TestExec.InSystemProgramming {
             String message = $"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
                              $"Disconnect '{Description}' from UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +
                              $"AFTER disconnecting, click OK to continue.";
-            // TODO: if (AutoContinue) _ = MessageBox.Show(GetInterconnectForm(), message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            // else _ = MessageBox.Show(message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (AutoContinue) _ = MessageBox.Show(GetInterconnectForm(), message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else _ = MessageBox.Show(message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (!AutoContinue) _ = MessageBox.Show(message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
             PostDisconnect?.Invoke();
         }
@@ -46,6 +45,7 @@ namespace ABT.TestSpace.TestExec.InSystemProgramming {
                     FileName = workingDirectory + fileName,
                     WorkingDirectory = workingDirectory,
                     CreateNoWindow = false,
+                    WindowStyle = ProcessWindowStyle.Maximized,
                     UseShellExecute = false,
                     RedirectStandardError = false,
                     RedirectStandardOutput = false
