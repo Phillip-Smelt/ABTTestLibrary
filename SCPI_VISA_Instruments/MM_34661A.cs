@@ -33,17 +33,17 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
-            ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone(AUTO, MAXimum, out Double voltsDC);
+            ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone(AUTO, DEFault, out Double voltsDC);
             return voltsDC;
         }
 
         public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
-            ((Ag3466x)SVI.Instrument).SCPI.MEASure.CURRent.DC.QueryAsciiReal(AUTO, MAXimum, out Double ampsDC);
+            ((Ag3466x)SVI.Instrument).SCPI.MEASure.CURRent.DC.QueryAsciiReal(AUTO, DEFault, out Double ampsDC);
             return ampsDC;
         }
 
         public static Double MeasureΩ(SCPI_VISA_Instrument SVI) {
-            ((Ag3466x)SVI.Instrument).SCPI.MEASure.RESistance.QueryAsciiReal(AUTO, MAXimum, out Double resistance);
+            ((Ag3466x)SVI.Instrument).SCPI.MEASure.RESistance.QueryAsciiReal(AUTO, DEFault, out Double resistance);
             return resistance;
         }
 
