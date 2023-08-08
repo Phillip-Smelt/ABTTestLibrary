@@ -22,6 +22,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             if (GetTerminals(SVI) == TERMINALS.Front) _ = MessageBox.Show("Please depress Keysight 34661A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            SetDelay(SVI, MMD.DEFault);
+            SetDelayAuto(SVI, true);
             SCPI99.Initialize(SVI);
         }
 
@@ -45,30 +47,20 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return resistance;
         }
 
-        public static void SetDelay(SCPI_VISA_Instrument SVI) {
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Command(MINimum);
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Command(MAXimum);
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Command(DEFault);
+        public static void SetDelay(SCPI_VISA_Instrument SVI, MMD mmd) { ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Command(Enum.GetName(typeof(MMD), mmd)); }
+
+        public static void SetDelay(SCPI_VISA_Instrument SVI, Double Seconds) { ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Command(Seconds); }
+
+        public static Double GetDelay(SCPI_VISA_Instrument SVI) {
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(MINimum, out Double seconds);
+            return seconds;
         }
-        
-        public static void GetDelay(SCPI_VISA_Instrument SVI) {
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Command(true);
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Command(false);
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Query(out Boolean state);
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(MINimum, out Double delay);
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(MAXimum, out Double delay1);
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(DEFault, out Double delay2);
-        }
+
+        public static void SetDelayAuto(SCPI_VISA_Instrument SVI, Boolean state) { ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Command(state); }
                 
-        public static void IsDelay(SCPI_VISA_Instrument SVI) {
+        public static Boolean IsDelayAuto(SCPI_VISA_Instrument SVI) {
             ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Query(out Boolean state);
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(MAXimum, out Double delay);
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(MAXimum, out Double delay1);
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(DEFault, out Double delay2);
-        }
-                
-        public static void IsDelayAuto(SCPI_VISA_Instrument SVI) {
-            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Query(out Boolean state);
+            return state;
         }
     }
 }

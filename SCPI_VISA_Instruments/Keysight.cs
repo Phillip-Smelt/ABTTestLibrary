@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 
 // All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
@@ -12,16 +13,17 @@ using System.Collections.Generic;
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class Keysight {
-        public enum CHANNELS { C1, C2 }
+        public const String AUTO = "AUTO";
 
+        public enum CHANNELS { C1, C2 }
         public static readonly Dictionary<CHANNELS, String> Channels = new Dictionary<CHANNELS, String> {
             { CHANNELS.C1, "(@1)" },
             { CHANNELS.C2, "(@2)" }
         };
-        
-        public const String AUTO = "AUTO";
-        public const String MINimum = "MINimum";
-        public const String MAXimum = "MAXimum";
-        public const String DEFault = "DEFault";
+
+        public enum MMD { MINimum, MAXimum, DEFault }
+        public static readonly String MINimum = Enum.GetName(typeof(MMD), MMD.MINimum);
+        public static readonly String MAXimum = Enum.GetName(typeof(MMD), MMD.MAXimum);
+        public static readonly String DEFault = Enum.GetName(typeof(MMD), MMD.DEFault);
     }
 }
