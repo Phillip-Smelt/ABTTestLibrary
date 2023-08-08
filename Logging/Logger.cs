@@ -11,14 +11,14 @@ using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.TestSpace.TestExec.AppConfig;
 
-// TODO: SQL1: Persist test data into Microsoft SQL Server Express; write all full Operation TestMeasurement results therein.
-// TODO: SQL2: Stop writing TestMeasurement results to RichTextBoxSink when testing full Operations; only write TestGroups results to RichTextBoxSink.
-// TODO: SQL3: Continue writing TestMeasurement results to RichTextBoxSink when only testing Groups.
-// TODO: SQL4: Stop saving RichTextBoxSink as RTF files, except allow manual export for Troubleshooting.
-// TODO: SQL5: This will resolve the RichTextBox scroll issue, wherein TestGroups results are scrolled up & away as TestMeasurements are appended.
-// TODO: SQL6: Only SQL Server Express persisted test data is legitimate; all RichTextBoxSink is Troubleshooting only.
-// TODO: SQL7: Create a Microsoft C# front-end exporting/reporting app for persisted SQL Server Express TestMeasurement full Operation test data.
-// TODO: SQL8: Export in CSV, report in PDF.
+// TODO: Persist test data into Microsoft SQL Server Express; write all full Operation TestMeasurement results therein.
+// - Stop writing TestMeasurement results to RichTextBoxSink when testing full Operations; only write TestGroups results to RichTextBoxSink.
+// - Continue writing TestMeasurement results to RichTextBoxSink when only testing Groups.
+// - Stop saving RichTextBoxSink as RTF files, except allow manual export for Troubleshooting.
+// - This will resolve the RichTextBox scroll issue, wherein TestGroups results are scrolled up & away as TestMeasurements are appended.
+// - Only SQL Server Express persisted test data is legitimate; all RichTextBoxSink is Troubleshooting only.
+// - Create a Microsoft C# front-end exporting/reporting app for persisted SQL Server Express TestMeasurement full Operation test data.
+// - Export in CSV, report in PDF.
 //
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used Serilog commands are conveniences, not necessities.
 // NOTE: Will never fully implement wrapper methods for the complete set of Serilog commands, just some of the most commonly used ones.
