@@ -107,8 +107,8 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         }
 
         public static Dictionary<R, C.S> Get(UE ue, HashSet<R> rs) {
-            Dictionary<R, C.S> RεS = Get(ue);
-            foreach (R r in rs) if (!RεS.ContainsKey(r)) RεS.Remove(r);
+            Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
+            foreach (R r in rs) RεS.Add(r, Get(ue, r));
             return RεS;
         }
 
