@@ -11,6 +11,13 @@ using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 // NOTE: Unlike all other classes in namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
+    public enum OUTPUT { off, ON }
+    public enum LOGIC { low, HIGH }
+    public enum BINARY { zero, ONE }
+    public enum SENSE_MODE { EXTernal, INTernal }
+    public enum TERMINALS_SVI { Plus, Minus }
+    // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
+
     public static class SCPI99 {
         // NOTE: SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows common functionality.
         // NOTE: Using this SCPI99 class is sub-optimal when a compatible .Net VISA instrument driver is available:
@@ -39,7 +46,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 new AgSCPI99(SVI.Address).SCPI.TST.Query(out Int32 selfTestResult);
                 if (selfTestResult != 0) throw new InvalidOperationException($"Self Test returned result '{selfTestResult}'.");
             } catch (Exception e) {
-                throw new InvalidOperationException(SCPI.GetErrorMessage(SVI, e.ToString()));
+                throw new InvalidOperationException(GetErrorMessage(SVI, e.ToString()));
                 // If unpowered, throws a Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
                 // which requires a seemingly unavailable Keysight library to explicitly Assert for in MS Unit Test.
                 // Instead catch Exception and re-throw as InvalidOperationException, which MS Test can explicitly Assert for.
@@ -69,7 +76,24 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return Identity;
         }
 
+        public static OUTPUT GetOutputState(SCPI_VISA_Instrument SVI) {
+            if (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) return OUTPUT.off;
+            else return OUTPUT.ON;
+        }
+        
+        public static void SetOutputState(SCPI_VISA_Instrument SVI, OUTPUT State) { SCPI99.Command(SVI, (State is OUTPUT.off) ? ":OUTPUT 0" : ":OUTPUT 1"); }
+
+        public static Boolean IsOutputState(SCPI_VISA_Instrument SVI, OUTPUT State) { return (GetOutputState(SVI) == State); }
+
+        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI) { return SCPI_VISA_Instrument.GetInfo(SVI, $"SCPI VISA Instrument Address '{0}' failed.{Environment.NewLine}"); }
+
+        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage) { return $"{GetErrorMessage(SVI)}{errorMessage}{Environment.NewLine}"; }
+
+        internal static Boolean IsCloseEnough(Double D1, Double D2, Double Delta) { return Math.Abs(D1 - D2) <= Delta; }
+        // Close is good enough for horseshoes, hand grenades, nuclear weapons, and Doubles!  Shamelessly plagiarized from the Internet!
+
         public static String GetIdentity(SCPI_VISA_Instrument SVI, SCPI_IDENTITY Property) { return GetIdentity(SVI).Split(IDENTITY_SEPARATOR)[(Int32)Property]; }
+
         public static String GetIdentity(String Address, SCPI_IDENTITY Property) { return GetIdentity(Address).Split(IDENTITY_SEPARATOR)[(Int32)Property]; }
 
         public static void Command(SCPI_VISA_Instrument SVI, String SCPI_Command) { new AgSCPI99(SVI.Address).Transport.Command.Invoke(SCPI_Command); }

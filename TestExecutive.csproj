@@ -47,7 +47,6 @@
     <Compile Include="SCPI_VISA_Instruments\ConfigSCPI_VISA_Instruments.cs" />
     <Compile Include="SCPI_VISA_Instruments\PS_E3610xB.cs" />
     <Compile Include="SCPI_VISA_Instruments\Keysight.cs" />
-    <Compile Include="SCPI_VISA_Instruments\SCPI.cs" />
     <Compile Include="SCPI_VISA_Instruments\SCPI99.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
