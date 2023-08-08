@@ -100,10 +100,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MINimum, Channels[CHANNELS.C1], out Double min);
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MAXimum, Channels[CHANNELS.C1], out Double max);
             if ((AmpsDC < min) || (AmpsDC > max)) {
-                String s = $"> {MINimum}/{MAXimum} Current.{Environment.NewLine}"
-                    + $" - {MINimum}   :  Current={min} A.{Environment.NewLine}"
+                String s = $"> MINimum/MAXimum Current.{Environment.NewLine}"
+                    + $" - MINimum   :  Current={min} A.{Environment.NewLine}"
                     + $" - Programmed:  Current={AmpsDC} A.{Environment.NewLine}"
-                    + $" - {MAXimum}   :  Current={max} A.";
+                    + $" - MAXimum   :  Current={max} A.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
             // TODO: ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command(false, Channels[CHANNELS.C1]);
@@ -116,10 +116,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MINimum, Channels[CHANNELS.C1], out Double[] min);
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MAXimum, Channels[CHANNELS.C1], out Double[] max);
             if ((VoltsDC < min[0]) || (VoltsDC > max[1])) {
-                String s = $"< {MINimum}/{MAXimum} Voltage.{Environment.NewLine}"
-                    + $" - {MINimum}   :  Voltage={min[0]} V.{Environment.NewLine}"
+                String s = $"< MINimum/MAXimum Voltage.{Environment.NewLine}"
+                    + $" - MINimum   :  Voltage={min[0]} V.{Environment.NewLine}"
                     + $" - Programmed:  Voltage={VoltsDC} V.{Environment.NewLine}"
-                    + $" - {MAXimum}   :  Voltage={max[1]} V.";
+                    + $" - MAXimum   :  Voltage={max[1]} V.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
         }
@@ -131,10 +131,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Query(MINimum, Channels[CHANNELS.C1], out Double[] min);
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Query(MAXimum, Channels[CHANNELS.C1], out Double[] max);
             if ((Watts < min[0]) || (Watts > max[1])) {
-                String s = $"< {MINimum}/{MAXimum} Wattage.{Environment.NewLine}"
-                    + $" - {MINimum}   :  Wattage={min[0]} W.{Environment.NewLine}"
+                String s = $"< MINimum/MAXimum Wattage.{Environment.NewLine}"
+                    + $" - MINimum   :  Wattage={min[0]} W.{Environment.NewLine}"
                     + $" - Programmed:  Wattage={Watts} W.{Environment.NewLine}"
-                    + $" - {MAXimum}   :  Wattage={max[1]} W.";
+                    + $" - MAXimum   :  Wattage={max[1]} W.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
             // TODO: ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.PROTection.STATe.Command(false, Channels[CHANNELS.C1]);
@@ -147,10 +147,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query(MINimum, Channels[CHANNELS.C1], out Double[] min);
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query(MAXimum, Channels[CHANNELS.C1], out Double[] max);
             if ((Ohms < min[0]) || (Ohms > max[0])) {
-                String s = $"< {MINimum}/{MAXimum} Resistance.{Environment.NewLine}"
-                    + $" - {MINimum}   :  Resistance={min[0]} Ω.{Environment.NewLine}"
+                String s = $"< MINimum/MAXimum Resistance.{Environment.NewLine}"
+                    + $" - MINimum   :  Resistance={min[0]} Ω.{Environment.NewLine}"
                     + $" - Programmed:  Resistance={Ohms} Ω.{Environment.NewLine}"
-                    + $" - {MAXimum}   :  Resistance={max[0]} Ω.";
+                    + $" - MAXimum   :  Resistance={max[0]} Ω.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
       }

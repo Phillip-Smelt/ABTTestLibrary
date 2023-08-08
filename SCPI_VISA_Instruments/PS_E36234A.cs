@@ -82,10 +82,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MINimum, Channels[Channel], out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MAXimum, Channels[Channel], out Double[] max);
             if ((VoltsDC < min[(Int32)Channel]) || (max[(Int32)Channel] < VoltsDC)) {
-                s = $"{MINimum}/{MAXimum} Voltage.{Environment.NewLine}"
-                + $" - {MINimum}   :  Voltage={min[(Int32)Channel]} VDC.{Environment.NewLine}"
+                s = $"MINimum/MAXimum Voltage.{Environment.NewLine}"
+                + $" - MINimum   :  Voltage={min[(Int32)Channel]} VDC.{Environment.NewLine}"
                 + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
-                + $" - {MAXimum}   :  Voltage={max[(Int32)Channel]} VDC.";
+                + $" - MAXimum   :  Voltage={max[(Int32)Channel]} VDC.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC, Channels[Channel]);
@@ -103,10 +103,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MINimum, Channels[Channel], out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MAXimum, Channels[Channel], out Double[] max);
             if ((AmpsDC < min[(Int32)Channel]) || (max[(Int32)Channel] < AmpsDC)) {
-                s = $"{MINimum}/{MAXimum} Current.{Environment.NewLine}"
-                + $" - {MINimum}   :  Current={min[(Int32)Channel]} ADC.{Environment.NewLine}"
+                s = $"MINimum/MAXimum Current.{Environment.NewLine}"
+                + $" - MINimum   :  Current={min[(Int32)Channel]} ADC.{Environment.NewLine}"
                 + $" - Programmed:  Current={AmpsDC} ADC.{Environment.NewLine}"
-                + $" - {MAXimum}   :  Current={max[(Int32)Channel]} ADC.";
+                + $" - MAXimum   :  Current={max[(Int32)Channel]} ADC.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC, Channels[Channel]);
@@ -124,10 +124,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MINimum, Channels[Channel], out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MAXimum, Channels[Channel], out Double[] max);
             if ((DelaySeconds < min[(Int32)Channel]) || (max[(Int32)Channel] < DelaySeconds)) {
-                s=$"{MINimum}/{MAXimum} Current Protection Delay.{Environment.NewLine}"
-                + $" - {MINimum}   :  Delay={min[(Int32)Channel]} seconds.{Environment.NewLine}"
+                s=$"MINimum/MAXimum Current Protection Delay.{Environment.NewLine}"
+                + $" - MINimum   :  Delay={min[(Int32)Channel]} seconds.{Environment.NewLine}"
                 + $" - Programmed:  Delay={DelaySeconds} seconds.{Environment.NewLine}"
-                + $" - {MAXimum}   :  Delay={max[(Int32)Channel]} seconds.";
+                + $" - MAXimum   :  Delay={max[(Int32)Channel]} seconds.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds, Channels[Channel]);
@@ -152,10 +152,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Query(MINimum, Channels[Channel], out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Query(MAXimum, Channels[Channel], out Double[] max);
             if ((VoltsDC < min[(Int32)Channel]) || (max[(Int32)Channel] < VoltsDC)) {
-                s = $"{MINimum}/{MAXimum} Voltage Protection.{Environment.NewLine}"
-                + $" - {MINimum}   :  Voltage={min[(Int32)Channel]} VDC.{Environment.NewLine}"
+                s = $"MINimum/MAXimum Voltage Protection.{Environment.NewLine}"
+                + $" - MINimum   :  Voltage={min[(Int32)Channel]} VDC.{Environment.NewLine}"
                 + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
-                + $" - {MAXimum}   :  Voltage={max[(Int32)Channel]} VDC.";
+                + $" - MAXimum   :  Voltage={max[(Int32)Channel]} VDC.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Command(VoltsDC, Channels[Channel]);

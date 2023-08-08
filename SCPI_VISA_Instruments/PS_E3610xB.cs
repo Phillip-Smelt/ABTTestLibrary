@@ -61,10 +61,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MINimum, out Double min);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MAXimum, out Double max);
             if((VoltsDC < min) || (max < VoltsDC)) {
-                s=$"{MINimum}/{MAXimum} Voltage.{Environment.NewLine}"
-                + $" - {MINimum}   :  Voltage={min} VDC.{Environment.NewLine}"
+                s=$"MINimum/MAXimum Voltage.{Environment.NewLine}"
+                + $" - MINimum   :  Voltage={min} VDC.{Environment.NewLine}"
                 + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
-                + $" - {MAXimum}   :  Voltage={max} VDC.";
+                + $" - MAXimum   :  Voltage={max} VDC.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC);
@@ -82,10 +82,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MINimum, out Double min);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MAXimum, out Double max);
             if ((AmpsDC < min) || (max < AmpsDC)) {
-                s=$"{MINimum}/{MAXimum} Current.{Environment.NewLine}"
-                + $" - {MINimum}   :  Current={min} ADC.{Environment.NewLine}"
+                s=$"MINimum/MAXimum Current.{Environment.NewLine}"
+                + $" - MINimum   :  Current={min} ADC.{Environment.NewLine}"
                 + $" - Programmed:  Current={AmpsDC} ADC.{Environment.NewLine}"
-                + $" - {MAXimum}   :  Current={max} ADC.";
+                + $" - MAXimum   :  Current={max} ADC.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC);
@@ -103,10 +103,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MINimum, out Double min);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MAXimum, out Double max);
             if ((DelaySeconds < min) || max < (DelaySeconds)) {
-                s=$"{MINimum}/{MAXimum} Current Protection Delay.{Environment.NewLine}"
-                + $" - {MINimum}   :  Delay={min} seconds.{Environment.NewLine}"
+                s=$"MINimum/MAXimum Current Protection Delay.{Environment.NewLine}"
+                + $" - MINimum   :  Delay={min} seconds.{Environment.NewLine}"
                 + $" - Programmed:  Delay={DelaySeconds} seconds.{Environment.NewLine}"
-                + $" - {MAXimum}    :  Delay={max} seconds.";
+                + $" - MAXimum   :  Delay={max} seconds.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds);
@@ -130,10 +130,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query(MINimum, out Double min);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query(MAXimum, out Double max);
             if (VoltsDC < min || max < VoltsDC) {
-                s=$"{MINimum}/{MAXimum} Voltage Protection.{Environment.NewLine}"
-                + $" - {MINimum}    :  Voltage={min} VDC.{Environment.NewLine}"
+                s=$"MINimum/MAXimum Voltage Protection.{Environment.NewLine}"
+                + $" - MINimum   :  Voltage={min} VDC.{Environment.NewLine}"
                 + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
-                + $" - {MAXimum}    :  Voltage={max} VDC.";
+                + $" - MAXimum   :  Voltage={max} VDC.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Command(VoltsDC);
