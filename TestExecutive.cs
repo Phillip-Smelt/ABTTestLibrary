@@ -59,6 +59,7 @@ namespace ABT.TestSpace.TestExec {
         private void Form_Shown(Object sender, EventArgs e) {
             this.FormReset();
             this.Text = $"{this.ConfigUUT.Number}, {this.ConfigUUT.Description}";
+#if !DEBUG
             if (!String.Equals(String.Empty, this.ConfigUUT.DocumentationFolder)) {
                 if (Directory.Exists(this.ConfigUUT.DocumentationFolder)) {
                     ProcessStartInfo psi = new ProcessStartInfo {
@@ -72,6 +73,7 @@ namespace ABT.TestSpace.TestExec {
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
                 } else MessageBox.Show(Form.ActiveForm, $"Path {this.ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+#endif
             this.ButtonSelectTests.Enabled = true;
         }
 
