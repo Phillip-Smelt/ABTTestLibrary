@@ -30,18 +30,44 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
-            ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone("AUTO", "MAXimum", out Double voltsDC);
+            ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone(SCPI.AUTO, SCPI.MAXimum, out Double voltsDC);
             return voltsDC;
         }
 
         public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
-            ((Ag3466x)SVI.Instrument).SCPI.MEASure.CURRent.DC.QueryAsciiReal("AUTO", "MAXimum", out Double ampsDC);
+            ((Ag3466x)SVI.Instrument).SCPI.MEASure.CURRent.DC.QueryAsciiReal(SCPI.AUTO, SCPI.MAXimum, out Double ampsDC);
             return ampsDC;
         }
 
         public static Double MeasureΩ(SCPI_VISA_Instrument SVI) {
-            ((Ag3466x)SVI.Instrument).SCPI.MEASure.RESistance.QueryAsciiReal("AUTO", "MAXimum", out Double resistance);
+            ((Ag3466x)SVI.Instrument).SCPI.MEASure.RESistance.QueryAsciiReal(SCPI.AUTO, SCPI.MAXimum, out Double resistance);
             return resistance;
+        }
+
+        public static void SetDelay(SCPI_VISA_Instrument SVI) {
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Command(SCPI.MINimum);
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Command(SCPI.MAXimum);
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Command(SCPI.DEFault);
+        }
+        
+        public static void GetDelay(SCPI_VISA_Instrument SVI) {
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Command(true);
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Command(false);
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Query(out Boolean state);
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(SCPI.MINimum, out Double delay);
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(SCPI.MAXimum, out Double delay1);
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(SCPI.DEFault, out Double delay2);
+        }
+                
+        public static void IsDelay(SCPI_VISA_Instrument SVI) {
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Query(out Boolean state);
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(SCPI.MAXimum, out Double delay);
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(SCPI.MAXimum, out Double delay1);
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.Query(SCPI.DEFault, out Double delay2);
+        }
+                
+        public static void IsDelayAuto(SCPI_VISA_Instrument SVI) {
+            ((Ag3466x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Query(out Boolean state);
         }
     }
 }
