@@ -205,7 +205,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
-            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{this.ConfigLogger.FilePath}\"" };
+            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{Logger.GetFilePath(this)}\"" };
             Process.Start(psi);
             // Will fail if this.ConfigLogger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
         }

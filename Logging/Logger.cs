@@ -35,7 +35,7 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         public static void Start(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) {
-                // When TestGroups are executed, test data is never saved to configLogger.FilePath as Rich Text.  Never.
+                // When TestGroups are executed, test data is never saved as Rich Text.
                 // RichTextBox only. 
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
@@ -53,7 +53,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             }
 
             if (testExecutive.ConfigLogger.FileEnabled && !testExecutive.ConfigLogger.SQLEnabled) {
-                // When TestOperations are executed, test data is always & automatically saved to config.Logger.FilePath as Rich Text.  Always.
+                // When TestOperations are executed, test data is always & automatically saved as Rich Text.
                 // RichTextBox + File.
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
@@ -192,23 +192,24 @@ namespace ABT.TestSpace.TestExec.Logging {
             }
         }
 
+        internal static String GetFilePath(TestExecutive testExecutive) { return $"{testExecutive.ConfigLogger.FilePath}{testExecutive.ConfigTest.TestElementID}\\"; }
+
         private static void FileStop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             String fileName = $"{testExecutive.ConfigUUT.Number}_{testExecutive.ConfigUUT.SerialNumber}_{testExecutive.ConfigTest.TestElementID}";
-            String[] files = Directory.GetFiles(testExecutive.ConfigLogger.FilePath, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
-            // Will fail if invalid this.ConfigLogger.FilePath.  Don't catch resulting Exception though; this has to be fixed in App.config.
-            // Otherwise, files is the set of all files in config.Logger.FilePath like
-            // config.configUUT.Number_Config.configUUT.SerialNumber_configTest.TestElementID_*.rtf.
+            String[] files = Directory.GetFiles(GetFilePath(testExecutive), $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
+            // Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in App.config.
+            // Otherwise, files is the set of all files like config.configUUT.Number_Config.configUUT.SerialNumber_configTest.TestElementID_*.rtf.
             Int32 maxNumber = 0; String s;
             foreach (String f in files) {
                 s = f;
-                s = s.Replace($"{testExecutive.ConfigLogger.FilePath}{fileName}", String.Empty);
+                s = s.Replace($"{GetFilePath(testExecutive)}{fileName}", String.Empty);
                 s = s.Replace(".rtf", String.Empty);
                 s = s.Replace("_", String.Empty);
                 foreach (FieldInfo fi in typeof(EventCodes).GetFields()) s = s.Replace((String)fi.GetValue(null), String.Empty);
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
                 // Example for final (3rd) iteration of foreach (String f in files):
                 //   FileName            : 'UUTNumber_TestElementID_SerialNumber'
-                //   Initially           : 'P:\Test\TDR\D4522137\Functional\UUTNumber_TestElementID_SerialNumber_3_PASS.rtf'
+                //   Initially           : 'P:\Test\TDR\D4522137-2\T-30\UUTNumber_TestElementID_SerialNumber_3_PASS.rtf'
                 //   FilePath + fileName : '_3_PASS.rtf'
                 //   .txt                : '_3_PASS'
                 //   _                   : '3PASS'
@@ -216,7 +217,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 //   maxNumber           : '3'
             }
             fileName += $"_{++maxNumber}_{testExecutive.ConfigUUT.EventCode}.rtf";
-            rtfResults.SaveFile($"{testExecutive.ConfigLogger.FilePath}{fileName}");
+            rtfResults.SaveFile($"{GetFilePath(testExecutive)}{fileName}");
         }
 
         private static void SQLStart(TestExecutive testExecutive) {
