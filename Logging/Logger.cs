@@ -43,9 +43,9 @@ namespace ABT.TestSpace.TestExec.Logging {
                     .CreateLogger();
                 Log.Information($"Note: following test results invalid for UUT production testing, only troubleshooting.");
                 Log.Information($"START             : {DateTime.Now}");
-                Log.Information($"UUT Revision      : {testExecutive.ConfigUUT.Revision}");
-                Log.Information($"UUT Number        : {testExecutive.ConfigUUT.Number}");
                 Log.Information($"UUT Serial Number : {testExecutive.ConfigUUT.SerialNumber}");
+                Log.Information($"UUT Number        : {testExecutive.ConfigUUT.Number}");
+                Log.Information($"UUT Revision      : {testExecutive.ConfigUUT.Revision}");
                 Log.Information($"TestGroup ID      : {testExecutive.ConfigTest.TestElementID}");
                 Log.Information($"Test Description  : {testExecutive.ConfigTest.TestElementDescription}\n");
                 return;
