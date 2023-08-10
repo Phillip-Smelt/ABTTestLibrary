@@ -209,7 +209,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
                 // Example for final (3rd) iteration of foreach (String f in files):
                 //   FileName            : 'UUTNumber_TestElementID_SerialNumber'
-                //   Initially           : 'P:\Test\TDR\D4522137-2\T-30\UUTNumber_TestElementID_SerialNumber_3_PASS.rtf'
+                //   Initially           : 'P:\Test\TDR\D4522142-1\T-30\UUTNumber_TestElementID_SerialNumber_3_PASS.rtf'
                 //   FilePath + fileName : '_3_PASS.rtf'
                 //   .txt                : '_3_PASS'
                 //   _                   : '3PASS'
