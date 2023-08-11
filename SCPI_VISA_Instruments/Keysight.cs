@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 
-// All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
+// All Agilent.CommandExpert.ScpiNet drivers are procured by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 // https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
 //
-// Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
+// Strenuously recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
+// https://www.keysight.com/us/en/search.html/command+expert
 //
 // NOTE: Unlike all other classes in namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.

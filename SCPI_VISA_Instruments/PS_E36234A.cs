@@ -2,16 +2,21 @@
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
-// All Agilent.CommandExpert.ScpiNet drivers are created by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
+// All Agilent.CommandExpert.ScpiNet drivers are procured by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 // https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
 //
-// Recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
+// Strenuously recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
+// https://www.keysight.com/us/en/search.html/command+expert
 //
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class PS_E36234A {
         public const String MODEL = "E36234A";
+
+        private enum CPDS { CCTRans, SCHange }
+        private static readonly String CCTRans = Enum.GetName(typeof(CPDS), CPDS.CCTRans);
+        private static readonly String SCHange = Enum.GetName(typeof(CPDS), CPDS.SCHange);
 
         public static Boolean IsPS_E36234A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgE36200)); }
 
@@ -60,7 +65,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             SetVDC(SVI, VoltsDC, Channel);
             SetVoltageProtection(SVI, VoltsDC * 1.10, Channel);
             SetADC(SVI, AmpsDC, Channel);
-            SetCurrentProtectionDelay(SVI, DelaySecondsCurrentProtection, Channel);
+            SetCurrentProtection(SVI, DelaySecondsCurrentProtection, Channel);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), Channels[Channel]);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(false, Channels[Channel]);
             ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command(true, Channels[Channel]);
@@ -119,7 +124,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return seconds;
         }
 
-        public static void SetCurrentProtectionDelay(SCPI_VISA_Instrument SVI, Double DelaySeconds, CHANNELS Channel) {
+        public static void SetCurrentProtection(SCPI_VISA_Instrument SVI, Double DelaySeconds, CHANNELS Channel) {
             String s;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MINimum, Channels[Channel], out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MAXimum, Channels[Channel], out Double[] max);
@@ -130,9 +135,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 + $" - MAXimum   :  Delay={max[(Int32)Channel]} seconds.";
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds, Channels[Channel]);
             SetCurrentProtectionState(SVI, OUTPUT.off, Channel);
-            // TODO: SetCurrentProtectionState(SVI, OUTPUT.ON, Channel);
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds, Channels[Channel]);
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.STARt.Command(CCTRans, "1");
+            SetCurrentProtectionState(SVI, OUTPUT.ON, Channel);
         }
 
         public static Boolean GetCurrentProtectionState(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
