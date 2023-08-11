@@ -137,7 +137,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             }
             SetCurrentProtectionState(SVI, OUTPUT.off, Channel);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds, Channels[Channel]);
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.STARt.Command(CCTRans, "1");
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.STARt.Command(CCTRans, Channels[Channel]);
             SetCurrentProtectionState(SVI, OUTPUT.ON, Channel);
         }
 
