@@ -14,7 +14,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class PS_E36234A {
         public const String MODEL = "E36234A";
 
-        private enum CPDS { CCTRans, SCHange }
+        private enum CPDS { CCTRans, SCHange } // For .SCPI.SOURce.CURRent.PROTection.DELay.STARt.Command();
         private static readonly String CCTRans = Enum.GetName(typeof(CPDS), CPDS.CCTRans);
         private static readonly String SCHange = Enum.GetName(typeof(CPDS), CPDS.SCHange);
 
