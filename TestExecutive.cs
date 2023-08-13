@@ -293,7 +293,18 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        internal static String EvaluateResultGroup(AppConfigTest configTest) { return EventCodes.UNSET; } // TODO:
+        internal static String EvaluateResultGroup(AppConfigTest configTest) { return EventCodes.UNSET; } 
+        // TODO: EvaluateResultGroup() parallels Spectrum 8800's SectionAbort flag:
+        //  - When Page and/or Step failures occur in a Spectrum 8800's Section:
+        //      - If Spectrum 8800's SectionAbort=false, test execution continues to the next Section.
+        //      - If Spectrum 8800's SectionAbort=true, test execution Aborts at the end of the Section.
+        //
+        // EvaluateResultGroup() will evaluate all TestMeasurement results for a TestGroup:
+        //  - A TestGroup's TestMeasurement CancelOnFailure boolean fields take precedance over the TestGroup's CancelOnFailure:
+        //      - If any failing TestMeasurement's CancelOnFailure = true, test execution is Canceled regardless of its TestGroup's CancelOnFailure.
+        //      - If all failing TestMeasurement's CancelOnFailure = false, test execution is Canceled if TestGroup's CancelOnFailure = true and any TestMeasurement failed.
+        //      - If all failing TestMeasurement's CancelOnFailure = false, test execution continues if TestGroup's CancelOnFailure = false.
+        //  - This allows non-critical TestGroup failures to continue test execution.
 
         internal static String EvaluateResultOperation(AppConfigTest configTest) {
             if (GetResultCount(configTest.Tests, EventCodes.PASS) == configTest.Tests.Count) return EventCodes.PASS;
