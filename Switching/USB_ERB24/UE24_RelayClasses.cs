@@ -112,11 +112,11 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public override Int32 GetHashCode() { return 3 * this.SwitchedNetPair.GetHashCode(); }
     }
 
-    public sealed class RouteStates {
+    public sealed class RelayRoutes {
         // TODO: Optimize Connect, DisConnect, AreConnected & AreDisConnected to invoke Set(UE ue, Dictionary<R, C.S> RεS) & Are(UE ue, Dictionary<R, C.S> RεS) for optimally simultaneous switching.
         public readonly Dictionary<Route, HashSet<State>> RS;
 
-        public RouteStates(Dictionary<Route, HashSet<State>> RouteStates) { this.RS = RouteStates; }
+        public RelayRoutes(Dictionary<Route, HashSet<State>> RelayRoutes) { this.RS = RelayRoutes; }
 
         public void Connect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.RS[GetRoute(SN1, SN2)]) Set(s.UE, s.R, s.S); }
         
