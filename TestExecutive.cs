@@ -14,6 +14,10 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
+using static ABT.TestSpace.TestExec.Switching.RelayForms;
+using static System.Collections.Specialized.BitVector32;
+using System.CodeDom.Compiler;
+using System.Xml.Linq;
 
 // TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 // NOTE: For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
@@ -305,6 +309,11 @@ namespace ABT.TestSpace.TestExec {
         //      - If all failing TestMeasurement's CancelOnFailure = false, test execution is Canceled if TestGroup's CancelOnFailure = true and any TestMeasurement failed.
         //      - If all failing TestMeasurement's CancelOnFailure = false, test execution continues if TestGroup's CancelOnFailure = false.
         //  - This allows non-critical TestGroup failures to continue test execution.
+        //
+        //  - In App.Config, element TestGroup, add CancelOnFailure field.
+        //  - Add logic to TestExcutive to "understand" TestGroups as it already understands TestMeasurements.
+        //  - Add if/then to TestsRun() to invoke EvaluateGroupResult() and Cancel if any TestMeasurement in TestGroup failed.
+        //  - TestRun() invokes EvaluateGroupResult() only when the final TestMeasurement in a TestGroup completes.
 
         internal static String EvaluateResultOperation(AppConfigTest configTest) {
             if (GetResultCount(configTest.Tests, EventCodes.PASS) == configTest.Tests.Count) return EventCodes.PASS;
