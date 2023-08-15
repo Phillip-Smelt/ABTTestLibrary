@@ -113,9 +113,9 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
 
     public sealed class SwitchedRoutes {
         // TODO: Optimize Connect, DisConnect, AreConnected & AreDisConnected to invoke Set(UE ue, Dictionary<R, C.S> RεS) & Are(UE ue, Dictionary<R, C.S> RεS) for optimally simultaneous switching.
-        public readonly Dictionary<Route, HashSet<State>> RS;
+        public readonly Dictionary<SwitchedRoute, HashSet<State>> SRs;
 
-        public RouteStates(Dictionary<Route, HashSet<State>> RouteStates) { this.RS = RouteStates; }
+        public SwitchedRoutes(Dictionary<SwitchedRoute, HashSet<State>> RouteStates) { this.SRs = RouteStates; }
 
         public void Connect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.SRs[GetSwitchedRoute(SN1, SN2)]) Set(s.UE, s.R, s.S); }
         
