@@ -13,8 +13,6 @@ using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 // NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class MM_34661A {
-        public enum TERMINALS { Front, Rear };
-
         public const String MODEL = "34461A";
 
         public static Boolean IsMM_34661A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(Ag3466x)); }
