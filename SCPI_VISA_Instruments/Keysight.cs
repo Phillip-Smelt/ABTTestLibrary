@@ -16,11 +16,15 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     
     public enum MMD { MINimum, MAXimum, DEFault }
 
+    public enum FORMAT { ASCii, REAL }
+
     public enum TERMINALS { Front, Rear };
 
     public static class Keysight {
         public const String AUTO = "AUTO";
 
+        public const String ASCII = "ASCii";
+        
         public static readonly Dictionary<CHANNELS, String> Channels = new Dictionary<CHANNELS, String> {
             { CHANNELS.C1, "(@1)" },
             { CHANNELS.C2, "(@2)" }

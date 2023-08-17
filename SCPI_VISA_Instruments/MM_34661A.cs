@@ -26,22 +26,27 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             SCPI99.Initialize(SVI);
         }
 
+        public static void FormatData(SCPI_VISA_Instrument SVI, FORMAT format) { ((Ag3466x)SVI.Instrument).SCPI.FORMat.DATA.Command(Enum.GetName(typeof(FORMAT), format), null); }
+
         public static TERMINALS GetTerminals(SCPI_VISA_Instrument SVI) {
             ((Ag3466x)SVI.Instrument).SCPI.ROUTe.TERMinals.Query(out String terminals);
             return String.Equals(terminals, "REAR") ? TERMINALS.Rear : TERMINALS.Front;
         }
 
         public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
+            FormatData(SVI, FORMAT.ASCii);
             ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone(AUTO, DEFault, out Double voltsDC);
             return voltsDC;
         }
 
         public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
+            FormatData(SVI, FORMAT.ASCii);
             ((Ag3466x)SVI.Instrument).SCPI.MEASure.CURRent.DC.QueryAsciiReal(AUTO, DEFault, out Double ampsDC);
             return ampsDC;
         }
 
         public static Double MeasureΩ(SCPI_VISA_Instrument SVI) {
+            FormatData(SVI, FORMAT.ASCii);
             ((Ag3466x)SVI.Instrument).SCPI.MEASure.RESistance.QueryAsciiReal(AUTO, DEFault, out Double resistance);
             return resistance;
         }
