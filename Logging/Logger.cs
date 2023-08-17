@@ -20,12 +20,7 @@ using ABT.TestSpace.TestExec.AppConfig;
 // - Create a Microsoft C# front-end exporting/reporting app for persisted SQL Server Express TestMeasurement full Operation test data.
 // - Export in CSV, report in PDF.
 //
-// NOTE: Below hopefully "value-added" wrapper methods for some commonly used Serilog commands are conveniences, not necessities.
-// NOTE: Will never fully implement wrapper methods for the complete set of Serilog commands, just some of the most commonly used ones.
-// - In general, TestExecutive's InterfaceAdapters, Logging, SCPI_VISA_Instruments & Switching namespaces exist partly to eliminate
-//   the need to reference TestExecutive's various DLLs directly from TestExecutor client apps.
-// - As long as suitable wrapper methods exists in Logger, needn't directly reference Serilog from TestExecutor client apps,
-//   as referencing TestExecutive suffices.
+
 namespace ABT.TestSpace.TestExec.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
@@ -101,13 +96,13 @@ namespace ABT.TestSpace.TestExec.Logging {
                 s.Append(String.Format("\t{0,-" + testExecutive.ConfigTest.FormattingLengthTestGroup + "} : {1}\n", group.ID, group.Description));
                 List<String> testMeasurementIDs = group.TestMeasurementIDs.Split(TestAbstract.SA).Select(id => id.Trim()).ToList();
                 foreach (String testMeasurementID in testMeasurementIDs) {
-                    s.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthTestMeasurement + "} : {1}\n", testExecutive.ConfigTest.Tests[testMeasurementID].ID, testExecutive.ConfigTest.Tests[testMeasurementID].Description));
+                    s.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthTestMeasurement + "} : {1}\n", testExecutive.ConfigTest.Measurements[testMeasurementID].ID, testExecutive.ConfigTest.Measurements[testMeasurementID].Description));
                 }
             }
             Log.Information($"TestMeasurements:\n{s}");
         }
 
-        public static void LogTest(Boolean isOperation, Test test, ref RichTextBox rtfResults) {
+        public static void LogTest(Boolean isOperation, Measurement test, ref RichTextBox rtfResults) {
             StringBuilder message = new StringBuilder();
             message.AppendLine($"TestMeasurement ID '{test.ID}'");
 #if DEBUG
@@ -120,17 +115,17 @@ namespace ABT.TestSpace.TestExec.Logging {
                 case TestCustomizable.ClassName:
                     TestCustomizable testCustomizable = (TestCustomizable)test.ClassObject;
                     if (testCustomizable.Arguments != TestCustomizable.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in TestAbstract.SplitArguments(testCustomizable.Arguments)) message.AppendLine($"  Key=Value         : {kvp.Key}={kvp.Value}");
-                    message.AppendLine($"  Actual            : {test.Measurement}");
+                    message.AppendLine($"  Actual            : {test.Value}");
                     break;
                 case TestISP.ClassName:
                     TestISP testISP = (TestISP)test.ClassObject;
                     message.AppendLine($"  Expected          : {testISP.ISPExpected}");
-                    message.AppendLine($"  Actual            : {test.Measurement}");
+                    message.AppendLine($"  Actual            : {test.Value}");
                     break;
                 case TestNumerical.ClassName:
                     TestNumerical testNumerical = (TestNumerical)test.ClassObject;
                     message.AppendLine($"  High Limit        : {testNumerical.High:G}");
-                    message.AppendLine($"  Measurement       : {Double.Parse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
+                    message.AppendLine($"  Measurement       : {Double.Parse(test.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
                     message.AppendLine($"  Low Limit         : {testNumerical.Low:G}");
                     message.Append($"  SI Units          : {Enum.GetName(typeof(SI_UNITS), testNumerical.SI_Units)}");
                     if (testNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.Append($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), testNumerical.SI_Units_Modifier)}");
@@ -139,7 +134,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 case TestTextual.ClassName:
                     TestTextual testTextual = (TestTextual)test.ClassObject;
                     message.AppendLine($"  Expected          : {testTextual.Text}");
-                    message.AppendLine($"  Actual            : {test.Measurement}");
+                    message.AppendLine($"  Actual            : {test.Value}");
                     break;
                 default:
                     throw new NotImplementedException($"TestMeasurement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");

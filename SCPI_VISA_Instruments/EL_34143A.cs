@@ -9,7 +9,6 @@ using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 // Strenuously recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 // https://www.keysight.com/us/en/search.html/command+expert
 //
-// NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public enum LOAD_MODE { CURR=0, POW=1, RES=2, VOLT=3 }
     // LOAD_MODE represents the canonical set of EL34143A electrical loads; current, power, resistance & voltage, in alphabetical & numerical order.

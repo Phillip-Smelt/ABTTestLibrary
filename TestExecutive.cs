@@ -43,7 +43,7 @@ namespace ABT.TestSpace.TestExec {
         internal readonly String _libraryAssemblyVersion;
         private Boolean _cancelled = false;
 
-        protected abstract Task<String> TestRun(String testID);
+        protected abstract Task<String> TestRun(String MeasurementID);
 
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();
@@ -211,9 +211,9 @@ namespace ABT.TestSpace.TestExec {
 
         private void TestsPreRun() {
             this.FormReset();
-            foreach (KeyValuePair<String, Test> kvp in this.ConfigTest.Tests) {
-                if (String.Equals(kvp.Value.ClassName, TestNumerical.ClassName)) kvp.Value.Measurement = Double.NaN.ToString();
-                else kvp.Value.Measurement = String.Empty;
+            foreach (KeyValuePair<String, Measurement> kvp in this.ConfigTest.Measurements) {
+                if (String.Equals(kvp.Value.ClassName, TestNumerical.ClassName)) kvp.Value.Value = Double.NaN.ToString();
+                else kvp.Value.Value = String.Empty;
                 kvp.Value.Result = EventCodes.UNSET;
 #if DEBUG
                 kvp.Value.DebugMessage = String.Empty;
@@ -227,34 +227,34 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private async Task TestsRun() {
-            foreach (String testID in this.ConfigTest.TestIDsSequence) {
+            foreach (String ID in this.ConfigTest.TestMeasurementIDsSequence) {
                 try {
-                    this.ConfigTest.Tests[testID].Measurement = await Task.Run(() => this.TestRun(testID));
-                    this.ConfigTest.Tests[testID].Result = EvaluateResultTest(this.ConfigTest.Tests[testID]);
+                    this.ConfigTest.Measurements[ID].Value = await Task.Run(() => this.TestRun(ID));
+                    this.ConfigTest.Measurements[ID].Result = EvaluateResultTest(this.ConfigTest.Measurements[ID]);
                 } catch (Exception e) {
-                    this.TestsRunExceptionHandler(testID, e);
+                    this.TestsRunExceptionHandler(ID, e);
                     break;
                 } finally {
-                    Logger.LogTest(this.ConfigTest.IsOperation, this.ConfigTest.Tests[testID], ref this.rtfResults);
+                    Logger.LogTest(this.ConfigTest.IsOperation, this.ConfigTest.Measurements[ID], ref this.rtfResults);
                 }
                 if (this._cancelled) {
-                    this.ConfigTest.Tests[testID].Result = EventCodes.CANCEL;
+                    this.ConfigTest.Measurements[ID].Result = EventCodes.CANCEL;
                     break;
                 }
-                if (String.Equals(this.ConfigTest.Tests[testID].Result, EventCodes.FAIL) && this.ConfigTest.Tests[testID].CancelOnFailure) break;
+                if (String.Equals(this.ConfigTest.Measurements[ID].Result, EventCodes.FAIL) && this.ConfigTest.Measurements[ID].CancelOnFailure) break;
             }
         }
 
-        private void TestsRunExceptionHandler(String testID, Exception e) {
+        private void TestsRunExceptionHandler(String ID, Exception e) {
             if (e.ToString().Contains(TestCancellationException.ClassName)) {
                 while (!(e is TestCancellationException) && (e.InnerException != null)) e = e.InnerException;
-                if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Tests[testID].Measurement = e.Message;
-                this.ConfigTest.Tests[testID].Result = EventCodes.CANCEL;
+                if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Measurements[ID].Value = e.Message;
+                this.ConfigTest.Measurements[ID].Result = EventCodes.CANCEL;
             } else {
                 SCPI99.ResetAll(this.SVIs);
                 UE24.Set(RelayForms.C.S.NC);
                 Logger.LogError(e.ToString());
-                this.ConfigTest.Tests[testID].Result = EventCodes.ERROR;
+                this.ConfigTest.Measurements[ID].Result = EventCodes.ERROR;
             }
         }
 
@@ -271,25 +271,25 @@ namespace ABT.TestSpace.TestExec {
             Logger.Stop(this, ref this.rtfResults);
         }
 
-        internal static String EvaluateResultTest(Test test) {
-            switch (test.ClassName) {
+        internal static String EvaluateResultTest(Measurement measurement) {
+            switch (measurement.ClassName) {
                 case TestCustomizable.ClassName:
-                    return test.Result;
+                    return measurement.Result;
                 case TestISP.ClassName:
-                    TestISP testISP = (TestISP)test.ClassObject;
-                    if (String.Equals(testISP.ISPExpected, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
+                    TestISP testISP = (TestISP)measurement.ClassObject;
+                    if (String.Equals(testISP.ISPExpected, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestNumerical.ClassName:
-                    if (!Double.TryParse(test.Measurement, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{test.ID}' Measurement '{test.Measurement}' ≠ System.Double.");
-                    TestNumerical testNumerical = (TestNumerical)test.ClassObject;
+                    if (!Double.TryParse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{measurement.ID}' Measurement '{measurement.Value}' ≠ System.Double.");
+                    TestNumerical testNumerical = (TestNumerical)measurement.ClassObject;
                     if ((testNumerical.Low <= dMeasurement) && (dMeasurement <= testNumerical.High)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case TestTextual.ClassName:
-                    TestTextual testTextual = (TestTextual)test.ClassObject;
-                    if (String.Equals(testTextual.Text, test.Measurement, StringComparison.Ordinal)) return EventCodes.PASS;
+                    TestTextual testTextual = (TestTextual)measurement.ClassObject;
+                    if (String.Equals(testTextual.Text, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 default:
-                    throw new NotImplementedException($"TestMeasurement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
+                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
             }
         }
 
@@ -312,31 +312,31 @@ namespace ABT.TestSpace.TestExec {
         //  - TestRun() invokes EvaluateGroupResult() only when the final TestMeasurement in a TestGroup completes.
 
         internal static String EvaluateResultOperation(AppConfigTest configTest) {
-            if (GetResultCount(configTest.Tests, EventCodes.PASS) == configTest.Tests.Count) return EventCodes.PASS;
+            if (GetResultCount(configTest.Measurements, EventCodes.PASS) == configTest.Measurements.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All test results are PASS, so overall UUT result is PASS.
-            if (GetResultCount(configTest.Tests, EventCodes.ERROR) != 0) return EventCodes.ERROR;
+            if (GetResultCount(configTest.Measurements, EventCodes.ERROR) != 0) return EventCodes.ERROR;
             // 2nd priority evaluation:
             // - If any test result is ERROR, overall UUT result is ERROR.
-            if (GetResultCount(configTest.Tests, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
+            if (GetResultCount(configTest.Measurements, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
             // 3rd priority evaluation:
             // - If any test result is CANCEL, and none were ERROR, overall UUT result is CANCEL.
-            if (GetResultCount(configTest.Tests, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
+            if (GetResultCount(configTest.Measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
             // 4th priority evaluation:
             // - If any test result is UNSET, and none were ERROR or CANCEL, then Test(s) didn't complete.
             // - Likely occurred because a Test failed that had its App.Config TestMeasurement CancelOnFail flag set to true.
-            if (GetResultCount(configTest.Tests, EventCodes.FAIL) != 0) return EventCodes.FAIL;
+            if (GetResultCount(configTest.Measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
             // 5th priority evaluation:
             // - If any test result is FAIL, and none were ERROR, CANCEL or UNSET, UUT result is FAIL.
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
-            foreach (KeyValuePair<String, Test> kvp in configTest.Tests) if (!validEvents.Contains(kvp.Value.Result)) invalidTests += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
+            foreach (KeyValuePair<String, Measurement> kvp in configTest.Measurements) if (!validEvents.Contains(kvp.Value.Result)) invalidTests += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
             Logger.LogError($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
             return EventCodes.ERROR;
             // Above handles class EventCodes changing (adding/deleting/renaming EventCodes) without accomodating EvaluateResultOperation() changes. 
         }
 
-        private static Int32 GetResultCount(Dictionary<String, Test> tests, String eventCode) { return (from test in tests where String.Equals(test.Value.Result, eventCode) select test).Count(); }
+        private static Int32 GetResultCount(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Result, eventCode) select measurement).Count(); }
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
     }

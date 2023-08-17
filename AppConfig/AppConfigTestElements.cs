@@ -45,6 +45,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
         [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
         [ConfigurationProperty("Independent", IsKey = false, IsRequired = true)] public Boolean Independent { get { return ((Boolean)base["Independent"]); } }
+        [ConfigurationProperty("CancelOnFailure", IsKey = false, IsRequired = true)] public Boolean CancelOnFailure { get { return ((Boolean)base["CancelOnFailure"]); } }
         [ConfigurationProperty("TestMeasurementIDs", IsKey = false, IsRequired = true)] public String TestMeasurementIDs { get { return ((String)base["TestMeasurementIDs"]).Trim(); } }
     }
 
@@ -107,13 +108,15 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String Revision;    
         public readonly String Description;
         public readonly Boolean Independent;
+        public readonly Boolean CancelOnFailure;
         public readonly String TestMeasurementIDs;
 
-        private Group(String id, String revision, String description, Boolean independent, String testMeasurementIDs) {
+        private Group(String id, String revision, String description, Boolean independent, Boolean cancelOnFailure, String testMeasurementIDs) {
             this.ID = id;
             this.Revision = revision;
             this.Description = description;
             this.Independent = independent;
+            this.CancelOnFailure = cancelOnFailure;
             this.TestMeasurementIDs = testMeasurementIDs;
         }
 
@@ -121,10 +124,43 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             TestGroupsSection testGroupSection = (TestGroupsSection)ConfigurationManager.GetSection(TestGroupsSection.ClassName);
             TestGroups testGroups = testGroupSection.TestGroups;
             Dictionary<String, Group> dictionary = new Dictionary<String, Group>();
-            foreach (TestGroup tg in testGroups) dictionary.Add(tg.ID, new Group(tg.ID, tg.Revision, tg.Description, tg.Independent, tg.TestMeasurementIDs));
+            foreach (TestGroup tg in testGroups) dictionary.Add(tg.ID, new Group(tg.ID, tg.Revision, tg.Description, tg.Independent, tg.CancelOnFailure, tg.TestMeasurementIDs));
             return dictionary;
         }
 
         public static Group Get(String TestGroupID) { return Get()[TestGroupID]; }
+    }
+
+    public class Measurement {
+        public readonly String ID;
+        public readonly String Description;
+        public readonly String Revision;
+        public readonly String ClassName;
+        public readonly Object ClassObject;
+        public readonly Boolean CancelOnFailure;
+        public String Value { get; set; } = String.Empty; // Determined during test.
+        public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
+#if DEBUG
+        public String DebugMessage { get; set; } = String.Empty; // Determined during test.
+#endif
+        private Measurement(String id, String description, String revision, String className, Boolean cancelOnFailure, String arguments) {
+            this.ID = id;
+            this.Description = description;
+            this.Revision = revision;
+            this.ClassName = className;
+            this.ClassObject = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
+            this.CancelOnFailure = cancelOnFailure;
+            if (String.Equals(this.ClassName, TestNumerical.ClassName)) this.Value = Double.NaN.ToString();
+        }
+
+        public static Dictionary<String, Measurement> Get() {
+            TestMeasurementsSection testMeasurementsSection = (TestMeasurementsSection)ConfigurationManager.GetSection(TestMeasurementsSection.ClassName);
+            TestMeasurements testMeasurements = testMeasurementsSection.TestMeasurements;
+            Dictionary<String, Measurement> dictionary = new Dictionary<String, Measurement>();
+            foreach (TestMeasurement tm in testMeasurements) { dictionary.Add(tm.ID, new Measurement(tm.ID, tm.Description, tm.Revision, tm.ClassName, tm.CancelOnFailure, tm.Arguments)); }
+            return dictionary;
+        }
+
+        public static Measurement Get(String TestMeasurementIDPresent) { return Get()[TestMeasurementIDPresent]; }
     }
 }

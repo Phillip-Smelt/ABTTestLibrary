@@ -10,7 +10,6 @@ using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 // Strenuously recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 // https://www.keysight.com/us/en/search.html/command+expert
 //
-// NOTE: Below hopefully "value-added" wrapper methods for some commonly used SCPI commands are conveniences, not necessities.
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class PS_E36103B { public const String MODEL = "E36103B"; } // PS_E36103B needed only in class TestExecutive.AppConfig.SCPI_VISA_Instrument.
 
