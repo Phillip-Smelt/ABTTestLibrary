@@ -9,15 +9,15 @@ namespace ABT.TestSpace.TestExec.AppConfig {
     public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
     public enum SI_UNITS_MODIFIERS { AC, DC, Peak, PP, NotApplicable, RMS }
 
-    public abstract class TestAbstract {
-        public const String ClassName = nameof(TestAbstract);
+    public abstract class MeasurementAbstract {
+        public const String ClassName = nameof(MeasurementAbstract);
         public const Char SA = '|'; // Arguments separator character.  Must match Arguments separator character used in TestExecutor's App.Config.
         public const Char SK = '='; // Key/Values separator character.  Must match Key/Values separator character used in TestExecutor's App.Config.
-        private protected TestAbstract() { }
+        private protected MeasurementAbstract() { }
 
         public static Dictionary<String, String> SplitArguments(String Arguments) {
             Dictionary<String, String> argDictionary = new Dictionary<String, String>();
-            if (String.Equals(Arguments, TestCustomizable.NOT_APPLICABLE)) argDictionary.Add(TestCustomizable.NOT_APPLICABLE, TestCustomizable.NOT_APPLICABLE);
+            if (String.Equals(Arguments, MeasurementCustomizable.NOT_APPLICABLE)) argDictionary.Add(MeasurementCustomizable.NOT_APPLICABLE, MeasurementCustomizable.NOT_APPLICABLE);
             else {
                 String[] args = Arguments.Split(SA);
                 String[] kvp;
@@ -34,12 +34,12 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public abstract String GetArguments();
     }
 
-    public class TestCustomizable : TestAbstract {
-        public new const String ClassName = nameof(TestCustomizable);
+    public class MeasurementCustomizable : MeasurementAbstract {
+        public new const String ClassName = nameof(MeasurementCustomizable);
         public readonly String Arguments;
         public const String NOT_APPLICABLE = "NotApplicable";
 
-        public TestCustomizable(String ID, String Arguments) {
+        public MeasurementCustomizable(String ID, String Arguments) {
             Dictionary<String, String> argsDict = SplitArguments(Arguments);
             ValidateArguments(ID, Arguments, argsDict);
             this.Arguments = Arguments;
@@ -58,14 +58,14 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public override String GetArguments() { return this.Arguments; }
     }
 
-    public class TestISP : TestAbstract {
-        public new const String ClassName = nameof(TestISP);
+    public class MeasurementISP : MeasurementAbstract {
+        public new const String ClassName = nameof(MeasurementISP);
         public readonly String ISPExecutableFolder;         private const String _ISP_EXECUTABLE_FOLDER = nameof(ISPExecutableFolder);
         public readonly String ISPExecutable;               private const String _ISP_EXECUTABLE = nameof(ISPExecutable);
         public readonly String ISPExecutableArguments;      private const String _ISP_EXECUTABLE_ARGUMENTS = nameof(ISPExecutableArguments);
         public readonly String ISPExpected;                 private const String _ISP_EXPECTED = nameof(ISPExpected);
 
-        public TestISP(String ID, String Arguments) {
+        public MeasurementISP(String ID, String Arguments) {
             Dictionary<String, String> argsDict = SplitArguments(Arguments);
             ValidateArguments(ID, Arguments, argsDict);
             this.ISPExecutableFolder = argsDict[_ISP_EXECUTABLE_FOLDER];
@@ -95,14 +95,14 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         }
     }
 
-    public class TestNumerical : TestAbstract {
-        public new const String ClassName = nameof(TestNumerical);
+    public class MeasurementNumerical : MeasurementAbstract {
+        public new const String ClassName = nameof(MeasurementNumerical);
         public readonly Double Low;                                                                 private const String _LOW = nameof(Low);
         public readonly Double High;                                                                private const String _HIGH = nameof(High);
         public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;                                 private const String _SI_UNITS = nameof(SI_Units);
         public readonly SI_UNITS_MODIFIERS SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;    private const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
 
-        public TestNumerical(String ID, String Arguments) {
+        public MeasurementNumerical(String ID, String Arguments) {
             Dictionary<String, String> argsDict = SplitArguments(Arguments);
             ValidateArguments(ID, Arguments, argsDict);
             this.High = Double.Parse(argsDict[_HIGH], NumberStyles.Float, CultureInfo.CurrentCulture);
@@ -139,11 +139,11 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         }
     }
 
-    public class TestTextual : TestAbstract {
-        public new const String ClassName = nameof(TestTextual);
+    public class MeasurementTextual : MeasurementAbstract {
+        public new const String ClassName = nameof(MeasurementTextual);
         public readonly String Text;                                private const String _TEXT = nameof(Text);
 
-        public TestTextual(String ID, String Arguments) {
+        public MeasurementTextual(String ID, String Arguments) {
             Dictionary<String, String> argsDict = SplitArguments(Arguments);
             ValidateArguments(ID, Arguments, argsDict);
             this.Text = argsDict[_TEXT];
@@ -182,10 +182,10 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             if (this.IsOperation) {
                 this.TestElementDescription = allOperations[this.TestElementID].Description;
                 this.TestElementRevision = allOperations[this.TestElementID].Revision;
-                this.TestGroupIDsSequence = allOperations[this.TestElementID].TestGroupIDs.Split(TestAbstract.SA).Select(id => id.Trim()).ToList();
+                this.TestGroupIDsSequence = allOperations[this.TestElementID].TestGroupIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList();
                 foreach (String testGroupID in this.TestGroupIDsSequence) {
                     this.Groups.Add(testGroupID, allGroups[testGroupID]);
-                    this.TestMeasurementIDsSequence.AddRange(allGroups[testGroupID].TestMeasurementIDs.Split(TestAbstract.SA).Select(id => id.Trim()).ToList());
+                    this.TestMeasurementIDsSequence.AddRange(allGroups[testGroupID].TestMeasurementIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList());
                     if (testGroupID.Length > this.FormattingLengthTestGroup) this.FormattingLengthTestGroup = testGroupID.Length;
                 }
             } else {
@@ -193,7 +193,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
                 this.TestElementRevision = allGroups[this.TestElementID].Revision;
                 this.TestGroupIDsSequence.Add(this.TestElementID);
                 this.Groups.Add(this.TestElementID, allGroups[this.TestElementID]);
-                this.TestMeasurementIDsSequence = allGroups[this.TestElementID].TestMeasurementIDs.Split(TestAbstract.SA).Select(id => id.Trim()).ToList();
+                this.TestMeasurementIDsSequence = allGroups[this.TestElementID].TestMeasurementIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList();
 
             }
             IEnumerable<String> duplicateIDs = this.TestMeasurementIDsSequence.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);

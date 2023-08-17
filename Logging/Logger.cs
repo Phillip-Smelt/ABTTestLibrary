@@ -11,13 +11,13 @@ using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.TestSpace.TestExec.AppConfig;
 
-// TODO: Persist test data into Microsoft SQL Server Express; write all full Operation TestMeasurement results therein.
+// TODO: Persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement results therein.
 // - Stop writing TestMeasurement results to RichTextBoxSink when testing full Operations; only write TestGroups results to RichTextBoxSink.
 // - Continue writing TestMeasurement results to RichTextBoxSink when only testing Groups.
 // - Stop saving RichTextBoxSink as RTF files, except allow manual export for Troubleshooting.
 // - This will resolve the RichTextBox scroll issue, wherein TestGroups results are scrolled up & away as TestMeasurements are appended.
-// - Only SQL Server Express persisted test data is legitimate; all RichTextBoxSink is Troubleshooting only.
-// - Create a Microsoft C# front-end exporting/reporting app for persisted SQL Server Express TestMeasurement full Operation test data.
+// - Only SQL Server Express persisted measurement data is legitimate; all RichTextBoxSink is Troubleshooting only.
+// - Create a Microsoft C# front-end exporting/reporting app for persisted SQL Server Express TestMeasurement full Operation measurement data.
 // - Export in CSV, report in PDF.
 //
 
@@ -30,25 +30,25 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         public static void Start(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) {
-                // When TestGroups are executed, test data is never saved as Rich Text.
+                // When TestGroups are executed, measurement data is never saved as Rich Text.
                 // RichTextBox only. 
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
-                Log.Information($"Note: following test results invalid for UUT production testing, only troubleshooting.");
+                Log.Information($"Note: following measurement results invalid for UUT production testing, only troubleshooting.");
                 Log.Information($"START             : {DateTime.Now}");
                 Log.Information($"UUT Serial Number : {testExecutive.ConfigUUT.SerialNumber}");
                 Log.Information($"UUT Number        : {testExecutive.ConfigUUT.Number}");
                 Log.Information($"UUT Revision      : {testExecutive.ConfigUUT.Revision}");
                 Log.Information($"TestGroup ID      : {testExecutive.ConfigTest.TestElementID}");
-                Log.Information($"Test Description  : {testExecutive.ConfigTest.TestElementDescription}\n");
+                Log.Information($"Description       : {testExecutive.ConfigTest.TestElementDescription}\n");
                 return;
-                // Log Header isn't written to Console when TestGroups are executed, further emphasizing test results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
+                // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurement results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
 
             if (testExecutive.ConfigLogger.FileEnabled && !testExecutive.ConfigLogger.SQLEnabled) {
-                // When TestOperations are executed, test data is always & automatically saved as Rich Text.
+                // When TestOperations are executed, measurement data is always & automatically saved as Rich Text.
                 // RichTextBox + File.
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
@@ -61,7 +61,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 // TODO: RichTextBox + File + SQL.
                 SQLStart(testExecutive);
             } else {
-                // RichTextBox only; customer doesn't require saved test data, unusual for Functional testing, but common for other testing methodologies.
+                // RichTextBox only; customer doesn't require saved measurement data, unusual for Functional testing, but common for other testing methodologies.
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
@@ -90,11 +90,11 @@ namespace ABT.TestSpace.TestExec.Logging {
 
             StringBuilder s = new StringBuilder();
             Operation operation = Operation.Get(testExecutive.ConfigTest.TestElementID);
-            List<String> testGroupIDs = operation.TestGroupIDs.Split(TestAbstract.SA).Select(id => id.Trim()).ToList();
+            List<String> testGroupIDs = operation.TestGroupIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList();
             foreach (String testGroupID in testGroupIDs) {
                 Group group = Group.Get(testGroupID);
                 s.Append(String.Format("\t{0,-" + testExecutive.ConfigTest.FormattingLengthTestGroup + "} : {1}\n", group.ID, group.Description));
-                List<String> testMeasurementIDs = group.TestMeasurementIDs.Split(TestAbstract.SA).Select(id => id.Trim()).ToList();
+                List<String> testMeasurementIDs = group.TestMeasurementIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList();
                 foreach (String testMeasurementID in testMeasurementIDs) {
                     s.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthTestMeasurement + "} : {1}\n", testExecutive.ConfigTest.Measurements[testMeasurementID].ID, testExecutive.ConfigTest.Measurements[testMeasurementID].Description));
                 }
@@ -102,54 +102,54 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"TestMeasurements:\n{s}");
         }
 
-        public static void LogTest(Boolean isOperation, Measurement test, ref RichTextBox rtfResults) {
+        public static void LogTest(Boolean isOperation, Measurement measurement, ref RichTextBox rtfResults) {
             StringBuilder message = new StringBuilder();
-            message.AppendLine($"TestMeasurement ID '{test.ID}'");
+            message.AppendLine($"TestMeasurement ID '{measurement.ID}'");
 #if DEBUG
-            message.AppendLine($"  Revision          : {test.Revision}");
-            message.AppendLine($"  Test Type         : {test.ClassName}");
-            message.AppendLine($"  Cancel on Failure : {test.CancelOnFailure}");
+            message.AppendLine($"  Revision          : {measurement.Revision}");
+            message.AppendLine($"  Measurement Type  : {measurement.ClassName}");
+            message.AppendLine($"  Cancel on Failure : {measurement.CancelOnFailure}");
 #endif
-            message.AppendLine($"  Description       : {test.Description}");
-            switch (test.ClassName) {
-                case TestCustomizable.ClassName:
-                    TestCustomizable testCustomizable = (TestCustomizable)test.ClassObject;
-                    if (testCustomizable.Arguments != TestCustomizable.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in TestAbstract.SplitArguments(testCustomizable.Arguments)) message.AppendLine($"  Key=Value         : {kvp.Key}={kvp.Value}");
-                    message.AppendLine($"  Actual            : {test.Value}");
+            message.AppendLine($"  Description       : {measurement.Description}");
+            switch (measurement.ClassName) {
+                case MeasurementCustomizable.ClassName:
+                    MeasurementCustomizable measurementCustomizable = (MeasurementCustomizable)measurement.ClassObject;
+                    if (measurementCustomizable.Arguments != MeasurementCustomizable.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in MeasurementAbstract.SplitArguments(measurementCustomizable.Arguments)) message.AppendLine($"  Key=Value         : {kvp.Key}={kvp.Value}");
+                    message.AppendLine($"  Actual            : {measurement.Value}");
                     break;
-                case TestISP.ClassName:
-                    TestISP testISP = (TestISP)test.ClassObject;
-                    message.AppendLine($"  Expected          : {testISP.ISPExpected}");
-                    message.AppendLine($"  Actual            : {test.Value}");
+                case MeasurementISP.ClassName:
+                    MeasurementISP measurementISP = (MeasurementISP)measurement.ClassObject;
+                    message.AppendLine($"  Expected          : {measurementISP.ISPExpected}");
+                    message.AppendLine($"  Actual            : {measurement.Value}");
                     break;
-                case TestNumerical.ClassName:
-                    TestNumerical testNumerical = (TestNumerical)test.ClassObject;
-                    message.AppendLine($"  High Limit        : {testNumerical.High:G}");
-                    message.AppendLine($"  Measurement       : {Double.Parse(test.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
-                    message.AppendLine($"  Low Limit         : {testNumerical.Low:G}");
-                    message.Append($"  SI Units          : {Enum.GetName(typeof(SI_UNITS), testNumerical.SI_Units)}");
-                    if (testNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.Append($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), testNumerical.SI_Units_Modifier)}");
+                case MeasurementNumerical.ClassName:
+                    MeasurementNumerical measurementNumerical = (MeasurementNumerical)measurement.ClassObject;
+                    message.AppendLine($"  High Limit        : {measurementNumerical.High:G}");
+                    message.AppendLine($"  Measurement       : {Double.Parse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
+                    message.AppendLine($"  Low Limit         : {measurementNumerical.Low:G}");
+                    message.Append($"  SI Units          : {Enum.GetName(typeof(SI_UNITS), measurementNumerical.SI_Units)}");
+                    if (measurementNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.Append($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), measurementNumerical.SI_Units_Modifier)}");
                     message.AppendLine("");
                     break;
-                case TestTextual.ClassName:
-                    TestTextual testTextual = (TestTextual)test.ClassObject;
-                    message.AppendLine($"  Expected          : {testTextual.Text}");
-                    message.AppendLine($"  Actual            : {test.Value}");
+                case MeasurementTextual.ClassName:
+                    MeasurementTextual measurementTextual = (MeasurementTextual)measurement.ClassObject;
+                    message.AppendLine($"  Expected          : {measurementTextual.Text}");
+                    message.AppendLine($"  Actual            : {measurement.Value}");
                     break;
                 default:
-                    throw new NotImplementedException($"TestMeasurement ID '{test.ID}' with ClassName '{test.ClassName}' not implemented.");
+                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
             }
-            message.AppendLine($"  Result            : {test.Result}");
+            message.AppendLine($"  Result            : {measurement.Result}");
 #if DEBUG
-            message.Append(test.DebugMessage);
+            message.Append(measurement.DebugMessage);
 #endif
             Log.Information(message.ToString());
-            if (isOperation) SetBackColor(ref rtfResults, 0, test.ID, EventCodes.GetColor(test.Result));
+            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Result));
         }
 
         public static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
-            // Log Trailer isn't written when not a TestOperation, further emphasizing test results aren't valid for passing & $hipping, only troubleshooting failures.
+            // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
                 ReplaceText(ref rtfResults, 0, MESSAGE_UUT_RESULT, MESSAGE_UUT_RESULT + testExecutive.ConfigUUT.EventCode);
                 SetBackColor(ref rtfResults, 0, testExecutive.ConfigUUT.EventCode, EventCodes.GetColor(testExecutive.ConfigUUT.EventCode));

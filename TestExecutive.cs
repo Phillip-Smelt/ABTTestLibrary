@@ -43,7 +43,7 @@ namespace ABT.TestSpace.TestExec {
         internal readonly String _libraryAssemblyVersion;
         private Boolean _cancelled = false;
 
-        protected abstract Task<String> TestRun(String MeasurementID);
+        protected abstract Task<String> MeasurementRun(String MeasurementID);
 
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();
@@ -88,48 +88,48 @@ namespace ABT.TestSpace.TestExec {
             String serialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.ConfigUUT.SerialNumber);
             if (String.Equals(serialNumber, String.Empty)) return;
             this.ConfigUUT.SerialNumber = serialNumber;
-            this.TestsPreRun();
-            await this.TestsRun();
-            this.TestsPostRun();
+            this.MeasurementsPreRun();
+            await this.MeasurementsRun();
+            this.MeasurementsPostRun();
         }
 
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            #region Long Test Cancellation Comment
+            #region Long Measurement Cancellation Comment
             // NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
             // A) Spontaneous Operator Initiated Cancellations:
             //      1)  Operator Proactive:
             //          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
-            //            cancel currently executing Test.
+            //            cancel currently executing Measurement.
             //          - Requires TestExecutor implementation by the Test Developer, but is initiated by Operator, so is categorized as such.
-            //          - Implementation necessary if the *currently* executing Test must be cancellable during execution by the Operator.
+            //          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
             //          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
             //          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
             //          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
             //      2)  Operator Reactive:
             //          - TestExecutive's already implemented, always available & default reactive "Cancel before next Test" technique,
-            //            which simply sets this._cancelled Boolean to true, checked at the end of TestExecutive.TestsRun()'s foreach loop.
-            //          - If this._cancelled is true, TestExecutive.TestsRun()'s foreach loop is broken, causing reactive cancellation
-            //            prior to the next Test's execution.
-            //          - Note: This doesn't proactively cancel the *currently* executing Test, which runs to completion.
+            //            which simply sets this._cancelled Boolean to true, checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
+            //          - If this._cancelled is true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation
+            //            prior to the next Measurement's execution.
+            //          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
             // B) PrePlanned Developer Programmed Cancellations:
             //      3)  TestExecutor/Test Developer initiated Cancellations:
-            //          - Any TestExecutor's Test can initiate a Cancellation programmatically by simply throwing a TestCancellationException:
-            //          - Permits immediate Cancellation if specific condition(s) occur in a Test; perhaps to prevent UUT or equipment damage,
+            //          - Any TestExecutor's Measurement can initiate a Cancellation programmatically by simply throwing a CancellationException:
+            //          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
             //            or simply because futher execution is pointless.
-            //          - Simply throw a TestCancellationException if the specific condition(s) occcur.
+            //          - Simply throw a CancellationException if the specific condition(s) occcur.
             //          - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestExecutor/blob/master/TestProgram/T-Common.cs
-            //          - Test Developer must set TestCancellationException's message to the Measured Value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
+            //          - Test Developer must set CancellationException's message to the Measured Value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
             //      4)  App.Config's CancelOnFailure:
             //          - App.Config's TestMeasurement element has a Boolean "CancelOnFailure" field:
-            //          - If the current TestExecutor.TestRun() has CancelOnFailure=true and it's resulting EvaluateResultTest() returns EventCodes.FAIL,
-            //            TestExecutive.TestsRun() will break/exit, stopping further testing.
-            //		    - Do not pass Go, do not collect $200, go directly to TestExecutive.TestsPostRun().
+            //          - If the current TestExecutor.MeasurementRun() has CancelOnFailure=true and it's resulting EvaluateResultMeasurement() returns EventCodes.FAIL,
+            //            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
+            //		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
             //
-            // NOTE: The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.TestRun() conpletes, via 
-            //       thrown TestCancellationExceptions.
-            // NOTE: The Operator Reactive & App.Config's CancelOnFailure Cancellations both occur after the currently executing TestExecutor.TestRun() completes, via checks
-            //       inside the TestExecutive.TestsRun() loop.
-            #endregion Long Test Cancellation Comment
+            // NOTE: The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
+            //       thrown CancellationExceptions.
+            // NOTE: The Operator Reactive & App.Config's CancelOnFailure Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
+            //       inside the TestExecutive.MeasurementsRun() loop.
+            #endregion Long Measurement Cancellation Comment
             this.CancelTokenSource.Cancel();
             this._cancelled = true;
             this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
@@ -209,10 +209,10 @@ namespace ABT.TestSpace.TestExec {
             // Will fail if this.ConfigLogger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
         }
 
-        private void TestsPreRun() {
+        private void MeasurementsPreRun() {
             this.FormReset();
             foreach (KeyValuePair<String, Measurement> kvp in this.ConfigTest.Measurements) {
-                if (String.Equals(kvp.Value.ClassName, TestNumerical.ClassName)) kvp.Value.Value = Double.NaN.ToString();
+                if (String.Equals(kvp.Value.ClassName, MeasurementNumerical.ClassName)) kvp.Value.Value = Double.NaN.ToString();
                 else kvp.Value.Value = String.Empty;
                 kvp.Value.Result = EventCodes.UNSET;
 #if DEBUG
@@ -226,13 +226,13 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonCancelReset(enabled: true);
         }
 
-        private async Task TestsRun() {
+        private async Task MeasurementsRun() {
             foreach (String ID in this.ConfigTest.TestMeasurementIDsSequence) {
                 try {
-                    this.ConfigTest.Measurements[ID].Value = await Task.Run(() => this.TestRun(ID));
-                    this.ConfigTest.Measurements[ID].Result = EvaluateResultTest(this.ConfigTest.Measurements[ID]);
+                    this.ConfigTest.Measurements[ID].Value = await Task.Run(() => this.MeasurementRun(ID));
+                    this.ConfigTest.Measurements[ID].Result = EvaluateResultMeasurement(this.ConfigTest.Measurements[ID]);
                 } catch (Exception e) {
-                    this.TestsRunExceptionHandler(ID, e);
+                    this.MeasurementsRunExceptionHandler(ID, e);
                     break;
                 } finally {
                     Logger.LogTest(this.ConfigTest.IsOperation, this.ConfigTest.Measurements[ID], ref this.rtfResults);
@@ -245,10 +245,10 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        private void TestsRunExceptionHandler(String ID, Exception e) {
-            if (e.ToString().Contains(TestCancellationException.ClassName)) {
-                while (!(e is TestCancellationException) && (e.InnerException != null)) e = e.InnerException;
-                if ((e is TestCancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Measurements[ID].Value = e.Message;
+        private void MeasurementsRunExceptionHandler(String ID, Exception e) {
+            if (e.ToString().Contains(CancellationException.ClassName)) {
+                while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException;
+                if ((e is CancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Measurements[ID].Value = e.Message;
                 this.ConfigTest.Measurements[ID].Result = EventCodes.CANCEL;
             } else {
                 SCPI99.ResetAll(this.SVIs);
@@ -258,7 +258,7 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        private void TestsPostRun() {
+        private void MeasurementsPostRun() {
             SCPI99.ResetAll(this.SVIs);
             UE24.Set(RelayForms.C.S.NC);
             this.ButtonSelectTests.Enabled = true;
@@ -271,22 +271,22 @@ namespace ABT.TestSpace.TestExec {
             Logger.Stop(this, ref this.rtfResults);
         }
 
-        internal static String EvaluateResultTest(Measurement measurement) {
+        internal static String EvaluateResultMeasurement(Measurement measurement) {
             switch (measurement.ClassName) {
-                case TestCustomizable.ClassName:
+                case MeasurementCustomizable.ClassName:
                     return measurement.Result;
-                case TestISP.ClassName:
-                    TestISP testISP = (TestISP)measurement.ClassObject;
-                    if (String.Equals(testISP.ISPExpected, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
+                case MeasurementISP.ClassName:
+                    MeasurementISP measurementISP = (MeasurementISP)measurement.ClassObject;
+                    if (String.Equals(measurementISP.ISPExpected, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
-                case TestNumerical.ClassName:
+                case MeasurementNumerical.ClassName:
                     if (!Double.TryParse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{measurement.ID}' Measurement '{measurement.Value}' ≠ System.Double.");
-                    TestNumerical testNumerical = (TestNumerical)measurement.ClassObject;
-                    if ((testNumerical.Low <= dMeasurement) && (dMeasurement <= testNumerical.High)) return EventCodes.PASS;
+                    MeasurementNumerical measurementNumerical = (MeasurementNumerical)measurement.ClassObject;
+                    if ((measurementNumerical.Low <= dMeasurement) && (dMeasurement <= measurementNumerical.High)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
-                case TestTextual.ClassName:
-                    TestTextual testTextual = (TestTextual)measurement.ClassObject;
-                    if (String.Equals(testTextual.Text, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
+                case MeasurementTextual.ClassName:
+                    MeasurementTextual measurementTextual = (MeasurementTextual)measurement.ClassObject;
+                    if (String.Equals(measurementTextual.Text, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 default:
                     throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
@@ -296,42 +296,42 @@ namespace ABT.TestSpace.TestExec {
         internal static String EvaluateResultGroup(AppConfigTest configTest) { return EventCodes.UNSET; } 
         // TODO: EvaluateResultGroup() parallels Spectrum 8800's SectionAbort flag:
         //  - When Page and/or Step failures occur in a Spectrum 8800's Section:
-        //      - If Spectrum 8800's SectionAbort=false, test execution continues to the next Section.
-        //      - If Spectrum 8800's SectionAbort=true, test execution Aborts at the end of the Section.
+        //      - If Spectrum 8800's SectionAbort=false, execution continues to the next Section.
+        //      - If Spectrum 8800's SectionAbort=true, execution Aborts at the end of the Section.
         //
         // EvaluateResultGroup() will evaluate all TestMeasurement results for a TestGroup:
         //  - A TestGroup's TestMeasurement CancelOnFailure boolean fields take precedance over the TestGroup's CancelOnFailure:
-        //      - If any failing TestMeasurement's CancelOnFailure = true, test execution is Canceled regardless of its TestGroup's CancelOnFailure.
-        //      - If all failing TestMeasurement's CancelOnFailure = false, test execution is Canceled if TestGroup's CancelOnFailure = true and any TestMeasurement failed.
-        //      - If all failing TestMeasurement's CancelOnFailure = false, test execution continues if TestGroup's CancelOnFailure = false.
-        //  - This allows non-critical TestGroup failures to continue test execution.
+        //      - If any failing TestMeasurement's CancelOnFailure = true, execution is Canceled regardless of its TestGroup's CancelOnFailure.
+        //      - If all failing TestMeasurement's CancelOnFailure = false, execution is Canceled if TestGroup's CancelOnFailure = true and any TestMeasurement failed.
+        //      - If all failing TestMeasurement's CancelOnFailure = false, execution continues if TestGroup's CancelOnFailure = false.
+        //  - This allows non-critical TestGroup failures to continue execution.
         //
         //  - In App.Config, element TestGroup, add CancelOnFailure field.
         //  - Add logic to TestExcutive to "understand" TestGroups as it already understands TestMeasurements.
-        //  - Add if/then to TestsRun() to invoke EvaluateGroupResult() and Cancel if any TestMeasurement in TestGroup failed.
-        //  - TestRun() invokes EvaluateGroupResult() only when the final TestMeasurement in a TestGroup completes.
+        //  - Add if/then to MeasurementsRun() to invoke EvaluateGroupResult() and Cancel if any TestMeasurement in TestGroup failed.
+        //  - MeasurementRun() invokes EvaluateGroupResult() only when the final TestMeasurement in a TestGroup completes.
 
         internal static String EvaluateResultOperation(AppConfigTest configTest) {
             if (GetResultCount(configTest.Measurements, EventCodes.PASS) == configTest.Measurements.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
-            // All test results are PASS, so overall UUT result is PASS.
+            // All measurement results are PASS, so overall UUT result is PASS.
             if (GetResultCount(configTest.Measurements, EventCodes.ERROR) != 0) return EventCodes.ERROR;
             // 2nd priority evaluation:
-            // - If any test result is ERROR, overall UUT result is ERROR.
+            // - If any measurement result is ERROR, overall UUT result is ERROR.
             if (GetResultCount(configTest.Measurements, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
             // 3rd priority evaluation:
-            // - If any test result is CANCEL, and none were ERROR, overall UUT result is CANCEL.
+            // - If any measurement result is CANCEL, and none were ERROR, overall UUT result is CANCEL.
             if (GetResultCount(configTest.Measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
             // 4th priority evaluation:
-            // - If any test result is UNSET, and none were ERROR or CANCEL, then Test(s) didn't complete.
-            // - Likely occurred because a Test failed that had its App.Config TestMeasurement CancelOnFail flag set to true.
+            // - If any measurement result is UNSET, and none were ERROR or CANCEL, then Measurement(s) didn't complete.
+            // - Likely occurred because a Measurement failed that had its App.Config TestMeasurement CancelOnFail flag set to true.
             if (GetResultCount(configTest.Measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
             // 5th priority evaluation:
-            // - If any test result is FAIL, and none were ERROR, CANCEL or UNSET, UUT result is FAIL.
+            // - If any measurement result is FAIL, and none were ERROR, CANCEL or UNSET, UUT result is FAIL.
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
             foreach (KeyValuePair<String, Measurement> kvp in configTest.Measurements) if (!validEvents.Contains(kvp.Value.Result)) invalidTests += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
-            Logger.LogError($"Invalid Test ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
+            Logger.LogError($"Invalid Measurement ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
             return EventCodes.ERROR;
             // Above handles class EventCodes changing (adding/deleting/renaming EventCodes) without accomodating EvaluateResultOperation() changes. 
         }
@@ -341,10 +341,10 @@ namespace ABT.TestSpace.TestExec {
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
     }
 
-    public class TestCancellationException : Exception {
-        // NOTE: Only ever throw TestCancellationException from TestExecutor, never from TestExecutive.
-        public TestCancellationException(String message = "") : base(message) { }
-        public const String ClassName = nameof(TestCancellationException);
+    public class CancellationException : Exception {
+        // NOTE: Only ever throw CancellationException from TestExecutor, never from TestExecutive.
+        public CancellationException(String message = "") : base(message) { }
+        public const String ClassName = nameof(CancellationException);
     }
 
     public static class EventCodes {

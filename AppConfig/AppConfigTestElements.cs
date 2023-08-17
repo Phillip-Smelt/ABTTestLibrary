@@ -150,7 +150,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             this.ClassName = className;
             this.ClassObject = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
             this.CancelOnFailure = cancelOnFailure;
-            if (String.Equals(this.ClassName, TestNumerical.ClassName)) this.Value = Double.NaN.ToString();
+            if (String.Equals(this.ClassName, MeasurementNumerical.ClassName)) this.Value = Double.NaN.ToString();
         }
 
         public static Dictionary<String, Measurement> Get() {

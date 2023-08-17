@@ -84,15 +84,15 @@ namespace ABT.TestSpace.TestExec.InSystemProgramming {
             else return (standardError, standardOutput, exitCode);
         }
 
-        public static String ExitCode(Measurement test) {
-            TestISP testISP = (TestISP)test.ClassObject;
-            String exitCode = ProcessExitCode(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder);
+        public static String ExitCode(Measurement measurement) {
+            MeasurementISP measurementISP = (MeasurementISP)measurement.ClassObject;
+            String exitCode = ProcessExitCode(measurementISP.ISPExecutableArguments, measurementISP.ISPExecutable, measurementISP.ISPExecutableFolder);
             return exitCode;
         }
 
-        public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(Measurement test) {
-            TestISP testISP = (TestISP)test.ClassObject;
-            (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(testISP.ISPExecutableArguments, testISP.ISPExecutable, testISP.ISPExecutableFolder, testISP.ISPExpected);
+        public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(Measurement measurement) {
+            MeasurementISP measurementISP = (MeasurementISP)measurement.ClassObject;
+            (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(measurementISP.ISPExecutableArguments, measurementISP.ISPExecutable, measurementISP.ISPExecutableFolder, measurementISP.ISPExpected);
             return (StandardError, StandardOutput, ExitCode);
         }
     }
