@@ -138,6 +138,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String ClassName;
         public readonly Object ClassObject;
         public readonly Boolean CancelOnFailure;
+        public String GroupID { get; set; } = String.Empty; // Determined pre-test.
         public String Value { get; set; } = String.Empty; // Determined during test.
         public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
 #if DEBUG
