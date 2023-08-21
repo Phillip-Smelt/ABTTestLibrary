@@ -293,7 +293,7 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        internal static String EvaluateResultGroup(AppConfigTest configTest) { return EventCodes.UNSET; } 
+        internal static String EvaluateResultGroup(AppConfigTest configTest) { return EventCodes.UNSET; }
         // TODO: EvaluateResultGroup() parallels Spectrum 8800's SectionAbort flag:
         //  - When Page and/or Step failures occur in a Spectrum 8800's Section:
         //      - If Spectrum 8800's SectionAbort=false, execution continues to the next Section.

@@ -133,8 +133,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
     public class Measurement {
         public readonly String ID;
-        public readonly String Description;
         public readonly String Revision;
+        public readonly String Description;
         public readonly String ClassName;
         public readonly Object ClassObject;
         public readonly Boolean CancelOnFailure;
@@ -143,10 +143,10 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 #if DEBUG
         public String DebugMessage { get; set; } = String.Empty; // Determined during test.
 #endif
-        private Measurement(String id, String description, String revision, String className, Boolean cancelOnFailure, String arguments) {
+        private Measurement(String id, String revision, String description, String className, Boolean cancelOnFailure, String arguments) {
             this.ID = id;
-            this.Description = description;
             this.Revision = revision;
+            this.Description = description;
             this.ClassName = className;
             this.ClassObject = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
             this.CancelOnFailure = cancelOnFailure;
@@ -157,7 +157,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             TestMeasurementsSection testMeasurementsSection = (TestMeasurementsSection)ConfigurationManager.GetSection(TestMeasurementsSection.ClassName);
             TestMeasurements testMeasurements = testMeasurementsSection.TestMeasurements;
             Dictionary<String, Measurement> dictionary = new Dictionary<String, Measurement>();
-            foreach (TestMeasurement tm in testMeasurements) { dictionary.Add(tm.ID, new Measurement(tm.ID, tm.Description, tm.Revision, tm.ClassName, tm.CancelOnFailure, tm.Arguments)); }
+            foreach (TestMeasurement tm in testMeasurements) { dictionary.Add(tm.ID, new Measurement(tm.ID, tm.Revision, tm.Description, tm.ClassName, tm.CancelOnFailure, tm.Arguments)); }
             return dictionary;
         }
 
