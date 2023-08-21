@@ -245,9 +245,6 @@ namespace ABT.TestSpace.TestExec {
                     }
                     if (String.Equals(this.ConfigTest.Measurements[measurementID].Result, EventCodes.FAIL) && this.ConfigTest.Measurements[measurementID].CancelOnFailure) break;
                 }
-                if (this.ConfigTest.IsOperation) {
-
-                }
                 Dictionary<String, Measurement> groupIDMeasurements = this.ConfigTest.Measurements.Where(m => this.ConfigTest.GroupIDsToMeasurementIDs.ContainsKey(groupID)).ToDictionary(m => m.Key, m => m.Value);
                 if (!String.Equals(this.EvaluateResults(groupIDMeasurements), EventCodes.PASS) && this.ConfigTest.Groups[groupID].CancelOnFailure) break;
             }

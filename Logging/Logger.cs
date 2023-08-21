@@ -80,8 +80,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"TestOperation:");
             Log.Information($"\tSTART             : {DateTime.Now}");
             Log.Information($"\t{MESSAGE_STOP}");
-            Log.Information($"\tOperator          : {UserPrincipal.Current.DisplayName}");
-            // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
+            Log.Information($"\tOperator          : {UserPrincipal.Current.DisplayName}"); // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             Log.Information($"\tExecutive Version : {testExecutive._libraryAssemblyVersion}");
             Log.Information($"\tExecutor Version  : {testExecutive._appAssemblyVersion}");
             Log.Information($"\tSpecification     : {testExecutive.ConfigUUT.TestSpecification}");
