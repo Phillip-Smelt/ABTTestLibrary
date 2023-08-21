@@ -14,6 +14,7 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
+using System.Runtime.CompilerServices;
 
 // TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 // NOTE: For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
@@ -231,6 +232,7 @@ namespace ABT.TestSpace.TestExec {
                 try {
                     this.ConfigTest.Measurements[ID].Value = await Task.Run(() => this.MeasurementRun(ID));
                     this.ConfigTest.Measurements[ID].Result = EvaluateResultMeasurement(this.ConfigTest.Measurements[ID]);
+                    if (this.ConfigTest.IsOperation) EvaluateResultGroup(this.ConfigTest, ID);
                 } catch (Exception e) {
                     this.MeasurementsRunExceptionHandler(ID, e);
                     break;
@@ -265,7 +267,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);
             if (this.ConfigTest.IsOperation) this.ConfigUUT.EventCode = EvaluateResultOperation(this.ConfigTest);
-            else this.ConfigUUT.EventCode = EvaluateResultGroup(this.ConfigTest);
+            else this.ConfigUUT.EventCode = EventCodes.UNSET;
             this.TextUUTResult.Text = this.ConfigUUT.EventCode;
             this.TextUUTResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
             Logger.Stop(this, ref this.rtfResults);
@@ -293,7 +295,7 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        internal static String EvaluateResultGroup(AppConfigTest configTest) { return EventCodes.UNSET; }
+        internal static String EvaluateResultGroup(AppConfigTest configTest, String measurementID) { return EventCodes.UNSET; }
         // TODO: EvaluateResultGroup() parallels Spectrum 8800's SectionAbort flag:
         //  - When Page and/or Step failures occur in a Spectrum 8800's Section:
         //      - If Spectrum 8800's SectionAbort=false, execution continues to the next Section.
