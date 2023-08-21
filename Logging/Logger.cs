@@ -93,10 +93,10 @@ namespace ABT.TestSpace.TestExec.Logging {
             List<String> testGroupIDs = operation.TestGroupIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList();
             foreach (String testGroupID in testGroupIDs) {
                 Group group = Group.Get(testGroupID);
-                s.Append(String.Format("\t{0,-" + testExecutive.ConfigTest.FormattingLengthTestGroup + "} : {1}\n", group.ID, group.Description));
+                s.Append(String.Format("\t{0,-" + testExecutive.ConfigTest.FormattingLengthGroupID + "} : {1}\n", group.ID, group.Description));
                 List<String> testMeasurementIDs = group.TestMeasurementIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList();
                 foreach (String testMeasurementID in testMeasurementIDs) {
-                    s.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthTestMeasurement + "} : {1}\n", testExecutive.ConfigTest.Measurements[testMeasurementID].ID, testExecutive.ConfigTest.Measurements[testMeasurementID].Description));
+                    s.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthMeasurementID + "} : {1}\n", testExecutive.ConfigTest.Measurements[testMeasurementID].ID, testExecutive.ConfigTest.Measurements[testMeasurementID].Description));
                 }
             }
             Log.Information($"TestMeasurements:\n{s}");

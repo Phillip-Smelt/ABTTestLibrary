@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -166,13 +167,13 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly Boolean IsOperation;
         public readonly String TestElementDescription;
         public readonly String TestElementRevision;
-        public readonly List<String> TestGroupIDsSequence = new List<String>();
+        public readonly List<String> GroupIDsSequence = new List<String>();
         public readonly Dictionary<String, Group> Groups = new Dictionary<String, Group>();
-        // Dictionaries don't preserve ordering, but Lists do, hence TestGroupIDsSequence & TestMeasurementIDsSequence.
+        public readonly Dictionary<String, List<String>> GroupIDsToMeasurementIDs = new Dictionary<String, List<String>>();
         public readonly List<String> TestMeasurementIDsSequence = new List<String>();
         public readonly Dictionary<String, Measurement> Measurements = new Dictionary<String, Measurement>();
-        public readonly Int32 FormattingLengthTestGroup = 0;
-        public readonly Int32 FormattingLengthTestMeasurement = 0;
+        public readonly Int32 FormattingLengthGroupID = 0;
+        public readonly Int32 FormattingLengthMeasurementID = 0;
 
         private AppConfigTest() {
             Dictionary<String, Operation> allOperations = Operation.Get();
@@ -183,30 +184,42 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             if (this.IsOperation) {
                 this.TestElementDescription = allOperations[this.TestElementID].Description;
                 this.TestElementRevision = allOperations[this.TestElementID].Revision;
-                this.TestGroupIDsSequence = allOperations[this.TestElementID].TestGroupIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList();
-                foreach (String testGroupID in this.TestGroupIDsSequence) {
-                    this.Groups.Add(testGroupID, allGroups[testGroupID]);
-                    if (testGroupID.Length > this.FormattingLengthTestGroup) this.FormattingLengthTestGroup = testGroupID.Length;
-                    foreach (String testMeasurementID in allGroups[testGroupID].TestMeasurementIDs.Split(MeasurementAbstract.SA)) {
-                        this.TestMeasurementIDsSequence.Add(testMeasurementID);
-                        this.Measurements.Add(testMeasurementID, allMeasurements[testMeasurementID]);
-                        this.Measurements[testMeasurementID].GroupID = testGroupID;
-                        if (testMeasurementID.Length > this.FormattingLengthTestMeasurement) this.FormattingLengthTestMeasurement = testMeasurementID.Length;
+                this.GroupIDsSequence = allOperations[this.TestElementID].TestGroupIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList();
+                foreach (String groupID in this.GroupIDsSequence) {
+                    this.Groups.Add(groupID, allGroups[groupID]);
+                    this.GroupIDsToMeasurementIDs.Add(groupID, allGroups[groupID].TestMeasurementIDs.Split(MeasurementAbstract.SA).ToList());
+
+                    this.HandleAnyDuplicatedIDs(this.GroupIDsToMeasurementIDs[groupID]);
+
+                    if (groupID.Length > this.FormattingLengthGroupID) this.FormattingLengthGroupID = groupID.Length;
+                    foreach (String measurementID in this.GroupIDsToMeasurementIDs[groupID]) {
+                        this.Measurements.Add(measurementID, allMeasurements[measurementID]);
+                        this.Measurements[measurementID].GroupID = groupID;
+                        if (measurementID.Length > this.FormattingLengthMeasurementID) this.FormattingLengthMeasurementID = measurementID.Length;
                     }
                 }
             } else {
                 this.TestElementDescription = allGroups[this.TestElementID].Description;
                 this.TestElementRevision = allGroups[this.TestElementID].Revision;
-                this.TestGroupIDsSequence.Add(this.TestElementID);
+                this.GroupIDsSequence.Add(this.TestElementID);
+
                 this.Groups.Add(this.TestElementID, allGroups[this.TestElementID]);
-                foreach (String testMeasurementID in allGroups[this.TestElementID].TestMeasurementIDs.Split(MeasurementAbstract.SA)) {
-                    this.TestMeasurementIDsSequence.Add(testMeasurementID);
-                    this.Measurements.Add(testMeasurementID, allMeasurements[testMeasurementID]);
-                    this.Measurements[testMeasurementID].GroupID = this.TestElementID;
-                    if (testMeasurementID.Length > this.FormattingLengthTestMeasurement) this.FormattingLengthTestMeasurement = testMeasurementID.Length;
+                this.GroupIDsToMeasurementIDs.Add(this.TestElementID, allGroups[this.TestElementID].TestMeasurementIDs.Split(MeasurementAbstract.SA).ToList());
+
+                this.HandleAnyDuplicatedIDs(this.GroupIDsToMeasurementIDs[this.TestElementID]);
+
+                foreach (String measurementID in this.GroupIDsToMeasurementIDs[this.TestElementID]) {
+                    this.Measurements.Add(measurementID, allMeasurements[measurementID]);
+                    this.Measurements[measurementID].GroupID = this.TestElementID;
+                    if (measurementID.Length > this.FormattingLengthMeasurementID) this.FormattingLengthMeasurementID = measurementID.Length;
                 }
             }
-            IEnumerable<String> duplicateIDs = this.TestMeasurementIDsSequence.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
+            foreach (String groupID in this.GroupIDsSequence) this.TestMeasurementIDsSequence.AddRange(this.GroupIDsToMeasurementIDs[groupID]);
+             this.HandleAnyDuplicatedIDs(this.TestMeasurementIDsSequence);
+        }
+
+        private void HandleAnyDuplicatedIDs(List<String> IDs) {
+            IEnumerable<String> duplicateIDs = IDs.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
             if (duplicateIDs.Count() !=0) throw new InvalidOperationException($"Duplicated TestMeasurementIDs '{String.Join("', '", duplicateIDs)}'.");
         }
 

@@ -228,22 +228,28 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private async Task MeasurementsRun() {
-            foreach (String ID in this.ConfigTest.TestMeasurementIDsSequence) {
-                try {
-                    this.ConfigTest.Measurements[ID].Value = await Task.Run(() => this.MeasurementRun(ID));
-                    this.ConfigTest.Measurements[ID].Result = EvaluateResultMeasurement(this.ConfigTest.Measurements[ID]);
-                    if (this.ConfigTest.IsOperation) EvaluateResultGroup(this.ConfigTest, ID);
-                } catch (Exception e) {
-                    this.MeasurementsRunExceptionHandler(ID, e);
-                    break;
-                } finally {
-                    Logger.LogTest(this.ConfigTest.IsOperation, this.ConfigTest.Measurements[ID], ref this.rtfResults);
+            foreach (String groupID in this.ConfigTest.GroupIDsSequence) {
+                foreach (String measurementID in this.ConfigTest.GroupIDsToMeasurementIDs[groupID]) {
+                    try {
+                        this.ConfigTest.Measurements[measurementID].Value = await Task.Run(() => this.MeasurementRun(measurementID));
+                        this.ConfigTest.Measurements[measurementID].Result = this.EvaluateResultMeasurement(this.ConfigTest.Measurements[measurementID]);
+                    } catch (Exception e) {
+                        this.MeasurementsRunExceptionHandler(measurementID, e);
+                        break;
+                    } finally {
+                        Logger.LogTest(this.ConfigTest.IsOperation, this.ConfigTest.Measurements[measurementID], ref this.rtfResults);
+                    }
+                    if (this._cancelled) {
+                        this.ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
+                        break;
+                    }
+                    if (String.Equals(this.ConfigTest.Measurements[measurementID].Result, EventCodes.FAIL) && this.ConfigTest.Measurements[measurementID].CancelOnFailure) break;
                 }
-                if (this._cancelled) {
-                    this.ConfigTest.Measurements[ID].Result = EventCodes.CANCEL;
-                    break;
+                if (this.ConfigTest.IsOperation) {
+
                 }
-                if (String.Equals(this.ConfigTest.Measurements[ID].Result, EventCodes.FAIL) && this.ConfigTest.Measurements[ID].CancelOnFailure) break;
+                Dictionary<String, Measurement> groupIDMeasurements = this.ConfigTest.Measurements.Where(m => this.ConfigTest.GroupIDsToMeasurementIDs.ContainsKey(groupID)).ToDictionary(m => m.Key, m => m.Value);
+                if (!String.Equals(this.EvaluateResults(groupIDMeasurements), EventCodes.PASS) && this.ConfigTest.Groups[groupID].CancelOnFailure) break;
             }
         }
 
@@ -266,14 +272,13 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonSelectTests.Enabled = true;
             this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);
-            if (this.ConfigTest.IsOperation) this.ConfigUUT.EventCode = EvaluateResultOperation(this.ConfigTest);
-            else this.ConfigUUT.EventCode = EventCodes.UNSET;
+            this.ConfigUUT.EventCode = this.EvaluateResults(this.ConfigTest.Measurements);
             this.TextUUTResult.Text = this.ConfigUUT.EventCode;
             this.TextUUTResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
             Logger.Stop(this, ref this.rtfResults);
         }
 
-        internal static String EvaluateResultMeasurement(Measurement measurement) {
+        private String EvaluateResultMeasurement(Measurement measurement) {
             switch (measurement.ClassName) {
                 case MeasurementCustomizable.ClassName:
                     return measurement.Result;
@@ -295,50 +300,35 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        internal static String EvaluateResultGroup(AppConfigTest configTest, String measurementID) { return EventCodes.UNSET; }
-        // TODO: EvaluateResultGroup() parallels Spectrum 8800's SectionAbort flag:
-        //  - When Page and/or Step failures occur in a Spectrum 8800's Section:
-        //      - If Spectrum 8800's SectionAbort=false, execution continues to the next Section.
-        //      - If Spectrum 8800's SectionAbort=true, execution Aborts at the end of the Section.
-        //
-        // EvaluateResultGroup() will evaluate all TestMeasurement results for a TestGroup:
-        //  - A TestGroup's TestMeasurement CancelOnFailure boolean fields take precedance over the TestGroup's CancelOnFailure:
-        //      - If any failing TestMeasurement's CancelOnFailure = true, execution is Canceled regardless of its TestGroup's CancelOnFailure.
-        //      - If all failing TestMeasurement's CancelOnFailure = false, execution is Canceled if TestGroup's CancelOnFailure = true and any TestMeasurement failed.
-        //      - If all failing TestMeasurement's CancelOnFailure = false, execution continues if TestGroup's CancelOnFailure = false.
-        //  - This allows non-critical TestGroup failures to continue execution.
-        //
-        //  - In App.Config, element TestGroup, add CancelOnFailure field.
-        //  - Add logic to TestExcutive to "understand" TestGroups as it already understands TestMeasurements.
-        //  - Add if/then to MeasurementsRun() to invoke EvaluateGroupResult() and Cancel if any TestMeasurement in TestGroup failed.
-        //  - MeasurementRun() invokes EvaluateGroupResult() only when the final TestMeasurement in a TestGroup completes.
-
-        internal static String EvaluateResultOperation(AppConfigTest configTest) {
-            if (GetResultCount(configTest.Measurements, EventCodes.PASS) == configTest.Measurements.Count) return EventCodes.PASS;
+        private String EvaluateResults(Dictionary<String, Measurement> measurements) {
+            if (!this.ConfigTest.IsOperation) return EventCodes.UNSET;
+            // 0th priority evaluation.
+            if (this.GetResultCount(measurements, EventCodes.PASS) == measurements.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
-            // All measurement results are PASS, so overall UUT result is PASS.
-            if (GetResultCount(configTest.Measurements, EventCodes.ERROR) != 0) return EventCodes.ERROR;
+            // All measurement results are PASS, so overall result is PASS.
+            if (this.GetResultCount(measurements, EventCodes.ERROR) != 0) return EventCodes.ERROR;
             // 2nd priority evaluation:
-            // - If any measurement result is ERROR, overall UUT result is ERROR.
-            if (GetResultCount(configTest.Measurements, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
+            // - If any measurement result is ERROR, overall result is ERROR.
+            if (this.GetResultCount(measurements, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
             // 3rd priority evaluation:
-            // - If any measurement result is CANCEL, and none were ERROR, overall UUT result is CANCEL.
-            if (GetResultCount(configTest.Measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
+            // - If any measurement result is CANCEL, and none were ERROR, overall result is CANCEL.
+            if (this.GetResultCount(measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
             // 4th priority evaluation:
             // - If any measurement result is UNSET, and none were ERROR or CANCEL, then Measurement(s) didn't complete.
             // - Likely occurred because a Measurement failed that had its App.Config TestMeasurement CancelOnFail flag set to true.
-            if (GetResultCount(configTest.Measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
+            if (this.GetResultCount(measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
             // 5th priority evaluation:
-            // - If any measurement result is FAIL, and none were ERROR, CANCEL or UNSET, UUT result is FAIL.
+            // - If any measurement result is FAIL, and none were ERROR, CANCEL or UNSET, result is FAIL.
+
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
-            foreach (KeyValuePair<String, Measurement> kvp in configTest.Measurements) if (!validEvents.Contains(kvp.Value.Result)) invalidTests += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
+            foreach (KeyValuePair<String, Measurement> kvp in measurements) if (!validEvents.Contains(kvp.Value.Result)) invalidTests += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
             Logger.LogError($"Invalid Measurement ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
             return EventCodes.ERROR;
-            // Above handles class EventCodes changing (adding/deleting/renaming EventCodes) without accomodating EvaluateResultOperation() changes. 
+            // Above handles class EventCodes changing (adding/deleting/renaming EventCodes) without accomodating EvaluateResults() changes. 
         }
 
-        private static Int32 GetResultCount(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Result, eventCode) select measurement).Count(); }
+        private Int32 GetResultCount(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Result, eventCode) select measurement).Count(); }
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
     }
