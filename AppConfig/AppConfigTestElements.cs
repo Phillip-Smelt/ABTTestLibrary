@@ -162,6 +162,6 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             return dictionary;
         }
 
-        public static Measurement Get(String TestMeasurementIDPresent) { return Get()[TestMeasurementIDPresent]; }
+        public static Measurement Get(String TestMeasurementID) { return Get()[TestMeasurementID]; }
     }
 }
