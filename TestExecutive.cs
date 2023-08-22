@@ -244,7 +244,7 @@ namespace ABT.TestSpace.TestExec {
                     }
                     if (String.Equals(this.ConfigTest.Measurements[measurementID].Result, EventCodes.FAIL) && this.ConfigTest.Measurements[measurementID].CancelOnFailure) break;
                 }
-                Dictionary<String, Measurement> groupIDMeasurements = new Dictionary<string, Measurement>();
+                Dictionary<String, Measurement> groupIDMeasurements = new Dictionary<String, Measurement>();
                 foreach (String measurementID in this.ConfigTest.GroupIDsToMeasurementIDs[groupID]) groupIDMeasurements.Add(measurementID, this.ConfigTest.Measurements[measurementID]);
                 if (!String.Equals(this.EvaluateResults(groupIDMeasurements), EventCodes.PASS) && this.ConfigTest.Groups[groupID].CancelOnFailure) break;
             }
