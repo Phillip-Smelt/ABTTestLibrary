@@ -74,11 +74,11 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             SetVDC(SVI, VoltsDC, Channel);
             SetADC(SVI, AmpsDC, Channel);
             
-            SetVoltageProtectionAmplitude(SVI, VoltsDC * 1.10, Channel);
+            SetVoltageProtectionAmplitude(SVI, VoltsDC * 1.25, Channel);
             SetCurrentProtectionAmplitude(SVI, AmpsDC, Channel);
             SetCurrentProtectionDelay(SVI, DelaySecondsCurrentProtection, Channel);
 
-            SetVoltageProtectionState(SVI, OUTPUT.off, Channel);
+            // TODOD: SetVoltageProtectionState(SVI, OUTPUT.ON, Channel);
             SetCurrentProtectionState(SVI, OUTPUT.ON, Channel);
             SetOutputState(SVI, State, Channel);
 
@@ -201,7 +201,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
             }
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Command(VoltsDC, Channels[Channel]);
-            SetVoltageProtectionState(SVI, OUTPUT.ON, Channel);
         }
 
         public static void ClearVoltageProtectionTripped(SCPI_VISA_Instrument SVI, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(Channels[Channel]); }
