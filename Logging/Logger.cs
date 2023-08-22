@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.TestSpace.TestExec.AppConfig;
+using System.Runtime.CompilerServices;
 
 // TODO: Persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement results therein.
 // - Stop writing TestMeasurement results to RichTextBoxSink when testing full Operations; only write TestGroups results to RichTextBoxSink.
@@ -79,8 +80,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"TestOperation:");
             Log.Information($"\tSTART             : {DateTime.Now}");
             Log.Information($"\t{MESSAGE_STOP}");
-            Log.Information($"\tOperator          : {UserPrincipal.Current.DisplayName}");
-            // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
+            Log.Information($"\tOperator          : {UserPrincipal.Current.DisplayName}"); // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             Log.Information($"\tExecutive Version : {testExecutive._libraryAssemblyVersion}");
             Log.Information($"\tExecutor Version  : {testExecutive._appAssemblyVersion}");
             Log.Information($"\tSpecification     : {testExecutive.ConfigUUT.TestSpecification}");
@@ -89,15 +89,9 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"\tDescription       : {testExecutive.ConfigTest.TestElementDescription}\n");
 
             StringBuilder s = new StringBuilder();
-            Operation operation = Operation.Get(testExecutive.ConfigTest.TestElementID);
-            List<String> testGroupIDs = operation.TestGroupIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList();
-            foreach (String testGroupID in testGroupIDs) {
-                Group group = Group.Get(testGroupID);
-                s.Append(String.Format("\t{0,-" + testExecutive.ConfigTest.FormattingLengthGroupID + "} : {1}\n", group.ID, group.Description));
-                List<String> testMeasurementIDs = group.TestMeasurementIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList();
-                foreach (String testMeasurementID in testMeasurementIDs) {
-                    s.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthMeasurementID + "} : {1}\n", testExecutive.ConfigTest.Measurements[testMeasurementID].ID, testExecutive.ConfigTest.Measurements[testMeasurementID].Description));
-                }
+            foreach (String groupID in testExecutive.ConfigTest.GroupIDsSequence) {
+                s.Append(String.Format("\t{0,-" + testExecutive.ConfigTest.FormattingLengthGroupID + "} : {1}\n", groupID, testExecutive.ConfigTest.Groups[groupID].Description));
+                foreach (String measurementID in testExecutive.ConfigTest.GroupIDsToMeasurementIDs[groupID]) s.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthMeasurementID + "} : {1}\n", measurementID, testExecutive.ConfigTest.Measurements[measurementID].Description));
             }
             Log.Information($"TestMeasurements:\n{s}");
         }
