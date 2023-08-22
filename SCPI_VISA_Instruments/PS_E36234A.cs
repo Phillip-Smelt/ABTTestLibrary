@@ -64,7 +64,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void SetVoltageSenseMode(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), Channels[Channel]); }
 
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, CHANNELS Channel, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, Double VoltageProtectionAmplitude, CHANNELS Channel, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
             SetVoltageProtectionState(SVI, OUTPUT.off, Channel);
             SetCurrentProtectionState(SVI, OUTPUT.off, Channel);
             ClearVoltageProtectionTripped(SVI, Channel);
@@ -74,11 +74,11 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             SetVoltageAmplitude(SVI, VoltsDC, Channel);
             SetCurrentAmplitude(SVI, AmpsDC, Channel);
             
-            SetVoltageProtectionAmplitude(SVI, VoltsDC * 1.25, Channel);
+            SetVoltageProtectionAmplitude(SVI, VoltageProtectionAmplitude, Channel);
             SetCurrentProtectionAmplitude(SVI, AmpsDC, Channel);
             SetCurrentProtectionDelay(SVI, DelaySecondsCurrentProtection, Channel);
 
-            // TODO: SetVoltageProtectionState(SVI, OUTPUT.ON, Channel);
+            SetVoltageProtectionState(SVI, OUTPUT.ON, Channel);
             SetCurrentProtectionState(SVI, OUTPUT.ON, Channel);
             SetOutputState(SVI, State, Channel);
 
