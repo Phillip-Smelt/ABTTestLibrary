@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting.Channels;
 using System.Threading;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
@@ -48,9 +49,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return States[(Int32)(Channel)] ? OUTPUT.ON : OUTPUT.off;
         }
 
-        public static Boolean AreSlewRates(SCPI_VISA_Instrument SVI, CHANNELS Channel, Double SlewRateRising, Double SlewRateFalling) { return ((SlewRateRising, SlewRateFalling) == GetSlewRates(SVI, Channel)); }
+        public static Boolean AreSlewRates(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, CHANNELS Channel) { return ((SlewRateRising, SlewRateFalling) == GetSlewRates(SVI, Channel)); }
 
-        public static void SetSlewRates(SCPI_VISA_Instrument SVI, CHANNELS Channel, Double SlewRateRising, Double SlewRateFalling) {
+        public static void SetSlewRates(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, CHANNELS Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.RISing.IMMediate.Command(SlewRateRising, Channels[Channel]);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.FALLing.IMMediate.Command(SlewRateFalling, Channels[Channel]);
         }
@@ -61,12 +62,15 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return (srr[(Int32)Channel], srf[(Int32)Channel]);
         }
 
+        public static void SetVoltageSenseMode(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), Channels[Channel]); }
+
         public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, CHANNELS Channel, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
             SetVoltageProtectionState(SVI, OUTPUT.off, Channel);
             SetCurrentProtectionState(SVI, OUTPUT.off, Channel);
             ClearVoltageProtectionTripped(SVI, Channel);
             ClearCurrentProtectionTripped(SVI, Channel);
 
+            SetVoltageSenseMode(SVI, KelvinSense, Channel);
             SetVDC(SVI, VoltsDC, Channel);
             SetADC(SVI, AmpsDC, Channel);
             
@@ -74,7 +78,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             SetCurrentProtectionAmplitude(SVI, AmpsDC, Channel);
             SetCurrentProtectionDelay(SVI, DelaySecondsCurrentProtection, Channel);
 
-            SetVoltageProtectionState(SVI, OUTPUT.ON, Channel);
+            SetVoltageProtectionState(SVI, OUTPUT.off, Channel);
             SetCurrentProtectionState(SVI, OUTPUT.ON, Channel);
             SetOutputState(SVI, State, Channel);
 
@@ -104,7 +108,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC, Channels[Channel]);
         }
 
-        public static Boolean IsVDC(SCPI_VISA_Instrument SVI, Double VoltsDC, CHANNELS Channel, Double Delta) { return SCPI99.IsCloseEnough(GetVDC(SVI, Channel), VoltsDC, Delta); }
+        public static Boolean IsVDC(SCPI_VISA_Instrument SVI, Double VoltsDC, Double Delta, CHANNELS Channel) { return SCPI99.IsCloseEnough(GetVDC(SVI, Channel), VoltsDC, Delta); }
 
         public static Double GetADC(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(null, Channels[Channel], out Double[] ampsDC);
@@ -125,7 +129,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC, Channels[Channel]);
         }
 
-        public static Boolean IsADC(SCPI_VISA_Instrument SVI, Double AmpsDC, CHANNELS Channel, Double Delta) { return SCPI99.IsCloseEnough(GetADC(SVI, Channel), AmpsDC, Delta); }
+        public static Boolean IsADC(SCPI_VISA_Instrument SVI, Double AmpsDC, Double Delta, CHANNELS Channel) { return SCPI99.IsCloseEnough(GetADC(SVI, Channel), AmpsDC, Delta); }
 
         public static Double GetCurrentProtectionDelay(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(null, Channels[Channel], out Double[] seconds);
