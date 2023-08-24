@@ -78,7 +78,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.LabelResult.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LabelResult.AutoSize = true;
-            this.LabelResult.Location = new System.Drawing.Point(653, 694);
+            this.LabelResult.Location = new System.Drawing.Point(672, 689);
             this.LabelResult.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelResult.Name = "LabelResult";
             this.LabelResult.Size = new System.Drawing.Size(45, 16);
