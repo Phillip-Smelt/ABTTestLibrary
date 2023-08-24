@@ -170,8 +170,8 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonSelectTests.Enabled = false;
             this.ButtonStartReset(enabled: false);
             this.ButtonCancelReset(enabled: false);
-            this.TextUUTResult.Text = String.Empty;
-            this.TextUUTResult.BackColor = Color.White;
+            this.TextResult.Text = String.Empty;
+            this.TextResult.BackColor = Color.White;
             if (this.ConfigTest != null) {
                 this.ButtonSaveOutput.Enabled = !this.ConfigTest.IsOperation;
                 this.ButtonOpenTestDataFolder.Enabled = (this.ConfigTest.IsOperation && this.ConfigLogger.FileEnabled);
@@ -270,8 +270,8 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);
             this.ConfigUUT.EventCode = this.EvaluateResults(this.ConfigTest.Measurements);
-            this.TextUUTResult.Text = this.ConfigUUT.EventCode;
-            this.TextUUTResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
+            this.TextResult.Text = this.ConfigUUT.EventCode;
+            this.TextResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
             Logger.Stop(this, ref this.rtfResults);
         }
 
