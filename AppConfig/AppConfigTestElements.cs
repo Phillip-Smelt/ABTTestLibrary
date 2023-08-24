@@ -44,7 +44,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
         [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
-        [ConfigurationProperty("Independent", IsKey = false, IsRequired = true)] public Boolean Independent { get { return ((Boolean)base["Independent"]); } }
+        [ConfigurationProperty("Selectable", IsKey = false, IsRequired = true)] public Boolean Selectable { get { return ((Boolean)base["Selectable"]); } }
         [ConfigurationProperty("CancelOnFailure", IsKey = false, IsRequired = true)] public Boolean CancelOnFailure { get { return ((Boolean)base["CancelOnFailure"]); } }
         [ConfigurationProperty("TestMeasurementIDs", IsKey = false, IsRequired = true)] public String TestMeasurementIDs { get { return ((String)base["TestMeasurementIDs"]).Trim(); } }
     }
@@ -107,15 +107,15 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String ID;
         public readonly String Revision;    
         public readonly String Description;
-        public readonly Boolean Independent;
+        public readonly Boolean Selectable;
         public readonly Boolean CancelOnFailure;
         public readonly String TestMeasurementIDs;
 
-        private Group(String id, String revision, String description, Boolean independent, Boolean cancelOnFailure, String testMeasurementIDs) {
+        private Group(String id, String revision, String description, Boolean selectable, Boolean cancelOnFailure, String testMeasurementIDs) {
             this.ID = id;
             this.Revision = revision;
             this.Description = description;
-            this.Independent = independent;
+            this.Selectable = selectable;
             this.CancelOnFailure = cancelOnFailure;
             this.TestMeasurementIDs = testMeasurementIDs;
         }
@@ -124,7 +124,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             TestGroupsSection testGroupSection = (TestGroupsSection)ConfigurationManager.GetSection(TestGroupsSection.ClassName);
             TestGroups testGroups = testGroupSection.TestGroups;
             Dictionary<String, Group> dictionary = new Dictionary<String, Group>();
-            foreach (TestGroup tg in testGroups) dictionary.Add(tg.ID, new Group(tg.ID, tg.Revision, tg.Description, tg.Independent, tg.CancelOnFailure, tg.TestMeasurementIDs));
+            foreach (TestGroup tg in testGroups) dictionary.Add(tg.ID, new Group(tg.ID, tg.Revision, tg.Description, tg.Selectable, tg.CancelOnFailure, tg.TestMeasurementIDs));
             return dictionary;
         }
 

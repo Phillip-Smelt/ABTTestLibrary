@@ -33,7 +33,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         private void FormRefresh() {
             if (this.radioButtonTestOperations.Checked) foreach (KeyValuePair<String, Operation> kvp in this.Operations) this.ListSelections.Items.Add(new ListViewItem(new String[] { kvp.Key, kvp.Value.Description}));
-            else foreach (KeyValuePair<String, Group> kvp in this.Groups) if (kvp.Value.Independent) this.ListSelections.Items.Add(new ListViewItem(new String[] { kvp.Key, kvp.Value.Description }));
+            else foreach (KeyValuePair<String, Group> kvp in this.Groups) if (kvp.Value.Selectable) this.ListSelections.Items.Add(new ListViewItem(new String[] { kvp.Key, kvp.Value.Description }));
             this.ListSelections.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
             this.ListSelections.Columns[1].Width = -2;
             // https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.columnheader.width?redirectedfrom=MSDN&view=windowsdesktop-7.0#System_Windows_Forms_ColumnHeader_Width
