@@ -298,8 +298,6 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private String EvaluateResults(Dictionary<String, Measurement> measurements) {
-            if (!this.ConfigTest.IsOperation) return EventCodes.UNSET;
-            // 0th priority evaluation.
             if (this.GetResultCount(measurements, EventCodes.PASS) == measurements.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All measurement results are PASS, so overall result is PASS.
