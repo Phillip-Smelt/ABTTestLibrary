@@ -18,7 +18,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         public static Dictionary<String, String> SplitArguments(String Arguments) {
             Dictionary<String, String> argDictionary = new Dictionary<String, String>();
-            if (String.Equals(Arguments, MeasurementCustomizable.NOT_APPLICABLE)) argDictionary.Add(MeasurementCustomizable.NOT_APPLICABLE, MeasurementCustomizable.NOT_APPLICABLE);
+            if (String.Equals(Arguments, MeasurementCustom.NOT_APPLICABLE)) argDictionary.Add(MeasurementCustom.NOT_APPLICABLE, MeasurementCustom.NOT_APPLICABLE);
             else {
                 String[] args = Arguments.Split(SA);
                 String[] kvp;
@@ -35,12 +35,12 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public abstract String GetArguments();
     }
 
-    public class MeasurementCustomizable : MeasurementAbstract {
-        public new const String ClassName = nameof(MeasurementCustomizable);
+    public class MeasurementCustom : MeasurementAbstract {
+        public new const String ClassName = nameof(MeasurementCustom);
         public readonly String Arguments;
         public const String NOT_APPLICABLE = "NotApplicable";
 
-        public MeasurementCustomizable(String ID, String Arguments) {
+        public MeasurementCustom(String ID, String Arguments) {
             Dictionary<String, String> argsDict = SplitArguments(Arguments);
             ValidateArguments(ID, Arguments, argsDict);
             this.Arguments = Arguments;
@@ -96,14 +96,14 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         }
     }
 
-    public class MeasurementNumerical : MeasurementAbstract {
-        public new const String ClassName = nameof(MeasurementNumerical);
+    public class MeasurementNumeric : MeasurementAbstract {
+        public new const String ClassName = nameof(MeasurementNumeric);
         public readonly Double Low;                                                                 private const String _LOW = nameof(Low);
         public readonly Double High;                                                                private const String _HIGH = nameof(High);
         public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;                                 private const String _SI_UNITS = nameof(SI_Units);
         public readonly SI_UNITS_MODIFIERS SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;    private const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
 
-        public MeasurementNumerical(String ID, String Arguments) {
+        public MeasurementNumeric(String ID, String Arguments) {
             Dictionary<String, String> argsDict = SplitArguments(Arguments);
             ValidateArguments(ID, Arguments, argsDict);
             this.High = Double.Parse(argsDict[_HIGH], NumberStyles.Float, CultureInfo.CurrentCulture);

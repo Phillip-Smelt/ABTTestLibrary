@@ -212,12 +212,10 @@ namespace ABT.TestSpace.TestExec {
         private void MeasurementsPreRun() {
             this.FormReset();
             foreach (KeyValuePair<String, Measurement> kvp in this.ConfigTest.Measurements) {
-                if (String.Equals(kvp.Value.ClassName, MeasurementNumerical.ClassName)) kvp.Value.Value = Double.NaN.ToString();
+                if (String.Equals(kvp.Value.ClassName, MeasurementNumeric.ClassName)) kvp.Value.Value = Double.NaN.ToString();
                 else kvp.Value.Value = String.Empty;
                 kvp.Value.Result = EventCodes.UNSET;
-#if DEBUG
-                kvp.Value.DebugMessage = String.Empty;
-#endif
+                kvp.Value.Message = String.Empty;
             }
             this.ConfigUUT.EventCode = EventCodes.UNSET;
             UE24.Set(RelayForms.C.S.NC);
@@ -277,16 +275,16 @@ namespace ABT.TestSpace.TestExec {
 
         private String EvaluateResultMeasurement(Measurement measurement) {
             switch (measurement.ClassName) {
-                case MeasurementCustomizable.ClassName:
+                case MeasurementCustom.ClassName:
                     return measurement.Result;
                 case MeasurementISP.ClassName:
                     MeasurementISP measurementISP = (MeasurementISP)measurement.ClassObject;
                     if (String.Equals(measurementISP.ISPExpected, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
-                case MeasurementNumerical.ClassName:
+                case MeasurementNumeric.ClassName:
                     if (!Double.TryParse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{measurement.ID}' Measurement '{measurement.Value}' ≠ System.Double.");
-                    MeasurementNumerical measurementNumerical = (MeasurementNumerical)measurement.ClassObject;
-                    if ((measurementNumerical.Low <= dMeasurement) && (dMeasurement <= measurementNumerical.High)) return EventCodes.PASS;
+                    MeasurementNumeric measurementNumeric = (MeasurementNumeric)measurement.ClassObject;
+                    if ((measurementNumeric.Low <= dMeasurement) && (dMeasurement <= measurementNumeric.High)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case MeasurementTextual.ClassName:
                     MeasurementTextual measurementTextual = (MeasurementTextual)measurement.ClassObject;

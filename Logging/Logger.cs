@@ -106,9 +106,9 @@ namespace ABT.TestSpace.TestExec.Logging {
 #endif
             message.AppendLine($"  Description       : {measurement.Description}");
             switch (measurement.ClassName) {
-                case MeasurementCustomizable.ClassName:
-                    MeasurementCustomizable measurementCustomizable = (MeasurementCustomizable)measurement.ClassObject;
-                    if (measurementCustomizable.Arguments != MeasurementCustomizable.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in MeasurementAbstract.SplitArguments(measurementCustomizable.Arguments)) message.AppendLine($"  Key=Value         : {kvp.Key}={kvp.Value}");
+                case MeasurementCustom.ClassName:
+                    MeasurementCustom measurementCustom = (MeasurementCustom)measurement.ClassObject;
+                    if (measurementCustom.Arguments != MeasurementCustom.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in MeasurementAbstract.SplitArguments(measurementCustom.Arguments)) message.AppendLine($"  Key=Value         : {kvp.Key}={kvp.Value}");
                     message.AppendLine($"  Actual            : {measurement.Value}");
                     break;
                 case MeasurementISP.ClassName:
@@ -116,13 +116,13 @@ namespace ABT.TestSpace.TestExec.Logging {
                     message.AppendLine($"  Expected          : {measurementISP.ISPExpected}");
                     message.AppendLine($"  Actual            : {measurement.Value}");
                     break;
-                case MeasurementNumerical.ClassName:
-                    MeasurementNumerical measurementNumerical = (MeasurementNumerical)measurement.ClassObject;
-                    message.AppendLine($"  High Limit        : {measurementNumerical.High:G}");
+                case MeasurementNumeric.ClassName:
+                    MeasurementNumeric measurementNumeric = (MeasurementNumeric)measurement.ClassObject;
+                    message.AppendLine($"  High Limit        : {measurementNumeric.High:G}");
                     message.AppendLine($"  Measurement       : {Double.Parse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
-                    message.AppendLine($"  Low Limit         : {measurementNumerical.Low:G}");
-                    message.Append($"  SI Units          : {Enum.GetName(typeof(SI_UNITS), measurementNumerical.SI_Units)}");
-                    if (measurementNumerical.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.Append($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), measurementNumerical.SI_Units_Modifier)}");
+                    message.AppendLine($"  Low Limit         : {measurementNumeric.Low:G}");
+                    message.Append($"  SI Units          : {Enum.GetName(typeof(SI_UNITS), measurementNumeric.SI_Units)}");
+                    if (measurementNumeric.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.Append($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), measurementNumeric.SI_Units_Modifier)}");
                     message.AppendLine("");
                     break;
                 case MeasurementTextual.ClassName:
@@ -134,9 +134,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                     throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
             }
             message.AppendLine($"  Result            : {measurement.Result}");
-#if DEBUG
-            message.Append(measurement.DebugMessage);
-#endif
+            if (measurement.Message.Length > 0) message.Append(measurement.Message);
             Log.Information(message.ToString());
             if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Result));
         }

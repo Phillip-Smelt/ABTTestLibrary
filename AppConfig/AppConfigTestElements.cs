@@ -141,9 +141,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public String GroupID { get; set; } = String.Empty; // Determined pre-test.
         public String Value { get; set; } = String.Empty; // Determined during test.
         public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
-#if DEBUG
-        public String DebugMessage { get; set; } = String.Empty; // Determined during test.
-#endif
+        public String Message { get; set; } = String.Empty; // Determined during test.
+
         private Measurement(String id, String revision, String description, String className, Boolean cancelOnFailure, String arguments) {
             this.ID = id;
             this.Revision = revision;
@@ -151,7 +150,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             this.ClassName = className;
             this.ClassObject = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
             this.CancelOnFailure = cancelOnFailure;
-            if (String.Equals(this.ClassName, MeasurementNumerical.ClassName)) this.Value = Double.NaN.ToString();
+            if (String.Equals(this.ClassName, MeasurementNumeric.ClassName)) this.Value = Double.NaN.ToString();
         }
 
         public static Dictionary<String, Measurement> Get() {
