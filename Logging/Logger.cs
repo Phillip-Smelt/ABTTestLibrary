@@ -133,7 +133,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                     throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
             }
             message.AppendLine($"  Result            : {measurement.Result}");
-            if (measurement.Message.Length > 0) message.Append(measurement.Message);
+            if (!String.Equals(measurement.Message, String.Empty)) message.Append(measurement.Message);
             Log.Information(message.ToString());
             if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Result));
         }
