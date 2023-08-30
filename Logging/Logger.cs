@@ -4,13 +4,11 @@ using System.DirectoryServices.AccountManagement;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.TestSpace.TestExec.AppConfig;
-using System.Runtime.CompilerServices;
 
 // TODO: Persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement results therein.
 // - Stop writing TestMeasurement results to RichTextBoxSink when testing full Operations; only write TestGroups results to RichTextBoxSink.
@@ -99,7 +97,7 @@ namespace ABT.TestSpace.TestExec.Logging {
         public static void LogTest(Boolean isOperation, Measurement measurement, ref RichTextBox rtfResults) {
             StringBuilder message = new StringBuilder();
             message.AppendLine($"TestMeasurement ID '{measurement.ID}'");
-#if DEBUG
+#if VERBOSE
             message.AppendLine($"  Revision          : {measurement.Revision}");
             message.AppendLine($"  Measurement Type  : {measurement.ClassName}");
             message.AppendLine($"  Cancel on Failure : {measurement.CancelOnFailure}");
