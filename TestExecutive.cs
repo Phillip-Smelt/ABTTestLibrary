@@ -51,8 +51,8 @@ namespace ABT.TestSpace.TestExec {
             this._libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             this.Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            UE24.Set(RelayForms.C.S.NO); // Ensure they'll switch.
-            UE24.Set(RelayForms.C.S.NC);
+            UE24.Set(RelayForms.C.S.NO); // Relays should be energized/de-energized occasionally as preventative maintenance.
+            UE24.Set(RelayForms.C.S.NC); // Besides, having 48 relays go "clack-clack" simultaneously sounds awesome...
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
