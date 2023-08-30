@@ -1,4 +1,5 @@
-﻿using System;
+﻿#undef VERBOSE
+using System;
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing;
