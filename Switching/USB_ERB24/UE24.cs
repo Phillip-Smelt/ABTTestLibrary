@@ -47,7 +47,6 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         }
 
         internal enum PORTS { A, B, CL, CH }
-        internal static Int32[] _ue24bitVector32Masks = GetUE24BitVector32Masks();
         #region methods
 
         #region Is/Are
@@ -113,15 +112,6 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         }
 
         public static Dictionary<R, C.S> Get(UE ue) {
-            // Obviously, can utilize MccBoard.DBitIn to read individual bits, instead of MccBoard.DIn to read multiple bits:
-            // - But, the USB-ERB24's reads it's relay states by reading its internal 82C55's ports.
-            // - These ports appear to operate similarly to MccBoard's DIn function, that is, they read the 82C55's 
-            //   port bits simultaneously.
-            // - If correct, then utilizing MccBoard's DBitIn function could be very inefficient compared to
-            //   the DIn function, since DBitIn would have to perform similar bit-shifting/bit-setting functions as this method does,
-            //   once for each of the USB-ERB24's 24 relays, as opposed to 4 times for this method.
-            // - Regardless, if preferred, below /*,*/commented code can replace the entirety of this method.
-            
             ErrorInfo errorInfo;  DigitalLogicState digitalLogicState;
             R r;  C.S s;  Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
             for (Int32 i = 0; i < Enum.GetValues(typeof(R)).Length; i++) {
@@ -132,25 +122,6 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
                 RεS.Add(r, s);
             }
             return RεS;
-            // TODO:  public static Dictionary<R, C.S> Get(UE ue)
-            /*
-            UInt16[] portBits = PortsRead(Only.USB_ERB24s[ue]);
-            UInt32[] biggerPortBits = Array.ConvertAll(portBits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
-            UInt32 relayBits = 0x0000;
-            relayBits |= biggerPortBits[(UInt32)PORTS.CH] << 00;
-            relayBits |= biggerPortBits[(UInt32)PORTS.CL] << 04;
-            relayBits |= biggerPortBits[(UInt32)PORTS.B] << 08;
-            relayBits |= biggerPortBits[(UInt32)PORTS.A] << 16;
-            BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
-
-            R r; C.S s; Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
-            for (Int32 i = 0; i < _ue24bitVector32Masks.Length; i++) {
-                r = (R)Enum.ToObject(typeof(R), i);
-                s = bitVector32[_ue24bitVector32Masks[i]] ? C.S.NO : C.S.NC;
-                RεS.Add(r, s);
-            }
-            return RεS;
-            */
         }
 
         // Below 3 methods mainly useful for parallelism, when testing multiple UUTs concurrently, with each B wired identically to test 1 UUT.
@@ -227,7 +198,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             foreach (KeyValuePair<R, C.S> kvp in RεS) {
                 relayBit = (UInt32)1 << (Byte)kvp.Key;
                 if (kvp.Value == C.S.NC) bits_NC ^= relayBit; // Sets a 0 in bits_NC for each explicitly assigned NC state in RεS.
-                else bits_NO |= relayBit;                      // Sets a 1 in bits_NO for each explicitly assigned NO state in RεS.
+                else bits_NO |= relayBit;                     // Sets a 1 in bits_NO for each explicitly assigned NO state in RεS.
             }
 
             BitVector32 bv32_NC = new BitVector32((Int32)bits_NC);
@@ -327,15 +298,6 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
                     $"ErrorInfo Value     : {errorInfo.Value}.{Environment.NewLine}" +
                     $"ErrorInfo Message   : {errorInfo.Message}.{Environment.NewLine}");
             }
-        }
-
-        private static Int32[] GetUE24BitVector32Masks() {
-            Int32 ue24RelayCount = Enum.GetValues(typeof(R)).Length;
-            Debug.Assert(ue24RelayCount == 24);
-            Int32[] ue24BitVector32Masks = new Int32[ue24RelayCount];
-            ue24BitVector32Masks[0] = BitVector32.CreateMask();
-            for (Int32 i = 0; i < ue24RelayCount - 1; i++) ue24BitVector32Masks[i + 1] = BitVector32.CreateMask(ue24BitVector32Masks[i]);
-            return ue24BitVector32Masks;
         }
         #endregion private methods
         #endregion methods
