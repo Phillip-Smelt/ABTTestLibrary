@@ -121,7 +121,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             //   the DIn function, since DBitIn would have to perform similar bit-shifting/bit-setting functions as this method does,
             //   once for each of the USB-ERB24's 24 relays, as opposed to 4 times for this method.
             // - Regardless, if preferred, below /*,*/commented code can replace the entirety of this method.
-            /*
+            
             ErrorInfo errorInfo;  DigitalLogicState digitalLogicState;
             R r;  C.S s;  Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
             for (Int32 i = 0; i < Enum.GetValues(typeof(R)).Length; i++) {
@@ -132,8 +132,8 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
                 RεS.Add(r, s);
             }
             return RεS;
-            */
-
+            // TODO:  public static Dictionary<R, C.S> Get(UE ue)
+            /*
             UInt16[] portBits = PortsRead(Only.USB_ERB24s[ue]);
             UInt32[] biggerPortBits = Array.ConvertAll(portBits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
             UInt32 relayBits = 0x0000;
@@ -150,6 +150,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
                 RεS.Add(r, s);
             }
             return RεS;
+            */
         }
 
         // Below 3 methods mainly useful for parallelism, when testing multiple UUTs concurrently, with each B wired identically to test 1 UUT.
@@ -210,6 +211,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             //   once for every call to DBitOut.
             //  - Thought is that DOut will write the bits as simultaneously as possible, at least more so than DBitOut.
             // - Regardless, if preferred, below /*,*/commented code can replace the entirety of this method.
+            
             /*
             ErrorInfo errorInfo;
             foreach (KeyValuePair<R, C.S> kvp in RεS) {
@@ -217,7 +219,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
                 ProcessErrorInfo(Only.USB_ERB24s[ue], errorInfo);
             }
             */
-
+            
             UInt32 relayBit;
             UInt32 bits_NC = 0xFFFF_FFFF; // bits_NC utilize Boolean And logic.
             UInt32 bits_NO = 0x0000_0000; // bits_NO utilize Boolean Or logic.
