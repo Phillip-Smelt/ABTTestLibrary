@@ -60,7 +60,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                         break;
                 }
             } catch (Exception e) {
-                throw new InvalidOperationException(SCPI99.GetErrorMessage(this, "Check to see if SCPI VISA Instrument is powered and its interface communicating."), e);
+                throw new InvalidOperationException(SCPI99.GetErrorMessage(this, "Check to see if Instrument is powered and its interface communicating."), e);
             }
         }
 

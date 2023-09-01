@@ -86,7 +86,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static Boolean IsOutputState(SCPI_VISA_Instrument SVI, OUTPUT State) { return (GetOutputState(SVI) == State); }
 
-        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI) { return SCPI_VISA_Instrument.GetInfo(SVI, $"SCPI VISA Instrument Address '{0}' failed.{Environment.NewLine}"); }
+        internal static String GetErrorMessage(SCPI_VISA_Instrument SVI) { return SCPI_VISA_Instrument.GetInfo(SVI, $"SCPI VISA Instrument Address '{SVI.Address}' failed.{Environment.NewLine}"); }
 
         internal static String GetErrorMessage(SCPI_VISA_Instrument SVI, String errorMessage) { return $"{GetErrorMessage(SVI)}{errorMessage}{Environment.NewLine}"; }
 
