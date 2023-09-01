@@ -92,7 +92,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
             public override Int32 GetHashCode() { return 3 * this.ID.GetHashCode(); }
 
-            public override string ToString() { return this.ID; }
+            public override String ToString() { return this.ID; }
         }
     }
 }
