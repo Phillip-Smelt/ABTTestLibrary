@@ -21,19 +21,63 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
  
         public static Boolean IsEL_34143A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgEL30000)); }
 
-        public static void Local(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
-
-        public static void Remote(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
-
-        public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
-
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             SCPI99.Initialize(SVI);
             ((AgEL30000)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command();
             ((AgEL30000)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
         }
 
-        public static void SetOutputState(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, null); }
+        public static void Local(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
+
+        public static Boolean LoadIs(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode) {
+            if (!LoadModeIs(SVI, LoadMode)) return false;
+            Double delta = 0.01;
+            switch (LoadMode) {
+                case LOAD_MODE.CURR:
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(null, null, out Double ampsDC);
+                    return SCPI99.IsCloseEnough(LoadValue, ampsDC, delta);
+                case LOAD_MODE.POW:
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Query(null, null, out Double[] watts);
+                    return SCPI99.IsCloseEnough(LoadValue, watts[0], delta);
+                case LOAD_MODE.RES:
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query(null, null, out Double[] ohms);
+                    return SCPI99.IsCloseEnough(LoadValue, ohms[0], delta);
+                case LOAD_MODE.VOLT:
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, null, out Double[] voltsDC);
+                    return SCPI99.IsCloseEnough(LoadValue, voltsDC[0], delta);
+                default:
+                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
+            }
+        }
+
+        public static Boolean LoadIs(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_UNITS LoadUnits) { return LoadIs(SVI, LoadValue, (LOAD_MODE)(Int32)LoadUnits); }
+
+        public static Boolean LoadModeIs(SCPI_VISA_Instrument SVI, LOAD_MODE LoadMode) { return LoadMode == LoadModeGet(SVI); }
+
+        public static LOAD_MODE LoadModeGet(SCPI_VISA_Instrument SVI) {
+            ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Query(null, out String LoadMode);
+            return (LOAD_MODE)Enum.Parse(typeof(LOAD_MODE), LoadMode); 
+        }
+
+        public static Boolean LoadUnitsAre(SCPI_VISA_Instrument SVI, LOAD_UNITS LoadUnits) { return LoadUnits == LoadUnitsGet(SVI); }
+
+        public static LOAD_UNITS LoadUnitsGet(SCPI_VISA_Instrument SVI) { return (LOAD_UNITS)(Int32)LoadModeGet(SVI); }
+
+        public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
+            ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(null, out Double[] ampsDC);
+            return ampsDC[0];
+        }
+
+        public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
+            ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.VOLTage.DC.Query(null, out Double[] voltsDC);
+            return voltsDC[0];
+        }
+
+        public static void OutputStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, null); }
+
+        public static void Remote(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
+
+        public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
 
         public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double LoadValue, LOAD_UNITS LoadUnits, SENSE_MODE KelvinSense = SENSE_MODE.INTernal) { Set(SVI, State, LoadValue, (LOAD_MODE)(Int32)LoadUnits, KelvinSense); }
 
@@ -56,42 +100,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 default:
                     throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
             }
-            SetOutputState(SVI, State);
+            OutputStateSet(SVI, State);
         }
-
-        public static LOAD_MODE GetLoadMode(SCPI_VISA_Instrument SVI) {
-            ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Query(null, out String LoadMode);
-            return (LOAD_MODE)Enum.Parse(typeof(LOAD_MODE), LoadMode); 
-        }
-
-        public static LOAD_UNITS GetLoadUnits(SCPI_VISA_Instrument SVI) { return (LOAD_UNITS)(Int32)GetLoadMode(SVI); }
-
-        public static Boolean IsLoadMode(SCPI_VISA_Instrument SVI, LOAD_MODE LoadMode) { return LoadMode == GetLoadMode(SVI); }
-
-        public static Boolean IsLoadUnits(SCPI_VISA_Instrument SVI, LOAD_UNITS LoadUnits) { return LoadUnits == GetLoadUnits(SVI); }
-
-        public static Boolean IsValueAndMode(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode) {
-            if (!IsLoadMode(SVI, LoadMode)) return false;
-            Double delta = 0.01;
-            switch (LoadMode) {
-                case LOAD_MODE.CURR:
-                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(null, null, out Double ampsDC);
-                    return SCPI99.IsCloseEnough(LoadValue, ampsDC, delta);
-                case LOAD_MODE.POW:
-                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Query(null, null, out Double[] watts);
-                    return SCPI99.IsCloseEnough(LoadValue, watts[0], delta);
-                case LOAD_MODE.RES:
-                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query(null, null, out Double[] ohms);
-                    return SCPI99.IsCloseEnough(LoadValue, ohms[0], delta);
-                case LOAD_MODE.VOLT:
-                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, null, out Double[] voltsDC);
-                    return SCPI99.IsCloseEnough(LoadValue, voltsDC[0], delta);
-                default:
-                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
-            }
-        }
-
-        public static Boolean IsValueAndUnits(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_UNITS LoadUnits) { return IsValueAndMode(SVI, LoadValue, (LOAD_MODE)(Int32)LoadUnits); }
 
         public static void SetCURRent(SCPI_VISA_Instrument SVI, Double AmpsDC) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("CURRent", null);
@@ -104,24 +114,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     + $" - MINimum   :  Current={min} A.{Environment.NewLine}"
                     + $" - Programmed:  Current={AmpsDC} A.{Environment.NewLine}"
                     + $" - MAXimum   :  Current={max} A.";
-                throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
+                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
             }
             // TODO: ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command(false, null);
-        }
-
-        public static void SetVOLtage(SCPI_VISA_Instrument SVI, Double VoltsDC) {
-            ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("VOLTage", null);
-            ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC, null);
-            ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.RANGe.Command(VoltsDC, null);
-            ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MINimum, null, out Double[] min);
-            ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MAXimum, null, out Double[] max);
-            if ((VoltsDC < min[0]) || (max[0] < VoltsDC)) {
-                String s = $"< MINimum/MAXimum Voltage.{Environment.NewLine}"
-                    + $" - MINimum   :  Voltage={min[0]} V.{Environment.NewLine}"
-                    + $" - Programmed:  Voltage={VoltsDC} V.{Environment.NewLine}"
-                    + $" - MAXimum   :  Voltage={max[0]} V.";
-                throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
-            }
         }
 
         public static void SetPOWer(SCPI_VISA_Instrument SVI, Double Watts) {
@@ -135,7 +130,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     + $" - MINimum   :  Wattage={min[0]} W.{Environment.NewLine}"
                     + $" - Programmed:  Wattage={Watts} W.{Environment.NewLine}"
                     + $" - MAXimum   :  Wattage={max[0]} W.";
-                throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
+                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
             }
             // TODO: ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
         }
@@ -151,18 +146,23 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     + $" - MINimum   :  Resistance={min[0]} Ω.{Environment.NewLine}"
                     + $" - Programmed:  Resistance={Ohms} Ω.{Environment.NewLine}"
                     + $" - MAXimum   :  Resistance={max[0]} Ω.";
-                throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
+                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
             }
       }
 
-        public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
-            ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.VOLTage.DC.Query(null, out Double[] voltsDC);
-            return voltsDC[0];
-        }
-
-        public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
-            ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(null, out Double[] ampsDC);
-            return ampsDC[0];
+        public static void SetVOLtage(SCPI_VISA_Instrument SVI, Double VoltsDC) {
+            ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("VOLTage", null);
+            ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC, null);
+            ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.RANGe.Command(VoltsDC, null);
+            ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MINimum, null, out Double[] min);
+            ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MAXimum, null, out Double[] max);
+            if ((VoltsDC < min[0]) || (max[0] < VoltsDC)) {
+                String s = $"< MINimum/MAXimum Voltage.{Environment.NewLine}"
+                    + $" - MINimum   :  Voltage={min[0]} V.{Environment.NewLine}"
+                    + $" - Programmed:  Voltage={VoltsDC} V.{Environment.NewLine}"
+                    + $" - MAXimum   :  Voltage={max[0]} V.";
+                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
+            }
         }
     }
 }

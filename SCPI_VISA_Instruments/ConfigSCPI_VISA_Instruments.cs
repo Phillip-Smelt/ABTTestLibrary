@@ -29,7 +29,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             this.Address = address;
 
             try {
-                this.Identity = SCPI99.GetIdentity(address, SCPI_IDENTITY.Model);
+                this.Identity = SCPI99.IdentityGet(address, SCPI_IDENTITY.Model);
 
                 switch (this.Identity) {
                     case EL_34143A.MODEL:
@@ -56,11 +56,11 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     default:
                         this.Instrument = new AgSCPI99(this.Address);
                         SCPI99.Initialize(this);
-                        Logger.LogError(SCPI99.GetErrorMessage(this, $"Unrecognized SCPI VISA Instrument.  Functionality limited to SCPI99 commands only."));
+                        Logger.LogError(SCPI99.ErrorMessageGet(this, $"Unrecognized SCPI VISA Instrument.  Functionality limited to SCPI99 commands only."));
                         break;
                 }
             } catch (Exception e) {
-                throw new InvalidOperationException(SCPI99.GetErrorMessage(this, "Check to see if Instrument is powered and its interface communicating."), e);
+                throw new InvalidOperationException(SCPI99.ErrorMessageGet(this, "Check to see if Instrument is powered and its interface communicating."), e);
             }
         }
 

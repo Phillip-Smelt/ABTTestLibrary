@@ -20,77 +20,14 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class PS_E3610xB {
         public static Boolean IsPS_E3610xB(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgE3610XB)); }
 
-        public static void Local(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
+        public static Boolean CurrentAmplitudeIs(SCPI_VISA_Instrument SVI, Double AmpsDC, Double Delta) { return SCPI99.IsCloseEnough(CurrentAmplitudeGet(SVI), AmpsDC, Delta); }
 
-        public static void Remote(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
-
-        public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
-
-        public static void Initialize(SCPI_VISA_Instrument SVI) {
-            SCPI99.Initialize(SVI);
-            ((AgE3610XB)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command();
-            ((AgE3610XB)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
-        }
-
-        public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
-            ((AgE3610XB)SVI.Instrument).SCPI.MEASure.VOLTage.DC.Query(out Double voltsDC);
-            return voltsDC;
-        }
-
-        public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
-            ((AgE3610XB)SVI.Instrument).SCPI.MEASure.CURRent.DC.Query(out Double ampsDC);
-            return ampsDC;
-        }
-
-         public static void SetVoltageSenseMode(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense)); }
-
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
-            SetVoltageProtectionState(SVI, OUTPUT.off);
-            SetCurrentProtectionState(SVI, OUTPUT.off);
-            ClearVoltageProtectionTripped(SVI);
-            ClearCurrentProtectionTripped(SVI);
-
-            SetVoltageSenseMode(SVI, KelvinSense);
-            SetVoltageAmplitude(SVI, VoltsDC);
-            SetCurrentAmplitude(SVI, AmpsDC);
-
-            SetVoltageProtection(SVI, VoltsDC * 1.10);
-            SetCurrentProtectionDelay(SVI, DelaySecondsCurrentProtection);
-
-            SetVoltageProtectionState(SVI, OUTPUT.ON);
-            SetCurrentProtectionState(SVI, OUTPUT.ON);
-            SCPI99.SetOutputState(SVI, State);
-
-            Thread.Sleep((Int32)(DelaySecondsSettling * 1000));
-        }
-
-        public static Double GetVoltageAmplitude(SCPI_VISA_Instrument SVI) {
-            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, out Double voltsDC);
-            return voltsDC;
-        }
-
-        public static void SetVoltageAmplitude(SCPI_VISA_Instrument SVI, Double VoltsDC) {
-            String s;
-            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MINimum, out Double min);
-            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MAXimum, out Double max);
-            if((VoltsDC < min) || (max < VoltsDC)) {
-                s=$"MINimum/MAXimum Voltage.{Environment.NewLine}"
-                + $" - MINimum   :  Voltage={min} VDC.{Environment.NewLine}"
-                + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
-                + $" - MAXimum   :  Voltage={max} VDC.";
-                throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
-            }
-            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC);
-        }
-
-        public static Boolean IsVoltageAmplitude(SCPI_VISA_Instrument SVI, Double VoltsDC, Double Delta) { return SCPI99.IsCloseEnough(GetVoltageAmplitude(SVI), VoltsDC, Delta); }
-
-        public static Double GetCurrentAmplitude(SCPI_VISA_Instrument SVI) {
+        public static Double CurrentAmplitudeGet(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(null, out Double ampsDC);
             return ampsDC;
         }
 
-        public static void SetCurrentAmplitude(SCPI_VISA_Instrument SVI, Double AmpsDC) {
+        public static void CurrentAmplitudeSet(SCPI_VISA_Instrument SVI, Double AmpsDC) {
             String s;
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MINimum, out Double min);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MAXimum, out Double max);
@@ -99,19 +36,17 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 + $" - MINimum   :  Current={min} ADC.{Environment.NewLine}"
                 + $" - Programmed:  Current={AmpsDC} ADC.{Environment.NewLine}"
                 + $" - MAXimum   :  Current={max} ADC.";
-                throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
+                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
             }
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC);
         }
 
-        public static Boolean IsCurrentAmplitude(SCPI_VISA_Instrument SVI, Double AmpsDC, Double Delta) { return SCPI99.IsCloseEnough(GetCurrentAmplitude(SVI), AmpsDC, Delta); }
-
-        public static Double GetCurrentProtectionDelay(SCPI_VISA_Instrument SVI) {
+        public static Double CurrentProtectionDelayGet(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(null, out Double seconds);
             return seconds;
         }
 
-        public static void SetCurrentProtectionDelay(SCPI_VISA_Instrument SVI, Double DelaySeconds) {
+        public static void CurrentProtectionDelaySet(SCPI_VISA_Instrument SVI, Double DelaySeconds) {
             String s;
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MINimum, out Double min);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MAXimum, out Double max);
@@ -120,32 +55,95 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 + $" - MINimum   :  Delay={min} seconds.{Environment.NewLine}"
                 + $" - Programmed:  Delay={DelaySeconds} seconds.{Environment.NewLine}"
                 + $" - MAXimum   :  Delay={max} seconds.";
-                throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
+                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
             }
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds);
-            SetCurrentProtectionState(SVI, OUTPUT.ON);
+            CurrentProtectionStateSet(SVI, OUTPUT.ON);
         }
 
-        public static Boolean GetCurrentProtectionState(SCPI_VISA_Instrument SVI) {
+        public static Boolean CurrentProtectionStateGet(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Query(out Boolean state);
             return state;
         }
 
-        public static void SetCurrentProtectionState(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is OUTPUT.ON)); }
+        public static void CurrentProtectionStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is OUTPUT.ON)); }
      
-        public static void ClearCurrentProtectionTripped(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.CLEar.Command(); }
+        public static void CurrentProtectionTrippedClear(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.CLEar.Command(); }
 
-        public static Boolean GetCurrentProtectionTripped(SCPI_VISA_Instrument SVI) {
+        public static Boolean CurrentProtectionTrippedGet(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.TRIPped.Query(out Boolean tripped);
             return tripped;
         }
 
-        public static Double GetVoltageProtection(SCPI_VISA_Instrument SVI) {
+        public static void Initialize(SCPI_VISA_Instrument SVI) {
+            SCPI99.Initialize(SVI);
+            ((AgE3610XB)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command();
+            ((AgE3610XB)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
+        }
+
+        public static void Local(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
+
+        public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
+            ((AgE3610XB)SVI.Instrument).SCPI.MEASure.CURRent.DC.Query(out Double ampsDC);
+            return ampsDC;
+        }
+
+        public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
+            ((AgE3610XB)SVI.Instrument).SCPI.MEASure.VOLTage.DC.Query(out Double voltsDC);
+            return voltsDC;
+        }
+
+        public static void Remote(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
+
+        public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
+
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
+            VoltageProtectionStateSet(SVI, OUTPUT.off);
+            CurrentProtectionStateSet(SVI, OUTPUT.off);
+            VoltageProtectionTrippedClear(SVI);
+            CurrentProtectionTrippedClear(SVI);
+
+            VoltageSenseModeSet(SVI, KelvinSense);
+            VoltageAmplitudeSet(SVI, VoltsDC);
+            CurrentAmplitudeSet(SVI, AmpsDC);
+
+            VoltageProtectionSet(SVI, VoltsDC * 1.10);
+            CurrentProtectionDelaySet(SVI, DelaySecondsCurrentProtection);
+
+            VoltageProtectionStateSet(SVI, OUTPUT.ON);
+            CurrentProtectionStateSet(SVI, OUTPUT.ON);
+            SCPI99.OutputStateSet(SVI, State);
+
+            Thread.Sleep((Int32)(DelaySecondsSettling * 1000));
+        }
+
+        public static Boolean VoltageAmplitudeIs(SCPI_VISA_Instrument SVI, Double VoltsDC, Double Delta) { return SCPI99.IsCloseEnough(VoltageAmplitudeGet(SVI), VoltsDC, Delta); }
+
+        public static Double VoltageAmplitudeGet(SCPI_VISA_Instrument SVI) {
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, out Double voltsDC);
+            return voltsDC;
+        }
+
+        public static void VoltageAmplitudeSet(SCPI_VISA_Instrument SVI, Double VoltsDC) {
+            String s;
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MINimum, out Double min);
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MAXimum, out Double max);
+            if((VoltsDC < min) || (max < VoltsDC)) {
+                s=$"MINimum/MAXimum Voltage.{Environment.NewLine}"
+                + $" - MINimum   :  Voltage={min} VDC.{Environment.NewLine}"
+                + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
+                + $" - MAXimum   :  Voltage={max} VDC.";
+                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
+            }
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC);
+        }
+
+        public static Double VoltageProtectionGet(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query(null, out Double amplitude);
             return amplitude;
         }
 
-        public static void SetVoltageProtection(SCPI_VISA_Instrument SVI, Double VoltsDC) {
+        public static void VoltageProtectionSet(SCPI_VISA_Instrument SVI, Double VoltsDC) {
             String s;
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query(MINimum, out Double min);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query(MAXimum, out Double max);
@@ -154,24 +152,26 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 + $" - MINimum   :  Voltage={min} VDC.{Environment.NewLine}"
                 + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
                 + $" - MAXimum   :  Voltage={max} VDC.";
-                throw new InvalidOperationException(SCPI99.GetErrorMessage(SVI, s));
+                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
             }
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Command(VoltsDC);
-            SetVoltageProtectionState(SVI, OUTPUT.ON);
+            VoltageProtectionStateSet(SVI, OUTPUT.ON);
         }
 
-        public static void ClearVoltageProtectionTripped(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(); }
+        public static void VoltageProtectionTrippedClear(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(); }
 
-        public static Boolean GetVoltageProtectionTripped(SCPI_VISA_Instrument SVI) {
+        public static Boolean VoltageProtectionTrippedGet(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.TRIPped.Query(out Boolean tripped);
             return tripped;
         }
 
-        public static Boolean GetVoltageProtectionState(SCPI_VISA_Instrument SVI) {
+        public static Boolean VoltageProtectionStateGet(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Query(out Boolean state);
             return state;
         }
 
-        public static void SetVoltageProtectionState(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(State is OUTPUT.ON); }
+        public static void VoltageProtectionStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(State is OUTPUT.ON); }
+ 
+        public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense)); }
     }
 }

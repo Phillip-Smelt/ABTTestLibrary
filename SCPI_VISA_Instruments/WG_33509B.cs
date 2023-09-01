@@ -20,26 +20,23 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((Ag33500B_33600A)SVI.Instrument).SCPI.DISPlay.TEXT.CLEar.Command();
         }
 
-        public static void Off(SCPI_VISA_Instrument SVI) {
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.RST.Command();
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.Command(null, false);
+        public static OUTPUT OutputStateGet(SCPI_VISA_Instrument SVI) {
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.Query(null, out Boolean State);
+            return State ? OUTPUT.ON : OUTPUT.off;
         }
 
-        public static void ApplyWaveformSquare(SCPI_VISA_Instrument SVI, Double FrequencyHz, Double AmplitudeV, Double OffsetV) {
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.LOAD.Command(null, "INFinity");
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.APPLy.SQUare.Command(null, FrequencyHz, "HZ", AmplitudeV, "V", OffsetV, "V");
-        }
+        public static Boolean OutputStateIs(SCPI_VISA_Instrument SVI, OUTPUT State) { return (State == OutputStateGet(SVI)); }
 
-        public static Boolean IsOff(SCPI_VISA_Instrument SVI) {
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.Query(null, out Boolean Output);
-            return Output == false;
-        }
+        public static void OutputStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.Command(null, (State is OUTPUT.ON)); }
 
-        public static Boolean IsOn(SCPI_VISA_Instrument SVI) { return !IsOff(SVI); }
-        
-        public static String GetWaveform(SCPI_VISA_Instrument SVI) {
+        public static String WaveformGet(SCPI_VISA_Instrument SVI) {
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.APPLy.Query(null, out String Waveform);
             return Waveform;
+        }
+
+        public static void WaveformSquareApply(SCPI_VISA_Instrument SVI, Double FrequencyHz, Double AmplitudeV, Double OffsetV) {
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.LOAD.Command(null, "INFinity");
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.APPLy.SQUare.Command(null, FrequencyHz, "HZ", AmplitudeV, "V", OffsetV, "V");
         }
     }
 }
