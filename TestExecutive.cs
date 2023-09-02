@@ -43,8 +43,6 @@ namespace ABT.TestSpace.TestExec {
         internal readonly String _libraryAssemblyVersion;
         private Boolean _cancelled = false;
 
-        protected abstract Task<String> MeasurementRun(String MeasurementID);
-
         protected TestExecutive(Icon icon) {
             this.InitializeComponent();
             this._appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
@@ -244,6 +242,8 @@ namespace ABT.TestSpace.TestExec {
                 if (this.MeasurementsCancelNotPassed(groupID)) return;
             }
         }
+        
+        protected abstract Task<String> MeasurementRun(String MeasurementID);
 
         private void MeasurementsPostRun() {
             SCPI99.ResetAll(this.SVIs);
@@ -257,16 +257,16 @@ namespace ABT.TestSpace.TestExec {
             Logger.Stop(this, ref this.rtfResults);
         }
 
-        private void MeasurementsRunExceptionHandler(String ID, Exception e) {
+        private void MeasurementsRunExceptionHandler(String measurementID, Exception e) {
             if (e.ToString().Contains(CancellationException.ClassName)) {
                 while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException;
-                if ((e is CancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Measurements[ID].Value = e.Message;
-                this.ConfigTest.Measurements[ID].Result = EventCodes.CANCEL;
+                if ((e is CancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Measurements[measurementID].Value = e.Message;
+                this.ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
             } else {
                 SCPI99.ResetAll(this.SVIs);
                 UE24.Set(RelayForms.C.S.NC);
                 Logger.LogError(e.ToString());
-                this.ConfigTest.Measurements[ID].Result = EventCodes.ERROR;
+                this.ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
             }
         }
 
@@ -307,20 +307,20 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private String MeasurementsEvaluate(Dictionary<String, Measurement> measurements) {
-            if (this.GetResultCount(measurements, EventCodes.PASS) == measurements.Count) return EventCodes.PASS;
+            if (this.ResultCountGet(measurements, EventCodes.PASS) == measurements.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All measurement results are PASS, so overall result is PASS.
-            if (this.GetResultCount(measurements, EventCodes.ERROR) != 0) return EventCodes.ERROR;
+            if (this.ResultCountGet(measurements, EventCodes.ERROR) != 0) return EventCodes.ERROR;
             // 2nd priority evaluation:
             // - If any measurement result is ERROR, overall result is ERROR.
-            if (this.GetResultCount(measurements, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
+            if (this.ResultCountGet(measurements, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
             // 3rd priority evaluation:
             // - If any measurement result is CANCEL, and none were ERROR, overall result is CANCEL.
-            if (this.GetResultCount(measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
+            if (this.ResultCountGet(measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
             // 4th priority evaluation:
             // - If any measurement result is UNSET, and none were ERROR or CANCEL, then Measurement(s) didn't complete.
             // - Likely occurred because a Measurement failed that had its App.Config TestMeasurement CancelOnFail flag set to true.
-            if (this.GetResultCount(measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
+            if (this.ResultCountGet(measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
             // 5th priority evaluation:
             // - If any measurement result is FAIL, and none were ERROR, CANCEL or UNSET, result is FAIL.
 
@@ -332,7 +332,7 @@ namespace ABT.TestSpace.TestExec {
             // Above handles class EventCodes changing (adding/deleting/renaming EventCodes) without accomodating EvaluateResults() changes. 
         }
 
-        private Int32 GetResultCount(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Result, eventCode) select measurement).Count(); }
+        private Int32 ResultCountGet(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Result, eventCode) select measurement).Count(); }
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
     }
