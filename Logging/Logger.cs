@@ -101,7 +101,7 @@ namespace ABT.TestSpace.TestExec.Logging {
 #if VERBOSE
             message.AppendLine($"  Revision          : {measurement.Revision}");
             message.AppendLine($"  Measurement Type  : {measurement.ClassName}");
-            message.AppendLine($"  Cancel on Failure : {measurement.CancelOnFailure}");
+            message.AppendLine($"  Cancel Not Passed : {measurement.CancelNotPassed}");
 #endif
             message.AppendLine($"  Description       : {measurement.Description}");
             switch (measurement.ClassName) {

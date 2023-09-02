@@ -45,7 +45,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
         [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
         [ConfigurationProperty("Selectable", IsKey = false, IsRequired = true)] public Boolean Selectable { get { return ((Boolean)base["Selectable"]); } }
-        [ConfigurationProperty("CancelOnFailure", IsKey = false, IsRequired = true)] public Boolean CancelOnFailure { get { return ((Boolean)base["CancelOnFailure"]); } }
+        [ConfigurationProperty("CancelNotPassed", IsKey = false, IsRequired = true)] public Boolean CancelNotPassed { get { return ((Boolean)base["CancelNotPassed"]); } }
         [ConfigurationProperty("TestMeasurementIDs", IsKey = false, IsRequired = true)] public String TestMeasurementIDs { get { return ((String)base["TestMeasurementIDs"]).Trim(); } }
     }
 
@@ -69,7 +69,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
         [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
         [ConfigurationProperty("ClassName", IsKey = false, IsRequired = true)] public String ClassName { get { return ((String)base["ClassName"]).Trim(); } }
-        [ConfigurationProperty("CancelOnFailure", IsKey = false, IsRequired = true)] public Boolean CancelOnFailure { get { return ((Boolean)base["CancelOnFailure"]); } }
+        [ConfigurationProperty("CancelNotPassed", IsKey = false, IsRequired = true)] public Boolean CancelNotPassed { get { return ((Boolean)base["CancelNotPassed"]); } }
         [ConfigurationProperty("Arguments", IsKey = false, IsRequired = true)] public String Arguments { get { return ((String)base["Arguments"]).Trim(); } }
     }
 
@@ -108,15 +108,15 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String Revision;    
         public readonly String Description;
         public readonly Boolean Selectable;
-        public readonly Boolean CancelOnFailure;
+        public readonly Boolean CancelNotPassed;
         public readonly String TestMeasurementIDs;
 
-        private Group(String id, String revision, String description, Boolean selectable, Boolean cancelOnFailure, String testMeasurementIDs) {
+        private Group(String id, String revision, String description, Boolean selectable, Boolean cancelNotPassed, String testMeasurementIDs) {
             this.ID = id;
             this.Revision = revision;
             this.Description = description;
             this.Selectable = selectable;
-            this.CancelOnFailure = cancelOnFailure;
+            this.CancelNotPassed = cancelNotPassed;
             this.TestMeasurementIDs = testMeasurementIDs;
         }
 
@@ -124,7 +124,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             TestGroupsSection testGroupSection = (TestGroupsSection)ConfigurationManager.GetSection(TestGroupsSection.ClassName);
             TestGroups testGroups = testGroupSection.TestGroups;
             Dictionary<String, Group> dictionary = new Dictionary<String, Group>();
-            foreach (TestGroup tg in testGroups) dictionary.Add(tg.ID, new Group(tg.ID, tg.Revision, tg.Description, tg.Selectable, tg.CancelOnFailure, tg.TestMeasurementIDs));
+            foreach (TestGroup tg in testGroups) dictionary.Add(tg.ID, new Group(tg.ID, tg.Revision, tg.Description, tg.Selectable, tg.CancelNotPassed, tg.TestMeasurementIDs));
             return dictionary;
         }
 
@@ -137,19 +137,19 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String Description;
         public readonly String ClassName;
         public readonly Object ClassObject;
-        public readonly Boolean CancelOnFailure;
+        public readonly Boolean CancelNotPassed;
         public String GroupID { get; set; } = String.Empty; // Determined pre-test.
         public String Value { get; set; } = String.Empty; // Determined during test.
         public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
         public String Message { get; set; } = String.Empty; // Determined during test.
 
-        private Measurement(String id, String revision, String description, String className, Boolean cancelOnFailure, String arguments) {
+        private Measurement(String id, String revision, String description, String className, Boolean cancelNotPassed, String arguments) {
             this.ID = id;
             this.Revision = revision;
             this.Description = description;
             this.ClassName = className;
             this.ClassObject = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
-            this.CancelOnFailure = cancelOnFailure;
+            this.CancelNotPassed = cancelNotPassed;
             if (String.Equals(this.ClassName, MeasurementNumeric.ClassName)) this.Value = Double.NaN.ToString();
         }
 
@@ -157,7 +157,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             TestMeasurementsSection testMeasurementsSection = (TestMeasurementsSection)ConfigurationManager.GetSection(TestMeasurementsSection.ClassName);
             TestMeasurements testMeasurements = testMeasurementsSection.TestMeasurements;
             Dictionary<String, Measurement> dictionary = new Dictionary<String, Measurement>();
-            foreach (TestMeasurement tm in testMeasurements) { dictionary.Add(tm.ID, new Measurement(tm.ID, tm.Revision, tm.Description, tm.ClassName, tm.CancelOnFailure, tm.Arguments)); }
+            foreach (TestMeasurement tm in testMeasurements) { dictionary.Add(tm.ID, new Measurement(tm.ID, tm.Revision, tm.Description, tm.ClassName, tm.CancelNotPassed, tm.Arguments)); }
             return dictionary;
         }
 

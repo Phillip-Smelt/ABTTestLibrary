@@ -119,15 +119,15 @@ namespace ABT.TestSpace.TestExec {
             //          - Simply throw a CancellationException if the specific condition(s) occcur.
             //          - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestExecutor/blob/master/TestProgram/T-Common.cs
             //          - Test Developer must set CancellationException's message to the Measured Value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
-            //      4)  App.Config's CancelOnFailure:
-            //          - App.Config's TestMeasurement element has a Boolean "CancelOnFailure" field:
-            //          - If the current TestExecutor.MeasurementRun() has CancelOnFailure=true and it's resulting EvaluateResultMeasurement() returns EventCodes.FAIL,
+            //      4)  App.Config's CancelNotPassed:
+            //          - App.Config's TestMeasurement element has a Boolean "CancelNotPassed" field:
+            //          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EventCodes.PASS,
             //            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
             //		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
             //
             // NOTE: The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
             //       thrown CancellationExceptions.
-            // NOTE: The Operator Reactive & App.Config's CancelOnFailure Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
+            // NOTE: The Operator Reactive & App.Config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
             //       inside the TestExecutive.MeasurementsRun() loop.
             #endregion Long Measurement Cancellation Comment
             this.CancelTokenSource.Cancel();
@@ -230,7 +230,7 @@ namespace ABT.TestSpace.TestExec {
                         this.ConfigTest.Measurements[measurementID].Value = await Task.Run(() => this.MeasurementRun(measurementID));
                         this.ConfigTest.Measurements[measurementID].Result = this.MeasurementEvaluate(this.ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
-                        this.MeasurementsExceptionHandler(measurementID, e);
+                        this.MeasurementsRunExceptionHandler(measurementID, e);
                         return;
                     } finally {
                         Logger.LogTest(this.ConfigTest.IsOperation, this.ConfigTest.Measurements[measurementID], ref this.rtfResults);
@@ -239,9 +239,9 @@ namespace ABT.TestSpace.TestExec {
                         this.ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
                         return;
                     }
-                    if (this.MeasurementFailed(measurementID) && this.ConfigTest.Measurements[measurementID].CancelOnFailure) return;
+                    if (this.MeasurementNotPassed(measurementID) && this.ConfigTest.Measurements[measurementID].CancelNotPassed) return;
                 }
-                if (this.GroupFailed(groupID) && this.ConfigTest.Groups[groupID].CancelOnFailure) return;
+                if (this.MeasurementsNotPassed(groupID) && this.ConfigTest.Groups[groupID].CancelNotPassed) return;
             }
         }
 
@@ -257,7 +257,7 @@ namespace ABT.TestSpace.TestExec {
             Logger.Stop(this, ref this.rtfResults);
         }
 
-        private void MeasurementsExceptionHandler(String ID, Exception e) {
+        private void MeasurementsRunExceptionHandler(String ID, Exception e) {
             if (e.ToString().Contains(CancellationException.ClassName)) {
                 while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException;
                 if ((e is CancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Measurements[ID].Value = e.Message;
@@ -270,12 +270,14 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        private Boolean MeasurementFailed(String measurementID) { return String.Equals(this.ConfigTest.Measurements[measurementID].Result, EventCodes.FAIL); }
+        private Boolean MeasurementNotPassed(String measurementID) { return !String.Equals(this.ConfigTest.Measurements[measurementID].Result, EventCodes.PASS); }
 
-        private Boolean GroupFailed(String groupID) {
-            Dictionary<String, Measurement> groupIDMeasurements = new Dictionary<String, Measurement>();
-            foreach (String measurementID in this.ConfigTest.GroupIDsToMeasurementIDs[groupID]) groupIDMeasurements.Add(measurementID, this.ConfigTest.Measurements[measurementID]);
-            return !String.Equals(this.MeasurementsEvaluate(groupIDMeasurements), EventCodes.PASS);
+        private Boolean MeasurementsNotPassed(String groupID) { return !String.Equals(this.MeasurementsEvaluate(MeasurementsGet(groupID)), EventCodes.PASS); }
+
+        private Dictionary<String, Measurement> MeasurementsGet(String groupID) {
+            Dictionary<String, Measurement> measurements = new Dictionary<String, Measurement>();
+            foreach (String measurementID in this.ConfigTest.GroupIDsToMeasurementIDs[groupID]) measurements.Add(measurementID, this.ConfigTest.Measurements[measurementID]);
+            return measurements;
         }
 
         private String MeasurementEvaluate(Measurement measurement) {
