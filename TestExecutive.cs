@@ -217,8 +217,8 @@ namespace ABT.TestSpace.TestExec {
                 kvp.Value.Message = String.Empty;
             }
             this.ConfigUUT.EventCode = EventCodes.UNSET;
-            UE24.Set(RelayForms.C.S.NC);
             SCPI99.ResetAll(this.SVIs);
+            UE24.Set(RelayForms.C.S.NC);
             Logger.Start(this, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
         }
@@ -239,21 +239,21 @@ namespace ABT.TestSpace.TestExec {
                         this.ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
                         return;
                     }
-                    if (this.MeasurementNotPassed(measurementID) && this.ConfigTest.Measurements[measurementID].CancelNotPassed) return;
+                    if (this.MeasurementCancelNotPassed(measurementID)) return;
                 }
-                if (this.MeasurementsNotPassed(groupID) && this.ConfigTest.Groups[groupID].CancelNotPassed) return;
+                if (this.MeasurementsCancelNotPassed(groupID)) return;
             }
         }
 
         private void MeasurementsPostRun() {
             SCPI99.ResetAll(this.SVIs);
-            UE24.Set(RelayForms.C.S.NC);
             this.ButtonSelectTests.Enabled = true;
             this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);
             this.ConfigUUT.EventCode = this.MeasurementsEvaluate(this.ConfigTest.Measurements);
             this.TextResult.Text = this.ConfigUUT.EventCode;
             this.TextResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
+            UE24.Set(RelayForms.C.S.NC);
             Logger.Stop(this, ref this.rtfResults);
         }
 
@@ -270,9 +270,13 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        private Boolean MeasurementNotPassed(String measurementID) { return !String.Equals(this.ConfigTest.Measurements[measurementID].Result, EventCodes.PASS); }
+        private Boolean MeasurementCancelNotPassed(String measurementID) {
+            return !String.Equals(this.ConfigTest.Measurements[measurementID].Result, EventCodes.PASS) && this.ConfigTest.Measurements[measurementID].CancelNotPassed; 
+        }
 
-        private Boolean MeasurementsNotPassed(String groupID) { return !String.Equals(this.MeasurementsEvaluate(MeasurementsGet(groupID)), EventCodes.PASS); }
+        private Boolean MeasurementsCancelNotPassed(String groupID) {
+            return !String.Equals(this.MeasurementsEvaluate(MeasurementsGet(groupID)), EventCodes.PASS) && this.ConfigTest.Groups[groupID].CancelNotPassed;
+        }
 
         private Dictionary<String, Measurement> MeasurementsGet(String groupID) {
             Dictionary<String, Measurement> measurements = new Dictionary<String, Measurement>();
@@ -283,7 +287,7 @@ namespace ABT.TestSpace.TestExec {
         private String MeasurementEvaluate(Measurement measurement) {
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
-                    return measurement.Result;
+                    return measurement.Result; // Test Developer must set Result in TestExecutor, else it will be EventCodes.UNSET.
                 case MeasurementISP.ClassName:
                     MeasurementISP measurementISP = (MeasurementISP)measurement.ClassObject;
                     if (String.Equals(measurementISP.ISPExpected, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
