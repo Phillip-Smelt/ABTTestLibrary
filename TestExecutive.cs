@@ -206,7 +206,6 @@ namespace ABT.TestSpace.TestExec {
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
             ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{Logger.GetFilePath(this)}\"" };
             Process.Start(psi);
-            // Will fail if this.ConfigLogger.FilePath is invalid.  Don't catch resulting Exception though; this has to be fixed in App.config.
         }
 
         private void MeasurementsPreRun() {
@@ -229,26 +228,36 @@ namespace ABT.TestSpace.TestExec {
                 foreach (String measurementID in this.ConfigTest.GroupIDsToMeasurementIDs[groupID]) {
                     try {
                         this.ConfigTest.Measurements[measurementID].Value = await Task.Run(() => this.MeasurementRun(measurementID));
-                        this.ConfigTest.Measurements[measurementID].Result = this.EvaluateResultMeasurement(this.ConfigTest.Measurements[measurementID]);
+                        this.ConfigTest.Measurements[measurementID].Result = this.MeasurementEvaluate(this.ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
-                        this.MeasurementsRunExceptionHandler(measurementID, e);
-                        break;
+                        this.MeasurementsExceptionHandler(measurementID, e);
+                        return;
                     } finally {
                         Logger.LogTest(this.ConfigTest.IsOperation, this.ConfigTest.Measurements[measurementID], ref this.rtfResults);
                     }
                     if (this._cancelled) {
                         this.ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
-                        break;
+                        return;
                     }
-                    if (String.Equals(this.ConfigTest.Measurements[measurementID].Result, EventCodes.FAIL) && this.ConfigTest.Measurements[measurementID].CancelOnFailure) break;
+                    if (this.MeasurementFailed(measurementID) && this.ConfigTest.Measurements[measurementID].CancelOnFailure) return;
                 }
-                Dictionary<String, Measurement> groupIDMeasurements = new Dictionary<String, Measurement>();
-                foreach (String measurementID in this.ConfigTest.GroupIDsToMeasurementIDs[groupID]) groupIDMeasurements.Add(measurementID, this.ConfigTest.Measurements[measurementID]);
-                if (!String.Equals(this.EvaluateResults(groupIDMeasurements), EventCodes.PASS) && this.ConfigTest.Groups[groupID].CancelOnFailure) break;
+                if (this.GroupFailed(groupID) && this.ConfigTest.Groups[groupID].CancelOnFailure) return;
             }
         }
 
-        private void MeasurementsRunExceptionHandler(String ID, Exception e) {
+        private void MeasurementsPostRun() {
+            SCPI99.ResetAll(this.SVIs);
+            UE24.Set(RelayForms.C.S.NC);
+            this.ButtonSelectTests.Enabled = true;
+            this.ButtonStartReset(enabled: true);
+            this.ButtonCancelReset(enabled: false);
+            this.ConfigUUT.EventCode = this.MeasurementsEvaluate(this.ConfigTest.Measurements);
+            this.TextResult.Text = this.ConfigUUT.EventCode;
+            this.TextResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
+            Logger.Stop(this, ref this.rtfResults);
+        }
+
+        private void MeasurementsExceptionHandler(String ID, Exception e) {
             if (e.ToString().Contains(CancellationException.ClassName)) {
                 while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException;
                 if ((e is CancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Measurements[ID].Value = e.Message;
@@ -261,19 +270,15 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        private void MeasurementsPostRun() {
-            SCPI99.ResetAll(this.SVIs);
-            UE24.Set(RelayForms.C.S.NC);
-            this.ButtonSelectTests.Enabled = true;
-            this.ButtonStartReset(enabled: true);
-            this.ButtonCancelReset(enabled: false);
-            this.ConfigUUT.EventCode = this.EvaluateResults(this.ConfigTest.Measurements);
-            this.TextResult.Text = this.ConfigUUT.EventCode;
-            this.TextResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
-            Logger.Stop(this, ref this.rtfResults);
+        private Boolean MeasurementFailed(String measurementID) { return String.Equals(this.ConfigTest.Measurements[measurementID].Result, EventCodes.FAIL); }
+
+        private Boolean GroupFailed(String groupID) {
+            Dictionary<String, Measurement> groupIDMeasurements = new Dictionary<String, Measurement>();
+            foreach (String measurementID in this.ConfigTest.GroupIDsToMeasurementIDs[groupID]) groupIDMeasurements.Add(measurementID, this.ConfigTest.Measurements[measurementID]);
+            return !String.Equals(this.MeasurementsEvaluate(groupIDMeasurements), EventCodes.PASS);
         }
 
-        private String EvaluateResultMeasurement(Measurement measurement) {
+        private String MeasurementEvaluate(Measurement measurement) {
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
                     return measurement.Result;
@@ -295,7 +300,7 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        private String EvaluateResults(Dictionary<String, Measurement> measurements) {
+        private String MeasurementsEvaluate(Dictionary<String, Measurement> measurements) {
             if (this.GetResultCount(measurements, EventCodes.PASS) == measurements.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All measurement results are PASS, so overall result is PASS.
