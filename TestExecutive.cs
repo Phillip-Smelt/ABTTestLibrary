@@ -243,7 +243,7 @@ namespace ABT.TestSpace.TestExec {
             }
         }
         
-        protected abstract Task<String> MeasurementRun(String MeasurementID);
+        protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
             SCPI99.ResetAll(this.SVIs);
