@@ -107,7 +107,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
                     MeasurementCustom measurementCustom = (MeasurementCustom)measurement.ClassObject;
-                    if (measurementCustom.Arguments != MeasurementCustom.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in MeasurementAbstract.SplitArguments(measurementCustom.Arguments)) message.AppendLine($"  Key=Value         : {kvp.Key}={kvp.Value}");
+                    if (measurementCustom.Arguments != MeasurementCustom.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in MeasurementAbstract.ArgumentsSplit(measurementCustom.Arguments)) message.AppendLine($"  Key=Value         : {kvp.Key}={kvp.Value}");
                     message.AppendLine($"  Actual            : {measurement.Value}");
                     break;
                 case MeasurementISP.ClassName:

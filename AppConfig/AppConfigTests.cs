@@ -14,9 +14,12 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public const String ClassName = nameof(MeasurementAbstract);
         public const Char SA = '|'; // Arguments separator character.  Must match Arguments separator character used in TestExecutor's App.Config.
         public const Char SK = '='; // Key/Values separator character.  Must match Key/Values separator character used in TestExecutor's App.Config.
+
         private protected MeasurementAbstract() { }
 
-        public static Dictionary<String, String> SplitArguments(String Arguments) {
+        public abstract String ArgumentsGet();
+
+        public static Dictionary<String, String> ArgumentsSplit(String Arguments) {
             Dictionary<String, String> argDictionary = new Dictionary<String, String>();
             if (String.Equals(Arguments, MeasurementCustom.NOT_APPLICABLE)) argDictionary.Add(MeasurementCustom.NOT_APPLICABLE, MeasurementCustom.NOT_APPLICABLE);
             else {
@@ -30,23 +33,23 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             return argDictionary;
         }
 
-        internal abstract void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict);
-
-        public abstract String GetArguments();
+        internal abstract void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict);
     }
 
     public class MeasurementCustom : MeasurementAbstract {
         public new const String ClassName = nameof(MeasurementCustom);
         public readonly String Arguments;
-        public const String NOT_APPLICABLE = "NotApplicable";
+        public readonly String NOT_APPLICABLE = Enum.GetName(typeof(SI_UNITS), SI_UNITS.NotApplicable);
 
         public MeasurementCustom(String ID, String Arguments) {
-            Dictionary<String, String> argsDict = SplitArguments(Arguments);
-            ValidateArguments(ID, Arguments, argsDict);
+            Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
+            ArgumentsValidate(ID, Arguments, argsDict);
             this.Arguments = Arguments;
         }
 
-        internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) {
+        public override String ArgumentsGet() { return this.Arguments; }
+
+        internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count == 0) throw new ArgumentException($"{ClassName} ID '{id}' requires 1 or more case-sensitive arguments:{Environment.NewLine}" +
                 $"   Example: '{NOT_APPLICABLE}'{Environment.NewLine}" +
                 $"   Or     : 'Key1{SK}Value1'{Environment.NewLine}" +
@@ -55,8 +58,6 @@ namespace ABT.TestSpace.TestExec.AppConfig {
                 $"             Key3{SK}Value3'{Environment.NewLine}" +
                 $"   Actual : '{arguments}'");
         }
-
-        public override String GetArguments() { return this.Arguments; }
     }
 
     public class MeasurementISP : MeasurementAbstract {
@@ -67,15 +68,19 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String ISPExpected;                 private const String _ISP_EXPECTED = nameof(ISPExpected);
 
         public MeasurementISP(String ID, String Arguments) {
-            Dictionary<String, String> argsDict = SplitArguments(Arguments);
-            ValidateArguments(ID, Arguments, argsDict);
+            Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
+            ArgumentsValidate(ID, Arguments, argsDict);
             this.ISPExecutableFolder = argsDict[_ISP_EXECUTABLE_FOLDER];
             this.ISPExecutable = argsDict[_ISP_EXECUTABLE];
             this.ISPExecutableArguments = argsDict[_ISP_EXECUTABLE_ARGUMENTS];
             this.ISPExpected = argsDict[_ISP_EXPECTED];
         }
 
-        internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) {
+        public override String ArgumentsGet() {
+            return $"{_ISP_EXECUTABLE_FOLDER}{SK}{this.ISPExecutableFolder}{SA}{_ISP_EXECUTABLE}{SK}{this.ISPExecutable}{SA}{_ISP_EXECUTABLE_ARGUMENTS}{SK}{this.ISPExecutableArguments}{SA}{_ISP_EXPECTED}{SK}{this.ISPExpected}";
+        }
+
+        internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $@"   Example: '{_ISP_EXECUTABLE}{SK}ipecmd.exe{SA}{Environment.NewLine}
                                 {_ISP_EXECUTABLE_FOLDER}{SK}C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe\{SA}{Environment.NewLine}
@@ -90,10 +95,6 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             if (!Directory.Exists(argsDict[_ISP_EXECUTABLE_FOLDER])) throw new ArgumentException($"{ClassName} ID '{id}' {_ISP_EXECUTABLE_FOLDER} '{argsDict[_ISP_EXECUTABLE_FOLDER]}' does not exist.");
             if (!File.Exists(argsDict[_ISP_EXECUTABLE_FOLDER] + argsDict[_ISP_EXECUTABLE])) throw new ArgumentException($"{ClassName} ID '{id}' {_ISP_EXECUTABLE} '{argsDict[_ISP_EXECUTABLE_FOLDER] + argsDict[_ISP_EXECUTABLE]}' does not exist.");
         }
-
-        public override String GetArguments() {
-            return $"{_ISP_EXECUTABLE_FOLDER}{SK}{this.ISPExecutableFolder}{SA}{_ISP_EXECUTABLE}{SK}{this.ISPExecutable}{SA}{_ISP_EXECUTABLE_ARGUMENTS}{SK}{this.ISPExecutableArguments}{SA}{_ISP_EXPECTED}{SK}{this.ISPExpected}";
-        }
     }
 
     public class MeasurementNumeric : MeasurementAbstract {
@@ -104,8 +105,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly SI_UNITS_MODIFIERS SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;    private const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
 
         public MeasurementNumeric(String ID, String Arguments) {
-            Dictionary<String, String> argsDict = SplitArguments(Arguments);
-            ValidateArguments(ID, Arguments, argsDict);
+            Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
+            ArgumentsValidate(ID, Arguments, argsDict);
             this.High = Double.Parse(argsDict[_HIGH], NumberStyles.Float, CultureInfo.CurrentCulture);
             this.Low = Double.Parse(argsDict[_LOW], NumberStyles.Float, CultureInfo.CurrentCulture);
 
@@ -119,7 +120,11 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             }
         }
 
-        internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) {
+        public override String ArgumentsGet() {
+            return $"{_HIGH}{SK}{this.High}{SA}{_LOW}{SK}{this.Low}{SA}{_SI_UNITS}{SK}{this.SI_Units}{SA}{_SI_UNITS_MODIFIER}{SK}{this.SI_Units_Modifier}";
+        }
+
+        internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $"   Example: '{_HIGH}{SK}0.004{SA}{Environment.NewLine}" +
                 $"             {_LOW}{SK}0.002{SA}{Environment.NewLine}" +
@@ -134,10 +139,6 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             if (!Double.TryParse(argsDict[_LOW], NumberStyles.Float, CultureInfo.CurrentCulture, out Double low)) throw new ArgumentException($"{ClassName} ID '{id}' {_LOW} '{argsDict[_LOW]}' ≠ System.Double.");
             if (low > high) throw new ArgumentException($"{ClassName} ID '{id}' {_LOW} '{low}' > {_HIGH} '{high}'.");
         }
-
-        public override String GetArguments() {
-            return $"{_HIGH}{SK}{this.High}{SA}{_LOW}{SK}{this.Low}{SA}{_SI_UNITS}{SK}{this.SI_Units}{SA}{_SI_UNITS_MODIFIER}{SK}{this.SI_Units_Modifier}";
-        }
     }
 
     public class MeasurementTextual : MeasurementAbstract {
@@ -145,20 +146,20 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String Text;                                private const String _TEXT = nameof(Text);
 
         public MeasurementTextual(String ID, String Arguments) {
-            Dictionary<String, String> argsDict = SplitArguments(Arguments);
-            ValidateArguments(ID, Arguments, argsDict);
+            Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
+            ArgumentsValidate(ID, Arguments, argsDict);
             this.Text = argsDict[_TEXT];
         }
 
-        internal override void ValidateArguments(String id, String arguments, Dictionary<String, String> argsDict) {
+        public override String ArgumentsGet() {
+            return $"{_TEXT}{SK}{this.Text}";
+        }
+
+        internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count != 1) throw new ArgumentException($"{ClassName} ID '{id}' requires 1 case-sensitive argument:{Environment.NewLine}" +
                 $"   Example: '{_TEXT}{SK}The quick brown fox jumps over the lazy dog.'{Environment.NewLine}" +
                 $"   Actual : '{arguments}'");
             if (!argsDict.ContainsKey(_TEXT)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_TEXT}' key-value pair.");
-        }
-
-        public override String GetArguments() {
-            return $"{_TEXT}{SK}{this.Text}";
         }
     }
 
