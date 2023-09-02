@@ -100,8 +100,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public Boolean Contains(SwitchedNet SN) { return (this.SwitchedNetPair.Item1 == SN) || (this.SwitchedNetPair.Item2 == SN); }
 
         public override Boolean Equals(Object obj) {
-            SwitchedRoute sr = obj as SwitchedRoute;
-            if (sr == null) return false;
+            if (!(obj is SwitchedRoute sr)) return false;
             if (ReferenceEquals(this, sr)) return true;
             if (sr.SwitchedNetPair.Item1 == this.SwitchedNetPair.Item1 && sr.SwitchedNetPair.Item2 == this.SwitchedNetPair.Item2) return true;
             if (sr.SwitchedNetPair.Item1 == this.SwitchedNetPair.Item2 && sr.SwitchedNetPair.Item2 == this.SwitchedNetPair.Item1) return true;
@@ -201,10 +200,10 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
                  where (r1.C == r2.NC || r1.C == r2.NO)
                  select (r1, r2)).ToList();
             if (rs.Count() != 0) {
-                foreach ((Relay r1, Relay r2) rr in rs) {
+                foreach ((Relay r1, Relay r2) in rs) {
                     sb.AppendLine("Below relay pair {R1, R2} serially connected, C1 to (NC2 ⨁ NO2)");
-                    sb.AppendLine($"   B1='{Relay.GetUE(rr.r1.UE)}', R1='{Relay.GetR(rr.r1.R)}', C1='{rr.r1.C}', NC1='{rr.r1.NC}', NO1='{rr.r1.NO}'.");
-                    sb.AppendLine($"   B2='{Relay.GetUE(rr.r2.UE)}', R2='{Relay.GetR(rr.r2.R)}', C2='{rr.r2.C}', NC2='{rr.r2.NC}', NO2='{rr.r2.NO}'.");
+                    sb.AppendLine($"   B1='{Relay.GetUE(r1.UE)}', R1='{Relay.GetR(r1.R)}', C1='{r1.C}', NC1='{r1.NC}', NO1='{r1.NO}'.");
+                    sb.AppendLine($"   B2='{Relay.GetUE(r2.UE)}', R2='{Relay.GetR(r2.R)}', C2='{r2.C}', NC2='{r2.NC}', NO2='{r2.NO}'.");
                     sb.AppendLine("");
                 }
                 throw new InvalidOperationException(sb.ToString());

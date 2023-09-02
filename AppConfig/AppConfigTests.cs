@@ -39,7 +39,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
     public class MeasurementCustom : MeasurementAbstract {
         public new const String ClassName = nameof(MeasurementCustom);
         public readonly String Arguments;
-        public readonly String NOT_APPLICABLE = Enum.GetName(typeof(SI_UNITS), SI_UNITS.NotApplicable);
+        public static readonly String NOT_APPLICABLE = Enum.GetName(typeof(SI_UNITS), SI_UNITS.NotApplicable);
 
         public MeasurementCustom(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
