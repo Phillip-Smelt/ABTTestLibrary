@@ -15,23 +15,25 @@ using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 
-// TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
-// NOTE: For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
-//  - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
-//  - Invoking public methods with named arguments is a superb, self-documenting coding technique, improved by PascalCasing.
-// TODO: Add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
-// TODO: Update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.3 when possible.
-// NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library supposedly compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & WinUI 3.
-//       TIDP.SAA actually appears to be compiled to .Net FrameWork 4.5, but that's still not necessarily compatible with .Net 7.0.
-//  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
-// TODO: Update to WinUI 3 or WPF instead of WinForms when possible.
-// NOTE: Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
-// NOTE: With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
-//
-//  References:
-//  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
-//  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
-//  - https://github.com/Amphenol-Borisch-Technologies/TestExecutiveTests
+/// <para>
+/// TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
+/// NOTE: For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
+///  - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
+///  - Invoking public methods with named arguments is a superb, self-documenting coding technique, improved by PascalCasing.
+/// TODO: Add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
+/// TODO: Update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.3 when possible.
+/// NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library supposedly compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & WinUI 3.
+///       TIDP.SAA actually appears to be compiled to .Net FrameWork 4.5, but that's still not necessarily compatible with .Net 7.0.
+///  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
+/// TODO: Update to WinUI 3 or WPF instead of WinForms when possible.
+/// NOTE: Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
+/// NOTE: With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
+///
+///  References:
+///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
+///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
+///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutiveTests
+///  </para>
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
@@ -90,44 +92,45 @@ namespace ABT.TestSpace.TestExec {
             await this.MeasurementsRun();
             this.MeasurementsPostRun();
         }
-
+            /// <summary>
+            /// NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
+            /// <para>
+            /// A) Spontaneous Operator Initiated Cancellations:
+            ///      1)  Operator Proactive:
+            ///          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
+            ///            cancel currently executing Measurement.
+            ///          - Requires TestExecutor implementation by the Test Developer, but is initiated by Operator, so is categorized as such.
+            ///          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
+            ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
+            ///          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
+            ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
+            ///      2)  Operator Reactive:
+            ///          - TestExecutive's already implemented, always available & default reactive "Cancel before next Test" technique,
+            ///            which simply sets this._cancelled Boolean to true, checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
+            ///          - If this._cancelled is true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation
+            ///            prior to the next Measurement's execution.
+            ///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
+            /// B) PrePlanned Developer Programmed Cancellations:
+            ///      3)  TestExecutor/Test Developer initiated Cancellations:
+            ///          - Any TestExecutor's Measurement can initiate a Cancellation programmatically by simply throwing a CancellationException:
+            ///          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
+            ///            or simply because futher execution is pointless.
+            ///          - Simply throw a CancellationException if the specific condition(s) occcur.
+            ///          - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestExecutor/blob/master/TestProgram/T-Common.cs
+            ///          - Test Developer must set CancellationException's message to the Measured Value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
+            ///      4)  App.Config's CancelNotPassed:
+            ///          - App.Config's TestMeasurement element has a Boolean "CancelNotPassed" field:
+            ///          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EventCodes.PASS,
+            ///            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
+            ///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
+            ///
+            /// NOTE: The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
+            ///       thrown CancellationExceptions.
+            /// NOTE: The Operator Reactive & App.Config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
+            ///       inside the TestExecutive.MeasurementsRun() loop.
+            /// </para>
+            /// </summary>
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            #region Long Measurement Cancellation Comment
-            // NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
-            // A) Spontaneous Operator Initiated Cancellations:
-            //      1)  Operator Proactive:
-            //          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
-            //            cancel currently executing Measurement.
-            //          - Requires TestExecutor implementation by the Test Developer, but is initiated by Operator, so is categorized as such.
-            //          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
-            //          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
-            //          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
-            //          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
-            //      2)  Operator Reactive:
-            //          - TestExecutive's already implemented, always available & default reactive "Cancel before next Test" technique,
-            //            which simply sets this._cancelled Boolean to true, checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
-            //          - If this._cancelled is true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation
-            //            prior to the next Measurement's execution.
-            //          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
-            // B) PrePlanned Developer Programmed Cancellations:
-            //      3)  TestExecutor/Test Developer initiated Cancellations:
-            //          - Any TestExecutor's Measurement can initiate a Cancellation programmatically by simply throwing a CancellationException:
-            //          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
-            //            or simply because futher execution is pointless.
-            //          - Simply throw a CancellationException if the specific condition(s) occcur.
-            //          - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestExecutor/blob/master/TestProgram/T-Common.cs
-            //          - Test Developer must set CancellationException's message to the Measured Value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
-            //      4)  App.Config's CancelNotPassed:
-            //          - App.Config's TestMeasurement element has a Boolean "CancelNotPassed" field:
-            //          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EventCodes.PASS,
-            //            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
-            //		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
-            //
-            // NOTE: The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
-            //       thrown CancellationExceptions.
-            // NOTE: The Operator Reactive & App.Config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
-            //       inside the TestExecutive.MeasurementsRun() loop.
-            #endregion Long Measurement Cancellation Comment
             this.CancelTokenSource.Cancel();
             this._cancelled = true;
             this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
@@ -270,13 +273,9 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        private Boolean MeasurementCancelNotPassed(String measurementID) {
-            return !String.Equals(this.ConfigTest.Measurements[measurementID].Result, EventCodes.PASS) && this.ConfigTest.Measurements[measurementID].CancelNotPassed; 
-        }
+        private Boolean MeasurementCancelNotPassed(String measurementID) { return !String.Equals(this.ConfigTest.Measurements[measurementID].Result, EventCodes.PASS) && this.ConfigTest.Measurements[measurementID].CancelNotPassed; }
 
-        private Boolean MeasurementsCancelNotPassed(String groupID) {
-            return !String.Equals(this.MeasurementsEvaluate(MeasurementsGet(groupID)), EventCodes.PASS) && this.ConfigTest.Groups[groupID].CancelNotPassed;
-        }
+        private Boolean MeasurementsCancelNotPassed(String groupID) { return !String.Equals(this.MeasurementsEvaluate(MeasurementsGet(groupID)), EventCodes.PASS) && this.ConfigTest.Groups[groupID].CancelNotPassed; }
 
         private Dictionary<String, Measurement> MeasurementsGet(String groupID) {
             Dictionary<String, Measurement> measurements = new Dictionary<String, Measurement>();
@@ -307,20 +306,20 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private String MeasurementsEvaluate(Dictionary<String, Measurement> measurements) {
-            if (this.ResultCountGet(measurements, EventCodes.PASS) == measurements.Count) return EventCodes.PASS;
+            if (this.MeasurementResultsCount(measurements, EventCodes.PASS) == measurements.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All measurement results are PASS, so overall result is PASS.
-            if (this.ResultCountGet(measurements, EventCodes.ERROR) != 0) return EventCodes.ERROR;
+            if (this.MeasurementResultsCount(measurements, EventCodes.ERROR) != 0) return EventCodes.ERROR;
             // 2nd priority evaluation:
             // - If any measurement result is ERROR, overall result is ERROR.
-            if (this.ResultCountGet(measurements, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
+            if (this.MeasurementResultsCount(measurements, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
             // 3rd priority evaluation:
             // - If any measurement result is CANCEL, and none were ERROR, overall result is CANCEL.
-            if (this.ResultCountGet(measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
+            if (this.MeasurementResultsCount(measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
             // 4th priority evaluation:
             // - If any measurement result is UNSET, and none were ERROR or CANCEL, then Measurement(s) didn't complete.
             // - Likely occurred because a Measurement failed that had its App.Config TestMeasurement CancelOnFail flag set to true.
-            if (this.ResultCountGet(measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
+            if (this.MeasurementResultsCount(measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
             // 5th priority evaluation:
             // - If any measurement result is FAIL, and none were ERROR, CANCEL or UNSET, result is FAIL.
 
@@ -332,7 +331,7 @@ namespace ABT.TestSpace.TestExec {
             // Above handles class EventCodes changing (adding/deleting/renaming EventCodes) without accomodating EvaluateResults() changes. 
         }
 
-        private Int32 ResultCountGet(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Result, eventCode) select measurement).Count(); }
+        private Int32 MeasurementResultsCount(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Result, eventCode) select measurement).Count(); }
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
     }
