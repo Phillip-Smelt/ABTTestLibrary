@@ -287,7 +287,7 @@ namespace ABT.TestSpace.TestExec {
         private String MeasurementEvaluate(Measurement measurement) {
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
-                    return measurement.Result; // Test Developer must set Result in TestExecutor, else it will be EventCodes.UNSET.
+                    return measurement.Result; // Test Developer must set Result in TestExecutor, else it remains MeasurementsPreRun()'s initital EventCodes.UNSET.
                 case MeasurementISP.ClassName:
                     MeasurementISP measurementISP = (MeasurementISP)measurement.ClassObject;
                     if (String.Equals(measurementISP.ISPExpected, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
