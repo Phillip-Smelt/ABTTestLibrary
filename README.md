@@ -1,5 +1,5 @@
 # TestExecutive
-A simple functional test sequencer/test executive library for sibling project TestExecutor.
+A minimalist functional test sequencer/test executive library for sibling project TestExecutor.
    
   Sibling project TestExecutor is both a demonstration program and a functional test of TestExecutive.
   
