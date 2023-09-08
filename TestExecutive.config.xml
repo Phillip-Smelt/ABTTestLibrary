@@ -12,7 +12,7 @@
 			      internal static readonly Alias P3V3      = new Alias("PS2");   // Single output Power Supply 2
 			      internal static readonly Alias P5V       = new Alias("PS3");   // Single output Power Supply 3
 			      internal static readonly Alias P12V_N12V = new Alias("PS4ε5"); // Dual-output Power Supplies 4 & 5.
-			      internal static readonly Alias VOUT_LOAD = new Alias("EL1");   // Electrical Load 1.
+			      internal static readonly Alias VOUT = new Alias("EL1");   // Electrical Load 1.
 			      internal static readonly Alias MM        = new Alias("MM1");   // Multi-Meter 1.
 			      internal static readonly Alias CLK       = new Alias("WG1");   // WaveGenerator 1.
 			  }
