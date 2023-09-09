@@ -29,8 +29,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void Local(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
 
-        public static Boolean LoadIs(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode) {
-            if (!LoadModeIs(SVI, LoadMode)) return false;
+        public static Boolean Is(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode) {
+            if (!ModeIs(SVI, LoadMode)) return false;
             Double delta = 0.01;
             switch (LoadMode) {
                 case LOAD_MODE.CURR:
@@ -50,18 +50,18 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             }
         }
 
-        public static Boolean LoadIs(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_UNITS LoadUnits) { return LoadIs(SVI, LoadValue, (LOAD_MODE)(Int32)LoadUnits); }
+        public static Boolean Is(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_UNITS LoadUnits) { return Is(SVI, LoadValue, (LOAD_MODE)(Int32)LoadUnits); }
 
-        public static Boolean LoadModeIs(SCPI_VISA_Instrument SVI, LOAD_MODE LoadMode) { return LoadMode == LoadModeGet(SVI); }
+        public static Boolean ModeIs(SCPI_VISA_Instrument SVI, LOAD_MODE LoadMode) { return LoadMode == ModeGet(SVI); }
 
-        public static LOAD_MODE LoadModeGet(SCPI_VISA_Instrument SVI) {
+        public static LOAD_MODE ModeGet(SCPI_VISA_Instrument SVI) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Query(null, out String LoadMode);
             return (LOAD_MODE)Enum.Parse(typeof(LOAD_MODE), LoadMode); 
         }
 
-        public static Boolean LoadUnitsAre(SCPI_VISA_Instrument SVI, LOAD_UNITS LoadUnits) { return LoadUnits == LoadUnitsGet(SVI); }
+        public static Boolean UnitsAre(SCPI_VISA_Instrument SVI, LOAD_UNITS LoadUnits) { return LoadUnits == UnitsGet(SVI); }
 
-        public static LOAD_UNITS LoadUnitsGet(SCPI_VISA_Instrument SVI) { return (LOAD_UNITS)(Int32)LoadModeGet(SVI); }
+        public static LOAD_UNITS UnitsGet(SCPI_VISA_Instrument SVI) { return (LOAD_UNITS)(Int32)ModeGet(SVI); }
 
         public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
             ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(null, out Double[] ampsDC);
