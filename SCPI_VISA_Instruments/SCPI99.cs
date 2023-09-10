@@ -86,10 +86,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value); }
 
-        public static OUTPUT OutputStateGet(SCPI_VISA_Instrument SVI) {
-            if (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) return OUTPUT.off;
-            else return OUTPUT.ON;
-        }
+        public static OUTPUT OutputStateGet(SCPI_VISA_Instrument SVI) { return (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) ? OUTPUT.off : OUTPUT.ON; }
 
         public static Boolean OutputStateIs(SCPI_VISA_Instrument SVI, OUTPUT State) { return (OutputStateGet(SVI) == State); }
       
