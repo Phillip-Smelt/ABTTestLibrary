@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.TestSpace.TestExec.AppConfig;
+using System.Net;
 
 // TODO: Persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement results therein.
 // - Stop writing TestMeasurement results to RichTextBoxSink when testing full Operations; only write TestGroups results to RichTextBoxSink.
