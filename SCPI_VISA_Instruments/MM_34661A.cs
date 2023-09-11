@@ -33,7 +33,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            if (TerminalsGet(SVI) == TERMINALS.Front) _ = MessageBox.Show("Please depress Keysight 34661A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            if (TerminalsGet(SVI) == TERMINAL.Front) _ = MessageBox.Show("Please depress Keysight 34661A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             DelaySet(SVI, MMD.DEFault);
             DelayAutoSet(SVI, true);
             SCPI99.Initialize(SVI);
@@ -59,9 +59,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return resistance;
         }
 
-        public static TERMINALS TerminalsGet(SCPI_VISA_Instrument SVI) {
+        public static TERMINAL TerminalsGet(SCPI_VISA_Instrument SVI) {
             ((Ag3466x)SVI.Instrument).SCPI.ROUTe.TERMinals.Query(out String terminals);
-            return String.Equals(terminals, "REAR") ? TERMINALS.Rear : TERMINALS.Front;
+            return String.Equals(terminals, "REAR") ? TERMINAL.Rear : TERMINAL.Front;
         }
     }
 }

@@ -121,7 +121,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                     message.AppendLine($"  Measurement       : {Double.Parse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
                     message.AppendLine($"  Low Limit         : {measurementNumeric.Low:G}");
                     message.Append($"  SI Units          : {Enum.GetName(typeof(SI_UNITS), measurementNumeric.SI_Units)}");
-                    if (measurementNumeric.SI_Units_Modifier != SI_UNITS_MODIFIERS.NotApplicable) message.Append($" {Enum.GetName(typeof(SI_UNITS_MODIFIERS), measurementNumeric.SI_Units_Modifier)}");
+                    if (measurementNumeric.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) message.Append($" {Enum.GetName(typeof(SI_UNITS_MODIFIER), measurementNumeric.SI_Units_Modifier)}");
                     message.AppendLine("");
                     break;
                 case MeasurementTextual.ClassName:

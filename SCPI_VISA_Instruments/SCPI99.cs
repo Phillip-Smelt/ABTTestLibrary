@@ -13,10 +13,7 @@ using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public enum OUTPUT { off, ON }
-    public enum LOGIC { low, HIGH }
-    public enum BINARY { zero, ONE }
     public enum SENSE_MODE { EXTernal, INTernal }
-    public enum TERMINALS_SVI { Plus, Minus }
     // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
 
     public static class SCPI99 {

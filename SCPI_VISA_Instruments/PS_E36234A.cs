@@ -21,14 +21,14 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static Boolean IsPS_E36234A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgE36200)); }
 
-        public static Double CurrentAmplitudeGet(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static Double CurrentAmplitudeGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(null, Channels[Channel], out Double[] ampsDC);
             return ampsDC[(Int32)Channel];
         }
 
-        public static Boolean CurrentAmplitudeIs(SCPI_VISA_Instrument SVI, Double AmpsDC, Double Delta, CHANNELS Channel) { return SCPI99.IsCloseEnough(CurrentAmplitudeGet(SVI, Channel), AmpsDC, Delta); }
+        public static Boolean CurrentAmplitudeIs(SCPI_VISA_Instrument SVI, Double AmpsDC, Double Delta, CHANNEL Channel) { return SCPI99.IsCloseEnough(CurrentAmplitudeGet(SVI, Channel), AmpsDC, Delta); }
 
-        public static void CurrentAmplitudeSet(SCPI_VISA_Instrument SVI, Double AmpsDC, CHANNELS Channel) {
+        public static void CurrentAmplitudeSet(SCPI_VISA_Instrument SVI, Double AmpsDC, CHANNEL Channel) {
             String s;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MINimum, Channels[Channel], out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MAXimum, Channels[Channel], out Double[] max);
@@ -42,12 +42,12 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC, Channels[Channel]);
         }
 
-        public static Double CurrentProtectionAmplitudeGet(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static Double CurrentProtectionAmplitudeGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.LEVel.AMPLitude.Query(null, Channels[Channel], out Double[] amperes);
             return amperes[(Int32)Channel];
         }
 
-        public static void CurrentProtectionAmplitudeSet(SCPI_VISA_Instrument SVI, Double Amperes, CHANNELS Channel) {
+        public static void CurrentProtectionAmplitudeSet(SCPI_VISA_Instrument SVI, Double Amperes, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.LEVel.AMPLitude.Query(MINimum, Channels[Channel], out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.LEVel.AMPLitude.Query(MAXimum, Channels[Channel], out Double[] max);
             String s;
@@ -61,12 +61,12 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.LEVel.AMPLitude.Command(Amperes, Channels[Channel]);
         }
 
-        public static Double CurrentProtectionDelayGet(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static Double CurrentProtectionDelayGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(null, Channels[Channel], out Double[] seconds);
             return seconds[(Int32)Channel];
         }
 
-        public static void CurrentProtectionDelaySet(SCPI_VISA_Instrument SVI, Double DelaySeconds, CHANNELS Channel) {
+        public static void CurrentProtectionDelaySet(SCPI_VISA_Instrument SVI, Double DelaySeconds, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MINimum, Channels[Channel], out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MAXimum, Channels[Channel], out Double[] max);
             String s;
@@ -81,59 +81,59 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.STARt.Command(CCTRans, Channels[Channel]);
         }
 
-        public static Boolean CurrentProtectionStateGet(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static Boolean CurrentProtectionStateGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Query(Channels[Channel], out Boolean[] state);
             return state[(Int32)Channel];
         }
  
-        public static void CurrentProtectionStateSet(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is OUTPUT.ON), Channels[Channel]); }
+        public static void CurrentProtectionStateSet(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNEL Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is OUTPUT.ON), Channels[Channel]); }
       
-        public static void CurrentProtectionTrippedClear(SCPI_VISA_Instrument SVI, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.CLEar.Command(Channels[Channel]); }
+        public static void CurrentProtectionTrippedClear(SCPI_VISA_Instrument SVI, CHANNEL Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.CLEar.Command(Channels[Channel]); }
 
-        public static Boolean CurrentProtectionTrippedGet(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static Boolean CurrentProtectionTrippedGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.TRIPped.Query(Channels[Channel], out Int32[] tripped);
             return (tripped[(Int32)Channel] == 1);
         }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             SCPI99.Initialize(SVI);
-            ((AgE36200)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command(Channels[CHANNELS.C1]);
-            ((AgE36200)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command(Channels[CHANNELS.C2]);
+            ((AgE36200)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command(Channels[CHANNEL.C1]);
+            ((AgE36200)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command(Channels[CHANNEL.C2]);
             ((AgE36200)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
         }
 
         public static void Local(SCPI_VISA_Instrument SVI) { ((AgE36200)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
 
-        public static Double MeasureADC(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static Double MeasureADC(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(Channels[Channel], out Double[] ampsDC);
             return ampsDC[(Int32)(Channel)];
         }
 
-        public static Double MeasureVDC(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static Double MeasureVDC(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.MEASure.SCALar.VOLTage.DC.Query(Channels[Channel], out Double[] voltsDC);
             return voltsDC[(Int32)(Channel)];
         }
 
-        public static Boolean SlewRatesAre(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, CHANNELS Channel) { return ((SlewRateRising, SlewRateFalling) == SlewRatesGet(SVI, Channel)); }
+        public static Boolean SlewRatesAre(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, CHANNEL Channel) { return ((SlewRateRising, SlewRateFalling) == SlewRatesGet(SVI, Channel)); }
 
         public static void Remote(SCPI_VISA_Instrument SVI) { ((AgE36200)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
 
         public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgE36200)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
 
-        public static (Double SlewRateRising, Double SlewRateFalling) SlewRatesGet(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static (Double SlewRateRising, Double SlewRateFalling) SlewRatesGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.RISing.IMMediate.Query(null, Channels[Channel], out Double[] srr);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.FALLing.IMMediate.Query(null, Channels[Channel], out Double[] srf);
             return (srr[(Int32)Channel], srf[(Int32)Channel]);
         }
 
-        public static void SlewRatesSet(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, CHANNELS Channel) {
+        public static void SlewRatesSet(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.RISing.IMMediate.Command(SlewRateRising, Channels[Channel]);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.FALLing.IMMediate.Command(SlewRateFalling, Channels[Channel]);
         }
 
-        public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), Channels[Channel]); }
+        public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense, CHANNEL Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), Channels[Channel]); }
 
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, Double VoltageProtectionAmplitude, CHANNELS Channel, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, Double VoltageProtectionAmplitude, CHANNEL Channel, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
             VoltageProtectionStateSet(SVI, OUTPUT.off, Channel);
             CurrentProtectionStateSet(SVI, OUTPUT.off, Channel);
             VoltageProtectionTrippedClear(SVI, Channel);
@@ -154,23 +154,23 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             Thread.Sleep((Int32)(DelaySecondsSettling * 1000));
         }
 
-        public static OUTPUT OutputStateGet(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static OUTPUT OutputStateGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Query(Channels[Channel], out Boolean[] States);
             return States[(Int32)(Channel)] ? OUTPUT.ON : OUTPUT.off;
         }
 
-        public static Boolean OutputStateIs(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNELS Channel) { return (State == OutputStateGet(SVI, Channel)); }
+        public static Boolean OutputStateIs(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNEL Channel) { return (State == OutputStateGet(SVI, Channel)); }
 
-        public static void OutputStateSet(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command((State is OUTPUT.ON), Channels[Channel]); }
+        public static void OutputStateSet(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNEL Channel) { ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command((State is OUTPUT.ON), Channels[Channel]); }
 
-        public static Double VoltageAmplitudeGet(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static Double VoltageAmplitudeGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, Channels[Channel], out Double[] voltsDC);
             return voltsDC[(Int32)Channel];
         }
 
-        public static Boolean VoltageAmplitudeIs(SCPI_VISA_Instrument SVI, Double VoltsDC, Double Delta, CHANNELS Channel) { return SCPI99.IsCloseEnough(VoltageAmplitudeGet(SVI, Channel), VoltsDC, Delta); }
+        public static Boolean VoltageAmplitudeIs(SCPI_VISA_Instrument SVI, Double VoltsDC, Double Delta, CHANNEL Channel) { return SCPI99.IsCloseEnough(VoltageAmplitudeGet(SVI, Channel), VoltsDC, Delta); }
 
-        public static void VoltageAmplitudeSet(SCPI_VISA_Instrument SVI, Double VoltsDC, CHANNELS Channel) {
+        public static void VoltageAmplitudeSet(SCPI_VISA_Instrument SVI, Double VoltsDC, CHANNEL Channel) {
             String s;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MINimum, Channels[Channel], out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MAXimum, Channels[Channel], out Double[] max);
@@ -184,12 +184,12 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC, Channels[Channel]);
         }
 
-        public static Double VoltageProtectionAmplitudeGet(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static Double VoltageProtectionAmplitudeGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Query(null, Channels[Channel], out Double[] amplitude);
             return amplitude[(Int32)Channel];
         }
 
-        public static void VoltageProtectionAmplitudeSet(SCPI_VISA_Instrument SVI, Double VoltsDC, CHANNELS Channel) {
+        public static void VoltageProtectionAmplitudeSet(SCPI_VISA_Instrument SVI, Double VoltsDC, CHANNEL Channel) {
             String s;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Query(MINimum, Channels[Channel], out Double[] min);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Query(MAXimum, Channels[Channel], out Double[] max);
@@ -203,16 +203,16 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Command(VoltsDC, Channels[Channel]);
         }
 
-        public static Boolean VoltageProtectionStateGet(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static Boolean VoltageProtectionStateGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Query(Channels[Channel], out Boolean state);
             return state;
         }
 
-        public static void VoltageProtectionStateSet(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command((State is OUTPUT.ON), Channels[Channel]); }
+        public static void VoltageProtectionStateSet(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNEL Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command((State is OUTPUT.ON), Channels[Channel]); }
 
-        public static void VoltageProtectionTrippedClear(SCPI_VISA_Instrument SVI, CHANNELS Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(Channels[Channel]); }
+        public static void VoltageProtectionTrippedClear(SCPI_VISA_Instrument SVI, CHANNEL Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(Channels[Channel]); }
 
-        public static Boolean VoltageProtectionTrippedGet(SCPI_VISA_Instrument SVI, CHANNELS Channel) {
+        public static Boolean VoltageProtectionTrippedGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.TRIPped.Query(Channels[Channel], out Int32[] tripped);
             return (tripped[(Int32)Channel] == 1);
         }

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace ABT.TestSpace.TestExec.AppConfig {
     public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
-    public enum SI_UNITS_MODIFIERS { AC, DC, Peak, PP, NotApplicable, RMS }
+    public enum SI_UNITS_MODIFIER { AC, DC, Peak, PP, NotApplicable, RMS }
 
     public abstract class MeasurementAbstract {
         public const String ClassName = nameof(MeasurementAbstract);
@@ -101,8 +101,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public new const String ClassName = nameof(MeasurementNumeric);
         public readonly Double Low;                                                                 private const String _LOW = nameof(Low);
         public readonly Double High;                                                                private const String _HIGH = nameof(High);
-        public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;                                 private const String _SI_UNITS = nameof(SI_Units);
-        public readonly SI_UNITS_MODIFIERS SI_Units_Modifier = SI_UNITS_MODIFIERS.NotApplicable;    private const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
+        public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;                                   private const String _SI_UNITS = nameof(SI_Units);
+        public readonly SI_UNITS_MODIFIER SI_Units_Modifier = SI_UNITS_MODIFIER.NotApplicable;        private const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
 
         public MeasurementNumeric(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
@@ -113,9 +113,9 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             String[] si_units = Enum.GetNames(typeof(SI_UNITS)).Select(s => s.ToLower()).ToArray();
             if (si_units.Any(argsDict[_SI_UNITS].ToLower().Contains)) {
                 this.SI_Units = (SI_UNITS)Enum.Parse(typeof(SI_UNITS), argsDict[_SI_UNITS], ignoreCase: true);
-                String[] si_units_modifiers = Enum.GetNames(typeof(SI_UNITS_MODIFIERS)).Select(s => s.ToLower()).ToArray();
+                String[] si_units_modifiers = Enum.GetNames(typeof(SI_UNITS_MODIFIER)).Select(s => s.ToLower()).ToArray();
                 if (si_units_modifiers.Any(argsDict[_SI_UNITS_MODIFIER].ToLower().Contains)) {
-                    this.SI_Units_Modifier = (SI_UNITS_MODIFIERS)Enum.Parse(typeof(SI_UNITS_MODIFIERS), argsDict[_SI_UNITS_MODIFIER], ignoreCase: true);
+                    this.SI_Units_Modifier = (SI_UNITS_MODIFIER)Enum.Parse(typeof(SI_UNITS_MODIFIER), argsDict[_SI_UNITS_MODIFIER], ignoreCase: true);
                 }
             }
         }

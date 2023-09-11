@@ -23,7 +23,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
 
     public sealed class UE24 {
         // NOTE: Most of this class is compatible with MCC's USB-ERB08 Relay Board, essentially a USB-ERB24 but with only 8 Form C relays instead of the USB-ERB24's 24.
-        // - Some portions are specific to the USB-ERB24 however; examples are enum R containing 24 relays & enum PORTS containing 24 bits.
+        // - Some portions are specific to the USB-ERB24 however; examples are enum R containing 24 relays & enum PORT containing 24 bits.
         // NOTE: This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
         // NOTE: USB-ERB24 relays are configurable for either Non-Inverting or Inverting logic, via hardware DIP switch S1.
         //  - Non-Inverting:  Logic low de-energizes the relays, logic high energizes them.
@@ -225,7 +225,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         #endregion Set
 
         #region private methods
-        private enum PORTS { A, B, CL, CH }
+        private enum PORT { A, B, CL, CH }
         /// <summary>
         /// Private methods PortRead() & PortsRead() wrap MccBoard's DIn(DigitalPortType portType, out ushort dataValue) function.
         /// one of the four available MccBoard functions for the USB-ERB8 & USB-ERB24.
@@ -256,10 +256,10 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         }
 
         private static void PortsWrite(MccBoard mccBoard, UInt16[] ports) {
-            PortWrite(mccBoard, DigitalPortType.FirstPortA, ports[(Int32)PORTS.A]);
-            PortWrite(mccBoard, DigitalPortType.FirstPortB, ports[(Int32)PORTS.B]);
-            PortWrite(mccBoard, DigitalPortType.FirstPortCL, ports[(Int32)PORTS.CL]);
-            PortWrite(mccBoard, DigitalPortType.FirstPortCH, ports[(Int32)PORTS.CH]);
+            PortWrite(mccBoard, DigitalPortType.FirstPortA, ports[(Int32)PORT.A]);
+            PortWrite(mccBoard, DigitalPortType.FirstPortB, ports[(Int32)PORT.B]);
+            PortWrite(mccBoard, DigitalPortType.FirstPortCL, ports[(Int32)PORT.CL]);
+            PortWrite(mccBoard, DigitalPortType.FirstPortCH, ports[(Int32)PORT.CH]);
         }
 
         private static DigitalPortType GetPort(R r) {
