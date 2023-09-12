@@ -25,9 +25,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         //		- SCPI Command strings must be perfectly phrased, without syntax errors, as C#'s compiler simply passes them into the SCPI instrument's interpreter.
         //		- SCPI Query return strings must be painstakingly parsed & interpreted to extract results.
         //  - Also, the SCPI99 standard isn't always implemented consistently by instrument manufacturers:
-        //	    - Assuming the SCPI99 VISA driver utilized by TestExecutive is perfectly SCPI99 compliant & bug-free.
-        //	    - Assuming all manufacturer SCPI99 VISA instruments utilized by TestExecutive are perfectly SCPI99 compliant & their interpreters bug-free.
-        //  - Then SCPI VISA instruments utilizing this SCPI99 class should work, albeit inconveniently.
+        //	    - Assuming the SCPI99 VISA driver utilized by TestExecutive is perfectly SCPI99 compliant & bug-free...
+        //	    - Assuming all manufacturer SCPI99 VISA instruments utilized by TestExecutive are perfectly SCPI99 compliant & their interpreters bug-free...
+        //      - ...Then, SCPI VISA instruments utilizing this SCPI99 class should work, albeit inconveniently.
         private const Char IDENTITY_SEPARATOR = ',';
 
         public static void Clear(SCPI_VISA_Instrument SVI) { new AgSCPI99(SVI.Address).SCPI.CLS.Command(); }
