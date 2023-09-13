@@ -62,7 +62,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 // TODO: RichTextBox + File + SQL.
                 SQLStart(testExecutive);
             } else {
-                // RichTextBox only; customer doesn't require saved measurement data, unusual for Functional testing, but common for other testing methodologies.
+                // RichTextBox only; customer doesn't require saved measurement data, unusual for Functional testing, but potentially not for other testing methodologies.
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
