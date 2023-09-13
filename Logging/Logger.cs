@@ -88,12 +88,12 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"\tRevision          : {testExecutive.ConfigTest.TestElementRevision}");
             Log.Information($"\tDescription       : {testExecutive.ConfigTest.TestElementDescription}\n");
 
-            StringBuilder s = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             foreach (String groupID in testExecutive.ConfigTest.GroupIDsSequence) {
-                s.Append(String.Format("\t{0,-" + testExecutive.ConfigTest.FormattingLengthGroupID + "} : {1}\n", groupID, testExecutive.ConfigTest.Groups[groupID].Description));
-                foreach (String measurementID in testExecutive.ConfigTest.GroupIDsToMeasurementIDs[groupID]) s.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthMeasurementID + "} : {1}\n", measurementID, testExecutive.ConfigTest.Measurements[measurementID].Description));
+                sb.Append(String.Format("\t{0,-" + testExecutive.ConfigTest.FormattingLengthGroupID + "} : {1}\n", groupID, testExecutive.ConfigTest.Groups[groupID].Description));
+                foreach (String measurementID in testExecutive.ConfigTest.GroupIDsToMeasurementIDs[groupID]) sb.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthMeasurementID + "} : {1}\n", measurementID, testExecutive.ConfigTest.Measurements[measurementID].Description));
             }
-            Log.Information($"TestMeasurements:\n{s}");
+            Log.Information($"TestMeasurements:\n{sb}");
         }
 
         public static void LogTest(Boolean isOperation, Measurement measurement, ref RichTextBox rtfResults) {
