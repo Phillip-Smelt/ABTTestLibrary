@@ -333,7 +333,7 @@ namespace ABT.TestSpace.TestExec {
 
         private Int32 MeasurementResultsCount(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Result, eventCode) select measurement).Count(); }
 
-        public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
+        public static String NotImplementedMessageEnum(Type enumType) { return $"{Environment.NewLine}{Environment.NewLine}   Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(", ", Enum.GetNames(enumType))}}}'.{Environment.NewLine}"; }
     }
 
     public class CancellationException : Exception {
