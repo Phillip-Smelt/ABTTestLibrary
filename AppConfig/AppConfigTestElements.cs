@@ -10,7 +10,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
     [ConfigurationCollection(typeof(TestOperation))]
     public class TestOperations : ConfigurationElementCollection {
         public const String PropertyName = "TestOperation";
-        public TestOperation this[Int32 idx] { get { return (TestOperation)this.BaseGet(idx); } }
+        public TestOperation this[Int32 idx] { get { return (TestOperation)BaseGet(idx); } }
         public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
         protected override String ElementName { get { return PropertyName; } }
         protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
@@ -32,7 +32,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
     [ConfigurationCollection(typeof(TestGroup))]
     public class TestGroups : ConfigurationElementCollection {
         public const String PropertyName = "TestGroup";
-        public TestGroup this[Int32 idx] { get { return (TestGroup)this.BaseGet(idx); } }
+        public TestGroup this[Int32 idx] { get { return (TestGroup)BaseGet(idx); } }
         public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
         protected override String ElementName { get { return PropertyName; } }
         protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
@@ -56,7 +56,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
     [ConfigurationCollection(typeof(TestMeasurement))]
     public class TestMeasurements : ConfigurationElementCollection {
         public const String PropertyName = "TestMeasurement";
-        public TestMeasurement this[Int32 idx] { get { return (TestMeasurement)this.BaseGet(idx); } }
+        public TestMeasurement this[Int32 idx] { get { return (TestMeasurement)BaseGet(idx); } }
         public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
         protected override String ElementName { get { return PropertyName; } }
         protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
@@ -75,8 +75,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
     public class ConfigTests {
         public TestMeasurementsSection TestMeasurementsSection { get { return (TestMeasurementsSection)ConfigurationManager.GetSection(TestMeasurementsSection.ClassName); } }
-        public TestMeasurements TestMeasurements { get { return this.TestMeasurementsSection.TestMeasurements; } }
-        public IEnumerable<TestMeasurement> TestMeasurement { get { foreach (TestMeasurement tm in this.TestMeasurements) if (tm != null) yield return tm; } }
+        public TestMeasurements TestMeasurements { get { return TestMeasurementsSection.TestMeasurements; } }
+        public IEnumerable<TestMeasurement> TestMeasurement { get { foreach (TestMeasurement tm in TestMeasurements) if (tm != null) yield return tm; } }
     }
 
     public class Operation {
@@ -86,10 +86,10 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String TestGroupIDs;
 
         private Operation(String id, String revision, String description, String testGroupIDs) {
-            this.ID = id;
-            this.Revision = revision;
-            this.Description = description;
-            this.TestGroupIDs = testGroupIDs;
+            ID = id;
+            Revision = revision;
+            Description = description;
+            TestGroupIDs = testGroupIDs;
         }
 
         public static Dictionary<String, Operation> Get() {
@@ -112,12 +112,12 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String TestMeasurementIDs;
 
         private Group(String id, String revision, String description, Boolean selectable, Boolean cancelNotPassed, String testMeasurementIDs) {
-            this.ID = id;
-            this.Revision = revision;
-            this.Description = description;
-            this.Selectable = selectable;
-            this.CancelNotPassed = cancelNotPassed;
-            this.TestMeasurementIDs = testMeasurementIDs;
+            ID = id;
+            Revision = revision;
+            Description = description;
+            Selectable = selectable;
+            CancelNotPassed = cancelNotPassed;
+            TestMeasurementIDs = testMeasurementIDs;
         }
 
         public static Dictionary<String, Group> Get() {
@@ -144,13 +144,13 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public String Message { get; set; } = String.Empty; // Determined during test.
 
         private Measurement(String id, String revision, String description, String className, Boolean cancelNotPassed, String arguments) {
-            this.ID = id;
-            this.Revision = revision;
-            this.Description = description;
-            this.ClassName = className;
-            this.ClassObject = Activator.CreateInstance(Type.GetType(this.GetType().Namespace + "." + this.ClassName), new Object[] { this.ID, arguments });
-            this.CancelNotPassed = cancelNotPassed;
-            if (String.Equals(this.ClassName, MeasurementNumeric.ClassName)) this.Value = Double.NaN.ToString();
+            ID = id;
+            Revision = revision;
+            Description = description;
+            ClassName = className;
+            ClassObject = Activator.CreateInstance(Type.GetType(GetType().Namespace + "." + ClassName), new Object[] { ID, arguments });
+            CancelNotPassed = cancelNotPassed;
+            if (String.Equals(ClassName, MeasurementNumeric.ClassName)) Value = Double.NaN.ToString();
         }
 
         public static Dictionary<String, Measurement> Get() {

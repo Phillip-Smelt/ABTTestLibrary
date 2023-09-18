@@ -47,7 +47,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             this.Arguments = Arguments;
         }
 
-        public override String ArgumentsGet() { return this.Arguments; }
+        public override String ArgumentsGet() { return Arguments; }
 
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count == 0) throw new ArgumentException($"{ClassName} ID '{id}' requires 1 or more case-sensitive arguments:{Environment.NewLine}" +
@@ -70,14 +70,14 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public MeasurementISP(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
             ArgumentsValidate(ID, Arguments, argsDict);
-            this.ISPExecutableFolder = argsDict[_ISP_EXECUTABLE_FOLDER];
-            this.ISPExecutable = argsDict[_ISP_EXECUTABLE];
-            this.ISPExecutableArguments = argsDict[_ISP_EXECUTABLE_ARGUMENTS];
-            this.ISPExpected = argsDict[_ISP_EXPECTED];
+            ISPExecutableFolder = argsDict[_ISP_EXECUTABLE_FOLDER];
+            ISPExecutable = argsDict[_ISP_EXECUTABLE];
+            ISPExecutableArguments = argsDict[_ISP_EXECUTABLE_ARGUMENTS];
+            ISPExpected = argsDict[_ISP_EXPECTED];
         }
 
         public override String ArgumentsGet() {
-            return $"{_ISP_EXECUTABLE_FOLDER}{SK}{this.ISPExecutableFolder}{SA}{_ISP_EXECUTABLE}{SK}{this.ISPExecutable}{SA}{_ISP_EXECUTABLE_ARGUMENTS}{SK}{this.ISPExecutableArguments}{SA}{_ISP_EXPECTED}{SK}{this.ISPExpected}";
+            return $"{_ISP_EXECUTABLE_FOLDER}{SK}{ISPExecutableFolder}{SA}{_ISP_EXECUTABLE}{SK}{ISPExecutable}{SA}{_ISP_EXECUTABLE_ARGUMENTS}{SK}{ISPExecutableArguments}{SA}{_ISP_EXPECTED}{SK}{ISPExpected}";
         }
 
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
@@ -107,21 +107,21 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public MeasurementNumeric(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
             ArgumentsValidate(ID, Arguments, argsDict);
-            this.High = Double.Parse(argsDict[_HIGH], NumberStyles.Float, CultureInfo.CurrentCulture);
-            this.Low = Double.Parse(argsDict[_LOW], NumberStyles.Float, CultureInfo.CurrentCulture);
+            High = Double.Parse(argsDict[_HIGH], NumberStyles.Float, CultureInfo.CurrentCulture);
+            Low = Double.Parse(argsDict[_LOW], NumberStyles.Float, CultureInfo.CurrentCulture);
 
             String[] si_units = Enum.GetNames(typeof(SI_UNITS)).Select(s => s.ToLower()).ToArray();
             if (si_units.Any(argsDict[_SI_UNITS].ToLower().Contains)) {
-                this.SI_Units = (SI_UNITS)Enum.Parse(typeof(SI_UNITS), argsDict[_SI_UNITS], ignoreCase: true);
+                SI_Units = (SI_UNITS)Enum.Parse(typeof(SI_UNITS), argsDict[_SI_UNITS], ignoreCase: true);
                 String[] si_units_modifiers = Enum.GetNames(typeof(SI_UNITS_MODIFIER)).Select(s => s.ToLower()).ToArray();
                 if (si_units_modifiers.Any(argsDict[_SI_UNITS_MODIFIER].ToLower().Contains)) {
-                    this.SI_Units_Modifier = (SI_UNITS_MODIFIER)Enum.Parse(typeof(SI_UNITS_MODIFIER), argsDict[_SI_UNITS_MODIFIER], ignoreCase: true);
+                    SI_Units_Modifier = (SI_UNITS_MODIFIER)Enum.Parse(typeof(SI_UNITS_MODIFIER), argsDict[_SI_UNITS_MODIFIER], ignoreCase: true);
                 }
             }
         }
 
         public override String ArgumentsGet() {
-            return $"{_HIGH}{SK}{this.High}{SA}{_LOW}{SK}{this.Low}{SA}{_SI_UNITS}{SK}{this.SI_Units}{SA}{_SI_UNITS_MODIFIER}{SK}{this.SI_Units_Modifier}";
+            return $"{_HIGH}{SK}{High}{SA}{_LOW}{SK}{Low}{SA}{_SI_UNITS}{SK}{SI_Units}{SA}{_SI_UNITS_MODIFIER}{SK}{SI_Units_Modifier}";
         }
 
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
@@ -148,11 +148,11 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public MeasurementTextual(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
             ArgumentsValidate(ID, Arguments, argsDict);
-            this.Text = argsDict[_TEXT];
+            Text = argsDict[_TEXT];
         }
 
         public override String ArgumentsGet() {
-            return $"{_TEXT}{SK}{this.Text}";
+            return $"{_TEXT}{SK}{Text}";
         }
 
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
@@ -180,39 +180,39 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             Dictionary<String, Operation> allOperations = Operation.Get();
             Dictionary<String, Group> allGroups = Group.Get();
             Dictionary<String, Measurement> allMeasurements = Measurement.Get();
-            (this.TestElementID, this.IsOperation) = SelectTests.Get(allOperations, allGroups);
+            (TestElementID, IsOperation) = SelectTests.Get(allOperations, allGroups);
 
-            if (this.IsOperation) {
-                this.TestElementDescription = allOperations[this.TestElementID].Description;
-                this.TestElementRevision = allOperations[this.TestElementID].Revision;
-                this.GroupIDsSequence = allOperations[this.TestElementID].TestGroupIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList();
-                foreach (String groupID in this.GroupIDsSequence) {
-                    this.Groups.Add(groupID, allGroups[groupID]);
-                    this.GroupIDsToMeasurementIDs.Add(groupID, allGroups[groupID].TestMeasurementIDs.Split(MeasurementAbstract.SA).ToList());
+            if (IsOperation) {
+                TestElementDescription = allOperations[TestElementID].Description;
+                TestElementRevision = allOperations[TestElementID].Revision;
+                GroupIDsSequence = allOperations[TestElementID].TestGroupIDs.Split(MeasurementAbstract.SA).Select(id => id.Trim()).ToList();
+                foreach (String groupID in GroupIDsSequence) {
+                    Groups.Add(groupID, allGroups[groupID]);
+                    GroupIDsToMeasurementIDs.Add(groupID, allGroups[groupID].TestMeasurementIDs.Split(MeasurementAbstract.SA).ToList());
 
-                    if (groupID.Length > this.FormattingLengthGroupID) this.FormattingLengthGroupID = groupID.Length;
-                    foreach (String measurementID in this.GroupIDsToMeasurementIDs[groupID]) {
-                        this.Measurements.Add(measurementID, allMeasurements[measurementID]);
-                        this.Measurements[measurementID].GroupID = groupID;
-                        if (measurementID.Length > this.FormattingLengthMeasurementID) this.FormattingLengthMeasurementID = measurementID.Length;
+                    if (groupID.Length > FormattingLengthGroupID) FormattingLengthGroupID = groupID.Length;
+                    foreach (String measurementID in GroupIDsToMeasurementIDs[groupID]) {
+                        Measurements.Add(measurementID, allMeasurements[measurementID]);
+                        Measurements[measurementID].GroupID = groupID;
+                        if (measurementID.Length > FormattingLengthMeasurementID) FormattingLengthMeasurementID = measurementID.Length;
                     }
                 }
             } else {
-                this.TestElementDescription = allGroups[this.TestElementID].Description;
-                this.TestElementRevision = allGroups[this.TestElementID].Revision;
-                this.GroupIDsSequence.Add(this.TestElementID);
-                this.Groups.Add(this.TestElementID, allGroups[this.TestElementID]);
-                this.GroupIDsToMeasurementIDs.Add(this.TestElementID, allGroups[this.TestElementID].TestMeasurementIDs.Split(MeasurementAbstract.SA).ToList());
+                TestElementDescription = allGroups[TestElementID].Description;
+                TestElementRevision = allGroups[TestElementID].Revision;
+                GroupIDsSequence.Add(TestElementID);
+                Groups.Add(TestElementID, allGroups[TestElementID]);
+                GroupIDsToMeasurementIDs.Add(TestElementID, allGroups[TestElementID].TestMeasurementIDs.Split(MeasurementAbstract.SA).ToList());
 
-                foreach (String measurementID in this.GroupIDsToMeasurementIDs[this.TestElementID]) {
-                    this.Measurements.Add(measurementID, allMeasurements[measurementID]);
-                    this.Measurements[measurementID].GroupID = this.TestElementID;
-                    if (measurementID.Length > this.FormattingLengthMeasurementID) this.FormattingLengthMeasurementID = measurementID.Length;
+                foreach (String measurementID in GroupIDsToMeasurementIDs[TestElementID]) {
+                    Measurements.Add(measurementID, allMeasurements[measurementID]);
+                    Measurements[measurementID].GroupID = TestElementID;
+                    if (measurementID.Length > FormattingLengthMeasurementID) FormattingLengthMeasurementID = measurementID.Length;
                 }
             }
-            foreach (String groupID in this.GroupIDsSequence) this.TestMeasurementIDsSequence.AddRange(this.GroupIDsToMeasurementIDs[groupID]);
+            foreach (String groupID in GroupIDsSequence) TestMeasurementIDsSequence.AddRange(GroupIDsToMeasurementIDs[groupID]);
 
-            IEnumerable<String> duplicateIDs = this.TestMeasurementIDsSequence.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
+            IEnumerable<String> duplicateIDs = TestMeasurementIDsSequence.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
             if (duplicateIDs.Count() !=0) throw new InvalidOperationException($"Duplicated TestMeasurementIDs '{String.Join("', '", duplicateIDs)}'.");
         }
 

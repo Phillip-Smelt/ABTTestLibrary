@@ -14,7 +14,7 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         public RichTextBoxSink(ref RichTextBox richTextBox, String outputTemplate = Logger.LOGGER_TEMPLATE) {
             this.richTextBox = richTextBox;
-            this.formatter = new MessageTemplateTextFormatter(outputTemplate);
+            formatter = new MessageTemplateTextFormatter(outputTemplate);
         }
 
         public void Emit(LogEvent logEvent) {

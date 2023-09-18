@@ -9,7 +9,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String SQLConnectionString = ConfigurationManager.AppSettings["LOGGER_SQLConnectionString"].Trim();
         public readonly Boolean TestEventsEnabled = Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_TestEventsEnabled"].Trim());
 
-        private AppConfigLogger() { if (!this.FilePath.EndsWith(@"\")) this.FilePath += @"\"; }
+        private AppConfigLogger() { if (!FilePath.EndsWith(@"\")) FilePath += @"\"; }
         // Logging.FileStop() requires terminating "\" character.
 
         public static AppConfigLogger Get() { return new AppConfigLogger(); }

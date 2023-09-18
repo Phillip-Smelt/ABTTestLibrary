@@ -39,7 +39,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         // Singleton pattern requires explicit static constructor to tell C# compiler not to mark type as beforefieldinit.
         // https://csharpindepth.com/articles/singleton
         private UE24() {
-            this.USB_ERB24s = new Dictionary<UE, MccBoard>() {
+            USB_ERB24s = new Dictionary<UE, MccBoard>() {
                 {UE.B0, new MccBoard((Int32)UE.B0)},
                 {UE.B1, new MccBoard((Int32)UE.B1)}
             };

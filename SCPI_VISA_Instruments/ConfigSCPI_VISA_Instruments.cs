@@ -24,37 +24,37 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public readonly Object Instrument; // NOTE: The assumption, thus far proven correct, is that Keysight's SCPI drivers don't contain state, thus can be readonly.
 
         private SCPI_VISA_Instrument(Alias id, String description, String address) {
-            this.ID = id;
-            this.Description = description;
-            this.Address = address;
+            ID = id;
+            Description = description;
+            Address = address;
 
             try {
-                this.Identity = SCPI99.IdentityGet(address, SCPI_IDENTITY.Model);
+                Identity = SCPI99.IdentityGet(address, SCPI_IDENTITY.Model);
 
-                switch (this.Identity) {
+                switch (Identity) {
                     case EL_34143A.MODEL:
-                        this.Instrument = new AgEL30000(this.Address);
+                        Instrument = new AgEL30000(Address);
                         EL_34143A.Initialize(this);
                         break;
                     case MM_34661A.MODEL:
-                        this.Instrument = new Ag3466x(this.Address);
+                        Instrument = new Ag3466x(Address);
                         MM_34661A.Initialize(this);
                         break;
                     case PS_E36103B.MODEL:
                     case PS_E36105B.MODEL:
-                        this.Instrument = new AgE3610XB(this.Address);
+                        Instrument = new AgE3610XB(Address);
                         PS_E3610xB.Initialize(this);
                         break;
                     case PS_E36234A.MODEL:
-                        this.Instrument = new AgE36200(this.Address);
+                        Instrument = new AgE36200(Address);
                         PS_E36234A.Initialize(this);
                         break;
                     case WG_33509B.MODEL:
-                        this.Instrument = new Ag33500B_33600A(this.Address);
+                        Instrument = new Ag33500B_33600A(Address);
                         WG_33509B.Initialize(this);
                         break;
                     default:
-                        this.Instrument = new AgSCPI99(this.Address);
+                        Instrument = new AgSCPI99(Address);
                         SCPI99.Initialize(this);
                         Logger.LogError(SCPI99.ErrorMessageGet(this, $"Unrecognized SCPI VISA Instrument.  Functionality limited to SCPI99 commands only."));
                         break;
@@ -82,17 +82,17 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public class Alias {
             public readonly String ID;
 
-            public Alias(String name) { this.ID = name; }
+            public Alias(String name) { ID = name; }
 
             public override Boolean Equals(Object obj) {
                 Alias a = obj as Alias;
                 if (ReferenceEquals(this, a)) return true;
-                return a != null && this.ID == a.ID;
+                return a != null && ID == a.ID;
             }
 
-            public override Int32 GetHashCode() { return 3 * this.ID.GetHashCode(); }
+            public override Int32 GetHashCode() { return 3 * ID.GetHashCode(); }
 
-            public override String ToString() { return this.ID; }
+            public override String ToString() { return ID; }
         }
     }
 }

@@ -46,51 +46,51 @@ namespace ABT.TestSpace.TestExec {
         private Boolean _cancelled = false;
 
         protected TestExecutive(Icon icon) {
-            this.InitializeComponent();
-            this._appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
-            this._libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            this.Icon = icon;
+            InitializeComponent();
+            _appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
+            _libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             UE24.Set(RelayForms.C.S.NO); // Relays should be energized/de-energized/re-enegized occasionally as preventative maintenance.
             UE24.Set(RelayForms.C.S.NC); // Besides, having 48 relays go "clack-clack" simultaneously sounds awesome...
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
-            this.FormReset();
-            this.Text = $"{this.ConfigUUT.Number}, {this.ConfigUUT.Description}";
+            FormReset();
+            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}";
 #if !DEBUG
-            if (!String.Equals(String.Empty, this.ConfigUUT.DocumentationFolder)) {
-                if (Directory.Exists(this.ConfigUUT.DocumentationFolder)) {
+            if (!String.Equals(String.Empty, ConfigUUT.DocumentationFolder)) {
+                if (Directory.Exists(ConfigUUT.DocumentationFolder)) {
                     ProcessStartInfo psi = new ProcessStartInfo {
                         FileName = "explorer.exe",
                         WindowStyle = ProcessWindowStyle.Minimized,
-                        Arguments = $"\"{this.ConfigUUT.DocumentationFolder}\""
+                        Arguments = $"\"{ConfigUUT.DocumentationFolder}\""
                     };
                     Process.Start(psi);
                     // Paths with embedded spaces require enclosing double-quotes (").
                     // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-                } else MessageBox.Show(Form.ActiveForm, $"Path {this.ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                } else MessageBox.Show(Form.ActiveForm, $"Path {ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 #endif
-            this.ButtonSelectTests.Enabled = true;
+            ButtonSelectTests.Enabled = true;
         }
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
-            this.ConfigTest = AppConfigTest.Get();
-            this.Text = $"{this.ConfigUUT.Number}, {this.ConfigUUT.Description}, {this.ConfigTest.TestElementID}";
-            this.FormReset();
-            this.ButtonSelectTests.Enabled = true;
-            this.ButtonStartReset(enabled: true);
+            ConfigTest = AppConfigTest.Get();
+            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
+            FormReset();
+            ButtonSelectTests.Enabled = true;
+            ButtonStartReset(enabled: true);
         }
 
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
-            String serialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: this.ConfigUUT.SerialNumber);
+            String serialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: ConfigUUT.SerialNumber);
             if (String.Equals(serialNumber, String.Empty)) return;
-            this.ConfigUUT.SerialNumber = serialNumber;
-            this.MeasurementsPreRun();
-            await this.MeasurementsRun();
-            this.MeasurementsPostRun();
+            ConfigUUT.SerialNumber = serialNumber;
+            MeasurementsPreRun();
+            await MeasurementsRun();
+            MeasurementsPostRun();
         }
             /// <summary>
             /// NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
@@ -106,8 +106,8 @@ namespace ABT.TestSpace.TestExec {
             ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
             ///      2)  Operator Reactive:
             ///          - TestExecutive's already implemented, always available & default reactive "Cancel before next Test" technique,
-            ///            which simply sets this._cancelled Boolean to true, checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
-            ///          - If this._cancelled is true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation
+            ///            which simply sets _cancelled Boolean to true, checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
+            ///          - If _cancelled is true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation
             ///            prior to the next Measurement's execution.
             ///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
             /// B) PrePlanned Developer Programmed Cancellations:
@@ -131,62 +131,62 @@ namespace ABT.TestSpace.TestExec {
             /// </para>
             /// </summary>
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            this.CancelTokenSource.Cancel();
-            this._cancelled = true;
-            this.ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
-            this.ButtonCancel.Enabled = false;
-            this.ButtonCancel.UseVisualStyleBackColor = false;
-            this.ButtonCancel.BackColor = Color.Red;
+            CancelTokenSource.Cancel();
+            _cancelled = true;
+            ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
+            ButtonCancel.Enabled = false;
+            ButtonCancel.UseVisualStyleBackColor = false;
+            ButtonCancel.BackColor = Color.Red;
         }
 
         private void ButtonStartReset(Boolean enabled) {
             if (enabled) {
-                this.ButtonStart.UseVisualStyleBackColor = false;
-                this.ButtonStart.BackColor = Color.Green;
+                ButtonStart.UseVisualStyleBackColor = false;
+                ButtonStart.BackColor = Color.Green;
             } else {
-                this.ButtonStart.BackColor = SystemColors.Control;
-                this.ButtonStart.UseVisualStyleBackColor = true;
+                ButtonStart.BackColor = SystemColors.Control;
+                ButtonStart.UseVisualStyleBackColor = true;
             }
-            this.ButtonStart.Enabled = enabled;
+            ButtonStart.Enabled = enabled;
         }
 
         private void ButtonCancelReset(Boolean enabled) {
             if (enabled) {
-                this.ButtonCancel.UseVisualStyleBackColor = false;
-                this.ButtonCancel.BackColor = Color.Yellow;
+                ButtonCancel.UseVisualStyleBackColor = false;
+                ButtonCancel.BackColor = Color.Yellow;
             } else {
-                this.ButtonCancel.BackColor = SystemColors.Control;
-                this.ButtonCancel.UseVisualStyleBackColor = true;
+                ButtonCancel.BackColor = SystemColors.Control;
+                ButtonCancel.UseVisualStyleBackColor = true;
             }
-            this.ButtonCancel.Text = "Cancel";
-            if (this.CancelTokenSource.IsCancellationRequested) {
-                this.CancelTokenSource.Dispose();
-                this.CancelTokenSource = new CancellationTokenSource();
+            ButtonCancel.Text = "Cancel";
+            if (CancelTokenSource.IsCancellationRequested) {
+                CancelTokenSource.Dispose();
+                CancelTokenSource = new CancellationTokenSource();
             }
-            this._cancelled = false;
-            this.ButtonCancel.Enabled = enabled;
+            _cancelled = false;
+            ButtonCancel.Enabled = enabled;
         }
 
         private void FormReset() {
-            this.ButtonSelectTests.Enabled = false;
-            this.ButtonStartReset(enabled: false);
-            this.ButtonCancelReset(enabled: false);
-            this.TextResult.Text = String.Empty;
-            this.TextResult.BackColor = Color.White;
-            if (this.ConfigTest != null) {
-                this.ButtonSaveOutput.Enabled = !this.ConfigTest.IsOperation;
-                this.ButtonOpenTestDataFolder.Enabled = (this.ConfigTest.IsOperation && this.ConfigLogger.FileEnabled);
+            ButtonSelectTests.Enabled = false;
+            ButtonStartReset(enabled: false);
+            ButtonCancelReset(enabled: false);
+            TextResult.Text = String.Empty;
+            TextResult.BackColor = Color.White;
+            if (ConfigTest != null) {
+                ButtonSaveOutput.Enabled = !ConfigTest.IsOperation;
+                ButtonOpenTestDataFolder.Enabled = (ConfigTest.IsOperation && ConfigLogger.FileEnabled);
             } else {
-                this.ButtonSaveOutput.Enabled = false;
-                this.ButtonOpenTestDataFolder.Enabled = false;
+                ButtonSaveOutput.Enabled = false;
+                ButtonOpenTestDataFolder.Enabled = false;
             }
-            this.ButtonEmergencyStop.Enabled = true;
-            this.rtfResults.Text = String.Empty;
+            ButtonEmergencyStop.Enabled = true;
+            rtfResults.Text = String.Empty;
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            this.TestSystemReset();
-            if (this.ButtonCancel.Enabled) this.ButtonCancel_Clicked(this, null);
+            TestSystemReset();
+            if (ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
 
         private void ButtonSaveOutput_Click(Object sender, EventArgs e) {
@@ -194,13 +194,13 @@ namespace ABT.TestSpace.TestExec {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{this.ConfigUUT.Number}_{this.ConfigTest.TestElementID}_{this.ConfigUUT.SerialNumber}",
+                FileName = $"{ConfigUUT.Number}_{ConfigTest.TestElementID}_{ConfigUUT.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
             };
             DialogResult dialogResult = saveFileDialog.ShowDialog();
-            if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) this.rtfResults.SaveFile(saveFileDialog.FileName);
+            if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName);
         }
 
         private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
@@ -209,73 +209,73 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void MeasurementsPreRun() {
-            this.FormReset();
-            foreach (KeyValuePair<String, Measurement> kvp in this.ConfigTest.Measurements) {
+            FormReset();
+            foreach (KeyValuePair<String, Measurement> kvp in ConfigTest.Measurements) {
                 if (String.Equals(kvp.Value.ClassName, MeasurementNumeric.ClassName)) kvp.Value.Value = Double.NaN.ToString();
                 else kvp.Value.Value = String.Empty;
                 kvp.Value.Result = EventCodes.UNSET;
                 kvp.Value.Message = String.Empty;
             }
-            this.ConfigUUT.EventCode = EventCodes.UNSET;
-            this.TestSystemReset();
-            Logger.Start(this, ref this.rtfResults);
-            this.ButtonCancelReset(enabled: true);
+            ConfigUUT.EventCode = EventCodes.UNSET;
+            TestSystemReset();
+            Logger.Start(this, ref rtfResults);
+            ButtonCancelReset(enabled: true);
         }
 
         private async Task MeasurementsRun() {
-            foreach (String groupID in this.ConfigTest.GroupIDsSequence) {
-                foreach (String measurementID in this.ConfigTest.GroupIDsToMeasurementIDs[groupID]) {
+            foreach (String groupID in ConfigTest.GroupIDsSequence) {
+                foreach (String measurementID in ConfigTest.GroupIDsToMeasurementIDs[groupID]) {
                     try {
-                        this.ConfigTest.Measurements[measurementID].Value = await Task.Run(() => this.MeasurementRun(measurementID));
-                        this.ConfigTest.Measurements[measurementID].Result = this.MeasurementEvaluate(this.ConfigTest.Measurements[measurementID]);
+                        ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
+                        ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
-                        this.TestSystemReset();
-                        this.MeasurementsRunExceptionHandler(measurementID, e);
+                        TestSystemReset();
+                        MeasurementsRunExceptionHandler(measurementID, e);
                         return;
                     } finally {
-                        Logger.LogTest(this.ConfigTest.IsOperation, this.ConfigTest.Measurements[measurementID], ref this.rtfResults);
+                        Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
                     }
-                    if (this._cancelled) {
-                        this.ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
+                    if (_cancelled) {
+                        ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
                         return;
                     }
-                    if (this.MeasurementCancelNotPassed(measurementID)) return;
+                    if (MeasurementCancelNotPassed(measurementID)) return;
                 }
-                if (this.MeasurementsCancelNotPassed(groupID)) return;
+                if (MeasurementsCancelNotPassed(groupID)) return;
             }
         }
         
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
-            this.TestSystemReset();
-            this.ButtonSelectTests.Enabled = true;
-            this.ButtonStartReset(enabled: true);
-            this.ButtonCancelReset(enabled: false);
-            this.ConfigUUT.EventCode = this.MeasurementsEvaluate(this.ConfigTest.Measurements);
-            this.TextResult.Text = this.ConfigUUT.EventCode;
-            this.TextResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
-            Logger.Stop(this, ref this.rtfResults);
+            TestSystemReset();
+            ButtonSelectTests.Enabled = true;
+            ButtonStartReset(enabled: true);
+            ButtonCancelReset(enabled: false);
+            ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
+            TextResult.Text = ConfigUUT.EventCode;
+            TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
+            Logger.Stop(this, ref rtfResults);
         }
 
         private void MeasurementsRunExceptionHandler(String measurementID, Exception e) {
             if (e.ToString().Contains(CancellationException.ClassName)) {
                 while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException;
-                if ((e is CancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Measurements[measurementID].Value = e.Message;
-                this.ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
+                if ((e is CancellationException) && !String.IsNullOrEmpty(e.Message)) ConfigTest.Measurements[measurementID].Value = e.Message;
+                ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
             } else {
                 Logger.LogError(e.ToString());
-                this.ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
+                ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
             }
         }
 
-        private Boolean MeasurementCancelNotPassed(String measurementID) { return !String.Equals(this.ConfigTest.Measurements[measurementID].Result, EventCodes.PASS) && this.ConfigTest.Measurements[measurementID].CancelNotPassed; }
+        private Boolean MeasurementCancelNotPassed(String measurementID) { return !String.Equals(ConfigTest.Measurements[measurementID].Result, EventCodes.PASS) && ConfigTest.Measurements[measurementID].CancelNotPassed; }
 
-        private Boolean MeasurementsCancelNotPassed(String groupID) { return !String.Equals(this.MeasurementsEvaluate(MeasurementsGet(groupID)), EventCodes.PASS) && this.ConfigTest.Groups[groupID].CancelNotPassed; }
+        private Boolean MeasurementsCancelNotPassed(String groupID) { return !String.Equals(MeasurementsEvaluate(MeasurementsGet(groupID)), EventCodes.PASS) && ConfigTest.Groups[groupID].CancelNotPassed; }
 
         private Dictionary<String, Measurement> MeasurementsGet(String groupID) {
             Dictionary<String, Measurement> measurements = new Dictionary<String, Measurement>();
-            foreach (String measurementID in this.ConfigTest.GroupIDsToMeasurementIDs[groupID]) measurements.Add(measurementID, this.ConfigTest.Measurements[measurementID]);
+            foreach (String measurementID in ConfigTest.GroupIDsToMeasurementIDs[groupID]) measurements.Add(measurementID, ConfigTest.Measurements[measurementID]);
             return measurements;
         }
 
@@ -302,20 +302,20 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private String MeasurementsEvaluate(Dictionary<String, Measurement> measurements) {
-            if (this.MeasurementResultsCount(measurements, EventCodes.PASS) == measurements.Count) return EventCodes.PASS;
+            if (MeasurementResultsCount(measurements, EventCodes.PASS) == measurements.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All measurement results are PASS, so overall result is PASS.
-            if (this.MeasurementResultsCount(measurements, EventCodes.ERROR) != 0) return EventCodes.ERROR;
+            if (MeasurementResultsCount(measurements, EventCodes.ERROR) != 0) return EventCodes.ERROR;
             // 2nd priority evaluation:
             // - If any measurement result is ERROR, overall result is ERROR.
-            if (this.MeasurementResultsCount(measurements, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
+            if (MeasurementResultsCount(measurements, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
             // 3rd priority evaluation:
             // - If any measurement result is CANCEL, and none were ERROR, overall result is CANCEL.
-            if (this.MeasurementResultsCount(measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
+            if (MeasurementResultsCount(measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
             // 4th priority evaluation:
             // - If any measurement result is UNSET, and none were ERROR or CANCEL, then Measurement(s) didn't complete.
             // - Likely occurred because a Measurement failed that had its App.Config TestMeasurement CancelOnFail flag set to true.
-            if (this.MeasurementResultsCount(measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
+            if (MeasurementResultsCount(measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
             // 5th priority evaluation:
             // - If any measurement result is FAIL, and none were ERROR, CANCEL or UNSET, result is FAIL.
 
@@ -332,7 +332,7 @@ namespace ABT.TestSpace.TestExec {
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
 
         public void TestSystemReset() {
-            SCPI99.ResetAll(this.SVIs);
+            SCPI99.ResetAll(SVIs);
             UE24.Set(RelayForms.C.S.NC);
         }
     }

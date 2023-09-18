@@ -18,12 +18,12 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public override Boolean Equals(Object obj) {
             SwitchedNet sn = obj as SwitchedNet;
             if (ReferenceEquals(this, sn)) return true;
-            return sn != null && sn.ID == this.ID && sn.Alias == this.Alias;
+            return sn != null && sn.ID == ID && sn.Alias == Alias;
         }
 
-        public override Int32 GetHashCode() { return 3 * this.ID.GetHashCode() + this.Alias.GetHashCode(); }
+        public override Int32 GetHashCode() { return 3 * ID.GetHashCode() + Alias.GetHashCode(); }
 
-        public override String ToString() { return this.ID; }
+        public override String ToString() { return ID; }
     }
 
     public sealed class Relay {
@@ -48,19 +48,19 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public static String GetUE(UE ue) { return Enum.GetName(typeof(UE), ue); }
         public static String GetR(R r) { return Enum.GetName(typeof(R), r); }
 
-        public C.S Get() { return UE24.Get(this.UE, this.R); }
+        public C.S Get() { return UE24.Get(UE, R); }
 
-        public void Set(C.S state) { UE24.Set(this.UE, this.R, state); }
+        public void Set(C.S state) { UE24.Set(UE, R, state); }
 
-        public Boolean Is(C.S state) { return UE24.Is(this.UE, this.R, state); }
+        public Boolean Is(C.S state) { return UE24.Is(UE, R, state); }
 
         public override Boolean Equals(Object obj) {
             Relay r = obj as Relay;
             if (ReferenceEquals(this, r)) return true;
-            return r != null && r.UE == this.UE && r.R == this.R && this.C == r.C && this.NC == r.NC && this.NO == r.NO;
+            return r != null && r.UE == UE && r.R == R && C == r.C && NC == r.NC && NO == r.NO;
         }
 
-        public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode(); }
+        public override Int32 GetHashCode() { return 3 * UE.GetHashCode() + R.GetHashCode(); }
     }
 
     public sealed class Terminal {
@@ -73,10 +73,10 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public override Boolean Equals(Object obj) {
             Terminal t = obj as Terminal;
             if (ReferenceEquals(this, t)) return true;
-            return t != null && t.UE == this.UE && t.R == this.R && t.T == this.T;
+            return t != null && t.UE == UE && t.R == R && t.T == T;
         }
 
-        public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode() + this.T.GetHashCode(); }
+        public override Int32 GetHashCode() { return 3 * UE.GetHashCode() + R.GetHashCode() + T.GetHashCode(); }
     }
 
     public sealed class State {
@@ -89,38 +89,38 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public override Boolean Equals(Object obj) {
             State s = obj as State;
             if (ReferenceEquals(this, s)) return true;
-            return s != null && s.UE == this.UE && s.R == this.R && s.S == this.S;
+            return s != null && s.UE == UE && s.R == R && s.S == S;
         }
 
-        public override Int32 GetHashCode() { return 3 * this.UE.GetHashCode() + this.R.GetHashCode() + this.S.GetHashCode(); }
+        public override Int32 GetHashCode() { return 3 * UE.GetHashCode() + R.GetHashCode() + S.GetHashCode(); }
     }
 
     public sealed class SwitchedRoute {
         public readonly Tuple<SwitchedNet, SwitchedNet> SwitchedNetPair;
-        public SwitchedRoute(Tuple<SwitchedNet, SwitchedNet> switchedNetPair) { this.SwitchedNetPair = switchedNetPair; }
+        public SwitchedRoute(Tuple<SwitchedNet, SwitchedNet> switchedNetPair) { SwitchedNetPair = switchedNetPair; }
 
-        public Boolean Contains(SwitchedNet SN) { return (this.SwitchedNetPair.Item1 == SN) || (this.SwitchedNetPair.Item2 == SN); }
+        public Boolean Contains(SwitchedNet SN) { return (SwitchedNetPair.Item1 == SN) || (SwitchedNetPair.Item2 == SN); }
 
         public override Boolean Equals(Object obj) {
             if (!(obj is SwitchedRoute sr)) return false;
             if (ReferenceEquals(this, sr)) return true;
-            if (sr.SwitchedNetPair.Item1 == this.SwitchedNetPair.Item1 && sr.SwitchedNetPair.Item2 == this.SwitchedNetPair.Item2) return true;
-            if (sr.SwitchedNetPair.Item1 == this.SwitchedNetPair.Item2 && sr.SwitchedNetPair.Item2 == this.SwitchedNetPair.Item1) return true;
+            if (sr.SwitchedNetPair.Item1 == SwitchedNetPair.Item1 && sr.SwitchedNetPair.Item2 == SwitchedNetPair.Item2) return true;
+            if (sr.SwitchedNetPair.Item1 == SwitchedNetPair.Item2 && sr.SwitchedNetPair.Item2 == SwitchedNetPair.Item1) return true;
             return false;
         }
 
-        public override Int32 GetHashCode() { return 3 * this.SwitchedNetPair.GetHashCode(); }
+        public override Int32 GetHashCode() { return 3 * SwitchedNetPair.GetHashCode(); }
     }
 
     public sealed class SwitchedRoutes {
         // TODO: Optimize Are & Set to invoke Are(UE ue, Dictionary<R, C.S> RεS) & Set(UE ue, Dictionary<R, C.S> RεS) for optimally simultaneous switching.
         public readonly Dictionary<SwitchedRoute, HashSet<State>> SRs;
 
-        public SwitchedRoutes(Dictionary<SwitchedRoute, HashSet<State>> RouteStates) { this.SRs = RouteStates; }
+        public SwitchedRoutes(Dictionary<SwitchedRoute, HashSet<State>> RouteStates) { SRs = RouteStates; }
 
         public Boolean Are(SwitchedNet SN1, SwitchedNet SN2, SWITCHED_STATE SwitchedState) {
             Boolean ac = true;
-            foreach (State s in this.SRs[SwitchedRouteGet(SN1, SN2)]) ac &= Is(s.UE, s.R, s.S); 
+            foreach (State s in SRs[SwitchedRouteGet(SN1, SN2)]) ac &= Is(s.UE, s.R, s.S); 
             switch(SwitchedState) {
                 case SWITCHED_STATE.disconnected:  return !ac;
                 case SWITCHED_STATE.CONNECTED:     return ac;
@@ -134,7 +134,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             return ac;
         }
 
-        public Boolean Connectable(SwitchedNet SN1, SwitchedNet SN2) { return this.SRs.ContainsKey(new SwitchedRoute(Tuple.Create(SN1, SN2))); }
+        public Boolean Connectable(SwitchedNet SN1, SwitchedNet SN2) { return SRs.ContainsKey(new SwitchedRoute(Tuple.Create(SN1, SN2))); }
 
         public Boolean Connectable(SwitchedNet SN, HashSet<SwitchedNet> SNs) {
             Boolean ac = true;
@@ -144,7 +144,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
 
         public HashSet<SwitchedRoute> RoutesGet(SwitchedNet SN) {
             HashSet<SwitchedRoute> switchedRoutes = new HashSet<SwitchedRoute>();
-            foreach (KeyValuePair<SwitchedRoute, HashSet<State>> kvp in this.SRs) { if (kvp.Key.Contains(SN)) switchedRoutes.Add(kvp.Key); }
+            foreach (KeyValuePair<SwitchedRoute, HashSet<State>> kvp in SRs) { if (kvp.Key.Contains(SN)) switchedRoutes.Add(kvp.Key); }
             return switchedRoutes;
             // If can convert:
             //      - Dictionary<String, HashSet<Terminal>>
@@ -162,8 +162,8 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
 
         public void Set(SwitchedNet SN1, SwitchedNet SN2, SWITCHED_STATE SwitchedState) {
             switch(SwitchedState) {
-                case SWITCHED_STATE.disconnected:  foreach (State s in this.SRs[SwitchedRouteGet(SN1, SN2)]) UE24.Set(s.UE, s.R, StateNegate(s.S));  break;
-                case SWITCHED_STATE.CONNECTED:     foreach (State s in this.SRs[SwitchedRouteGet(SN1, SN2)]) UE24.Set(s.UE, s.R, s.S);               break;
+                case SWITCHED_STATE.disconnected:  foreach (State s in SRs[SwitchedRouteGet(SN1, SN2)]) UE24.Set(s.UE, s.R, StateNegate(s.S));  break;
+                case SWITCHED_STATE.CONNECTED:     foreach (State s in SRs[SwitchedRouteGet(SN1, SN2)]) UE24.Set(s.UE, s.R, s.S);               break;
                 default:                           throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(SWITCHED_STATE)));
             }
         }
@@ -177,8 +177,8 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
 
         private SwitchedRoute SwitchedRouteGet(SwitchedNet SN1, SwitchedNet SN2) {
             SwitchedRoute sr = new SwitchedRoute(Tuple.Create(SN1, SN2));
-            if (!this.SRs.ContainsKey(sr)) sr = new SwitchedRoute(Tuple.Create(SN2, SN1)); // If at first you don't succeed...
-            if (!this.SRs.ContainsKey(sr)) throw new ArgumentException($"Invalid Route SwitchedNets SN1 '{SN1}' & SN2 '{SN2}'.");
+            if (!SRs.ContainsKey(sr)) sr = new SwitchedRoute(Tuple.Create(SN2, SN1)); // If at first you don't succeed...
+            if (!SRs.ContainsKey(sr)) throw new ArgumentException($"Invalid Route SwitchedNets SN1 '{SN1}' & SN2 '{SN2}'.");
             return sr;
         }
 
@@ -189,19 +189,19 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public readonly Dictionary<String, HashSet<Terminal>> SNTs = new Dictionary<String, HashSet<Terminal>>();
 
         public Relays(HashSet<Relay> rs) {
-            this.Rs = rs;
+            Rs = rs;
             Validate();
 
-            //foreach (Relay r in this.Rs) {
-            //    if (!this.SNTs.ContainsKey(r.C)) 
+            //foreach (Relay r in Rs) {
+            //    if (!SNTs.ContainsKey(r.C)) 
             //}
         }
 
         private void Validate() {
             StringBuilder sb = new StringBuilder($"Cannot currently accomodate USB-ERB24 Relays connected serially:{Environment.NewLine}Boards/Relays");
             List<(Relay, Relay)> rs =
-                (from r1 in this.Rs
-                 from r2 in this.Rs
+                (from r1 in Rs
+                 from r2 in Rs
                  where (r1.C == r2.NC || r1.C == r2.NO)
                  select (r1, r2)).ToList();
             if (rs.Count() != 0) {
