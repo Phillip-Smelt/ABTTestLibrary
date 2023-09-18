@@ -10,7 +10,6 @@ using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.TestSpace.TestExec.AppConfig;
-using System.Net;
 
 // TODO: Persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement results therein.
 // - Stop writing TestMeasurement results to RichTextBoxSink when testing full Operations; only write TestGroups results to RichTextBoxSink.
@@ -100,44 +99,46 @@ namespace ABT.TestSpace.TestExec.Logging {
             StringBuilder message = new StringBuilder();
             message.AppendLine($"TestMeasurement ID '{measurement.ID}'");
 #if VERBOSE
-            message.AppendLine($"  Revision          : {measurement.Revision}");
-            message.AppendLine($"  Measurement Type  : {measurement.ClassName}");
-            message.AppendLine($"  Cancel Not Passed : {measurement.CancelNotPassed}");
+            message.AppendLine(MessageFormat("Revision", measurement.Revision));
+            message.AppendLine(MessageFormat("Measurement Type", measurement.ClassName));
+            message.AppendLine(MessageFormat("Cancel Not Passed", measurement.CancelNotPassed.ToString()));
 #endif
-            message.AppendLine($"  Description       : {measurement.Description}");
+            message.AppendLine(MessageFormat("Description", measurement.Description));
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
                     MeasurementCustom measurementCustom = (MeasurementCustom)measurement.ClassObject;
-                    if (measurementCustom.Arguments != MeasurementCustom.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in MeasurementAbstract.ArgumentsSplit(measurementCustom.Arguments)) message.AppendLine($"  Key=Value         : {kvp.Key}={kvp.Value}");
-                    message.AppendLine($"  Actual            : {measurement.Value}");
+                    if (measurementCustom.Arguments != MeasurementCustom.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in MeasurementAbstract.ArgumentsSplit(measurementCustom.Arguments)) message.AppendLine(MessageFormat($"Key=Value", $"{kvp.Key}={kvp.Value}"));
+                    message.AppendLine(MessageFormat("Actual", measurement.Value));
                     break;
                 case MeasurementISP.ClassName:
                     MeasurementISP measurementISP = (MeasurementISP)measurement.ClassObject;
-                    message.AppendLine($"  Expected          : {measurementISP.ISPExpected}");
-                    message.AppendLine($"  Actual            : {measurement.Value}");
+                    message.AppendLine(MessageFormat("Expected", measurementISP.ISPExpected));
+                    message.AppendLine(MessageFormat("Actual", measurement.Value));
                     break;
                 case MeasurementNumeric.ClassName:
                     MeasurementNumeric measurementNumeric = (MeasurementNumeric)measurement.ClassObject;
-                    message.AppendLine($"  High Limit        : {measurementNumeric.High:G}");
-                    message.AppendLine($"  Measurement       : {Double.Parse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}");
-                    message.AppendLine($"  Low Limit         : {measurementNumeric.Low:G}");
-                    message.Append($"  SI Units          : {Enum.GetName(typeof(SI_UNITS), measurementNumeric.SI_Units)}");
-                    if (measurementNumeric.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) message.Append($" {Enum.GetName(typeof(SI_UNITS_MODIFIER), measurementNumeric.SI_Units_Modifier)}");
-                    message.AppendLine("");
+                    message.AppendLine(MessageFormat("High Limit", $"{measurementNumeric.High:G}"));
+                    message.AppendLine(MessageFormat("Measurement", $"{Double.Parse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}"));
+                    message.AppendLine(MessageFormat("Low Limit", $"{measurementNumeric.Low:G}"));
+                    String si_units = $"{Enum.GetName(typeof(SI_UNITS), measurementNumeric.SI_Units)}";
+                    if (measurementNumeric.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) si_units += $" {Enum.GetName(typeof(SI_UNITS_MODIFIER), measurementNumeric.SI_Units_Modifier)}";
+                    message.AppendLine(MessageFormat("SI Units", si_units));
                     break;
                 case MeasurementTextual.ClassName:
                     MeasurementTextual measurementTextual = (MeasurementTextual)measurement.ClassObject;
-                    message.AppendLine($"  Expected          : {measurementTextual.Text}");
-                    message.AppendLine($"  Actual            : {measurement.Value}");
+                    message.AppendLine(MessageFormat("Expected", measurementTextual.Text));
+                    message.AppendLine(MessageFormat("Actual", measurement.Value));
                     break;
                 default:
                     throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
             }
-            message.AppendLine($"  Result            : {measurement.Result}");
+            message.AppendLine(MessageFormat("Result", measurement.Result));
             if (!String.Equals(measurement.Message, String.Empty)) message.Append(measurement.Message);
             Log.Information(message.ToString());
             if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Result));
         }
+
+        private static String MessageFormat(String label, String message) { return $"  {label}".PadRight(Logger.SPACES_21.Length) + $" : {message}"; }
 
         public static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
