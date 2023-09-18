@@ -37,12 +37,12 @@ namespace ABT.TestSpace.TestExec.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
                 Log.Information($"Note: following measurement results invalid for UUT production testing, only troubleshooting.");
-                Log.Information($"START             : {DateTime.Now}");
-                Log.Information($"UUT Serial Number : {testExecutive.ConfigUUT.SerialNumber}");
-                Log.Information($"UUT Number        : {testExecutive.ConfigUUT.Number}");
-                Log.Information($"UUT Revision      : {testExecutive.ConfigUUT.Revision}");
-                Log.Information($"TestGroup ID      : {testExecutive.ConfigTest.TestElementID}");
-                Log.Information($"Description       : {testExecutive.ConfigTest.TestElementDescription}\n");
+                Log.Information(MessageFormat($"START", $"{DateTime.Now}"));
+                Log.Information(MessageFormat($"UUT Serial Number", $"{testExecutive.ConfigUUT.SerialNumber}"));
+                Log.Information(MessageFormat($"UUT Number", $"{testExecutive.ConfigUUT.Number}"));
+                Log.Information(MessageFormat($"UUT Revision", $"{testExecutive.ConfigUUT.Revision}"));
+                Log.Information(MessageFormat($"TestGroup ID", $"{testExecutive.ConfigTest.TestElementID}"));
+                Log.Information(MessageFormat($"Description", $"{testExecutive.ConfigTest.TestElementDescription}\n"));
                 return;
                 // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurement results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
