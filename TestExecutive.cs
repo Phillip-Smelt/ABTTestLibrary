@@ -116,8 +116,6 @@ namespace ABT.TestSpace.TestExec {
             ///          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
             ///            or simply because futher execution is pointless.
             ///          - Simply throw a CancellationException if the specific condition(s) occcur.
-            ///          - This is simulated in T01 in https://github.com/Amphenol-Borisch-Technologies/TestExecutor/blob/master/TestProgram/T-Common.cs
-            ///          - Test Developer must set CancellationException's message to the Measured Value for it to be Logged, else default String.Empty or Double.NaN values are Logged.
             ///      4)  App.Config's CancelNotPassed:
             ///          - App.Config's TestMeasurement element has a Boolean "CancelNotPassed" field:
             ///          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EventCodes.PASS,
@@ -230,7 +228,9 @@ namespace ABT.TestSpace.TestExec {
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
                         TestSystemReset();
-                        MeasurementsRunExceptionHandler(measurementID, e);
+                        Logger.LogError(e.ToString());
+                        if (e.ToString().Contains(CancellationException.ClassName)) ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
+                        else ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
                         return;
                     } finally {
                         Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
@@ -256,17 +256,6 @@ namespace ABT.TestSpace.TestExec {
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
             Logger.Stop(this, ref rtfResults);
-        }
-
-        private void MeasurementsRunExceptionHandler(String measurementID, Exception e) {
-            if (e.ToString().Contains(CancellationException.ClassName)) {
-                while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException;
-                if ((e is CancellationException) && !String.IsNullOrEmpty(e.Message)) ConfigTest.Measurements[measurementID].Value = e.Message;
-                ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
-            } else {
-                Logger.LogError(e.ToString());
-                ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
-            }
         }
 
         private Boolean MeasurementCancelNotPassed(String measurementID) { return !String.Equals(ConfigTest.Measurements[measurementID].Result, EventCodes.PASS) && ConfigTest.Measurements[measurementID].CancelNotPassed; }
