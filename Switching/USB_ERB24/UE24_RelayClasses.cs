@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.UI.WebControls.Expressions;
-using static ABT.TestSpace.TestExec.Switching.USB_ERB24.UE24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
+using static ABT.TestSpace.TestExec.Switching.USB_ERB24.UE24;
 
 namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
+    public enum SWITCHED_STATE { disconnected, CONNECTED };
+
     public sealed class SwitchedNet {
         public readonly String ID;
         public readonly String Alias;
@@ -111,58 +113,36 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
     }
 
     public sealed class SwitchedRoutes {
-        // TODO: Optimize Connect, DisConnect, AreConnected & AreDisConnected to invoke Set(UE ue, Dictionary<R, C.S> RεS) & Are(UE ue, Dictionary<R, C.S> RεS) for optimally simultaneous switching.
+        // TODO: Optimize Are & Set to invoke Are(UE ue, Dictionary<R, C.S> RεS) & Set(UE ue, Dictionary<R, C.S> RεS) for optimally simultaneous switching.
         public readonly Dictionary<SwitchedRoute, HashSet<State>> SRs;
 
         public SwitchedRoutes(Dictionary<SwitchedRoute, HashSet<State>> RouteStates) { this.SRs = RouteStates; }
 
-        public void Connect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.SRs[GetSwitchedRoute(SN1, SN2)]) Set(s.UE, s.R, s.S); }
-        
-        public void Connect(SwitchedNet SN, HashSet<SwitchedNet> SNs) { foreach (SwitchedNet sn in SNs) Connect(SN, sn); }
-
-        public void DisConnect(SwitchedNet SN1, SwitchedNet SN2) { foreach (State s in this.SRs[GetSwitchedRoute(SN1, SN2)]) Set(s.UE, s.R, GetStateOpposite(s.S)); }
-
-        public void DisConnect(SwitchedNet SN, HashSet<SwitchedNet> SNs) { foreach (SwitchedNet sn in SNs) DisConnect(SN, sn); }
-
-        public void Switch(SwitchedNet SN, SwitchedNet From, SwitchedNet To) {
-            DisConnect(SN, From);
-            Connect(SN, To);
+        public Boolean Are(SwitchedNet SN1, SwitchedNet SN2, SWITCHED_STATE SwitchedState) {
+            Boolean ac = true;
+            foreach (State s in this.SRs[SwitchedRouteGet(SN1, SN2)]) ac &= Is(s.UE, s.R, s.S); 
+            switch(SwitchedState) {
+                case SWITCHED_STATE.disconnected:  return !ac;
+                case SWITCHED_STATE.CONNECTED:     return ac;
+                default:                           throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(SWITCHED_STATE)));
+            }
         }
 
-        public Boolean AreConnected(SwitchedNet SN1, SwitchedNet SN2) {
+        public Boolean Are(SwitchedNet SN, HashSet<SwitchedNet> SNs, SWITCHED_STATE SwitchedState) {
             Boolean ac = true;
-            foreach (State s in this.SRs[GetSwitchedRoute(SN1, SN2)]) ac &= Is(s.UE, s.R, s.S);
+            foreach (SwitchedNet sn in SNs) ac &= Are(SN, sn, SwitchedState);
             return ac;
         }
 
-        public Boolean AreConnected(SwitchedNet SN, HashSet<SwitchedNet> SNs) {
+        public Boolean Connectable(SwitchedNet SN1, SwitchedNet SN2) { return this.SRs.ContainsKey(new SwitchedRoute(Tuple.Create(SN1, SN2))); }
+
+        public Boolean Connectable(SwitchedNet SN, HashSet<SwitchedNet> SNs) {
             Boolean ac = true;
-            foreach (SwitchedNet sn in SNs) ac &= AreConnected(SN, sn);
+            foreach (SwitchedNet sn in SNs) ac &= Connectable(SN, sn);
             return ac;
         }
 
-        public Boolean AreDisConnected(SwitchedNet SN1, SwitchedNet SN2) { return !AreConnected(SN1, SN2); }
-
-        public Boolean AreDisConnected(SwitchedNet SN, HashSet<SwitchedNet> SNs) { return !AreConnected(SN, SNs); }
-
-        public Boolean AreConnectable(SwitchedNet SN1, SwitchedNet SN2) { return this.SRs.ContainsKey(new SwitchedRoute(Tuple.Create(SN1, SN2))); }
-
-        public Boolean AreConnectable(SwitchedNet SN, HashSet<SwitchedNet> SNs) {
-            Boolean ac = true;
-            foreach (SwitchedNet sn in SNs) ac &= AreConnectable(SN, sn);
-            return ac;
-        }
-
-        private SwitchedRoute GetSwitchedRoute(SwitchedNet SN1, SwitchedNet SN2) {
-            SwitchedRoute sr = new SwitchedRoute(Tuple.Create(SN1, SN2));
-            if (!this.SRs.ContainsKey(sr)) sr = new SwitchedRoute(Tuple.Create(SN2, SN1)); // If at first you don't succeed...
-            if (!this.SRs.ContainsKey(sr)) throw new ArgumentException($"Invalid Route SwitchedNets SN1 '{SN1}' & SN2 '{SN2}'.");
-            return sr;
-        }
-
-        public static C.S GetStateOpposite(C.S State) { return (State == C.S.NO) ? C.S.NC : C.S.NO; }
-
-        public HashSet<SwitchedRoute> GetRoutes(SwitchedNet SN) {
+        public HashSet<SwitchedRoute> RoutesGet(SwitchedNet SN) {
             HashSet<SwitchedRoute> switchedRoutes = new HashSet<SwitchedRoute>();
             foreach (KeyValuePair<SwitchedRoute, HashSet<State>> kvp in this.SRs) { if (kvp.Key.Contains(SN)) switchedRoutes.Add(kvp.Key); }
             return switchedRoutes;
@@ -177,6 +157,31 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             //
             // Initially support ERB24's Set(), Is() & Get() functions for discrete/single (UE, R, C.S)
         }
+
+        private static C.S StateNegate(C.S State) { return (State == C.S.NO) ? C.S.NC : C.S.NO; }
+
+        public void Set(SwitchedNet SN1, SwitchedNet SN2, SWITCHED_STATE SwitchedState) {
+            switch(SwitchedState) {
+                case SWITCHED_STATE.disconnected:  foreach (State s in this.SRs[SwitchedRouteGet(SN1, SN2)]) UE24.Set(s.UE, s.R, StateNegate(s.S));  break;
+                case SWITCHED_STATE.CONNECTED:     foreach (State s in this.SRs[SwitchedRouteGet(SN1, SN2)]) UE24.Set(s.UE, s.R, s.S);               break;
+                default:                           throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(SWITCHED_STATE)));
+            }
+        }
+
+        public void Set(SwitchedNet SN, HashSet<SwitchedNet> SNs, SWITCHED_STATE SwitchedState) { foreach (SwitchedNet sn in SNs) Set(SN, sn, SwitchedState); }
+
+        public void Switch(SwitchedNet SN, SwitchedNet From, SwitchedNet To) {
+            Set(SN, From, SWITCHED_STATE.disconnected);
+            Set(SN, To, SWITCHED_STATE.CONNECTED);
+        }
+
+        private SwitchedRoute SwitchedRouteGet(SwitchedNet SN1, SwitchedNet SN2) {
+            SwitchedRoute sr = new SwitchedRoute(Tuple.Create(SN1, SN2));
+            if (!this.SRs.ContainsKey(sr)) sr = new SwitchedRoute(Tuple.Create(SN2, SN1)); // If at first you don't succeed...
+            if (!this.SRs.ContainsKey(sr)) throw new ArgumentException($"Invalid Route SwitchedNets SN1 '{SN1}' & SN2 '{SN2}'.");
+            return sr;
+        }
+
     }
 
     public sealed class Relays {

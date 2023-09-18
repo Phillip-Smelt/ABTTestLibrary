@@ -51,7 +51,7 @@ namespace ABT.TestSpace.TestExec {
             this._libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             this.Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            UE24.Set(RelayForms.C.S.NO); // Relays should be energized/de-energized occasionally as preventative maintenance.
+            UE24.Set(RelayForms.C.S.NO); // Relays should be energized/de-energized/re-enegized occasionally as preventative maintenance.
             UE24.Set(RelayForms.C.S.NC); // Besides, having 48 relays go "clack-clack" simultaneously sounds awesome...
         }
 
@@ -185,8 +185,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            SCPI99.ResetAll(this.SVIs);
-            UE24.Set(RelayForms.C.S.NC);
+            this.TestSystemReset();
             if (this.ButtonCancel.Enabled) this.ButtonCancel_Clicked(this, null);
        }
 
@@ -218,8 +217,7 @@ namespace ABT.TestSpace.TestExec {
                 kvp.Value.Message = String.Empty;
             }
             this.ConfigUUT.EventCode = EventCodes.UNSET;
-            SCPI99.ResetAll(this.SVIs);
-            UE24.Set(RelayForms.C.S.NC);
+            this.TestSystemReset();
             Logger.Start(this, ref this.rtfResults);
             this.ButtonCancelReset(enabled: true);
         }
@@ -231,6 +229,7 @@ namespace ABT.TestSpace.TestExec {
                         this.ConfigTest.Measurements[measurementID].Value = await Task.Run(() => this.MeasurementRun(measurementID));
                         this.ConfigTest.Measurements[measurementID].Result = this.MeasurementEvaluate(this.ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
+                        this.TestSystemReset();
                         this.MeasurementsRunExceptionHandler(measurementID, e);
                         return;
                     } finally {
@@ -249,14 +248,13 @@ namespace ABT.TestSpace.TestExec {
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
-            SCPI99.ResetAll(this.SVIs);
+            this.TestSystemReset();
             this.ButtonSelectTests.Enabled = true;
             this.ButtonStartReset(enabled: true);
             this.ButtonCancelReset(enabled: false);
             this.ConfigUUT.EventCode = this.MeasurementsEvaluate(this.ConfigTest.Measurements);
             this.TextResult.Text = this.ConfigUUT.EventCode;
             this.TextResult.BackColor = EventCodes.GetColor(this.ConfigUUT.EventCode);
-            UE24.Set(RelayForms.C.S.NC);
             Logger.Stop(this, ref this.rtfResults);
         }
 
@@ -266,8 +264,6 @@ namespace ABT.TestSpace.TestExec {
                 if ((e is CancellationException) && !String.IsNullOrEmpty(e.Message)) this.ConfigTest.Measurements[measurementID].Value = e.Message;
                 this.ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
             } else {
-                SCPI99.ResetAll(this.SVIs);
-                UE24.Set(RelayForms.C.S.NC);
                 Logger.LogError(e.ToString());
                 this.ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
             }
@@ -333,7 +329,12 @@ namespace ABT.TestSpace.TestExec {
 
         private Int32 MeasurementResultsCount(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Result, eventCode) select measurement).Count(); }
 
-        public static String NotImplementedMessageEnum(Type enumType) { return $"{Environment.NewLine}{Environment.NewLine}   Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(", ", Enum.GetNames(enumType))}}}'.{Environment.NewLine}"; }
+        public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
+
+        public void TestSystemReset() {
+            SCPI99.ResetAll(this.SVIs);
+            UE24.Set(RelayForms.C.S.NC);
+        }
     }
 
     public class CancellationException : Exception {
@@ -341,6 +342,8 @@ namespace ABT.TestSpace.TestExec {
         public CancellationException(String message = "") : base(message) { }
         public const String ClassName = nameof(CancellationException);
     }
+
+    public static class Ext{ public static Boolean In<T>(this T value, params T[] values) where T : struct { return values.Contains(value); } }
 
     public static class EventCodes {
         public const String CANCEL = "CANCEL";

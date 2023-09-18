@@ -13,14 +13,11 @@ using System.Collections.Generic;
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public enum CHANNEL { C1, C2 }
-    
     public enum MMD { MINimum, MAXimum, DEFault }
-
     public enum TERMINAL { Front, Rear };
 
     public static class Keysight {
         public const String AUTO = "AUTO";
-
         public const String ASCII = "ASCii";
         
         public static readonly Dictionary<CHANNEL, String> Channels = new Dictionary<CHANNEL, String> {
