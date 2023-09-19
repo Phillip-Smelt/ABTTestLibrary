@@ -228,9 +228,11 @@ namespace ABT.TestSpace.TestExec {
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
                         TestSystemReset();
+                        if (e.ToString().Contains(CancellationException.ClassName)) {
+                            while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
+                            this.ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
+                        } else this.ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
                         Logger.LogError(e.ToString());
-                        if (e.ToString().Contains(CancellationException.ClassName)) ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
-                        else ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
                         return;
                     } finally {
                         Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
