@@ -229,9 +229,9 @@ namespace ABT.TestSpace.TestExec {
                     } catch (Exception e) {
                         TestSystemReset();
                         if (e.ToString().Contains(CancellationException.ClassName)) {
+                            ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
                             while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
-                            this.ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
-                        } else this.ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
+                        } else ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
                         Logger.LogError(e.ToString());
                         return;
                     } finally {
