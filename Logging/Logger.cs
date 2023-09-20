@@ -154,9 +154,9 @@ namespace ABT.TestSpace.TestExec.Logging {
             }
         }
 
-        public static void LogError(String logMessage) {
+        public static void LogError(String logMessage, Boolean ShowMessage) {
             Log.Error(logMessage);
-            _ = MessageBox.Show(Form.ActiveForm, $"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
+            if (ShowMessage) _ = MessageBox.Show(Form.ActiveForm, $"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
                 "Please contact Test Engineering if assistance required.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 

@@ -234,7 +234,9 @@ namespace ABT.TestSpace.TestExec {
                             ConfigTest.Measurements[measurementID].Message += $"{Environment.NewLine}  {CancellationException.ClassName}:{Environment.NewLine}  {e.Message}";
                         } else {
                             ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
-                            Logger.LogError(e.ToString());
+                            ConfigTest.Measurements[measurementID].Message += $"{Environment.NewLine}{e}";
+                            _ = MessageBox.Show(Form.ActiveForm, $"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
+                                "Please contact Test Engineering if assistance required.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         return;
                     } finally {
@@ -316,7 +318,7 @@ namespace ABT.TestSpace.TestExec {
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
             foreach (KeyValuePair<String, Measurement> kvp in measurements) if (!validEvents.Contains(kvp.Value.Result)) invalidTests += $"ID: '{kvp.Key}' Result: '{kvp.Value.Result}'.{Environment.NewLine}";
-            Logger.LogError($"Invalid Measurement ID(s) to Result(s):{Environment.NewLine}{invalidTests}");
+            Logger.LogError($"{Environment.NewLine}Invalid Measurement ID(s) to Result(s):{Environment.NewLine}{invalidTests}", ShowMessage: true);
             return EventCodes.ERROR;
             // Above handles class EventCodes changing (adding/deleting/renaming EventCodes) without accomodating EvaluateResults() changes. 
         }
