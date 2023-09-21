@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -99,8 +97,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
     public class MeasurementNumeric : MeasurementAbstract {
         public new const String ClassName = nameof(MeasurementNumeric);
-        public readonly Double Low;                                                                 private const String _LOW = nameof(Low);
-        public readonly Double High;                                                                private const String _HIGH = nameof(High);
+        public readonly Double Low;                                                                   private const String _LOW = nameof(Low);
+        public readonly Double High;                                                                  private const String _HIGH = nameof(High);
         public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;                                   private const String _SI_UNITS = nameof(SI_Units);
         public readonly SI_UNITS_MODIFIER SI_Units_Modifier = SI_UNITS_MODIFIER.NotApplicable;        private const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
 
@@ -120,9 +118,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             }
         }
 
-        public override String ArgumentsGet() {
-            return $"{_HIGH}{SK}{High}{SA}{_LOW}{SK}{Low}{SA}{_SI_UNITS}{SK}{SI_Units}{SA}{_SI_UNITS_MODIFIER}{SK}{SI_Units_Modifier}";
-        }
+        public override String ArgumentsGet() { return $"{_HIGH}{SK}{High}{SA}{_LOW}{SK}{Low}{SA}{_SI_UNITS}{SK}{SI_Units}{SA}{_SI_UNITS_MODIFIER}{SK}{SI_Units_Modifier}"; }
 
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
