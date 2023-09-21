@@ -61,16 +61,16 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return tripped;
         }
 
-        public static Double Get(SCPI_VISA_Instrument SVI, UNITS_PS UPS) {
-            switch(UPS) {
-                case UNITS_PS.Amps:
+        public static Double Get(SCPI_VISA_Instrument SVI, DC_PS dc_ps) {
+            switch(dc_ps) {
+                case DC_PS.Amps:
                     ((AgE3610XB)SVI.Instrument).SCPI.MEASure.CURRent.DC.Query(out Double ampsDC);
                     return ampsDC;
-                case UNITS_PS.Volts:
+                case DC_PS.Volts:
                     ((AgE3610XB)SVI.Instrument).SCPI.MEASure.VOLTage.DC.Query(out Double voltsDC);
                     return voltsDC;
                 default:
-                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(UNITS_PS)));
+                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(DC_PS)));
             }
         }
 
@@ -103,7 +103,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             CurrentProtectionStateSet(SVI, OUTPUT.ON);
             SCPI99.OutputStateSet(SVI, State);
 
-            Thread.Sleep((Int32)(DelaySecondsSettling * 1000));
+            Thread.Sleep(millisecondsTimeout: (Int32)(DelaySecondsSettling * 1000));
         }
 
         public static Boolean VoltageAmplitudeIs(SCPI_VISA_Instrument SVI, Double VoltsDC, Double Delta) { return SCPI99.IsCloseEnough(VoltageAmplitudeGet(SVI), VoltsDC, Delta); }

@@ -73,16 +73,16 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return (tripped[(Int32)Channel] == 1);
         }
         
-        public static Double Get(SCPI_VISA_Instrument SVI, UNITS_PS UPS, CHANNEL Channel) {
-            switch(UPS) {
-                case UNITS_PS.Amps:
+        public static Double Get(SCPI_VISA_Instrument SVI, DC_PS dc_ps, CHANNEL Channel) {
+            switch(dc_ps) {
+                case DC_PS.Amps:
                     ((AgE36200)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(Channels[Channel], out Double[] ampsDC);
                     return ampsDC[(Int32)(Channel)];
-                case UNITS_PS.Volts:
+                case DC_PS.Volts:
                     ((AgE36200)SVI.Instrument).SCPI.MEASure.SCALar.VOLTage.DC.Query(Channels[Channel], out Double[] voltsDC);
                     return voltsDC[(Int32)(Channel)];
                 default:
-                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(UNITS_PS)));
+                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(DC_PS)));
             }
         }
 
@@ -132,7 +132,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             CurrentProtectionStateSet(SVI, OUTPUT.ON, Channel);
             OutputStateSet(SVI, State, Channel);
 
-            Thread.Sleep((Int32)(DelaySecondsSettling * 1000));
+            Thread.Sleep(millisecondsTimeout: (Int32)(DelaySecondsSettling * 1000));
         }
 
         public static OUTPUT OutputStateGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
