@@ -11,10 +11,7 @@ using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 //
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public enum LOAD_MODE { CURR=0, POW=1, RES=2, VOLT=3 }
-    // LOAD_MODE represents the canonical set of EL34143A electrical loads; current, power, resistance & voltage, in alphabetical & numerical order.
-    public enum LOAD_UNITS { AMPS_DC=0, WATTS=1, OHMS=2, VOLTS_DC=3 }
-    // LOAD_UNITS is a syntactic sugar representation of LOAD_MODE substituting Système International Units for their equivalent modes; AMPS_DC≡CURR, WATTS≡POW, OHMS≡RES, VOLTS_DC≡VOLT.
-    // The explicit integer values correlate LOAD_MODE to LOAD_UNITS; their actual values are irrelevant.
+    public enum LOAD_MEASURE { CURR=0, POW=1, VOLT=3 }
 
     public static class EL_34143A {
         public const String MODEL = "EL34143A";
@@ -50,18 +47,12 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             }
         }
 
-        public static Boolean Is(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_UNITS LoadUnits) { return Is(SVI, LoadValue, (LOAD_MODE)(Int32)LoadUnits); }
-
         public static Boolean ModeIs(SCPI_VISA_Instrument SVI, LOAD_MODE LoadMode) { return LoadMode == ModeGet(SVI); }
 
         public static LOAD_MODE ModeGet(SCPI_VISA_Instrument SVI) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Query(null, out String LoadMode);
             return (LOAD_MODE)Enum.Parse(typeof(LOAD_MODE), LoadMode); 
         }
-
-        public static Boolean UnitsAre(SCPI_VISA_Instrument SVI, LOAD_UNITS LoadUnits) { return LoadUnits == UnitsGet(SVI); }
-
-        public static LOAD_UNITS UnitsGet(SCPI_VISA_Instrument SVI) { return (LOAD_UNITS)(Int32)ModeGet(SVI); }
 
         public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
             ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(null, out Double[] ampsDC);
@@ -73,13 +64,27 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return voltsDC[0];
         }
 
+        public static Double Get(SCPI_VISA_Instrument SVI, LOAD_MEASURE LoadMeasure) {
+            switch(LoadMeasure) {
+                case LOAD_MEASURE.CURR:
+                    ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(null, out Double[] ampsDC);
+                    return ampsDC[0];
+                case LOAD_MEASURE.POW:
+                    ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.POWer.DC.Query(null, out Double[] watts);
+                    return watts[0];
+                case LOAD_MEASURE.VOLT:
+                    ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.VOLTage.DC.Query(null, out Double[] voltsDC);
+                    return voltsDC[0];
+                default:
+                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MEASURE)));
+            }
+        }
+
         public static void OutputStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, null); }
 
         public static void Remote(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
 
         public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
-
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double LoadValue, LOAD_UNITS LoadUnits, SENSE_MODE KelvinSense = SENSE_MODE.INTernal) { Set(SVI, State, LoadValue, (LOAD_MODE)(Int32)LoadUnits, KelvinSense); }
 
         public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double LoadValue, LOAD_MODE LoadMode, SENSE_MODE KelvinSense = SENSE_MODE.INTernal) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense));
