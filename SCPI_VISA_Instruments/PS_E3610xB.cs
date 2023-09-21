@@ -28,16 +28,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void CurrentAmplitudeSet(SCPI_VISA_Instrument SVI, Double AmpsDC) {
-            String s;
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MINimum, out Double min);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MAXimum, out Double max);
-            if ((AmpsDC < min) || (max < AmpsDC)) {
-                s=$"MINimum/MAXimum Current.{Environment.NewLine}"
-                + $" - MINimum   :  Current={min} ADC.{Environment.NewLine}"
-                + $" - Programmed:  Current={AmpsDC} ADC.{Environment.NewLine}"
-                + $" - MAXimum   :  Current={max} ADC.";
-                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
-            }
+            SCPI99.ValueValidate(SVI, min, AmpsDC, max, "Current");
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC);
         }
 
@@ -47,16 +40,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void CurrentProtectionDelaySet(SCPI_VISA_Instrument SVI, Double DelaySeconds) {
-            String s;
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MINimum, out Double min);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MAXimum, out Double max);
-            if ((DelaySeconds < min) || max < (DelaySeconds)) {
-                s=$"MINimum/MAXimum Current Protection Delay.{Environment.NewLine}"
-                + $" - MINimum   :  Delay={min} seconds.{Environment.NewLine}"
-                + $" - Programmed:  Delay={DelaySeconds} seconds.{Environment.NewLine}"
-                + $" - MAXimum   :  Delay={max} seconds.";
-                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
-            }
+            SCPI99.ValueValidate(SVI, min, DelaySeconds, max, "Current Protection Delay");
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds);
             CurrentProtectionStateSet(SVI, OUTPUT.ON);
         }
@@ -75,6 +61,19 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return tripped;
         }
 
+        public static Double Get(SCPI_VISA_Instrument SVI, UNITS_PS UPS) {
+            switch(UPS) {
+                case UNITS_PS.Amps:
+                    ((AgE3610XB)SVI.Instrument).SCPI.MEASure.CURRent.DC.Query(out Double ampsDC);
+                    return ampsDC;
+                case UNITS_PS.Volts:
+                    ((AgE3610XB)SVI.Instrument).SCPI.MEASure.VOLTage.DC.Query(out Double voltsDC);
+                    return voltsDC;
+                default:
+                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(UNITS_PS)));
+            }
+        }
+
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             SCPI99.Initialize(SVI);
             ((AgE3610XB)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command();
@@ -82,16 +81,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void Local(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
-
-        public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
-            ((AgE3610XB)SVI.Instrument).SCPI.MEASure.CURRent.DC.Query(out Double ampsDC);
-            return ampsDC;
-        }
-
-        public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
-            ((AgE3610XB)SVI.Instrument).SCPI.MEASure.VOLTage.DC.Query(out Double voltsDC);
-            return voltsDC;
-        }
 
         public static void Remote(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
 
@@ -125,16 +114,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void VoltageAmplitudeSet(SCPI_VISA_Instrument SVI, Double VoltsDC) {
-            String s;
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MINimum, out Double min);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MAXimum, out Double max);
-            if((VoltsDC < min) || (max < VoltsDC)) {
-                s=$"MINimum/MAXimum Voltage.{Environment.NewLine}"
-                + $" - MINimum   :  Voltage={min} VDC.{Environment.NewLine}"
-                + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
-                + $" - MAXimum   :  Voltage={max} VDC.";
-                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
-            }
+            SCPI99.ValueValidate(SVI, min, VoltsDC, max, "Voltage");
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC);
         }
 
@@ -144,16 +126,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void VoltageProtectionSet(SCPI_VISA_Instrument SVI, Double VoltsDC) {
-            String s;
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query(MINimum, out Double min);
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query(MAXimum, out Double max);
-            if (VoltsDC < min || max < VoltsDC) {
-                s=$"MINimum/MAXimum Voltage Protection.{Environment.NewLine}"
-                + $" - MINimum   :  Voltage={min} VDC.{Environment.NewLine}"
-                + $" - Programmed:  Voltage={VoltsDC} VDC.{Environment.NewLine}"
-                + $" - MAXimum   :  Voltage={max} VDC.";
-                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
-            }
+            SCPI99.ValueValidate(SVI, min, VoltsDC, max, "Voltage Protection");
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Command(VoltsDC);
             VoltageProtectionStateSet(SVI, OUTPUT.ON);
         }

@@ -13,6 +13,7 @@ using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public enum OUTPUT { off, ON }
+    public enum UNITS_PS { Amps, Volts }
     public enum STATE { off, ON }
     public enum SENSE_MODE { EXTernal, INTernal }
     // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
@@ -98,6 +99,16 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static Int32 QuestionCondition(SCPI_VISA_Instrument SVI) {
             new AgSCPI99(SVI.Address).SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
             return ConditionRegister;
+        }
+
+        internal static void ValueValidate(SCPI_VISA_Instrument SVI, Double Min, Double Value, Double Max, String ValueType) {
+            if ((Value < Min) || (Max < Value)) {
+                String s = $"{ValueType} exceeds valid range:{Environment.NewLine}"
+                    + $" - MINimum   :  {Min}{Environment.NewLine}"
+                    + $" - Programmed:  {Value}{Environment.NewLine}"
+                    + $" - MAXimum   :  {Max}";
+                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
+            }
         }
     }
 }

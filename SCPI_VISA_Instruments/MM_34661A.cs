@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
+using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08.SCPI.CALibration.TEMPerature;
 using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 // All Agilent.CommandExpert.ScpiNet drivers are procured by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
@@ -10,7 +11,11 @@ using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 // Strenuously recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 // https://www.keysight.com/us/en/search.html/command+expert
 //
+
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
+
+public enum PROPERTY { AmperageAC, AmperageDC, Capacitance, Continuity, Frequency, Fresistance, Period, Resistance, Temperature, VoltageAC, VoltageDC, VoltageDiodic }
+
     public static class MM_34661A {
         public const String MODEL = "34461A";
 
@@ -32,6 +37,50 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return seconds;
         }
 
+        public static Double Get(SCPI_VISA_Instrument SVI, PROPERTY property) {
+            // SCPI FORMAT:DATA(ASCii/REAL) command unavailable on KS 34661A.
+            switch(property) {
+                case PROPERTY.AmperageAC:
+                    ((Ag3466x)SVI.Instrument).SCPI.MEASure.CURRent.AC.QueryAsciiReal(AUTO, DEFault, out Double acCurrent);
+                    return acCurrent;
+                case PROPERTY.AmperageDC:
+                    ((Ag3466x)SVI.Instrument).SCPI.MEASure.CURRent.DC.QueryAsciiReal(AUTO, DEFault, out Double dcCurrent);
+                    return dcCurrent;
+                case PROPERTY.Capacitance:
+                    ((Ag3466x)SVI.Instrument).SCPI.MEASure.CAPacitance.QueryAsciiReal(AUTO, DEFault, out Double capacitance);
+                    return capacitance;
+                case PROPERTY.Continuity:
+                    ((Ag3466x)SVI.Instrument).SCPI.MEASure.CONTinuity.QueryAsciiReal(out Double continuity);
+                    return continuity;
+                case PROPERTY.Frequency:
+                    ((Ag3466x)SVI.Instrument).SCPI.MEASure.FREQuency.QueryAsciiReal(AUTO, DEFault, out Double frequency);
+                    return frequency;
+                case PROPERTY.Fresistance:
+                    ((Ag3466x)SVI.Instrument).SCPI.MEASure.FRESistance.QueryAsciiReal(AUTO, DEFault, out Double fresistance);
+                    return fresistance;
+                case PROPERTY .Period:
+                    ((Ag3466x)SVI.Instrument).SCPI.MEASure.PERiod.QueryAsciiReal(AUTO, DEFault, out Double period);
+                    return period;
+                case PROPERTY.Resistance:
+                    ((Ag3466x)SVI.Instrument).SCPI.MEASure.RESistance.QueryAsciiReal(AUTO, DEFault, out Double resistance);
+                    return resistance;
+                case PROPERTY.Temperature:
+                    ((Ag3466x)SVI.Instrument).SCPI.MEASure.TEMPerature.QueryAsciiReal(AUTO, DEFault, null, null, out Double temperature);
+                    return temperature;
+                case PROPERTY.VoltageAC:
+                    ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.AC.QueryAsciiReal(AUTO, DEFault, out Double acVoltage);
+                    return acVoltage;
+                case PROPERTY.VoltageDC:
+                    ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone(AUTO, DEFault, out Double dcVoltage);
+                    return dcVoltage;
+                case PROPERTY .VoltageDiodic:
+                    ((Ag3466x)SVI.Instrument).SCPI.MEASure.DIODe.QueryAsciiReal(out Double diodeVoltage);
+                    return diodeVoltage;
+                default:
+                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(PROPERTY)));
+            }
+        }
+
         public static void Initialize(SCPI_VISA_Instrument SVI) {
             if (TerminalsGet(SVI) == TERMINAL.Front) _ = MessageBox.Show("Please depress Keysight 34661A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             DelaySet(SVI, MMD.DEFault);
@@ -40,24 +89,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void Local(SCPI_VISA_Instrument SVI) { ((Ag3466x)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
-
-        public static Double MeasureADC(SCPI_VISA_Instrument SVI) {
-            // SCPI FORMAT:DATA(ASCii/REAL) command unavailable on KS 34661A.
-            ((Ag3466x)SVI.Instrument).SCPI.MEASure.CURRent.DC.QueryAsciiReal(AUTO, DEFault, out Double ampsDC);
-            return ampsDC;
-        }
-
-        public static Double MeasureVDC(SCPI_VISA_Instrument SVI) {
-            // SCPI FORMAT:DATA(ASCii/REAL) command unavailable on KS 34661A.
-            ((Ag3466x)SVI.Instrument).SCPI.MEASure.VOLTage.DC.QueryAsciiRealClone(AUTO, DEFault, out Double voltsDC);
-            return voltsDC;
-        }
-
-        public static Double MeasureΩ(SCPI_VISA_Instrument SVI) {
-            // SCPI FORMAT:DATA(ASCii/REAL) command unavailable on KS 34661A.
-            ((Ag3466x)SVI.Instrument).SCPI.MEASure.RESistance.QueryAsciiReal(AUTO, DEFault, out Double resistance);
-            return resistance;
-        }
 
         public static TERMINAL TerminalsGet(SCPI_VISA_Instrument SVI) {
             ((Ag3466x)SVI.Instrument).SCPI.ROUTe.TERMinals.Query(out String terminals);
