@@ -61,8 +61,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return tripped;
         }
 
-        public static Double Get(SCPI_VISA_Instrument SVI, PS_DC ps_dc) {
-            switch(ps_dc) {
+        public static Double Get(SCPI_VISA_Instrument SVI, PS_DC DC) {
+            switch(DC) {
                 case PS_DC.Amps:
                     ((AgE3610XB)SVI.Instrument).SCPI.MEASure.CURRent.DC.Query(out Double ampsDC);
                     return ampsDC;
