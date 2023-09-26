@@ -13,8 +13,8 @@ using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public enum OUTPUT { off, ON }
-    public enum DC_PS { Amps, Volts }
-    public enum AC_PS { Amps, Volts }
+    public enum PS_DC { Amps, Volts }
+    public enum PS_AC { Amps, Volts }
     public enum SENSE_MODE { EXTernal, INTernal }
     public enum STATE { off, ON }
     // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
@@ -86,11 +86,11 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value); }
 
-        public static OUTPUT OutputStateGet(SCPI_VISA_Instrument SVI) { return (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) ? OUTPUT.off : OUTPUT.ON; }
+        public static OUTPUT Get(SCPI_VISA_Instrument SVI) { return (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) ? OUTPUT.off : OUTPUT.ON; }
 
-        public static Boolean OutputStateIs(SCPI_VISA_Instrument SVI, OUTPUT State) { return (OutputStateGet(SVI) == State); }
+        public static Boolean Is(SCPI_VISA_Instrument SVI, OUTPUT State) { return (Get(SVI) == State); }
       
-        public static void OutputStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { SCPI99.Command(SVI, (State is OUTPUT.off) ? ":OUTPUT 0" : ":OUTPUT 1"); }
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State) { SCPI99.Command(SVI, (State is OUTPUT.off) ? ":OUTPUT 0" : ":OUTPUT 1"); }
 
         public static String Query(SCPI_VISA_Instrument SVI, String SCPI_Query) {
             new AgSCPI99(SVI.Address).Transport.Query.Invoke(SCPI_Query, out String response);

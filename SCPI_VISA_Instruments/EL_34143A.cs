@@ -70,15 +70,13 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             }
         }
 
-        public static void OutputStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, null); }
-
         public static void Remote(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
 
         public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
 
         public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double LoadValue, LOAD_MODE LoadMode, SENSE_MODE KelvinSense = SENSE_MODE.INTernal) {
             Set(SVI, LoadValue, LoadMode, KelvinSense);
-            OutputStateSet(SVI, State);
+            Set(SVI, State);
         }
 
         public static void Set(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode, SENSE_MODE KelvinSense = SENSE_MODE.INTernal) {
@@ -126,5 +124,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
             }
         }
+
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, null); }
+
     }
 }
