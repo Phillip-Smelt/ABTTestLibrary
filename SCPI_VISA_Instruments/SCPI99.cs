@@ -86,11 +86,11 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value); }
 
-        public static OUTPUT Get(SCPI_VISA_Instrument SVI) { return (String.Equals(Query(SVI, ":OUTPUT?"), "0")) ? OUTPUT.off : OUTPUT.ON; }
+        public static OUTPUT Get(SCPI_VISA_Instrument SVI) { return (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) ? OUTPUT.off : OUTPUT.ON; }
 
         public static Boolean Is(SCPI_VISA_Instrument SVI, OUTPUT State) { return (Get(SVI) == State); }
       
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State) { if(!Is(SVI, State)) Command(SVI, (State is OUTPUT.off) ? ":OUTPUT 0" : ":OUTPUT 1"); }
+        public static void OutputStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { SCPI99.Command(SVI, (State is OUTPUT.off) ? ":OUTPUT 0" : ":OUTPUT 1"); }
 
         public static String Query(SCPI_VISA_Instrument SVI, String SCPI_Query) {
             new AgSCPI99(SVI.Address).Transport.Query.Invoke(SCPI_Query, out String response);

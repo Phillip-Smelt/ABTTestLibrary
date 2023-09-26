@@ -88,6 +88,33 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static Boolean Is(SCPI_VISA_Instrument SVI, LOAD_MODE LoadMode) { return LoadMode == Get(SVI); }
 
+        public static LOAD_MODE Get(SCPI_VISA_Instrument SVI) {
+            ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Query(null, out String LoadMode);
+            return (LOAD_MODE)Enum.Parse(typeof(LOAD_MODE), LoadMode); 
+        }
+
+        public static Double Get(SCPI_VISA_Instrument SVI, LOAD_MEASURE LoadMeasure) {
+            switch(LoadMeasure) {
+                case LOAD_MEASURE.CURR:
+                    ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(null, out Double[] ampsDC);
+                    return ampsDC[0];
+                case LOAD_MEASURE.POW:
+                    ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.POWer.DC.Query(null, out Double[] watts);
+                    return watts[0];
+                case LOAD_MEASURE.VOLT:
+                    ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.VOLTage.DC.Query(null, out Double[] voltsDC);
+                    return voltsDC[0];
+                default:
+                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MEASURE)));
+            }
+        }
+
+        public static void OutputStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, null); }
+
+        public static void OutputStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, null); }
+
+        public static void OutputStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, null); }
+
         public static void Remote(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
 
         public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
@@ -144,5 +171,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
             }
         }
+
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, null); }
+
     }
 }

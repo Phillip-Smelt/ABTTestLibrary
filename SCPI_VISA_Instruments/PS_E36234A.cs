@@ -73,9 +73,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return (tripped[(Int32)Channel] == 1);
         }
         
-        public static Double Get(SCPI_VISA_Instrument SVI, PS_DC dc_ps, CHANNEL Channel) {
+        public static Double Get(SCPI_VISA_Instrument SVI, DC_PS dc_ps, CHANNEL Channel) {
             switch(dc_ps) {
-                case PS_DC.Amps:
+                case DC_PS.Amps:
                     ((AgE36200)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(Channels[Channel], out Double[] ampsDC);
                     return ampsDC[(Int32)(Channel)];
                 case PS_DC.Volts:
@@ -127,33 +127,22 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             Set(SVI, PS_DC.Volts, VoltsDC, Channel);
             
             CurrentProtectionDelaySet(SVI, DelaySecondsCurrentProtection, Channel);
-            VoltageProtectionStateSet(SVI, State, Channel);
-            CurrentProtectionStateSet(SVI, State, Channel);
-            Set(SVI, State, Channel);
+
+            VoltageProtectionStateSet(SVI, OUTPUT.ON, Channel);
+            CurrentProtectionStateSet(SVI, OUTPUT.ON, Channel);
+            OutputStateSet(SVI, State, Channel);
 
             Thread.Sleep(millisecondsTimeout: (Int32)(DelaySecondsSettling * 1000));
         }
 
-        public static void Set(SCPI_VISA_Instrument SVI, PS_DC DC, Double Amplitude, CHANNEL Channel) {
-            switch (DC) {
-                case PS_DC.Amps:
-                    CurrentProtectionStateSet(SVI, OUTPUT.off, Channel);
-                    CurrentProtectionTrippedClear(SVI, Channel);
-                    CurrentAmplitudeSet(SVI, Amplitude, Channel);
-                    CurrentProtectionAmplitudeSet(SVI, Amplitude, Channel);
-                    break;
-                case PS_DC.Volts:
-                    VoltageProtectionStateSet(SVI, OUTPUT.off, Channel);
-                    VoltageProtectionTrippedClear(SVI, Channel);
-                    VoltageProtectionAmplitudeSet(SVI, Amplitude, Channel);
-                    VoltageAmplitudeSet(SVI, Amplitude, Channel);
-                    break;
-                default:
-                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(PS_DC)));
-            }
+        public static OUTPUT OutputStateGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
+            ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Query(Channels[Channel], out Boolean[] States);
+            return States[(Int32)(Channel)] ? OUTPUT.ON : OUTPUT.off;
         }
 
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNEL Channel) { if(!Is(SVI, State, Channel)) ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command((State is OUTPUT.ON), Channels[Channel]); }
+        public static Boolean OutputStateIs(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNEL Channel) { return (State == OutputStateGet(SVI, Channel)); }
+
+        public static void OutputStateSet(SCPI_VISA_Instrument SVI, OUTPUT State, CHANNEL Channel) { ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command((State is OUTPUT.ON), Channels[Channel]); }
 
         public static Double VoltageAmplitudeGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, Channels[Channel], out Double[] voltsDC);
