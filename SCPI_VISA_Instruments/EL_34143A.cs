@@ -48,6 +48,11 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static Boolean Is(SCPI_VISA_Instrument SVI, LOAD_MODE LoadMode) { return LoadMode == Get(SVI); }
+        
+        public static Boolean Is(SCPI_VISA_Instrument SVI, OUTPUT State) {
+            ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Query(null, out Boolean state);
+            return ((state ? OUTPUT.ON : OUTPUT.off) == State);
+        }
 
         public static LOAD_MODE Get(SCPI_VISA_Instrument SVI) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Query(null, out String LoadMode);
@@ -125,7 +130,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             }
         }
 
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, null); }
+        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State) { if (!Is(SVI, State)) ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is OUTPUT.ON, null); }
 
     }
 }
