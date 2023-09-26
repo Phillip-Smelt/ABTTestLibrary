@@ -73,8 +73,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return (tripped[(Int32)Channel] == 1);
         }
         
-        public static Double Get(SCPI_VISA_Instrument SVI, PS_DC dc_ps, CHANNEL Channel) {
-            switch(dc_ps) {
+        public static Double Get(SCPI_VISA_Instrument SVI, PS_DC DC, CHANNEL Channel) {
+            switch(DC) {
                 case PS_DC.Amps:
                     ((AgE36200)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(Channels[Channel], out Double[] ampsDC);
                     return ampsDC[(Int32)(Channel)];
