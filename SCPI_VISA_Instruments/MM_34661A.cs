@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
-using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08.SCPI.CALibration.TEMPerature;
 using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 // All Agilent.CommandExpert.ScpiNet drivers are procured by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
