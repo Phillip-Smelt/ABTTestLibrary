@@ -102,11 +102,11 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void Local(SCPI_VISA_Instrument SVI) { ((AgE36200)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
 
-        public static Boolean SlewRatesAre(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, CHANNEL Channel) { return ((SlewRateRising, SlewRateFalling) == SlewRatesGet(SVI, Channel)); }
-
         public static void Remote(SCPI_VISA_Instrument SVI) { ((AgE36200)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
 
         public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgE36200)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
+
+        public static Boolean SlewRatesAre(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, CHANNEL Channel) { return ((SlewRateRising, SlewRateFalling) == SlewRatesGet(SVI, Channel)); }
 
         public static (Double SlewRateRising, Double SlewRateFalling) SlewRatesGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.RISing.IMMediate.Query(null, Channels[Channel], out Double[] srr);
@@ -127,9 +127,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             Set(SVI, PS_DC.Volts, VoltsDC, Channel);
             
             CurrentProtectionDelaySet(SVI, DelaySecondsCurrentProtection, Channel);
+            VoltageProtectionAmplitudeSet(SVI, VoltageProtectionAmplitude, Channel);
 
-            VoltageProtectionStateSet(SVI, OUTPUT.ON, Channel);
             CurrentProtectionStateSet(SVI, OUTPUT.ON, Channel);
+            VoltageProtectionStateSet(SVI, OUTPUT.ON, Channel);
             Set(SVI, State, Channel);
 
             Thread.Sleep(millisecondsTimeout: (Int32)(DelaySecondsSettling * 1000));
@@ -146,7 +147,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 case PS_DC.Volts:
                     VoltageProtectionStateSet(SVI, OUTPUT.off, Channel);
                     VoltageProtectionTrippedClear(SVI, Channel);
-                    VoltageProtectionAmplitudeSet(SVI, Amplitude, Channel);
                     VoltageAmplitudeSet(SVI, Amplitude, Channel);
                     break;
                 default:
