@@ -42,7 +42,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MAXimum, out Double max);
             SCPI99.ValueValidate(SVI, min, DelaySeconds, max, "Current Protection Delay");
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds);
-            CurrentProtectionStateSet(SVI, OUTPUT.ON);
+            CurrentProtectionStateSet(SVI, STATE.ON);
         }
 
         public static Boolean CurrentProtectionStateGet(SCPI_VISA_Instrument SVI) {
@@ -50,7 +50,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return state;
         }
 
-        public static void CurrentProtectionStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is OUTPUT.ON)); }
+        public static void CurrentProtectionStateSet(SCPI_VISA_Instrument SVI, STATE State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is STATE.ON)); }
      
         public static void CurrentProtectionTrippedClear(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.CLEar.Command(); }
 
@@ -84,9 +84,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
 
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State, Double VoltsDC, Double AmpsDC, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
-            VoltageProtectionStateSet(SVI, OUTPUT.off);
-            CurrentProtectionStateSet(SVI, OUTPUT.off);
+        public static void Set(SCPI_VISA_Instrument SVI, STATE State, Double VoltsDC, Double AmpsDC, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
+            VoltageProtectionStateSet(SVI, STATE.off);
+            CurrentProtectionStateSet(SVI, STATE.off);
             VoltageProtectionTrippedClear(SVI);
             CurrentProtectionTrippedClear(SVI);
 
@@ -97,8 +97,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             VoltageProtectionSet(SVI, VoltsDC * 1.10);
             CurrentProtectionDelaySet(SVI, DelaySecondsCurrentProtection);
 
-            VoltageProtectionStateSet(SVI, OUTPUT.ON);
-            CurrentProtectionStateSet(SVI, OUTPUT.ON);
+            VoltageProtectionStateSet(SVI, STATE.ON);
+            CurrentProtectionStateSet(SVI, STATE.ON);
             SCPI99.Set(SVI, State);
 
             Thread.Sleep(millisecondsTimeout: (Int32)(DelaySecondsSettling * 1000));
@@ -128,7 +128,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Query(MAXimum, out Double max);
             SCPI99.ValueValidate(SVI, min, VoltsDC, max, "Voltage Protection");
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Command(VoltsDC);
-            VoltageProtectionStateSet(SVI, OUTPUT.ON);
+            VoltageProtectionStateSet(SVI, STATE.ON);
         }
 
         public static void VoltageProtectionTrippedClear(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(); }
@@ -143,7 +143,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return state;
         }
 
-        public static void VoltageProtectionStateSet(SCPI_VISA_Instrument SVI, OUTPUT State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(State is OUTPUT.ON); }
+        public static void VoltageProtectionStateSet(SCPI_VISA_Instrument SVI, STATE State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(State is STATE.ON); }
  
         public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense)); }
     }

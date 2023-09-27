@@ -20,14 +20,14 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((Ag33500B_33600A)SVI.Instrument).SCPI.DISPlay.TEXT.CLEar.Command();
         }
 
-        public static OUTPUT Get(SCPI_VISA_Instrument SVI) {
+        public static STATE Get(SCPI_VISA_Instrument SVI) {
             ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.Query(null, out Boolean State);
-            return State ? OUTPUT.ON : OUTPUT.off;
+            return State ? STATE.ON : STATE.off;
         }
 
-        public static Boolean Is(SCPI_VISA_Instrument SVI, OUTPUT State) { return (State == Get(SVI)); }
+        public static Boolean Is(SCPI_VISA_Instrument SVI, STATE State) { return (State == Get(SVI)); }
 
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State) { ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.Command(null, (State is OUTPUT.ON)); }
+        public static void Set(SCPI_VISA_Instrument SVI, STATE State) { ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.Command(null, (State is STATE.ON)); }
 
         public static String WaveformGet(SCPI_VISA_Instrument SVI) {
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.APPLy.Query(null, out String Waveform);

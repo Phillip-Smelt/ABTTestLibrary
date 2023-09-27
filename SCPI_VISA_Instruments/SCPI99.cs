@@ -12,7 +12,6 @@ using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 // NOTE: Unlike all other classes in namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
-    public enum OUTPUT { off, ON }
     public enum PS_DC { Amps, Volts }
     public enum PS_AC { Amps, Volts }
     public enum SENSE_MODE { EXTernal, INTernal }
@@ -43,9 +42,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         internal static String ErrorMessageGet(SCPI_VISA_Instrument SVI, String errorMessage) { return $"{ErrorMessageGet(SVI)}{errorMessage}{Environment.NewLine}"; }
 
-        public static OUTPUT Get(SCPI_VISA_Instrument SVI) { return (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) ? OUTPUT.off : OUTPUT.ON; }
+        public static STATE Get(SCPI_VISA_Instrument SVI) { return (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) ? STATE.off : STATE.ON; }
 
-        public static Boolean Is(SCPI_VISA_Instrument SVI, OUTPUT State) { return (Get(SVI) == State); }
+        public static Boolean Is(SCPI_VISA_Instrument SVI, STATE State) { return (Get(SVI) == State); }
       
         public static String IdentityGet(SCPI_VISA_Instrument SVI) { return IdentityGet(SVI.Address); }
 
@@ -90,7 +89,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value); }
 
-        public static void Set(SCPI_VISA_Instrument SVI, OUTPUT State) { if(!Is(SVI, State)) Command(SVI, (State is OUTPUT.off) ? ":OUTPUT 0" : ":OUTPUT 1"); }
+        public static void Set(SCPI_VISA_Instrument SVI, STATE State) { if(!Is(SVI, State)) Command(SVI, (State is STATE.off) ? ":OUTPUT 0" : ":OUTPUT 1"); }
 
         public static String Query(SCPI_VISA_Instrument SVI, String SCPI_Query) {
             new AgSCPI99(SVI.Address).Transport.Query.Invoke(SCPI_Query, out String response);
