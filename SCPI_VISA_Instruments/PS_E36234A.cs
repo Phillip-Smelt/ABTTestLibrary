@@ -130,8 +130,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             VoltageProtectionAmplitudeSet(SVI, VoltageProtectionAmplitude, Channel);
 
             Set(SVI, State, Channel);
-            CurrentProtectionStateSet(SVI, STATE.ON, Channel);
-            VoltageProtectionStateSet(SVI, STATE.ON, Channel);
+            CurrentProtectionStateSet(SVI, State, Channel);
+            VoltageProtectionStateSet(SVI, State, Channel);
 
             Thread.Sleep(millisecondsTimeout: (Int32)(DelaySecondsSettling * 1000));
         }
