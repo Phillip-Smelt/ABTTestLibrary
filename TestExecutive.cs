@@ -339,8 +339,6 @@ namespace ABT.TestSpace.TestExec {
         public const String ClassName = nameof(CancellationException);
     }
 
-    public static class Ext{ public static Boolean In<T>(this T value, params T[] values) where T : struct { return values.Contains(value); } }
-
     public static class EventCodes {
         public const String CANCEL = "CANCEL";
         public const String ERROR = "ERROR";
@@ -359,4 +357,6 @@ namespace ABT.TestSpace.TestExec {
             return codesToColors[eventCode];
         }
     }
+
+    public static class Ext{ public static Boolean In<T>(this T value, params T[] values) where T : struct { return values.Contains(value); } }
 }

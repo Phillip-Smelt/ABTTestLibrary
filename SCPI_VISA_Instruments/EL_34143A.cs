@@ -65,8 +65,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return ((state ? OUTPUT.ON : OUTPUT.off) == State);
         }
 
-        public static Boolean Is(SCPI_VISA_Instrument SVI, LOAD_MODE LoadMode) { return Get(SVI) == LoadMode; }
-
         public static Boolean Is(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode) {
             if (!Is(SVI, LoadMode)) return false;
             Double delta = 0.01;
@@ -87,6 +85,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
             }
         }
+
+        public static Boolean Is(SCPI_VISA_Instrument SVI, LOAD_MODE LoadMode) { return LoadMode == Get(SVI); }
 
         public static void Remote(SCPI_VISA_Instrument SVI) { ((AgEL30000)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
 
