@@ -60,7 +60,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             }
         }
 
-
         public static Boolean Is(SCPI_VISA_Instrument SVI, OUTPUT State) {
             ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Query(null, out Boolean state);
             return ((state ? OUTPUT.ON : OUTPUT.off) == State);
