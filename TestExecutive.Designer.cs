@@ -25,152 +25,143 @@ namespace ABT.TestSpace.TestExec {
         /// </summary>
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestExecutive));
-            ButtonStart = new System.Windows.Forms.Button();
-            ButtonCancel = new System.Windows.Forms.Button();
-            TextResult = new System.Windows.Forms.TextBox();
-            LabelResult = new System.Windows.Forms.Label();
-            rtfResults = new System.Windows.Forms.RichTextBox();
-            ButtonSaveOutput = new System.Windows.Forms.Button();
-            ButtonSelectTests = new System.Windows.Forms.Button();
-            ButtonOpenTestDataFolder = new System.Windows.Forms.Button();
-            ButtonEmergencyStop = new System.Windows.Forms.Button();
-            SuspendLayout();
+            this.ButtonStart = new System.Windows.Forms.Button();
+            this.ButtonCancel = new System.Windows.Forms.Button();
+            this.TextResult = new System.Windows.Forms.TextBox();
+            this.LabelResult = new System.Windows.Forms.Label();
+            this.rtfResults = new System.Windows.Forms.RichTextBox();
+            this.ButtonSaveOutput = new System.Windows.Forms.Button();
+            this.ButtonSelectTests = new System.Windows.Forms.Button();
+            this.ButtonOpenTestDataFolder = new System.Windows.Forms.Button();
+            this.ButtonEmergencyStop = new System.Windows.Forms.Button();
+            this.SuspendLayout();
             // 
             // ButtonStart
             // 
-            ButtonStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            ButtonStart.BackColor = System.Drawing.Color.Green;
-            ButtonStart.Location = new System.Drawing.Point(203, 689);
-            ButtonStart.Margin = new System.Windows.Forms.Padding(4);
-            ButtonStart.Name = "ButtonStart";
-            ButtonStart.Size = new System.Drawing.Size(117, 64);
-            ButtonStart.TabIndex = 1;
-            ButtonStart.Text = "Start";
-            ButtonStart.UseVisualStyleBackColor = false;
-            ButtonStart.Click += new System.EventHandler(ButtonStart_Clicked);
+            this.ButtonStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ButtonStart.BackColor = System.Drawing.Color.Green;
+            this.ButtonStart.Location = new System.Drawing.Point(152, 560);
+            this.ButtonStart.Name = "ButtonStart";
+            this.ButtonStart.Size = new System.Drawing.Size(88, 52);
+            this.ButtonStart.TabIndex = 1;
+            this.ButtonStart.Text = "Start";
+            this.ButtonStart.UseVisualStyleBackColor = false;
+            this.ButtonStart.Click += new System.EventHandler(this.ButtonStart_Clicked);
             // 
             // ButtonCancel
             // 
-            ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            ButtonCancel.BackColor = System.Drawing.Color.Yellow;
-            ButtonCancel.Location = new System.Drawing.Point(375, 689);
-            ButtonCancel.Margin = new System.Windows.Forms.Padding(4);
-            ButtonCancel.Name = "ButtonCancel";
-            ButtonCancel.Size = new System.Drawing.Size(117, 64);
-            ButtonCancel.TabIndex = 2;
-            ButtonCancel.Text = "Cancel";
-            ButtonCancel.UseVisualStyleBackColor = false;
-            ButtonCancel.Click += new System.EventHandler(ButtonCancel_Clicked);
+            this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ButtonCancel.BackColor = System.Drawing.Color.Yellow;
+            this.ButtonCancel.Location = new System.Drawing.Point(281, 560);
+            this.ButtonCancel.Name = "ButtonCancel";
+            this.ButtonCancel.Size = new System.Drawing.Size(88, 52);
+            this.ButtonCancel.TabIndex = 2;
+            this.ButtonCancel.Text = "Cancel";
+            this.ButtonCancel.UseVisualStyleBackColor = false;
+            this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Clicked);
             // 
             // TextResult
             // 
-            TextResult.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            TextResult.Location = new System.Drawing.Point(657, 714);
-            TextResult.Margin = new System.Windows.Forms.Padding(4);
-            TextResult.Name = "TextResult";
-            TextResult.ReadOnly = true;
-            TextResult.Size = new System.Drawing.Size(79, 22);
-            TextResult.TabIndex = 3;
-            TextResult.TabStop = false;
-            TextResult.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextResult.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.TextResult.Location = new System.Drawing.Point(493, 580);
+            this.TextResult.Name = "TextResult";
+            this.TextResult.ReadOnly = true;
+            this.TextResult.Size = new System.Drawing.Size(60, 20);
+            this.TextResult.TabIndex = 3;
+            this.TextResult.TabStop = false;
+            this.TextResult.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelResult
             // 
-            LabelResult.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            LabelResult.AutoSize = true;
-            LabelResult.Location = new System.Drawing.Point(672, 689);
-            LabelResult.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            LabelResult.Name = "LabelResult";
-            LabelResult.Size = new System.Drawing.Size(45, 16);
-            LabelResult.TabIndex = 7;
-            LabelResult.Text = "Result";
-            LabelResult.UseWaitCursor = true;
+            this.LabelResult.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.LabelResult.AutoSize = true;
+            this.LabelResult.Location = new System.Drawing.Point(504, 560);
+            this.LabelResult.Name = "LabelResult";
+            this.LabelResult.Size = new System.Drawing.Size(37, 13);
+            this.LabelResult.TabIndex = 7;
+            this.LabelResult.Text = "Result";
+            this.LabelResult.UseWaitCursor = true;
             // 
             // rtfResults
             // 
-            rtfResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.rtfResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            rtfResults.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            rtfResults.Location = new System.Drawing.Point(31, 26);
-            rtfResults.Margin = new System.Windows.Forms.Padding(4);
-            rtfResults.Name = "rtfResults";
-            rtfResults.ReadOnly = true;
-            rtfResults.Size = new System.Drawing.Size(1333, 640);
-            rtfResults.TabIndex = 8;
-            rtfResults.TabStop = false;
-            rtfResults.Text = "";
+            this.rtfResults.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rtfResults.Location = new System.Drawing.Point(23, 21);
+            this.rtfResults.Name = "rtfResults";
+            this.rtfResults.ReadOnly = true;
+            this.rtfResults.Size = new System.Drawing.Size(1001, 521);
+            this.rtfResults.TabIndex = 8;
+            this.rtfResults.TabStop = false;
+            this.rtfResults.Text = "";
             // 
             // ButtonSaveOutput
             // 
-            ButtonSaveOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            ButtonSaveOutput.Location = new System.Drawing.Point(911, 694);
-            ButtonSaveOutput.Margin = new System.Windows.Forms.Padding(4);
-            ButtonSaveOutput.Name = "ButtonSaveOutput";
-            ButtonSaveOutput.Size = new System.Drawing.Size(117, 58);
-            ButtonSaveOutput.TabIndex = 4;
-            ButtonSaveOutput.Text = "Save Output";
-            ButtonSaveOutput.UseVisualStyleBackColor = true;
-            ButtonSaveOutput.Click += new System.EventHandler(ButtonSaveOutput_Click);
+            this.ButtonSaveOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonSaveOutput.Location = new System.Drawing.Point(683, 564);
+            this.ButtonSaveOutput.Name = "ButtonSaveOutput";
+            this.ButtonSaveOutput.Size = new System.Drawing.Size(88, 47);
+            this.ButtonSaveOutput.TabIndex = 4;
+            this.ButtonSaveOutput.Text = "Save Output";
+            this.ButtonSaveOutput.UseVisualStyleBackColor = true;
+            this.ButtonSaveOutput.Click += new System.EventHandler(this.ButtonSaveOutput_Click);
             // 
             // ButtonSelectTests
             // 
-            ButtonSelectTests.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            ButtonSelectTests.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            ButtonSelectTests.Location = new System.Drawing.Point(31, 690);
-            ButtonSelectTests.Margin = new System.Windows.Forms.Padding(4);
-            ButtonSelectTests.Name = "ButtonSelectTests";
-            ButtonSelectTests.Size = new System.Drawing.Size(117, 58);
-            ButtonSelectTests.TabIndex = 0;
-            ButtonSelectTests.Text = "Select Tests";
-            ButtonSelectTests.UseVisualStyleBackColor = true;
-            ButtonSelectTests.Click += new System.EventHandler(ButtonSelectTests_Click);
+            this.ButtonSelectTests.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ButtonSelectTests.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ButtonSelectTests.Location = new System.Drawing.Point(23, 561);
+            this.ButtonSelectTests.Name = "ButtonSelectTests";
+            this.ButtonSelectTests.Size = new System.Drawing.Size(88, 47);
+            this.ButtonSelectTests.TabIndex = 0;
+            this.ButtonSelectTests.Text = "Select Tests";
+            this.ButtonSelectTests.UseVisualStyleBackColor = true;
+            this.ButtonSelectTests.Click += new System.EventHandler(this.ButtonSelectTests_Click);
             // 
             // ButtonOpenTestDataFolder
             // 
-            ButtonOpenTestDataFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            ButtonOpenTestDataFolder.Location = new System.Drawing.Point(1084, 693);
-            ButtonOpenTestDataFolder.Margin = new System.Windows.Forms.Padding(4);
-            ButtonOpenTestDataFolder.Name = "ButtonOpenTestDataFolder";
-            ButtonOpenTestDataFolder.Size = new System.Drawing.Size(117, 58);
-            ButtonOpenTestDataFolder.TabIndex = 5;
-            ButtonOpenTestDataFolder.Text = "Open Test Data Folder";
-            ButtonOpenTestDataFolder.UseVisualStyleBackColor = true;
-            ButtonOpenTestDataFolder.Click += new System.EventHandler(ButtonOpenTestDataFolder_Click);
+            this.ButtonOpenTestDataFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonOpenTestDataFolder.Location = new System.Drawing.Point(813, 563);
+            this.ButtonOpenTestDataFolder.Name = "ButtonOpenTestDataFolder";
+            this.ButtonOpenTestDataFolder.Size = new System.Drawing.Size(88, 47);
+            this.ButtonOpenTestDataFolder.TabIndex = 5;
+            this.ButtonOpenTestDataFolder.Text = "Open Test Data Folder";
+            this.ButtonOpenTestDataFolder.UseVisualStyleBackColor = true;
+            this.ButtonOpenTestDataFolder.Click += new System.EventHandler(this.ButtonOpenTestDataFolder_Click);
             // 
             // ButtonEmergencyStop
             // 
-            ButtonEmergencyStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            ButtonEmergencyStop.Image = ((System.Drawing.Image)(resources.GetObject("ButtonEmergencyStop.Image")));
-            ButtonEmergencyStop.Location = new System.Drawing.Point(1256, 672);
-            ButtonEmergencyStop.Margin = new System.Windows.Forms.Padding(4);
-            ButtonEmergencyStop.Name = "ButtonEmergencyStop";
-            ButtonEmergencyStop.Size = new System.Drawing.Size(109, 101);
-            ButtonEmergencyStop.TabIndex = 6;
-            ButtonEmergencyStop.UseVisualStyleBackColor = true;
-            ButtonEmergencyStop.Click += new System.EventHandler(ButtonEmergencyStop_Clicked);
+            this.ButtonEmergencyStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonEmergencyStop.Image = ((System.Drawing.Image)(resources.GetObject("ButtonEmergencyStop.Image")));
+            this.ButtonEmergencyStop.Location = new System.Drawing.Point(942, 546);
+            this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";
+            this.ButtonEmergencyStop.Size = new System.Drawing.Size(82, 82);
+            this.ButtonEmergencyStop.TabIndex = 6;
+            this.ButtonEmergencyStop.UseVisualStyleBackColor = true;
+            this.ButtonEmergencyStop.Click += new System.EventHandler(this.ButtonEmergencyStop_Clicked);
             // 
             // TestExecutive
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(1400, 784);
-            Controls.Add(ButtonEmergencyStop);
-            Controls.Add(ButtonOpenTestDataFolder);
-            Controls.Add(ButtonSelectTests);
-            Controls.Add(ButtonSaveOutput);
-            Controls.Add(rtfResults);
-            Controls.Add(LabelResult);
-            Controls.Add(TextResult);
-            Controls.Add(ButtonCancel);
-            Controls.Add(ButtonStart);
-            Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            Name = "TestExecutive";
-            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            Text = "Test Program";
-            Shown += new System.EventHandler(Form_Shown);
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1050, 637);
+            this.Controls.Add(this.ButtonEmergencyStop);
+            this.Controls.Add(this.ButtonOpenTestDataFolder);
+            this.Controls.Add(this.ButtonSelectTests);
+            this.Controls.Add(this.ButtonSaveOutput);
+            this.Controls.Add(this.rtfResults);
+            this.Controls.Add(this.LabelResult);
+            this.Controls.Add(this.TextResult);
+            this.Controls.Add(this.ButtonCancel);
+            this.Controls.Add(this.ButtonStart);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Name = "TestExecutive";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Test Program";
+            this.Shown += new System.EventHandler(this.Form_Shown);
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
         #endregion
