@@ -58,43 +58,6 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         }
     }
 
-    public class MeasurementISP : MeasurementAbstract {
-        public new const String ClassName = nameof(MeasurementISP);
-        public readonly String ISPExecutableFolder;         private const String _ISP_EXECUTABLE_FOLDER = nameof(ISPExecutableFolder);
-        public readonly String ISPExecutable;               private const String _ISP_EXECUTABLE = nameof(ISPExecutable);
-        public readonly String ISPExecutableArguments;      private const String _ISP_EXECUTABLE_ARGUMENTS = nameof(ISPExecutableArguments);
-        public readonly String ISPExpected;                 private const String _ISP_EXPECTED = nameof(ISPExpected);
-
-        public MeasurementISP(String ID, String Arguments) {
-            Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
-            ArgumentsValidate(ID, Arguments, argsDict);
-            ISPExecutableFolder = argsDict[_ISP_EXECUTABLE_FOLDER];
-            ISPExecutable = argsDict[_ISP_EXECUTABLE];
-            ISPExecutableArguments = argsDict[_ISP_EXECUTABLE_ARGUMENTS];
-            ISPExpected = argsDict[_ISP_EXPECTED];
-        }
-
-        public override String ArgumentsGet() {
-            return $"{_ISP_EXECUTABLE_FOLDER}{SK}{ISPExecutableFolder}{SA}{_ISP_EXECUTABLE}{SK}{ISPExecutable}{SA}{_ISP_EXECUTABLE_ARGUMENTS}{SK}{ISPExecutableArguments}{SA}{_ISP_EXPECTED}{SK}{ISPExpected}";
-        }
-
-        internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
-            if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
-                $@"   Example: '{_ISP_EXECUTABLE}{SK}ipecmd.exe{SA}{Environment.NewLine}
-                                {_ISP_EXECUTABLE_FOLDER}{SK}C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe\{SA}{Environment.NewLine}
-                                {_ISP_EXECUTABLE_ARGUMENTS}{SK}C:\TBD\U1_Firmware.hex{SA}{Environment.NewLine}
-                                {_ISP_EXPECTED}{SK}0xAC0E'{Environment.NewLine}" +
-                 $"   Actual : '{arguments}'");
-            if (!argsDict.ContainsKey(_ISP_EXECUTABLE_FOLDER)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXECUTABLE_FOLDER}' key-value pair.");
-            if (!argsDict.ContainsKey(_ISP_EXECUTABLE)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXECUTABLE}' key-value pair.");
-            if (!argsDict.ContainsKey(_ISP_EXECUTABLE_ARGUMENTS)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXECUTABLE_ARGUMENTS}' key-value pair.");
-            if (!argsDict.ContainsKey(_ISP_EXPECTED)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_ISP_EXPECTED}' key-value pair.");
-            if (!argsDict[_ISP_EXECUTABLE_FOLDER].EndsWith(@"\")) throw new ArgumentException($"{ClassName} ID '{id}' {_ISP_EXECUTABLE_FOLDER} '{argsDict[_ISP_EXECUTABLE_FOLDER]}' does not end with '\\'.");
-            if (!Directory.Exists(argsDict[_ISP_EXECUTABLE_FOLDER])) throw new ArgumentException($"{ClassName} ID '{id}' {_ISP_EXECUTABLE_FOLDER} '{argsDict[_ISP_EXECUTABLE_FOLDER]}' does not exist.");
-            if (!File.Exists(argsDict[_ISP_EXECUTABLE_FOLDER] + argsDict[_ISP_EXECUTABLE])) throw new ArgumentException($"{ClassName} ID '{id}' {_ISP_EXECUTABLE} '{argsDict[_ISP_EXECUTABLE_FOLDER] + argsDict[_ISP_EXECUTABLE]}' does not exist.");
-        }
-    }
-
     public class MeasurementNumeric : MeasurementAbstract {
         public new const String ClassName = nameof(MeasurementNumeric);
         public readonly Double Low;                                                                   private const String _LOW = nameof(Low);
@@ -134,6 +97,43 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             if (!Double.TryParse(argsDict[_HIGH], NumberStyles.Float, CultureInfo.CurrentCulture, out Double high)) throw new ArgumentException($"{ClassName} ID '{id}' {_HIGH} '{argsDict[_HIGH]}' ≠ System.Double.");
             if (!Double.TryParse(argsDict[_LOW], NumberStyles.Float, CultureInfo.CurrentCulture, out Double low)) throw new ArgumentException($"{ClassName} ID '{id}' {_LOW} '{argsDict[_LOW]}' ≠ System.Double.");
             if (low > high) throw new ArgumentException($"{ClassName} ID '{id}' {_LOW} '{low}' > {_HIGH} '{high}'.");
+        }
+    }
+
+    public class MeasurementProcess : MeasurementAbstract {
+        public new const String ClassName = nameof(MeasurementProcess);
+        public readonly String ProcessFolder;           private const String _PROCESS_FOLDER = nameof(ProcessFolder);
+        public readonly String ProcessExecutable;       private const String _PROCESS_EXECUTABLE = nameof(ProcessExecutable);
+        public readonly String ProcessArguments;        private const String _PROCESS_ARGUMENTS = nameof(ProcessArguments);
+        public readonly String ProcessExpected;         private const String _PROCESS_EXPECTED = nameof(ProcessExpected);
+
+        public MeasurementProcess(String ID, String Arguments) {
+            Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
+            ArgumentsValidate(ID, Arguments, argsDict);
+            ProcessFolder = argsDict[_PROCESS_FOLDER];
+            ProcessExecutable = argsDict[_PROCESS_EXECUTABLE];
+            ProcessArguments = argsDict[_PROCESS_ARGUMENTS];
+            ProcessExpected = argsDict[_PROCESS_EXPECTED];
+        }
+
+        public override String ArgumentsGet() {
+            return $"{_PROCESS_FOLDER}{SK}{ProcessFolder}{SA}{_PROCESS_EXECUTABLE}{SK}{ProcessExecutable}{SA}{_PROCESS_ARGUMENTS}{SK}{ProcessArguments}{SA}{_PROCESS_EXPECTED}{SK}{ProcessExpected}";
+        }
+
+        internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
+            if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
+                $@"   Example: '{_PROCESS_EXECUTABLE}{SK}ipecmd.exe{SA}{Environment.NewLine}
+                                {_PROCESS_FOLDER}{SK}C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe\{SA}{Environment.NewLine}
+                                {_PROCESS_ARGUMENTS}{SK}C:\TBD\U1_Firmware.hex{SA}{Environment.NewLine}
+                                {_PROCESS_EXPECTED}{SK}0xAC0E'{Environment.NewLine}" +
+                 $"   Actual : '{arguments}'");
+            if (!argsDict.ContainsKey(_PROCESS_FOLDER)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_PROCESS_FOLDER}' key-value pair.");
+            if (!argsDict.ContainsKey(_PROCESS_EXECUTABLE)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_PROCESS_EXECUTABLE}' key-value pair.");
+            if (!argsDict.ContainsKey(_PROCESS_ARGUMENTS)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_PROCESS_ARGUMENTS}' key-value pair.");
+            if (!argsDict.ContainsKey(_PROCESS_EXPECTED)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_PROCESS_EXPECTED}' key-value pair.");
+            if (!argsDict[_PROCESS_FOLDER].EndsWith(@"\")) throw new ArgumentException($"{ClassName} ID '{id}' {_PROCESS_FOLDER} '{argsDict[_PROCESS_FOLDER]}' does not end with '\\'.");
+            if (!Directory.Exists(argsDict[_PROCESS_FOLDER])) throw new ArgumentException($"{ClassName} ID '{id}' {_PROCESS_FOLDER} '{argsDict[_PROCESS_FOLDER]}' does not exist.");
+            if (!File.Exists(argsDict[_PROCESS_FOLDER] + argsDict[_PROCESS_EXECUTABLE])) throw new ArgumentException($"{ClassName} ID '{id}' {_PROCESS_EXECUTABLE} '{argsDict[_PROCESS_FOLDER] + argsDict[_PROCESS_EXECUTABLE]}' does not exist.");
         }
     }
 

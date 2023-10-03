@@ -279,18 +279,18 @@ namespace ABT.TestSpace.TestExec {
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
                     return measurement.Result; // Test Developer must set Result in TestExecutor, else it remains MeasurementsPreRun()'s initital EventCodes.UNSET.
-                case MeasurementISP.ClassName:
-                    MeasurementISP measurementISP = (MeasurementISP)measurement.ClassObject;
-                    if (String.Equals(measurementISP.ISPExpected, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
-                    else return EventCodes.FAIL;
                 case MeasurementNumeric.ClassName:
                     if (!Double.TryParse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{measurement.ID}' Measurement '{measurement.Value}' ≠ System.Double.");
-                    MeasurementNumeric measurementNumeric = (MeasurementNumeric)measurement.ClassObject;
-                    if ((measurementNumeric.Low <= dMeasurement) && (dMeasurement <= measurementNumeric.High)) return EventCodes.PASS;
+                    MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;
+                    if ((mn.Low <= dMeasurement) && (dMeasurement <= mn.High)) return EventCodes.PASS;
+                    else return EventCodes.FAIL;
+                case MeasurementProcess.ClassName:
+                    MeasurementProcess mp = (MeasurementProcess)measurement.ClassObject;
+                    if (String.Equals(mp.ProcessExpected, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 case MeasurementTextual.ClassName:
-                    MeasurementTextual measurementTextual = (MeasurementTextual)measurement.ClassObject;
-                    if (String.Equals(measurementTextual.Text, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
+                    MeasurementTextual mt = (MeasurementTextual)measurement.ClassObject;
+                    if (String.Equals(mt.Text, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
                     else return EventCodes.FAIL;
                 default:
                     throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");

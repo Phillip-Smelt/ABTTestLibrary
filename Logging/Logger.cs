@@ -106,27 +106,27 @@ namespace ABT.TestSpace.TestExec.Logging {
             message.AppendLine(MessageFormat("Description", measurement.Description));
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
-                    MeasurementCustom measurementCustom = (MeasurementCustom)measurement.ClassObject;
-                    if (measurementCustom.Arguments != MeasurementCustom.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in MeasurementAbstract.ArgumentsSplit(measurementCustom.Arguments)) message.AppendLine(MessageFormat($"Key=Value", $"{kvp.Key}={kvp.Value}"));
-                    message.AppendLine(MessageFormat("Actual", measurement.Value));
-                    break;
-                case MeasurementISP.ClassName:
-                    MeasurementISP measurementISP = (MeasurementISP)measurement.ClassObject;
-                    message.AppendLine(MessageFormat("Expected", measurementISP.ISPExpected));
+                    MeasurementCustom mc = (MeasurementCustom)measurement.ClassObject;
+                    if (mc.Arguments != MeasurementCustom.NOT_APPLICABLE) foreach (KeyValuePair<String, String> kvp in MeasurementAbstract.ArgumentsSplit(mc.Arguments)) message.AppendLine(MessageFormat($"Key=Value", $"{kvp.Key}={kvp.Value}"));
                     message.AppendLine(MessageFormat("Actual", measurement.Value));
                     break;
                 case MeasurementNumeric.ClassName:
-                    MeasurementNumeric measurementNumeric = (MeasurementNumeric)measurement.ClassObject;
-                    message.AppendLine(MessageFormat("High Limit", $"{measurementNumeric.High:G}"));
+                    MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;
+                    message.AppendLine(MessageFormat("High Limit", $"{mn.High:G}"));
                     message.AppendLine(MessageFormat("Measurement", $"{Double.Parse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}"));
-                    message.AppendLine(MessageFormat("Low Limit", $"{measurementNumeric.Low:G}"));
-                    String si_units = $"{Enum.GetName(typeof(SI_UNITS), measurementNumeric.SI_Units)}";
-                    if (measurementNumeric.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) si_units += $" {Enum.GetName(typeof(SI_UNITS_MODIFIER), measurementNumeric.SI_Units_Modifier)}";
+                    message.AppendLine(MessageFormat("Low Limit", $"{mn.Low:G}"));
+                    String si_units = $"{Enum.GetName(typeof(SI_UNITS), mn.SI_Units)}";
+                    if (mn.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) si_units += $" {Enum.GetName(typeof(SI_UNITS_MODIFIER), mn.SI_Units_Modifier)}";
                     message.AppendLine(MessageFormat("SI Units", si_units));
                     break;
+                case MeasurementProcess.ClassName:
+                    MeasurementProcess mp = (MeasurementProcess)measurement.ClassObject;
+                    message.AppendLine(MessageFormat("Expected", mp.ProcessExpected));
+                    message.AppendLine(MessageFormat("Actual", measurement.Value));
+                    break;
                 case MeasurementTextual.ClassName:
-                    MeasurementTextual measurementTextual = (MeasurementTextual)measurement.ClassObject;
-                    message.AppendLine(MessageFormat("Expected", measurementTextual.Text));
+                    MeasurementTextual mt = (MeasurementTextual)measurement.ClassObject;
+                    message.AppendLine(MessageFormat("Expected", mt.Text));
                     message.AppendLine(MessageFormat("Actual", measurement.Value));
                     break;
                 default:

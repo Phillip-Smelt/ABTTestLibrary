@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ABT.TestSpace.TestExec.AppConfig;
 
-namespace ABT.TestSpace.TestExec.InSystemProgramming {
-    public enum ISP_METHOD { ExitCode, Redirect }
+namespace ABT.TestSpace.TestExec.ProcessesExternal {
+    public enum PROCESS_METHOD { ExitCode, Redirect }
     
-    public static class ISP {
+    public static class ProcessExternal {
         public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect, Boolean AutoContinue = false) { 
             PreConnect?.Invoke();
             String message = $"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
@@ -85,14 +85,14 @@ namespace ABT.TestSpace.TestExec.InSystemProgramming {
         }
 
         public static String ExitCode(Measurement measurement) {
-            MeasurementISP measurementISP = (MeasurementISP)measurement.ClassObject;
-            String exitCode = ProcessExitCode(measurementISP.ISPExecutableArguments, measurementISP.ISPExecutable, measurementISP.ISPExecutableFolder);
+            MeasurementProcess mp = (MeasurementProcess)measurement.ClassObject;
+            String exitCode = ProcessExitCode(mp.ProcessArguments, mp.ProcessExecutable, mp.ProcessFolder);
             return exitCode;
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(Measurement measurement) {
-            MeasurementISP measurementISP = (MeasurementISP)measurement.ClassObject;
-            (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(measurementISP.ISPExecutableArguments, measurementISP.ISPExecutable, measurementISP.ISPExecutableFolder, measurementISP.ISPExpected);
+            MeasurementProcess mp = (MeasurementProcess)measurement.ClassObject;
+            (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(mp.ProcessArguments, mp.ProcessExecutable, mp.ProcessFolder, mp.ProcessExpected);
             return (StandardError, StandardOutput, ExitCode);
         }
     }
