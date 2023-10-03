@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="AppConfig\AppConfigLogger.cs" />
     <Compile Include="AppConfig\AppConfigUUT.cs" />
-    <Compile Include="ProcessesExternal\ProcessExternal.cs" />
+    <Compile Include="Processes\ProcessExternal.cs" />
     <Compile Include="Logging\SerialNumberControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

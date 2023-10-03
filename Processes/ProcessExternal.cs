@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ABT.TestSpace.TestExec.AppConfig;
 
-namespace ABT.TestSpace.TestExec.ProcessesExternal {
+namespace ABT.TestSpace.TestExec.Processes {
     public enum PROCESS_METHOD { ExitCode, Redirect }
     
     public static class ProcessExternal {
@@ -29,6 +29,12 @@ namespace ABT.TestSpace.TestExec.ProcessesExternal {
             else _ = MessageBox.Show(message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (!AutoContinue) _ = MessageBox.Show(message, $"Disconnect '{Connector}'", MessageBoxButtons.OK, MessageBoxIcon.Information);
             PostDisconnect?.Invoke();
+        }
+
+        public static String ExitCode(Measurement measurement) {
+            MeasurementProcess mp = (MeasurementProcess)measurement.ClassObject;
+            String exitCode = ProcessExitCode(mp.ProcessArguments, mp.ProcessExecutable, mp.ProcessFolder);
+            return exitCode;
         }
 
         private static Form FormInterconnectGet() {
@@ -82,12 +88,6 @@ namespace ABT.TestSpace.TestExec.ProcessesExternal {
             }
             if (standardOutput.Contains(expectedResult)) return (standardError, expectedResult, exitCode);
             else return (standardError, standardOutput, exitCode);
-        }
-
-        public static String ExitCode(Measurement measurement) {
-            MeasurementProcess mp = (MeasurementProcess)measurement.ClassObject;
-            String exitCode = ProcessExitCode(mp.ProcessArguments, mp.ProcessExecutable, mp.ProcessFolder);
-            return exitCode;
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(Measurement measurement) {
