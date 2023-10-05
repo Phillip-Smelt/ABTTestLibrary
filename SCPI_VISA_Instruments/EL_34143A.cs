@@ -108,6 +108,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             switch (LoadMode) {
                 case LOAD_MODE.CURR:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("CURRent", null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.RANGe.Command(MAXimum, null);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MINimum, null, out min);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MAXimum, null, out max);
                     SCPI99.ValueValidate(SVI, min, LoadValue, max, LoadType);
@@ -115,6 +116,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     break;
                 case LOAD_MODE.POW:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("POWer", null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.RANGe.Command(MAXimum, null);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Query(MINimum, null, out min2);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Query(MAXimum, null, out max2);
                     SCPI99.ValueValidate(SVI, min2[0], LoadValue, max2[0], LoadType);
@@ -123,6 +125,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     break;
                 case LOAD_MODE.RES:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("RESistance", null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.RANGe.Command(MAXimum, null);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query(MINimum, null, out min2);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query(MAXimum, null, out max2);
                     SCPI99.ValueValidate(SVI, min2[0], LoadValue, max2[0], LoadType);
@@ -131,6 +134,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     break;
                 case LOAD_MODE.VOLT:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("VOLTage", null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.RANGe.Command(MAXimum, null);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MINimum, null, out min2);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MAXimum, null, out max2);
                     SCPI99.ValueValidate(SVI, min2[0], LoadValue, max2[0], LoadType);
