@@ -108,8 +108,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             switch (LoadMode) {
                 case LOAD_MODE.CURR:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("CURRent", null);
-                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(LoadValue, null);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.RANGe.Command(LoadValue, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(LoadValue, null);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MINimum, null, out min);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MAXimum, null, out max);
                     SCPI99.ValueValidate(SVI, min, LoadValue, max, LoadType);
