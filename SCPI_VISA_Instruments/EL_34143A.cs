@@ -113,7 +113,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MINimum, null, out min);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MAXimum, null, out max);
                     SCPI99.ValueValidate(SVI, min, LoadValue, max, LoadType);
-                    // TODO: ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command(false, null);
                     break;
                 case LOAD_MODE.POW:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("POWer", null);
@@ -131,6 +130,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query(MINimum, null, out min2);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Query(MAXimum, null, out max2);
                     SCPI99.ValueValidate(SVI, min2[0], LoadValue, max2[0], LoadType);
+                    // TODO: ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
                     break;
                 case LOAD_MODE.VOLT:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("VOLTage", null);
@@ -139,6 +139,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MINimum, null, out min2);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MAXimum, null, out max2);
                     SCPI99.ValueValidate(SVI, min2[0], LoadValue, max2[0], LoadType);
+                    // TODO: ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
                     break;
                 default:
                     throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
