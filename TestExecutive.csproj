@@ -43,6 +43,12 @@
   <ItemGroup>
     <Compile Include="AppConfig\AppConfigLogger.cs" />
     <Compile Include="AppConfig\AppConfigUUT.cs" />
+    <Compile Include="Logging\SerialNumber.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Logging\SerialNumber.Designer.cs">
+      <DependentUpon>SerialNumber.cs</DependentUpon>
+    </Compile>
     <Compile Include="Processes\ProcessExternal.cs" />
     <Compile Include="SCPI_VISA_Instruments\ConfigSCPI_VISA_Instruments.cs" />
     <Compile Include="SCPI_VISA_Instruments\PS_E3610xB.cs" />
@@ -143,11 +149,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\LICENSE.txt" />
+    <None Include="Logging\LICENSE.txt" />
     <Content Include="TestExecutive.config.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="P:\Test\Engineers\repos\isoMicro\packages\System.Runtime.WindowsRuntime.4.7.0\build\net461\System.Runtime.WindowsRuntime.targets" Condition="Exists('P:\Test\Engineers\repos\isoMicro\packages\System.Runtime.WindowsRuntime.4.7.0\build\net461\System.Runtime.WindowsRuntime.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('P:\Test\Engineers\repos\isoMicro\packages\System.Runtime.WindowsRuntime.4.7.0\build\net461\System.Runtime.WindowsRuntime.targets')" Text="$([System.String]::Format('$(ErrorText)', 'P:\Test\Engineers\repos\isoMicro\packages\System.Runtime.WindowsRuntime.4.7.0\build\net461\System.Runtime.WindowsRuntime.targets'))" />
+  </Target>
 </Project>
