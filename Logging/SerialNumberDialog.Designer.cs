@@ -1,5 +1,5 @@
 ﻿namespace ABT.TestSpace.TestExec.Logging {
-    partial class SerialNumber {
+    partial class SerialNumberDialog {
         private System.ComponentModel.IContainer components = null;
 
         protected override void Dispose(bool disposing) {
@@ -53,7 +53,7 @@
             this.OK.UseVisualStyleBackColor = false;
             this.OK.Click += new System.EventHandler(this.OK_Clicked);
             // 
-            // SerialNumber
+            // SerialNumberDialog
             // 
             this.AcceptButton = this.OK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -67,7 +67,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "SerialNumber";
+            this.Name = "SerialNumberDialog";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Scan ABT Serial Number";

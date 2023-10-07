@@ -85,7 +85,11 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
+#if !DEBUG
             String serialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: ConfigUUT.SerialNumber);
+#else
+            String serialNumber = SerialNumberDialog.Get(ConfigUUT.SerialNumber);
+#endif
             if (String.Equals(serialNumber, String.Empty)) return;
             ConfigUUT.SerialNumber = serialNumber;
             MeasurementsPreRun();
@@ -283,15 +287,15 @@ namespace ABT.TestSpace.TestExec {
                     if (!Double.TryParse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{measurement.ID}' Measurement '{measurement.Value}' ≠ System.Double.");
                     MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;
                     if ((mn.Low <= dMeasurement) && (dMeasurement <= mn.High)) return EventCodes.PASS;
-                    else return EventCodes.FAIL;
+                    return EventCodes.FAIL;
                 case MeasurementProcess.ClassName:
                     MeasurementProcess mp = (MeasurementProcess)measurement.ClassObject;
                     if (String.Equals(mp.ProcessExpected, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
-                    else return EventCodes.FAIL;
+                    return EventCodes.FAIL;
                 case MeasurementTextual.ClassName:
                     MeasurementTextual mt = (MeasurementTextual)measurement.ClassObject;
                     if (String.Equals(mt.Text, measurement.Value, StringComparison.Ordinal)) return EventCodes.PASS;
-                    else return EventCodes.FAIL;
+                    return EventCodes.FAIL;
                 default:
                     throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
             }
