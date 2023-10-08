@@ -14,6 +14,7 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
+using System.Configuration;
 
 /// <para>
 /// TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -43,6 +44,7 @@ namespace ABT.TestSpace.TestExec {
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
         internal readonly String _appAssemblyVersion;
         internal readonly String _libraryAssemblyVersion;
+        private Boolean _LOGGER_SerialNumberDialogEnabled = Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_SerialNumberDialogEnabled"]);
         private Boolean _cancelled = false;
 
         protected TestExecutive(Icon icon) {
@@ -85,11 +87,11 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
-#if !DEBUG
-            String serialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: ConfigUUT.SerialNumber);
-#else
-            String serialNumber = SerialNumberDialog.Get(ConfigUUT.SerialNumber);
-#endif
+            String serialNumber;
+            if (_LOGGER_SerialNumberDialogEnabled) {
+                SerialNumberDialog snd = new SerialNumberDialog(ConfigUUT.SerialNumber);
+                serialNumber = snd.ShowDialog().Equals(DialogResult.OK) ? snd.Get() : String.Empty;
+            } else serialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: ConfigUUT.SerialNumber);
             if (String.Equals(serialNumber, String.Empty)) return;
             ConfigUUT.SerialNumber = serialNumber;
             MeasurementsPreRun();

@@ -19,31 +19,19 @@ using Windows.Security.Cryptography;
 
 namespace ABT.TestSpace.TestExec.Logging {
     public partial class SerialNumberDialog : Form {
-        private static BarcodeScanner _scanner = null;
-        private static ClaimedBarcodeScanner _claimedScanner = null;
-        private static SerialNumberDialog _snd = null;
+        private BarcodeScanner _scanner = null;
+        private ClaimedBarcodeScanner _claimedScanner = null;
 
-        private SerialNumberDialog() {
+        public SerialNumberDialog(String InitialSerialNumber) {
             InitializeComponent();
             GetBarcodeScanner();
-            _snd.BarCodeText.Text = String.Empty;
+            FormUpdate(InitialSerialNumber);
         }
 
-        public static String Get(String InitialSerialNumber) {
-            _snd = new SerialNumberDialog();
-            FormUpdate(InitialSerialNumber);
-            DialogResult dr = _snd.ShowDialog(); // Modal Dialog, wait until operator clicks OK or Cancel buttons.
-            String serialNumber;
-            if (dr.Equals(DialogResult.OK)) serialNumber = _snd.BarCodeText.ToString();
-            else serialNumber = String.Empty;
-            _scanner.Dispose();
-            _claimedScanner.Dispose();
-            _snd.Dispose();
-            return serialNumber;
-        }
+        public String Get() { return BarCodeText.Text; }
 
         private async void GetBarcodeScanner() {
-            _scanner = await Device.GetFirstBarcodeScannerAsync();
+            _scanner = await GetFirstBarcodeScannerAsync();
             if (_scanner == null) throw new InvalidOperationException("Barcode scanner not found.");
             _claimedScanner = await _scanner.ClaimScannerAsync(); // Claim exclusively & enable.
             if (_claimedScanner == null) throw new InvalidOperationException("Barcode scanner not found.");
@@ -55,12 +43,15 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         private void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
 
-        private void ClaimedScanner_DataReceived(ClaimedBarcodeScanner sender, BarcodeScannerDataReceivedEventArgs args) { Invoke(new DataReceived(DelegateMethod), args); }
+        private void ClaimedScanner_DataReceived(ClaimedBarcodeScanner sender, BarcodeScannerDataReceivedEventArgs args) {
+            _ = MessageBox.Show("DataReceived!", "DataReceived!", MessageBoxButtons.OK);
+            Invoke(new DataReceived(DelegateMethod), args);
+        }
 
         private delegate void DataReceived(BarcodeScannerDataReceivedEventArgs args);
 
         private void DelegateMethod(BarcodeScannerDataReceivedEventArgs args) {
-            if (args.Report.ScanDataLabel == null || args.Report.ScanDataType != BarcodeSymbologies.Code39) return;
+            if (args.Report.ScanDataLabel == null) return;
             FormUpdate(CryptographicBuffer.ConvertBinaryToString(BinaryStringEncoding.Utf8, args.Report.ScanDataLabel));
         }
 
@@ -68,22 +59,18 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         private void Cancel_Clicked(Object sender, EventArgs e) { DialogResult = DialogResult.Cancel; }
 
-        private static void FormUpdate(String text) {
+        private void FormUpdate(String text) {
+            BarCodeText.Text = text;
             if (Regex.IsMatch(text, "^01BB2-[0-9]{5}$")) {
-                _snd.BarCodeText.Text = text;
-                _snd.OK.Enabled = true;
-                _snd.OK.BackColor = System.Drawing.Color.Green;
-            }
-            if (String.Equals(text, String.Empty)) {
-                _snd.BarCodeText.Text = String.Empty;
-                _snd.OK.Enabled = false;
-                _snd.OK.BackColor = System.Drawing.Color.Red;
+                OK.Enabled = true;
+                OK.BackColor = System.Drawing.Color.Green;
+            } else {
+                OK.Enabled = false;
+                OK.BackColor = System.Drawing.Color.DimGray;
             }
         }
-    }
 
-    internal static class Device {
-        internal static async Task<BarcodeScanner> GetFirstBarcodeScannerAsync(PosConnectionTypes connectionTypes = PosConnectionTypes.Local) {
+        private static async Task<BarcodeScanner> GetFirstBarcodeScannerAsync(PosConnectionTypes connectionTypes = PosConnectionTypes.Local) {
             return await GetFirstDeviceAsync(BarcodeScanner.GetDeviceSelector(connectionTypes), async (id) => await BarcodeScanner.FromIdAsync(id));
         }
 
