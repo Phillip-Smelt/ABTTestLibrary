@@ -19,6 +19,8 @@ using Windows.Security.Cryptography;
 
 namespace ABT.TestSpace.TestExec.Logging {
     public partial class SerialNumberDialog : Form {
+    // NOTE: ClaimedBarcodeScanner Events don't fire in Windows 10 Enterprise, Version 22H2, OS Build 19045.3516, Windows Feature Experience Pack 1000.19052.1000.0.
+    // - Suspect same issue as https://learn.microsoft.com/en-us/answers/questions/820762/c-claimedbarcodescanner-events-not-firing-in-windo?orderBy=Newest.
         private BarcodeScanner _scanner = null;
         private ClaimedBarcodeScanner _claimedScanner = null;
 
@@ -33,13 +35,13 @@ namespace ABT.TestSpace.TestExec.Logging {
         private async void GetBarcodeScanner() {
             _scanner = await GetFirstBarcodeScannerAsync();
             if (_scanner == null) throw new InvalidOperationException("Barcode scanner not found.");
-            _claimedScanner = await _scanner.ClaimScannerAsync(); // Claim exclusively & enable.
+            _claimedScanner = await _scanner.ClaimScannerAsync(); // Claim exclusively.
             if (_claimedScanner == null) throw new InvalidOperationException("Barcode scanner not found.");
             _claimedScanner.ReleaseDeviceRequested += ClaimedScanner_ReleaseDeviceRequested;
             _claimedScanner.DataReceived += ClaimedScanner_DataReceived;
             _claimedScanner.ErrorOccurred += ClaimedScanner_ErrorOccurred;
             _claimedScanner.TriggerPressed += ClaimedScanner_TriggerPressed;
-            _claimedScanner.TriggerReleased  += ClaimedScanner_TriggerReleased;
+            _claimedScanner.TriggerReleased += ClaimedScanner_TriggerReleased;
             _claimedScanner.IsDecodeDataEnabled = true; // Decode raw data from scanner and sends the ScanDataLabel and ScanDataType in the DataReceived event.
             await _claimedScanner.EnableAsync(); // Scanner must be enabled in order to receive the DataReceived event.
         }
