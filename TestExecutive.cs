@@ -44,7 +44,7 @@ namespace ABT.TestSpace.TestExec {
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
         internal readonly String _appAssemblyVersion;
         internal readonly String _libraryAssemblyVersion;
-        private Boolean _LOGGER_SerialNumberDialogEnabled = Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_SerialNumberDialogEnabled"]);
+        private readonly Boolean _LOGGER_SerialNumberDialogEnabled = Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_SerialNumberDialogEnabled"]);
         private Boolean _cancelled = false;
 
         protected TestExecutive(Icon icon) {
@@ -98,42 +98,43 @@ namespace ABT.TestSpace.TestExec {
             await MeasurementsRun();
             MeasurementsPostRun();
         }
-            /// <summary>
-            /// NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
-            /// <para>
-            /// A) Spontaneous Operator Initiated Cancellations:
-            ///      1)  Operator Proactive:
-            ///          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
-            ///            cancel currently executing Measurement.
-            ///          - Requires TestExecutor implementation by the Test Developer, but is initiated by Operator, so is categorized as such.
-            ///          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
-            ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
-            ///          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
-            ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
-            ///      2)  Operator Reactive:
-            ///          - TestExecutive's already implemented, always available & default reactive "Cancel before next Test" technique,
-            ///            which simply sets _cancelled Boolean to true, checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
-            ///          - If _cancelled is true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation
-            ///            prior to the next Measurement's execution.
-            ///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
-            /// B) PrePlanned Developer Programmed Cancellations:
-            ///      3)  TestExecutor/Test Developer initiated Cancellations:
-            ///          - Any TestExecutor's Measurement can initiate a Cancellation programmatically by simply throwing a CancellationException:
-            ///          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
-            ///            or simply because futher execution is pointless.
-            ///          - Simply throw a CancellationException if the specific condition(s) occcur.
-            ///      4)  App.Config's CancelNotPassed:
-            ///          - App.Config's TestMeasurement element has a Boolean "CancelNotPassed" field:
-            ///          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EventCodes.PASS,
-            ///            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
-            ///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
-            ///
-            /// NOTE: The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
-            ///       thrown CancellationExceptions.
-            /// NOTE: The Operator Reactive & App.Config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
-            ///       inside the TestExecutive.MeasurementsRun() loop.
-            /// </para>
-            /// </summary>
+
+        /// <summary>
+        /// NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
+        /// <para>
+        /// A) Spontaneous Operator Initiated Cancellations:
+        ///      1)  Operator Proactive:
+        ///          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
+        ///            cancel currently executing Measurement.
+        ///          - Requires TestExecutor implementation by the Test Developer, but is initiated by Operator, so is categorized as such.
+        ///          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
+        ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
+        ///          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
+        ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
+        ///      2)  Operator Reactive:
+        ///          - TestExecutive's already implemented, always available & default reactive "Cancel before next Test" technique,
+        ///            which simply sets _cancelled Boolean to true, checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
+        ///          - If _cancelled is true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation
+        ///            prior to the next Measurement's execution.
+        ///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
+        /// B) PrePlanned Developer Programmed Cancellations:
+        ///      3)  TestExecutor/Test Developer initiated Cancellations:
+        ///          - Any TestExecutor's Measurement can initiate a Cancellation programmatically by simply throwing a CancellationException:
+        ///          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
+        ///            or simply because futher execution is pointless.
+        ///          - Simply throw a CancellationException if the specific condition(s) occcur.
+        ///      4)  App.Config's CancelNotPassed:
+        ///          - App.Config's TestMeasurement element has a Boolean "CancelNotPassed" field:
+        ///          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EventCodes.PASS,
+        ///            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
+        ///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
+        ///
+        /// NOTE: The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
+        ///       thrown CancellationExceptions.
+        /// NOTE: The Operator Reactive & App.Config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
+        ///       inside the TestExecutive.MeasurementsRun() loop.
+        /// </para>
+        /// </summary>
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             CancelTokenSource.Cancel();
             _cancelled = true;
