@@ -37,11 +37,26 @@ namespace ABT.TestSpace.TestExec.Logging {
             if (_claimedScanner == null) throw new InvalidOperationException("Barcode scanner not found.");
             _claimedScanner.ReleaseDeviceRequested += ClaimedScanner_ReleaseDeviceRequested;
             _claimedScanner.DataReceived += ClaimedScanner_DataReceived;
+            _claimedScanner.ErrorOccurred += ClaimedScanner_ErrorOccurred;
+            _claimedScanner.TriggerPressed += ClaimedScanner_TriggerPressed;
+            _claimedScanner.TriggerReleased  += ClaimedScanner_TriggerReleased;
             _claimedScanner.IsDecodeDataEnabled = true; // Decode raw data from scanner and sends the ScanDataLabel and ScanDataType in the DataReceived event.
             await _claimedScanner.EnableAsync(); // Scanner must be enabled in order to receive the DataReceived event.
         }
 
         private void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
+
+        private void ClaimedScanner_ErrorOccurred(ClaimedBarcodeScanner sender, BarcodeScannerErrorOccurredEventArgs args) {
+            _ = MessageBox.Show("ErrorOccurred!", "ErrorOccurred!", MessageBoxButtons.OK);
+        }
+
+        private void ClaimedScanner_TriggerPressed(Object sender, ClaimedBarcodeScanner e) {
+            _ = MessageBox.Show("TriggerPressed!", "TriggerPressed!", MessageBoxButtons.OK);
+        }
+
+        private void ClaimedScanner_TriggerReleased(Object sender, ClaimedBarcodeScanner e) {
+            _ = MessageBox.Show("TriggerReleased !", "TriggerReleased !", MessageBoxButtons.OK);
+        }
 
         private void ClaimedScanner_DataReceived(ClaimedBarcodeScanner sender, BarcodeScannerDataReceivedEventArgs args) {
             _ = MessageBox.Show("DataReceived!", "DataReceived!", MessageBoxButtons.OK);

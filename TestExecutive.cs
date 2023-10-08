@@ -91,7 +91,7 @@ namespace ABT.TestSpace.TestExec {
             if (_LOGGER_SerialNumberDialogEnabled) {
                 SerialNumberDialog snd = new SerialNumberDialog(ConfigUUT.SerialNumber);
                 serialNumber = snd.ShowDialog().Equals(DialogResult.OK) ? snd.Get() : String.Empty;
-            } else serialNumber = Interaction.InputBox(Prompt: "Please enter UUT Serial Number", Title: "Enter Serial Number", DefaultResponse: ConfigUUT.SerialNumber);
+            } else serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: ConfigUUT.SerialNumber);
             if (String.Equals(serialNumber, String.Empty)) return;
             ConfigUUT.SerialNumber = serialNumber;
             MeasurementsPreRun();
