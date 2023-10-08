@@ -19,8 +19,14 @@ using Windows.Security.Cryptography;
 
 namespace ABT.TestSpace.TestExec.Logging {
     public partial class SerialNumberDialog : Form {
-    // NOTE: ClaimedBarcodeScanner Events don't fire in Windows 10 Enterprise, Version 22H2, OS Build 19045.3516, Windows Feature Experience Pack 1000.19052.1000.0.
-    // - Suspect same issue as https://learn.microsoft.com/en-us/answers/questions/820762/c-claimedbarcodescanner-events-not-firing-in-windo?orderBy=Newest.
+        // NOTE: Class SerialNumberDialog tested with Honeywell Voyager 1200G USB Barcode Scanner:
+        //  - Works fine in Windows 11 Professional, Version 22H2, OS Build 22621.2361, Windows Feature Experience Pack 1000.22674.1000.0.
+        //  - Won't work in Windows 10 Enterprise,   Version 22H2, OS Build 19045.3516, Windows Feature Experience Pack 1000.19052.1000.0.
+        //      - ClaimedBarcodeScanner Events don't fire in Windows 10 Enterprise, suspect same issue as
+        //      - https://learn.microsoft.com/en-us/answers/questions/820762/c-claimedbarcodescanner-events-not-firing-in-windo?orderBy=Newest.
+        // NOTE: Honeywell Voyager 1200G USB Barcode Scanner is a Microsoft supported Point of Service peripheral.
+        //  - https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support
+
         private BarcodeScanner _scanner = null;
         private ClaimedBarcodeScanner _claimedScanner = null;
 
