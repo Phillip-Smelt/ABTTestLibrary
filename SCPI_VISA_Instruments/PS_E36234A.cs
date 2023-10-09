@@ -28,9 +28,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static Boolean CurrentAmplitudeIs(SCPI_VISA_Instrument SVI, Double AmpsDC, Double Delta, CHANNEL Channel) { return SCPI99.IsCloseEnough(CurrentAmplitudeGet(SVI, Channel), AmpsDC, Delta); }
 
         public static void CurrentAmplitudeSet(SCPI_VISA_Instrument SVI, Double AmpsDC, CHANNEL Channel) {
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MINimum, Channels[Channel], out Double[] min);
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Query(MAXimum, Channels[Channel], out Double[] max);
-            SCPI99.ValueValidate(SVI, min[(Int32)Channel], AmpsDC, max[(Int32)Channel], "Current");
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC, Channels[Channel]);
         }
 
@@ -40,9 +37,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void CurrentProtectionAmplitudeSet(SCPI_VISA_Instrument SVI, Double Amperes, CHANNEL Channel) {
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.LEVel.AMPLitude.Query(MINimum, Channels[Channel], out Double[] min);
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.LEVel.AMPLitude.Query(MAXimum, Channels[Channel], out Double[] max);
-            SCPI99.ValueValidate(SVI, min[(Int32)Channel], Amperes, max[(Int32)Channel], "Current Protection Amperage");
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.LEVel.AMPLitude.Command(Amperes, Channels[Channel]);
         }
 
@@ -52,9 +46,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void CurrentProtectionDelaySet(SCPI_VISA_Instrument SVI, Double DelaySeconds, CHANNEL Channel) {
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MINimum, Channels[Channel], out Double[] min);
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Query(MAXimum, Channels[Channel], out Double[] max);
-            SCPI99.ValueValidate(SVI, min[(Int32)Channel], DelaySeconds, max[(Int32)Channel], "Current Protection Delay");
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds, Channels[Channel]);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.STARt.Command(CCTRans, Channels[Channel]);
         }
@@ -164,9 +155,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static Boolean VoltageAmplitudeIs(SCPI_VISA_Instrument SVI, Double VoltsDC, Double Delta, CHANNEL Channel) { return SCPI99.IsCloseEnough(VoltageAmplitudeGet(SVI, Channel), VoltsDC, Delta); }
 
         public static void VoltageAmplitudeSet(SCPI_VISA_Instrument SVI, Double VoltsDC, CHANNEL Channel) {
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MINimum, Channels[Channel], out Double[] min);
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(MAXimum, Channels[Channel], out Double[] max);
-            SCPI99.ValueValidate(SVI, min[(Int32)Channel], VoltsDC, max[(Int32)Channel], "Voltage");
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC, Channels[Channel]);
         }
 
@@ -176,9 +164,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void VoltageProtectionAmplitudeSet(SCPI_VISA_Instrument SVI, Double VoltsDC, CHANNEL Channel) {
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Query(MINimum, Channels[Channel], out Double[] min);
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Query(MAXimum, Channels[Channel], out Double[] max);
-            SCPI99.ValueValidate(SVI, min[(Int32)Channel], VoltsDC, max[(Int32)Channel], "Voltage Protection");
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Command(VoltsDC, Channels[Channel]);
         }
 

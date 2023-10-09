@@ -58,7 +58,8 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
-            FormReset();
+            FormModeReset();
+            FormModeWait();
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}";
 #if !DEBUG
             if (!String.Equals(String.Empty, ConfigUUT.DocumentationFolder)) {
@@ -75,15 +76,13 @@ namespace ABT.TestSpace.TestExec {
                 } else MessageBox.Show(Form.ActiveForm, $"Path {ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 #endif
-            ButtonSelectTests.Enabled = true;
         }
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
             ConfigTest = AppConfigTest.Get();
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
-            FormReset();
-            ButtonSelectTests.Enabled = true;
-            ButtonStartReset(enabled: true);
+            FormModeReset();
+            FormModeWait();
         }
 
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
@@ -94,9 +93,12 @@ namespace ABT.TestSpace.TestExec {
             } else serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: ConfigUUT.SerialNumber);
             if (String.Equals(serialNumber, String.Empty)) return;
             ConfigUUT.SerialNumber = serialNumber;
+            FormModeReset();
+            FormModeRun();
             MeasurementsPreRun();
             await MeasurementsRun();
             MeasurementsPostRun();
+            FormModeWait();
         }
 
         /// <summary>
@@ -172,12 +174,11 @@ namespace ABT.TestSpace.TestExec {
             ButtonCancel.Enabled = enabled;
         }
 
-        private void FormReset() {
-            ButtonSelectTests.Enabled = false;
-            ButtonStartReset(enabled: false);
+        private void FormModeWait() {
+            ButtonSelectTests.Enabled = true;
+            ButtonStartReset(enabled: (ConfigTest != null));
+            ButtonEmergencyStop.Enabled = true; // Always enabled.
             ButtonCancelReset(enabled: false);
-            TextResult.Text = String.Empty;
-            TextResult.BackColor = Color.White;
             if (ConfigTest != null) {
                 ButtonSaveOutput.Enabled = !ConfigTest.IsOperation;
                 ButtonOpenTestDataFolder.Enabled = (ConfigTest.IsOperation && ConfigLogger.FileEnabled);
@@ -185,8 +186,21 @@ namespace ABT.TestSpace.TestExec {
                 ButtonSaveOutput.Enabled = false;
                 ButtonOpenTestDataFolder.Enabled = false;
             }
-            ButtonEmergencyStop.Enabled = true;
+        }
+
+        private void FormModeReset() { 
+            TextResult.Text = String.Empty;
+            TextResult.BackColor = Color.White;
             rtfResults.Text = String.Empty;
+        }
+
+        private void FormModeRun() {
+            ButtonCancelReset(enabled: true);
+            ButtonEmergencyStop.Enabled = true; // Always enabled.
+            ButtonSelectTests.Enabled = false;
+            ButtonStartReset(enabled: false);
+            ButtonSaveOutput.Enabled = false;
+            ButtonOpenTestDataFolder.Enabled = false;
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
@@ -214,7 +228,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void MeasurementsPreRun() {
-            FormReset();
+            Logger.Start(this, ref rtfResults);
             foreach (KeyValuePair<String, Measurement> kvp in ConfigTest.Measurements) {
                 if (String.Equals(kvp.Value.ClassName, MeasurementNumeric.ClassName)) kvp.Value.Value = Double.NaN.ToString();
                 else kvp.Value.Value = String.Empty;
@@ -223,8 +237,6 @@ namespace ABT.TestSpace.TestExec {
             }
             ConfigUUT.EventCode = EventCodes.UNSET;
             TestSystemReset();
-            Logger.Start(this, ref rtfResults);
-            ButtonCancelReset(enabled: true);
         }
 
         private async Task MeasurementsRun() {
@@ -263,9 +275,6 @@ namespace ABT.TestSpace.TestExec {
 
         private void MeasurementsPostRun() {
             TestSystemReset();
-            ButtonSelectTests.Enabled = true;
-            ButtonStartReset(enabled: true);
-            ButtonCancelReset(enabled: false);
             ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);

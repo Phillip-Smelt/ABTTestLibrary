@@ -100,15 +100,5 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             new AgSCPI99(SVI.Address).SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
             return ConditionRegister;
         }
-
-        internal static void ValueValidate(SCPI_VISA_Instrument SVI, Double Min, Double Value, Double Max, String ValueType) {
-            if ((Value < Min) || (Max < Value)) {
-                String s = $"{ValueType} exceeds valid range:{Environment.NewLine}"
-                    + $" - MINimum   :  {Min}{Environment.NewLine}"
-                    + $" - Programmed:  {Value}{Environment.NewLine}"
-                    + $" - MAXimum   :  {Max}";
-                throw new InvalidOperationException(SCPI99.ErrorMessageGet(SVI, s));
-            }
-        }
     }
 }
