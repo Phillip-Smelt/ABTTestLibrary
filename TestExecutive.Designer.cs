@@ -44,7 +44,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonStart.Name = "ButtonStart";
             this.ButtonStart.Size = new System.Drawing.Size(88, 52);
             this.ButtonStart.TabIndex = 1;
-            this.ButtonStart.Text = "Start";
+            this.ButtonStart.Text = "&Start";
             this.ButtonStart.UseVisualStyleBackColor = false;
             this.ButtonStart.Click += new System.EventHandler(this.ButtonStart_Clicked);
             // 
@@ -56,7 +56,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(88, 52);
             this.ButtonCancel.TabIndex = 2;
-            this.ButtonCancel.Text = "Cancel";
+            this.ButtonCancel.Text = "&Cancel";
             this.ButtonCancel.UseVisualStyleBackColor = false;
             this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Clicked);
             // 
@@ -77,7 +77,7 @@ namespace ABT.TestSpace.TestExec {
             this.LabelResult.AutoSize = true;
             this.LabelResult.Location = new System.Drawing.Point(504, 560);
             this.LabelResult.Name = "LabelResult";
-            this.LabelResult.Size = new System.Drawing.Size(37, 13);
+            this.LabelResult.Size = new System.Drawing.Size(42, 15);
             this.LabelResult.TabIndex = 7;
             this.LabelResult.Text = "Result";
             this.LabelResult.UseWaitCursor = true;
@@ -103,7 +103,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonSaveOutput.Name = "ButtonSaveOutput";
             this.ButtonSaveOutput.Size = new System.Drawing.Size(88, 47);
             this.ButtonSaveOutput.TabIndex = 4;
-            this.ButtonSaveOutput.Text = "Save Output";
+            this.ButtonSaveOutput.Text = "Save &Output";
             this.ButtonSaveOutput.UseVisualStyleBackColor = true;
             this.ButtonSaveOutput.Click += new System.EventHandler(this.ButtonSaveOutput_Click);
             // 
@@ -115,7 +115,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonSelectTests.Name = "ButtonSelectTests";
             this.ButtonSelectTests.Size = new System.Drawing.Size(88, 47);
             this.ButtonSelectTests.TabIndex = 0;
-            this.ButtonSelectTests.Text = "Select Tests";
+            this.ButtonSelectTests.Text = "Select &Tests";
             this.ButtonSelectTests.UseVisualStyleBackColor = true;
             this.ButtonSelectTests.Click += new System.EventHandler(this.ButtonSelectTests_Click);
             // 
@@ -126,7 +126,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonOpenTestDataFolder.Name = "ButtonOpenTestDataFolder";
             this.ButtonOpenTestDataFolder.Size = new System.Drawing.Size(88, 47);
             this.ButtonOpenTestDataFolder.TabIndex = 5;
-            this.ButtonOpenTestDataFolder.Text = "Open Test Data Folder";
+            this.ButtonOpenTestDataFolder.Text = "Open Test &Data Folder";
             this.ButtonOpenTestDataFolder.UseVisualStyleBackColor = true;
             this.ButtonOpenTestDataFolder.Click += new System.EventHandler(this.ButtonOpenTestDataFolder_Click);
             // 
@@ -138,6 +138,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";
             this.ButtonEmergencyStop.Size = new System.Drawing.Size(82, 82);
             this.ButtonEmergencyStop.TabIndex = 6;
+            this.ButtonEmergencyStop.Text = "&Emergency Stop";
             this.ButtonEmergencyStop.UseVisualStyleBackColor = true;
             this.ButtonEmergencyStop.Click += new System.EventHandler(this.ButtonEmergencyStop_Clicked);
             // 
@@ -155,7 +156,7 @@ namespace ABT.TestSpace.TestExec {
             this.Controls.Add(this.TextResult);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonStart);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "TestExecutive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Test Program";
