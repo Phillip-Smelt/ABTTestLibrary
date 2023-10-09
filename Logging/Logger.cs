@@ -37,12 +37,12 @@ namespace ABT.TestSpace.TestExec.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
                 Log.Information($"Note: following measurement results invalid for UUT production testing, only troubleshooting.");
-                Log.Information(MessageFormat($"START", $"{DateTime.Now}"));
                 Log.Information(MessageFormat($"UUT Serial Number", $"{testExecutive.ConfigUUT.SerialNumber}"));
                 Log.Information(MessageFormat($"UUT Number", $"{testExecutive.ConfigUUT.Number}"));
                 Log.Information(MessageFormat($"UUT Revision", $"{testExecutive.ConfigUUT.Revision}"));
                 Log.Information(MessageFormat($"TestGroup ID", $"{testExecutive.ConfigTest.TestElementID}"));
-                Log.Information(MessageFormat($"Description", $"{testExecutive.ConfigTest.TestElementDescription}\n"));
+                Log.Information(MessageFormat($"Description", $"{testExecutive.ConfigTest.TestElementDescription}"));
+                Log.Information(MessageFormat($"START", $"{DateTime.Now}\n"));
                 return;
                 // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurement results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
@@ -97,7 +97,7 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         public static void LogTest(Boolean isOperation, Measurement measurement, ref RichTextBox rtfResults) {
             StringBuilder message = new StringBuilder();
-            message.AppendLine($"TestMeasurement ID '{measurement.ID}'");
+            message.AppendLine(MessageFormat("TestMeasurement ID", measurement.ID));
 #if VERBOSE
             message.AppendLine(MessageFormat("Revision", measurement.Revision));
             message.AppendLine(MessageFormat("Measurement Type", measurement.ClassName));
@@ -113,7 +113,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 case MeasurementNumeric.ClassName:
                     MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;
                     message.AppendLine(MessageFormat("High Limit", $"{mn.High:G}"));
-                    message.AppendLine(MessageFormat("Measurement", $"{Double.Parse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}"));
+                    message.AppendLine(MessageFormat("Measurerd", $"{Double.Parse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}"));
                     message.AppendLine(MessageFormat("Low Limit", $"{mn.Low:G}"));
                     String si_units = $"{Enum.GetName(typeof(SI_UNITS), mn.SI_Units)}";
                     if (mn.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) si_units += $" {Enum.GetName(typeof(SI_UNITS_MODIFIER), mn.SI_Units_Modifier)}";
