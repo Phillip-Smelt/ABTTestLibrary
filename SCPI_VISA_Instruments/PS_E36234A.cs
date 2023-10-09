@@ -7,7 +7,7 @@ using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 // https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
 //
-// Strenuously recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
+// Enthusiastically recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 // https://www.keysight.com/us/en/search.html/command+expert
 //
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {

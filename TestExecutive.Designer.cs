@@ -24,7 +24,6 @@ namespace ABT.TestSpace.TestExec {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestExecutive));
             this.ButtonStart = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.TextResult = new System.Windows.Forms.TextBox();
@@ -133,7 +132,8 @@ namespace ABT.TestSpace.TestExec {
             // ButtonEmergencyStop
             // 
             this.ButtonEmergencyStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonEmergencyStop.Image = ((System.Drawing.Image)(resources.GetObject("ButtonEmergencyStop.Image")));
+            this.ButtonEmergencyStop.Image = global::ABT.TestSpace.Properties.Resources.EmergencyStop;
+            this.ButtonEmergencyStop.ImageAlign = System.Drawing.ContentAlignment.BottomRight;
             this.ButtonEmergencyStop.Location = new System.Drawing.Point(942, 546);
             this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";
             this.ButtonEmergencyStop.Size = new System.Drawing.Size(82, 82);

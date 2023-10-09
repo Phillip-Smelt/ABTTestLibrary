@@ -155,6 +155,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Logging\LICENSE.txt" />
+    <None Include="Resources\EmergencyStop.png" />
     <Content Include="TestExecutive.config.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
