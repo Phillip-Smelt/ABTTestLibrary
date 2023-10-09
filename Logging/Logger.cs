@@ -113,7 +113,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 case MeasurementNumeric.ClassName:
                     MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;
                     message.AppendLine(MessageFormat("High Limit", $"{mn.High:G}"));
-                    message.AppendLine(MessageFormat("Measurerd", $"{Double.Parse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}"));
+                    message.AppendLine(MessageFormat("Measured", $"{Double.Parse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}"));
                     message.AppendLine(MessageFormat("Low Limit", $"{mn.Low:G}"));
                     String si_units = $"{Enum.GetName(typeof(SI_UNITS), mn.SI_Units)}";
                     if (mn.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) si_units += $" {Enum.GetName(typeof(SI_UNITS_MODIFIER), mn.SI_Units_Modifier)}";
