@@ -144,6 +144,7 @@ namespace ABT.TestSpace.TestExec {
             ButtonCancel.Enabled = false;
             ButtonCancel.UseVisualStyleBackColor = false;
             ButtonCancel.BackColor = Color.Red;
+            ButtonCancel.Refresh();
         }
 
         private void ButtonStartReset(Boolean enabled) {
@@ -155,6 +156,7 @@ namespace ABT.TestSpace.TestExec {
                 ButtonStart.UseVisualStyleBackColor = true;
             }
             ButtonStart.Enabled = enabled;
+            ButtonStart.Refresh();
         }
 
         private void ButtonCancelReset(Boolean enabled) {
@@ -165,13 +167,14 @@ namespace ABT.TestSpace.TestExec {
                 ButtonCancel.BackColor = SystemColors.Control;
                 ButtonCancel.UseVisualStyleBackColor = true;
             }
-            ButtonCancel.Text = "Cancel";
+            ButtonCancel.Text = "&Cancel";
             if (CancelTokenSource.IsCancellationRequested) {
                 CancelTokenSource.Dispose();
                 CancelTokenSource = new CancellationTokenSource();
             }
             _cancelled = false;
             ButtonCancel.Enabled = enabled;
+            ButtonCancel.Refresh();
         }
 
         private void FormModeWait() {
@@ -186,21 +189,28 @@ namespace ABT.TestSpace.TestExec {
                 ButtonSaveOutput.Enabled = false;
                 ButtonOpenTestDataFolder.Enabled = false;
             }
+            ButtonSaveOutput.Refresh();
+            ButtonOpenTestDataFolder.Refresh();
         }
 
         private void FormModeReset() { 
             TextResult.Text = String.Empty;
             TextResult.BackColor = Color.White;
+            TextResult.Refresh();
             rtfResults.Text = String.Empty;
+            rtfResults.Refresh();
         }
 
         private void FormModeRun() {
             ButtonCancelReset(enabled: true);
             ButtonEmergencyStop.Enabled = true; // Always enabled.
             ButtonSelectTests.Enabled = false;
+            ButtonSelectTests.Refresh();
             ButtonStartReset(enabled: false);
             ButtonSaveOutput.Enabled = false;
+            ButtonSaveOutput.Refresh();
             ButtonOpenTestDataFolder.Enabled = false;
+            ButtonOpenTestDataFolder.Refresh();
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
