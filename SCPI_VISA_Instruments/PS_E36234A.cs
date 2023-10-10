@@ -64,7 +64,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return (tripped[(Int32)Channel] == 1);
         }
         
-        public static Double Get(SCPI_VISA_Instrument SVI, PS_DC DC, CHANNEL Channel) {
+        public static Double Get(SCPI_VISA_Instrument SVI, PS_DC DC, CHANNEL Channel, SENSE_MODE KelvinSense) {
+            VoltageSenseModeSet(SVI, KelvinSense, Channel);
             switch(DC) {
                 case PS_DC.Amps:
                     ((AgE36200)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(Channels[Channel], out Double[] ampsDC);
@@ -112,10 +113,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense, CHANNEL Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), Channels[Channel]); }
 
-        public static void Set(SCPI_VISA_Instrument SVI, STATE State, Double VoltsDC, Double AmpsDC, Double VoltageProtectionAmplitude, CHANNEL Channel, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
-            VoltageSenseModeSet(SVI, KelvinSense, Channel);
-            Set(SVI, PS_DC.Amps, AmpsDC, Channel);
-            Set(SVI, PS_DC.Volts, VoltsDC, Channel);
+        public static void Set(SCPI_VISA_Instrument SVI, STATE State, Double VoltsDC, Double AmpsDC, Double VoltageProtectionAmplitude, CHANNEL Channel, SENSE_MODE KelvinSense, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
+            Set(SVI, PS_DC.Amps, AmpsDC, Channel, KelvinSense);
+            Set(SVI, PS_DC.Volts, VoltsDC, Channel, KelvinSense);
             
             CurrentProtectionDelaySet(SVI, DelaySecondsCurrentProtection, Channel);
             VoltageProtectionAmplitudeSet(SVI, VoltageProtectionAmplitude, Channel);
@@ -127,7 +127,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             Thread.Sleep(millisecondsTimeout: (Int32)(DelaySecondsSettling * 1000));
         }
 
-        public static void Set(SCPI_VISA_Instrument SVI, PS_DC DC, Double Amplitude, CHANNEL Channel) {
+        public static void Set(SCPI_VISA_Instrument SVI, PS_DC DC, Double Amplitude, CHANNEL Channel, SENSE_MODE KelvinSense) {
+            VoltageSenseModeSet(SVI, KelvinSense, Channel);
             switch (DC) {
                 case PS_DC.Amps:
                     CurrentProtectionStateSet(SVI, STATE.off, Channel);
