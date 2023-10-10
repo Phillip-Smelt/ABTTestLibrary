@@ -31,7 +31,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return (LOAD_MODE)Enum.Parse(typeof(LOAD_MODE), LoadMode); 
         }
 
-        public static Double Get(SCPI_VISA_Instrument SVI, LOAD_MEASURE LoadMeasure) {
+        public static Double Get(SCPI_VISA_Instrument SVI, LOAD_MEASURE LoadMeasure, SENSE_MODE KelvinSense) {
+            VoltageSenseModeSet(SVI, KelvinSense);
             switch(LoadMeasure) {
                 case LOAD_MEASURE.CURR:
                     ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(null, out Double[] ampsDC);
@@ -47,7 +48,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             }
         }
 
-        public static Double Get(SCPI_VISA_Instrument SVI, PS_DC DC, CHANNEL Channel) {
+        public static Double Get(SCPI_VISA_Instrument SVI, PS_DC DC, CHANNEL Channel, SENSE_MODE KelvinSense) {
+            VoltageSenseModeSet(SVI, KelvinSense);
             switch(DC) {
                 case PS_DC.Amps:
                     ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(Channels[Channel], out Double[] ampsDC);
@@ -94,14 +96,14 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void Set(SCPI_VISA_Instrument SVI, STATE State) { if (!Is(SVI, State)) ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is STATE.ON, null); }
 
-        public static void Set(SCPI_VISA_Instrument SVI, STATE State, Double LoadValue, LOAD_MODE LoadMode, SENSE_MODE KelvinSense = SENSE_MODE.INTernal) {
+        public static void Set(SCPI_VISA_Instrument SVI, STATE State, Double LoadValue, LOAD_MODE LoadMode, SENSE_MODE KelvinSense) {
             Set(SVI, LoadValue, LoadMode, KelvinSense);
             Set(SVI, State);
         }
 
-        public static void Set(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode, SENSE_MODE KelvinSense = SENSE_MODE.INTernal) {
+        public static void Set(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode, SENSE_MODE KelvinSense) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense));
-            // Despite being part of VOLTage sub-system, SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal"/"INTernal") enables/disables 4-wire Kelvin sensing for all Kelvin capable loads.
+            VoltageSenseModeSet(SVI, KelvinSense);
             Double min, max;
             Double[] min2, max2;
             String LoadType = Enum.GetName(typeof(LOAD_MODE), LoadMode);
@@ -132,6 +134,18 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 default:
                     throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
             }
+        }
+
+        public static SENSE_MODE VoltageSenseModeGet(SCPI_VISA_Instrument SVI) {
+            ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Query(null, out String SenseMode);
+            return (SENSE_MODE)Enum.Parse(typeof(SENSE_MODE), SenseMode); 
+        }        
+
+        public static Boolean VoltageSenseModeIs(SCPI_VISA_Instrument SVI, SENSE_MODE SenseMode) { return SenseMode == VoltageSenseModeGet(SVI); }
+
+        public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense) {
+            ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense));
+            // Despite being part of VOLTage sub-system, SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal"/"INTernal") enables/disables 4-wire Kelvin sensing for all Kelvin capable loads.
         }
     }
 }

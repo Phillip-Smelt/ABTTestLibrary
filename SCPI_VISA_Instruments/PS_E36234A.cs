@@ -111,8 +111,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.FALLing.IMMediate.Command(SlewRateFalling, Channels[Channel]);
         }
 
-        public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense, CHANNEL Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), Channels[Channel]); }
-
         public static void Set(SCPI_VISA_Instrument SVI, STATE State, Double VoltsDC, Double AmpsDC, Double VoltageProtectionAmplitude, CHANNEL Channel, SENSE_MODE KelvinSense, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
             Set(SVI, PS_DC.Amps, AmpsDC, Channel, KelvinSense);
             Set(SVI, PS_DC.Volts, VoltsDC, Channel, KelvinSense);
@@ -181,5 +179,16 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.TRIPped.Query(Channels[Channel], out Int32[] tripped);
             return (tripped[(Int32)Channel] == 1);
         }
+
+        public static SENSE_MODE VoltageSenseModeGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Query(Channels[Channel], out String[] SenseMode);
+            return (SENSE_MODE)Enum.Parse(typeof(SENSE_MODE), SenseMode[(Int32)Channel]); 
+        }
+
+        public static Boolean VoltageSenseModeIs(SCPI_VISA_Instrument SVI, SENSE_MODE SenseMode, CHANNEL Channel) { return SenseMode == VoltageSenseModeGet(SVI, Channel); }
+
+        public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense, CHANNEL Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), Channels[Channel]); }
+
+
     }
 }
