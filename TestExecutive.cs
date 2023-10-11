@@ -94,17 +94,13 @@ namespace ABT.TestSpace.TestExec {
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             CancelTokenSource.Cancel();
             _cancelled = true;
-            Debug.Assert(!ButtonCancel.InvokeRequired);
             ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
             ButtonCancel.Enabled = false;
             ButtonCancel.UseVisualStyleBackColor = false;
             ButtonCancel.BackColor = Color.Red;
-            ButtonCancel.Refresh();
-            this.Refresh();
         }
 
         private void ButtonCancelReset(Boolean enabled) {
-            Debug.Assert(!ButtonCancel.InvokeRequired);
             if (enabled) {
                 ButtonCancel.UseVisualStyleBackColor = false;
                 ButtonCancel.BackColor = Color.Yellow;
@@ -112,15 +108,12 @@ namespace ABT.TestSpace.TestExec {
                 ButtonCancel.BackColor = SystemColors.Control;
                 ButtonCancel.UseVisualStyleBackColor = true;
             }
-            ButtonCancel.Text = "&Cancel";
             if (CancelTokenSource.IsCancellationRequested) {
                 CancelTokenSource.Dispose();
                 CancelTokenSource = new CancellationTokenSource();
             }
             _cancelled = false;
             ButtonCancel.Enabled = enabled;
-            ButtonCancel.Refresh();
-            this.Refresh ();
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
@@ -148,7 +141,6 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
-            Debug.Assert(!InvokeRequired);
             ConfigTest = AppConfigTest.Get();
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
             FormModeReset();
@@ -172,7 +164,6 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonStartReset(Boolean enabled) {
-            Debug.Assert(!ButtonStart.InvokeRequired);
             if (enabled) {
                 ButtonStart.UseVisualStyleBackColor = false;
                 ButtonStart.BackColor = Color.Green;
@@ -181,8 +172,6 @@ namespace ABT.TestSpace.TestExec {
                 ButtonStart.UseVisualStyleBackColor = true;
             }
             ButtonStart.Enabled = enabled;
-            ButtonStart.Refresh();
-            this.Refresh ();
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
@@ -207,39 +196,21 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void FormModeReset() {
-            Debug.Assert(!TextResult.InvokeRequired);
-            Debug.Assert(!rtfResults.InvokeRequired);
             TextResult.Text = String.Empty;
             TextResult.BackColor = Color.White;
             rtfResults.Text = String.Empty;
-            TextResult.Refresh();
-            rtfResults.Refresh();
-            this.Refresh ();
         }
 
         private void FormModeRun() {
-            Debug.Assert(!ButtonSelectTests.InvokeRequired);
-            Debug.Assert(!ButtonSaveOutput.InvokeRequired);
-            Debug.Assert(!ButtonOpenTestDataFolder.InvokeRequired);
-            Debug.Assert(!ButtonEmergencyStop.InvokeRequired);
             ButtonCancelReset(enabled: true);
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
             ButtonSaveOutput.Enabled = false;
             ButtonOpenTestDataFolder.Enabled = false;
             ButtonEmergencyStop.Enabled = true; // Always enabled.
-            ButtonSelectTests.Refresh();
-            ButtonSaveOutput.Refresh();
-            ButtonOpenTestDataFolder.Refresh();
-            ButtonEmergencyStop.Refresh();
-            this.Refresh();
         }
 
         private void FormModeWait() {
-            Debug.Assert(!ButtonSelectTests.InvokeRequired);
-            Debug.Assert(!ButtonSaveOutput.InvokeRequired);
-            Debug.Assert(!ButtonOpenTestDataFolder.InvokeRequired);
-            Debug.Assert(!ButtonEmergencyStop.InvokeRequired);
             ButtonSelectTests.Enabled = true;
             ButtonStartReset(enabled: (ConfigTest != null));
             ButtonCancelReset(enabled: false);
@@ -251,11 +222,6 @@ namespace ABT.TestSpace.TestExec {
                 ButtonOpenTestDataFolder.Enabled = false;
             }
             ButtonEmergencyStop.Enabled = true; // Always enabled.
-            ButtonSelectTests.Refresh();
-            ButtonSaveOutput.Refresh();
-            ButtonOpenTestDataFolder.Refresh();
-            ButtonEmergencyStop.Refresh();
-            this.Refresh();
         }
 
         private void MeasurementsPreRun() {
@@ -305,7 +271,6 @@ namespace ABT.TestSpace.TestExec {
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
-            Debug.Assert(!TextResult.InvokeRequired);
             TestSystemReset();
             ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
             TextResult.Text = ConfigUUT.EventCode;
