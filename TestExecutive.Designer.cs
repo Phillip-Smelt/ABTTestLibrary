@@ -40,7 +40,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonStart.BackColor = System.Drawing.Color.Green;
             this.ButtonStart.Location = new System.Drawing.Point(203, 689);
-            this.ButtonStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonStart.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonStart.Name = "ButtonStart";
             this.ButtonStart.Size = new System.Drawing.Size(117, 64);
             this.ButtonStart.TabIndex = 1;
@@ -53,7 +53,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonCancel.BackColor = System.Drawing.Color.Yellow;
             this.ButtonCancel.Location = new System.Drawing.Point(375, 689);
-            this.ButtonCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonCancel.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(117, 64);
             this.ButtonCancel.TabIndex = 2;
@@ -65,7 +65,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.TextResult.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.TextResult.Location = new System.Drawing.Point(657, 714);
-            this.TextResult.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.TextResult.Margin = new System.Windows.Forms.Padding(4);
             this.TextResult.Name = "TextResult";
             this.TextResult.ReadOnly = true;
             this.TextResult.Size = new System.Drawing.Size(79, 22);
@@ -92,7 +92,7 @@ namespace ABT.TestSpace.TestExec {
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rtfResults.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtfResults.Location = new System.Drawing.Point(31, 26);
-            this.rtfResults.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rtfResults.Margin = new System.Windows.Forms.Padding(4);
             this.rtfResults.Name = "rtfResults";
             this.rtfResults.ReadOnly = true;
             this.rtfResults.Size = new System.Drawing.Size(1333, 640);
@@ -104,7 +104,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.ButtonSaveOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonSaveOutput.Location = new System.Drawing.Point(911, 694);
-            this.ButtonSaveOutput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonSaveOutput.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonSaveOutput.Name = "ButtonSaveOutput";
             this.ButtonSaveOutput.Size = new System.Drawing.Size(117, 58);
             this.ButtonSaveOutput.TabIndex = 4;
@@ -117,7 +117,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonSelectTests.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonSelectTests.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonSelectTests.Location = new System.Drawing.Point(31, 690);
-            this.ButtonSelectTests.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonSelectTests.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonSelectTests.Name = "ButtonSelectTests";
             this.ButtonSelectTests.Size = new System.Drawing.Size(117, 58);
             this.ButtonSelectTests.TabIndex = 0;
@@ -129,7 +129,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.ButtonOpenTestDataFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonOpenTestDataFolder.Location = new System.Drawing.Point(1084, 693);
-            this.ButtonOpenTestDataFolder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonOpenTestDataFolder.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonOpenTestDataFolder.Name = "ButtonOpenTestDataFolder";
             this.ButtonOpenTestDataFolder.Size = new System.Drawing.Size(117, 58);
             this.ButtonOpenTestDataFolder.TabIndex = 5;
@@ -141,11 +141,10 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.ButtonEmergencyStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonEmergencyStop.Image = global::ABT.TestSpace.Properties.Resources.EmergencyStop;
-            this.ButtonEmergencyStop.ImageAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.ButtonEmergencyStop.Location = new System.Drawing.Point(1256, 672);
-            this.ButtonEmergencyStop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonEmergencyStop.Location = new System.Drawing.Point(1256, 694);
+            this.ButtonEmergencyStop.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";
-            this.ButtonEmergencyStop.Size = new System.Drawing.Size(109, 101);
+            this.ButtonEmergencyStop.Size = new System.Drawing.Size(108, 84);
             this.ButtonEmergencyStop.TabIndex = 6;
             this.ButtonEmergencyStop.Text = "Emergency Stop";
             this.ButtonEmergencyStop.UseVisualStyleBackColor = true;
