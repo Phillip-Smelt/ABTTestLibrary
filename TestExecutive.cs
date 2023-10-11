@@ -27,6 +27,10 @@ using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 ///       TIDP.SAA actually appears to be compiled to .Net FrameWork 4.5, but that's still not necessarily compatible with .Net 7.0.
 ///  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
 /// TODO: Update to WinUI 3 or WPF instead of WinForms when possible.
+/// TODO: Debug TestExecutive control access keys; embedded '&' in control's Text properties for Alt-keying shortcuts.
+///       Had them for all controls, all worked with their Alt-keys, but didn't display as underlined characters except in Designer view.
+///       Removed until can resolve.
+/// https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-create-access-keys-for-windows-forms-controls?view=netframeworkdesktop-4.8.
 /// NOTE: Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
 /// With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 ///
