@@ -99,8 +99,8 @@ namespace ABT.TestSpace.TestExec {
             ButtonCancel.Enabled = false;
             ButtonCancel.UseVisualStyleBackColor = false;
             ButtonCancel.BackColor = Color.Red;
-            ButtonCancel.Invalidate(true);
-            ButtonCancel.Update();
+            ButtonCancel.Refresh();
+            this.Refresh();
         }
 
         private void ButtonCancelReset(Boolean enabled) {
@@ -119,8 +119,8 @@ namespace ABT.TestSpace.TestExec {
             }
             _cancelled = false;
             ButtonCancel.Enabled = enabled;
-            ButtonCancel.Invalidate(true);
-            ButtonCancel.Update();
+            ButtonCancel.Refresh();
+            this.Refresh ();
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
@@ -181,8 +181,8 @@ namespace ABT.TestSpace.TestExec {
                 ButtonStart.UseVisualStyleBackColor = true;
             }
             ButtonStart.Enabled = enabled;
-            ButtonStart.Invalidate(true);
-            ButtonStart.Update();
+            ButtonStart.Refresh();
+            this.Refresh ();
         }
 
         private void Form_Shown(Object sender, EventArgs e) {
@@ -211,40 +211,37 @@ namespace ABT.TestSpace.TestExec {
             Debug.Assert(!rtfResults.InvokeRequired);
             TextResult.Text = String.Empty;
             TextResult.BackColor = Color.White;
-            TextResult.Invalidate(true);
-            TextResult.Update();
             rtfResults.Text = String.Empty;
-            rtfResults.Invalidate(true);
-            rtfResults.Update();
+            TextResult.Refresh();
+            rtfResults.Refresh();
+            this.Refresh ();
         }
 
         private void FormModeRun() {
-            Debug.Assert(!ButtonEmergencyStop.InvokeRequired);
             Debug.Assert(!ButtonSelectTests.InvokeRequired);
             Debug.Assert(!ButtonSaveOutput.InvokeRequired);
             Debug.Assert(!ButtonOpenTestDataFolder.InvokeRequired);
+            Debug.Assert(!ButtonEmergencyStop.InvokeRequired);
             ButtonCancelReset(enabled: true);
-            ButtonEmergencyStop.Enabled = true; // Always enabled.
             ButtonSelectTests.Enabled = false;
-            ButtonSelectTests.Invalidate(true);
-            ButtonSelectTests.Update();
             ButtonStartReset(enabled: false);
             ButtonSaveOutput.Enabled = false;
-            ButtonSaveOutput.Invalidate(true);
-            ButtonSaveOutput.Update();
-            ButtonOpenTestDataFolder.Invalidate(true);
             ButtonOpenTestDataFolder.Enabled = false;
-            ButtonOpenTestDataFolder.Update();
+            ButtonEmergencyStop.Enabled = true; // Always enabled.
+            ButtonSelectTests.Refresh();
+            ButtonSaveOutput.Refresh();
+            ButtonOpenTestDataFolder.Refresh();
+            ButtonEmergencyStop.Refresh();
+            this.Refresh();
         }
 
         private void FormModeWait() {
-            Debug.Assert(!ButtonEmergencyStop.InvokeRequired);
             Debug.Assert(!ButtonSelectTests.InvokeRequired);
             Debug.Assert(!ButtonSaveOutput.InvokeRequired);
             Debug.Assert(!ButtonOpenTestDataFolder.InvokeRequired);
+            Debug.Assert(!ButtonEmergencyStop.InvokeRequired);
             ButtonSelectTests.Enabled = true;
             ButtonStartReset(enabled: (ConfigTest != null));
-            ButtonEmergencyStop.Enabled = true; // Always enabled.
             ButtonCancelReset(enabled: false);
             if (ConfigTest != null) {
                 ButtonSaveOutput.Enabled = !ConfigTest.IsOperation;
@@ -253,10 +250,12 @@ namespace ABT.TestSpace.TestExec {
                 ButtonSaveOutput.Enabled = false;
                 ButtonOpenTestDataFolder.Enabled = false;
             }
-            ButtonSaveOutput.Invalidate(true);
-            ButtonSaveOutput.Update();
-            ButtonOpenTestDataFolder.Invalidate(true);
-            ButtonOpenTestDataFolder.Update();
+            ButtonEmergencyStop.Enabled = true; // Always enabled.
+            ButtonSelectTests.Refresh();
+            ButtonSaveOutput.Refresh();
+            ButtonOpenTestDataFolder.Refresh();
+            ButtonEmergencyStop.Refresh();
+            this.Refresh();
         }
 
         private void MeasurementsPreRun() {
