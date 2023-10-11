@@ -348,6 +348,10 @@ namespace ABT.TestSpace.TestExec {
             SCPI99.ResetAll(SVIs);
             UE24.Set(RelayForms.C.S.NC);
         }
+
+        private void TestExecutive_Load(Object sender, EventArgs e) {
+
+        }
     }
 
     public class CancellationException : Exception {

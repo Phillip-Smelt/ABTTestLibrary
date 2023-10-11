@@ -21,116 +21,117 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         #region
         private void InitializeComponent() {
-            LabelSelections = new System.Windows.Forms.Label();
-            OK = new System.Windows.Forms.Button();
-            ListSelections = new System.Windows.Forms.ListView();
-            radioButtonTestOperations = new System.Windows.Forms.RadioButton();
-            radioButtonTestGroups = new System.Windows.Forms.RadioButton();
-            selectionType = new System.Windows.Forms.GroupBox();
-            selectionType.SuspendLayout();
-            SuspendLayout();
+            this.LabelSelections = new System.Windows.Forms.Label();
+            this.OK = new System.Windows.Forms.Button();
+            this.ListSelections = new System.Windows.Forms.ListView();
+            this.radioButtonTestOperations = new System.Windows.Forms.RadioButton();
+            this.radioButtonTestGroups = new System.Windows.Forms.RadioButton();
+            this.selectionType = new System.Windows.Forms.GroupBox();
+            this.selectionType.SuspendLayout();
+            this.SuspendLayout();
             // 
             // LabelSelections
             // 
-            LabelSelections.AutoSize = true;
-            LabelSelections.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            LabelSelections.Location = new System.Drawing.Point(16, 7);
-            LabelSelections.Name = "LabelSelections";
-            LabelSelections.Size = new System.Drawing.Size(70, 16);
-            LabelSelections.TabIndex = 0;
-            LabelSelections.Text = "Selections";
-            LabelSelections.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.LabelSelections.AutoSize = true;
+            this.LabelSelections.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.LabelSelections.Location = new System.Drawing.Point(12, 6);
+            this.LabelSelections.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.LabelSelections.Name = "LabelSelections";
+            this.LabelSelections.Size = new System.Drawing.Size(56, 13);
+            this.LabelSelections.TabIndex = 0;
+            this.LabelSelections.Text = "Selections";
+            this.LabelSelections.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // OK
             // 
-            OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            OK.Enabled = false;
-            OK.Location = new System.Drawing.Point(413, 366);
-            OK.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            OK.Name = "OK";
-            OK.Size = new System.Drawing.Size(77, 44);
-            OK.TabIndex = 4;
-            OK.Text = "OK";
-            OK.UseVisualStyleBackColor = true;
-            OK.Click += new System.EventHandler(OK_Click);
+            this.OK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.OK.Enabled = false;
+            this.OK.Location = new System.Drawing.Point(310, 297);
+            this.OK.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.OK.Name = "OK";
+            this.OK.Size = new System.Drawing.Size(58, 36);
+            this.OK.TabIndex = 4;
+            this.OK.Text = "OK";
+            this.OK.UseVisualStyleBackColor = true;
+            this.OK.Click += new System.EventHandler(this.OK_Click);
             // 
             // ListSelections
             // 
-            ListSelections.FullRowSelect = true;
-            ListSelections.GridLines = true;
-            ListSelections.HideSelection = false;
-            ListSelections.LabelWrap = false;
-            ListSelections.Location = new System.Drawing.Point(13, 27);
-            ListSelections.Margin = new System.Windows.Forms.Padding(4);
-            ListSelections.MultiSelect = false;
-            ListSelections.Name = "ListSelections";
-            ListSelections.ShowGroups = false;
-            ListSelections.Size = new System.Drawing.Size(887, 312);
-            ListSelections.TabIndex = 0;
-            ListSelections.UseCompatibleStateImageBehavior = false;
-            ListSelections.View = System.Windows.Forms.View.Details;
-            ListSelections.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(List_SelectionChanged);
+            this.ListSelections.FullRowSelect = true;
+            this.ListSelections.GridLines = true;
+            this.ListSelections.HideSelection = false;
+            this.ListSelections.LabelWrap = false;
+            this.ListSelections.Location = new System.Drawing.Point(10, 22);
+            this.ListSelections.MultiSelect = false;
+            this.ListSelections.Name = "ListSelections";
+            this.ListSelections.ShowGroups = false;
+            this.ListSelections.Size = new System.Drawing.Size(666, 254);
+            this.ListSelections.TabIndex = 0;
+            this.ListSelections.UseCompatibleStateImageBehavior = false;
+            this.ListSelections.View = System.Windows.Forms.View.Details;
+            this.ListSelections.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.List_SelectionChanged);
             // 
             // radioButtonTestOperations
             // 
-            radioButtonTestOperations.AutoSize = true;
-            radioButtonTestOperations.Location = new System.Drawing.Point(7, 18);
-            radioButtonTestOperations.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            radioButtonTestOperations.Name = "radioButtonTestOperations";
-            radioButtonTestOperations.Size = new System.Drawing.Size(327, 20);
-            radioButtonTestOperations.TabIndex = 2;
-            radioButtonTestOperations.TabStop = true;
-            radioButtonTestOperations.Text = "FilePro Traveler Operations for Production Testing";
-            radioButtonTestOperations.UseVisualStyleBackColor = true;
-            radioButtonTestOperations.CheckedChanged += new System.EventHandler(GroupBoxSelect_CheckedChanged);
+            this.radioButtonTestOperations.AutoSize = true;
+            this.radioButtonTestOperations.Location = new System.Drawing.Point(5, 15);
+            this.radioButtonTestOperations.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButtonTestOperations.Name = "radioButtonTestOperations";
+            this.radioButtonTestOperations.Size = new System.Drawing.Size(260, 17);
+            this.radioButtonTestOperations.TabIndex = 2;
+            this.radioButtonTestOperations.TabStop = true;
+            this.radioButtonTestOperations.Text = "FilePro Traveler Operations for Production Testing";
+            this.radioButtonTestOperations.UseVisualStyleBackColor = true;
+            this.radioButtonTestOperations.CheckedChanged += new System.EventHandler(this.GroupBoxSelect_CheckedChanged);
             // 
             // radioButtonTestGroups
             // 
-            radioButtonTestGroups.AutoSize = true;
-            radioButtonTestGroups.Location = new System.Drawing.Point(5, 44);
-            radioButtonTestGroups.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            radioButtonTestGroups.Name = "radioButtonTestGroups";
-            radioButtonTestGroups.Size = new System.Drawing.Size(225, 20);
-            radioButtonTestGroups.TabIndex = 3;
-            radioButtonTestGroups.TabStop = true;
-            radioButtonTestGroups.Text = "Test Groups for Trouble-shooting";
-            radioButtonTestGroups.UseVisualStyleBackColor = true;
-            radioButtonTestGroups.CheckedChanged += new System.EventHandler(GroupBoxSelect_CheckedChanged);
+            this.radioButtonTestGroups.AutoSize = true;
+            this.radioButtonTestGroups.Location = new System.Drawing.Point(4, 36);
+            this.radioButtonTestGroups.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButtonTestGroups.Name = "radioButtonTestGroups";
+            this.radioButtonTestGroups.Size = new System.Drawing.Size(180, 17);
+            this.radioButtonTestGroups.TabIndex = 3;
+            this.radioButtonTestGroups.TabStop = true;
+            this.radioButtonTestGroups.Text = "Test Groups for Trouble-shooting";
+            this.radioButtonTestGroups.UseVisualStyleBackColor = true;
+            this.radioButtonTestGroups.CheckedChanged += new System.EventHandler(this.GroupBoxSelect_CheckedChanged);
             // 
             // selectionType
             // 
-            selectionType.Controls.Add(radioButtonTestGroups);
-            selectionType.Controls.Add(radioButtonTestOperations);
-            selectionType.Location = new System.Drawing.Point(12, 346);
-            selectionType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            selectionType.Name = "selectionType";
-            selectionType.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            selectionType.Size = new System.Drawing.Size(355, 70);
-            selectionType.TabIndex = 1;
-            selectionType.TabStop = false;
+            this.selectionType.Controls.Add(this.radioButtonTestGroups);
+            this.selectionType.Controls.Add(this.radioButtonTestOperations);
+            this.selectionType.Location = new System.Drawing.Point(9, 281);
+            this.selectionType.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.selectionType.Name = "selectionType";
+            this.selectionType.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.selectionType.Size = new System.Drawing.Size(266, 57);
+            this.selectionType.TabIndex = 1;
+            this.selectionType.TabStop = false;
             // 
             // SelectTests
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(912, 466);
-            ControlBox = false;
-            Controls.Add(selectionType);
-            Controls.Add(ListSelections);
-            Controls.Add(OK);
-            Controls.Add(LabelSelections);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "SelectTests";
-            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            Text = "Select Tests";
-            Load += new System.EventHandler(SelectTests_Load);
-            selectionType.ResumeLayout(false);
-            selectionType.PerformLayout();
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(684, 379);
+            this.ControlBox = false;
+            this.Controls.Add(this.selectionType);
+            this.Controls.Add(this.ListSelections);
+            this.Controls.Add(this.OK);
+            this.Controls.Add(this.LabelSelections);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "SelectTests";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Select Tests";
+            this.TopMost = true;
+            this.Load += new System.EventHandler(this.SelectTests_Load);
+            this.selectionType.ResumeLayout(false);
+            this.selectionType.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
         #endregion
