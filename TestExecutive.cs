@@ -28,12 +28,11 @@ using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 ///  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
 /// TODO: Update to WinUI 3 or WPF instead of WinForms when possible.
 /// NOTE: Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
-/// NOTE: With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
+/// With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 ///
 ///  References:
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
-///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutiveTests
 ///  </para>
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
@@ -53,54 +52,9 @@ namespace ABT.TestSpace.TestExec {
             _libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            UE24.Set(RelayForms.C.S.NO); // Relays should be energized/de-energized/re-enegized occasionally as preventative maintenance.
-            UE24.Set(RelayForms.C.S.NC); // Besides, having 48 relays go "clack-clack" simultaneously sounds awesome...
+            UE24.Set(RelayForms.C.S.NO); // Relays should be energized/de-energized/re-energized occasionally as preventative maintenance.
+            UE24.Set(RelayForms.C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
         }
-
-        private void Form_Shown(Object sender, EventArgs e) {
-            FormModeReset();
-            FormModeWait();
-            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}";
-#if !DEBUG
-            if (!String.Equals(String.Empty, ConfigUUT.DocumentationFolder)) {
-                if (Directory.Exists(ConfigUUT.DocumentationFolder)) {
-                    ProcessStartInfo psi = new ProcessStartInfo {
-                        FileName = "explorer.exe",
-                        WindowStyle = ProcessWindowStyle.Minimized,
-                        Arguments = $"\"{ConfigUUT.DocumentationFolder}\""
-                    };
-                    Process.Start(psi);
-                    // Paths with embedded spaces require enclosing double-quotes (").
-                    // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
-                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-                } else MessageBox.Show(Form.ActiveForm, $"Path {ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-#endif
-        }
-
-        private void ButtonSelectTests_Click(Object sender, EventArgs e) {
-            ConfigTest = AppConfigTest.Get();
-            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
-            FormModeReset();
-            FormModeWait();
-        }
-
-        private async void ButtonStart_Clicked(Object sender, EventArgs e) {
-            String serialNumber;
-            if (_LOGGER_SerialNumberDialogEnabled) {
-                SerialNumberDialog snd = new SerialNumberDialog(ConfigUUT.SerialNumber);
-                serialNumber = snd.ShowDialog().Equals(DialogResult.OK) ? snd.Get() : String.Empty;
-            } else serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: ConfigUUT.SerialNumber);
-            if (String.Equals(serialNumber, String.Empty)) return;
-            ConfigUUT.SerialNumber = serialNumber;
-            FormModeReset();
-            FormModeRun();
-            MeasurementsPreRun();
-            await MeasurementsRun();
-            MeasurementsPostRun();
-            FormModeWait();
-        }
-
         /// <summary>
         /// NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
         /// <para>
@@ -140,6 +94,7 @@ namespace ABT.TestSpace.TestExec {
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             CancelTokenSource.Cancel();
             _cancelled = true;
+            Debug.Assert(!ButtonCancel.InvokeRequired);
             ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
             ButtonCancel.Enabled = false;
             ButtonCancel.UseVisualStyleBackColor = false;
@@ -148,20 +103,8 @@ namespace ABT.TestSpace.TestExec {
             ButtonCancel.Update();
         }
 
-        private void ButtonStartReset(Boolean enabled) {
-            if (enabled) {
-                ButtonStart.UseVisualStyleBackColor = false;
-                ButtonStart.BackColor = Color.Green;
-            } else {
-                ButtonStart.BackColor = SystemColors.Control;
-                ButtonStart.UseVisualStyleBackColor = true;
-            }
-            ButtonStart.Enabled = enabled;
-            ButtonStart.Invalidate(true);
-            ButtonStart.Update();
-        }
-
         private void ButtonCancelReset(Boolean enabled) {
+            Debug.Assert(!ButtonCancel.InvokeRequired);
             if (enabled) {
                 ButtonCancel.UseVisualStyleBackColor = false;
                 ButtonCancel.BackColor = Color.Yellow;
@@ -180,53 +123,15 @@ namespace ABT.TestSpace.TestExec {
             ButtonCancel.Update();
         }
 
-        private void FormModeWait() {
-            ButtonSelectTests.Enabled = true;
-            ButtonStartReset(enabled: (ConfigTest != null));
-            ButtonEmergencyStop.Enabled = true; // Always enabled.
-            ButtonCancelReset(enabled: false);
-            if (ConfigTest != null) {
-                ButtonSaveOutput.Enabled = !ConfigTest.IsOperation;
-                ButtonOpenTestDataFolder.Enabled = (ConfigTest.IsOperation && ConfigLogger.FileEnabled);
-            } else {
-                ButtonSaveOutput.Enabled = false;
-                ButtonOpenTestDataFolder.Enabled = false;
-            }
-            ButtonSaveOutput.Invalidate(true);
-            ButtonSaveOutput.Update();
-            ButtonOpenTestDataFolder.Invalidate(true);
-            ButtonOpenTestDataFolder.Update();
-        }
-
-        private void FormModeReset() { 
-            TextResult.Text = String.Empty;
-            TextResult.BackColor = Color.White;
-            TextResult.Invalidate(true);
-            TextResult.Update();
-            rtfResults.Text = String.Empty;
-            rtfResults.Invalidate(true);
-            rtfResults.Update();
-        }
-
-        private void FormModeRun() {
-            ButtonCancelReset(enabled: true);
-            ButtonEmergencyStop.Enabled = true; // Always enabled.
-            ButtonSelectTests.Enabled = false;
-            ButtonSelectTests.Invalidate(true);
-            ButtonSelectTests.Update();
-            ButtonStartReset(enabled: false);
-            ButtonSaveOutput.Enabled = false;
-            ButtonSaveOutput.Invalidate(true);
-            ButtonSaveOutput.Update();
-            ButtonOpenTestDataFolder.Invalidate(true);
-            ButtonOpenTestDataFolder.Enabled = false;
-            ButtonOpenTestDataFolder.Update();
-        }
-
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             TestSystemReset();
             if (ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
+
+        private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
+            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{Logger.GetFilePath(this)}\"" };
+            Process.Start(psi);
+        }
 
         private void ButtonSaveOutput_Click(Object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog {
@@ -242,9 +147,116 @@ namespace ABT.TestSpace.TestExec {
             if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName);
         }
 
-        private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
-            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{Logger.GetFilePath(this)}\"" };
-            Process.Start(psi);
+        private void ButtonSelectTests_Click(Object sender, EventArgs e) {
+            Debug.Assert(!InvokeRequired);
+            ConfigTest = AppConfigTest.Get();
+            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
+            FormModeReset();
+            FormModeWait();
+        }
+
+        private async void ButtonStart_Clicked(Object sender, EventArgs e) {
+            String serialNumber;
+            if (_LOGGER_SerialNumberDialogEnabled) {
+                SerialNumberDialog snd = new SerialNumberDialog(ConfigUUT.SerialNumber);
+                serialNumber = snd.ShowDialog().Equals(DialogResult.OK) ? snd.Get() : String.Empty;
+            } else serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: ConfigUUT.SerialNumber);
+            if (String.Equals(serialNumber, String.Empty)) return;
+            ConfigUUT.SerialNumber = serialNumber;
+            FormModeReset();
+            FormModeRun();
+            MeasurementsPreRun();
+            await MeasurementsRun();
+            MeasurementsPostRun();
+            FormModeWait();
+        }
+
+        private void ButtonStartReset(Boolean enabled) {
+            Debug.Assert(!ButtonStart.InvokeRequired);
+            if (enabled) {
+                ButtonStart.UseVisualStyleBackColor = false;
+                ButtonStart.BackColor = Color.Green;
+            } else {
+                ButtonStart.BackColor = SystemColors.Control;
+                ButtonStart.UseVisualStyleBackColor = true;
+            }
+            ButtonStart.Enabled = enabled;
+            ButtonStart.Invalidate(true);
+            ButtonStart.Update();
+        }
+
+        private void Form_Shown(Object sender, EventArgs e) {
+            FormModeReset();
+            FormModeWait();
+            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}";
+#if !DEBUG
+            if (!String.Equals(String.Empty, ConfigUUT.DocumentationFolder)) {
+                if (Directory.Exists(ConfigUUT.DocumentationFolder)) {
+                    ProcessStartInfo psi = new ProcessStartInfo {
+                        FileName = "explorer.exe",
+                        WindowStyle = ProcessWindowStyle.Minimized,
+                        Arguments = $"\"{ConfigUUT.DocumentationFolder}\""
+                    };
+                    Process.Start(psi);
+                    // Paths with embedded spaces require enclosing double-quotes (").
+                    // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
+                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
+                } else MessageBox.Show(Form.ActiveForm, $"Path {ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+#endif
+        }
+
+        private void FormModeReset() {
+            Debug.Assert(!TextResult.InvokeRequired);
+            Debug.Assert(!rtfResults.InvokeRequired);
+            TextResult.Text = String.Empty;
+            TextResult.BackColor = Color.White;
+            TextResult.Invalidate(true);
+            TextResult.Update();
+            rtfResults.Text = String.Empty;
+            rtfResults.Invalidate(true);
+            rtfResults.Update();
+        }
+
+        private void FormModeRun() {
+            Debug.Assert(!ButtonEmergencyStop.InvokeRequired);
+            Debug.Assert(!ButtonSelectTests.InvokeRequired);
+            Debug.Assert(!ButtonSaveOutput.InvokeRequired);
+            Debug.Assert(!ButtonOpenTestDataFolder.InvokeRequired);
+            ButtonCancelReset(enabled: true);
+            ButtonEmergencyStop.Enabled = true; // Always enabled.
+            ButtonSelectTests.Enabled = false;
+            ButtonSelectTests.Invalidate(true);
+            ButtonSelectTests.Update();
+            ButtonStartReset(enabled: false);
+            ButtonSaveOutput.Enabled = false;
+            ButtonSaveOutput.Invalidate(true);
+            ButtonSaveOutput.Update();
+            ButtonOpenTestDataFolder.Invalidate(true);
+            ButtonOpenTestDataFolder.Enabled = false;
+            ButtonOpenTestDataFolder.Update();
+        }
+
+        private void FormModeWait() {
+            Debug.Assert(!ButtonEmergencyStop.InvokeRequired);
+            Debug.Assert(!ButtonSelectTests.InvokeRequired);
+            Debug.Assert(!ButtonSaveOutput.InvokeRequired);
+            Debug.Assert(!ButtonOpenTestDataFolder.InvokeRequired);
+            ButtonSelectTests.Enabled = true;
+            ButtonStartReset(enabled: (ConfigTest != null));
+            ButtonEmergencyStop.Enabled = true; // Always enabled.
+            ButtonCancelReset(enabled: false);
+            if (ConfigTest != null) {
+                ButtonSaveOutput.Enabled = !ConfigTest.IsOperation;
+                ButtonOpenTestDataFolder.Enabled = (ConfigTest.IsOperation && ConfigLogger.FileEnabled);
+            } else {
+                ButtonSaveOutput.Enabled = false;
+                ButtonOpenTestDataFolder.Enabled = false;
+            }
+            ButtonSaveOutput.Invalidate(true);
+            ButtonSaveOutput.Update();
+            ButtonOpenTestDataFolder.Invalidate(true);
+            ButtonOpenTestDataFolder.Update();
         }
 
         private void MeasurementsPreRun() {
@@ -294,6 +306,7 @@ namespace ABT.TestSpace.TestExec {
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
+            Debug.Assert(!TextResult.InvokeRequired);
             TestSystemReset();
             ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
             TextResult.Text = ConfigUUT.EventCode;
