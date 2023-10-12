@@ -63,6 +63,16 @@ namespace ABT.TestSpace.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BMC5486_s_PICKit4_Connector_Polarity {
+            get {
+                object obj = ResourceManager.GetObject("BMC5486_s_PICKit4_Connector_Polarity", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap EmergencyStop {
             get {
                 object obj = ResourceManager.GetObject("EmergencyStop", resourceCulture);

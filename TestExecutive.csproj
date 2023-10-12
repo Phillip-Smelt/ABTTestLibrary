@@ -153,9 +153,12 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Logging\Honeywell Voyager 1200G User%27s Guide.pdf" />
+    <None Include="Logging\ReadMe from Honeywell Voyager 1200G User%27s Guide for use with TestExecutive.pdf" />
     <None Include="packages.config" />
     <None Include="Logging\LICENSE.txt" />
     <None Include="Resources\EmergencyStop.png" />
+    <Content Include="Resources\BMC5486%27s PICKit4 Connector Polarity.jpg" />
     <Content Include="TestExecutive.config.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -19,14 +19,23 @@ using Windows.Security.Cryptography;
 
 namespace ABT.TestSpace.TestExec.Logging {
     public partial class SerialNumberDialog : Form {
-        // NOTE: Class SerialNumberDialog tested with Honeywell Voyager 1200G USB Barcode Scanner:
-        //  - Works fine in Windows 11 Professional, Version 22H2, OS Build 22621.2361, Windows Feature Experience Pack 1000.22674.1000.0.
-        //  - Won't work in Windows 10 Enterprise,   Version 22H2, OS Build 19045.3516, Windows Feature Experience Pack 1000.19052.1000.0.
+        // TODO: Convert to Singleton, like USB_TO_GPIO.  Also debug on Windows 10
+        // NOTE: SerialNumberDialog derived from https://learn.microsoft.com/en-us/samples/microsoft/windows-universal-samples/barcodescanner/.  Thanks Bill!
+        // NOTE: SerialNumberDialog tested with Honeywell Voyager 1200G USB Barcode Scanner:
+        //  - Works fine in:   Windows 11 Professional,    Version 22H2, OS Build 22621.2361, Windows Feature Experience Pack 1000.22674.1000.0.
+        //  - Doesn't work in: Windows 10 Enterprise,      Version 22H2, OS Build 19045.3570, Windows Feature Experience Pack 1000.19052.1000.0.
+        //  - Doesn't work in: Windows 10 Enterprise LTSC, Version 1809, OS Build 17763.4974, no Windows Feature Experience Pack listed.
         //      - ClaimedBarcodeScanner Events don't fire in Windows 10 Enterprise, suspect same issue as
         //      - https://learn.microsoft.com/en-us/answers/questions/820762/c-claimedbarcodescanner-events-not-firing-in-windo?orderBy=Newest.
         // NOTE: Honeywell Voyager 1200G USB Barcode Scanner is a Microsoft supported Point of Service peripheral.
         //  - https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support
-
+        // NOTE: Honeywell Voyager 1200G Scanner must be programmed into USB HID mode to work correctly with TestExecutive to read ABT Serial #s.
+        //       - Scan PAP131 label from "ReadMe from Honeywell Voyager 1200G User's Guide for use with TestExecutive.pdf" to program 1200 into USB HID mode.
+        //       - Both "ReadMe" & "User's Guide reside in this folder for convenience.
+        // NOTE: Voyager 1200G won't scan ABT Serial #s into Notepad/Wordpad/Text Editor of Choice when in USB HID mode:
+        //       - It will only deliver scanned data to a USB HID application like TestExecutive's SerialNumberDialog class.
+        //       - You must either scan the Voyager 1200G's  DEFALT or PAP124 barcodes to restore "normal" scanning.
+        // NOTE: The 1200G must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
         private BarcodeScanner _scanner = null;
         private ClaimedBarcodeScanner _claimedScanner = null;
 
@@ -46,8 +55,6 @@ namespace ABT.TestSpace.TestExec.Logging {
             _claimedScanner.ReleaseDeviceRequested += ClaimedScanner_ReleaseDeviceRequested;
             _claimedScanner.DataReceived += ClaimedScanner_DataReceived;
             _claimedScanner.ErrorOccurred += ClaimedScanner_ErrorOccurred;
-            _claimedScanner.TriggerPressed += ClaimedScanner_TriggerPressed;
-            _claimedScanner.TriggerReleased += ClaimedScanner_TriggerReleased;
             _claimedScanner.IsDecodeDataEnabled = true; // Decode raw data from scanner and sends the ScanDataLabel and ScanDataType in the DataReceived event.
             await _claimedScanner.EnableAsync(); // Scanner must be enabled in order to receive the DataReceived event.
         }
@@ -58,18 +65,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             _ = MessageBox.Show("ErrorOccurred!", "ErrorOccurred!", MessageBoxButtons.OK);
         }
 
-        private void ClaimedScanner_TriggerPressed(Object sender, ClaimedBarcodeScanner e) {
-            _ = MessageBox.Show("TriggerPressed!", "TriggerPressed!", MessageBoxButtons.OK);
-        }
-
-        private void ClaimedScanner_TriggerReleased(Object sender, ClaimedBarcodeScanner e) {
-            _ = MessageBox.Show("TriggerReleased !", "TriggerReleased !", MessageBoxButtons.OK);
-        }
-
-        private void ClaimedScanner_DataReceived(ClaimedBarcodeScanner sender, BarcodeScannerDataReceivedEventArgs args) {
-            _ = MessageBox.Show("DataReceived!", "DataReceived!", MessageBoxButtons.OK);
-            Invoke(new DataReceived(DelegateMethod), args);
-        }
+        private void ClaimedScanner_DataReceived(ClaimedBarcodeScanner sender, BarcodeScannerDataReceivedEventArgs args) { Invoke(new DataReceived(DelegateMethod), args); }
 
         private delegate void DataReceived(BarcodeScannerDataReceivedEventArgs args);
 
