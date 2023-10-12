@@ -19,7 +19,7 @@ using Windows.Security.Cryptography;
 
 namespace ABT.TestSpace.TestExec.Logging {
     public partial class SerialNumberDialog : Form {
-        // TODO: Convert to Singleton, like USB_TO_GPIO.  Also debug on Windows 10
+        // TODO: Convert to Singleton, like USB_TO_GPIO.  Also, debug on Windows 10.
         // NOTE: SerialNumberDialog derived from https://learn.microsoft.com/en-us/samples/microsoft/windows-universal-samples/barcodescanner/.  Thanks Bill!
         // NOTE: SerialNumberDialog tested with Honeywell Voyager 1200G USB Barcode Scanner:
         //  - Works fine in:   Windows 11 Professional,    Version 22H2, OS Build 22621.2361, Windows Feature Experience Pack 1000.22674.1000.0.
@@ -30,7 +30,7 @@ namespace ABT.TestSpace.TestExec.Logging {
         // NOTE: Honeywell Voyager 1200G USB Barcode Scanner is a Microsoft supported Point of Service peripheral.
         //  - https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support
         // NOTE: Honeywell Voyager 1200G Scanner must be programmed into USB HID mode to work correctly with TestExecutive to read ABT Serial #s.
-        //       - Scan PAP131 label from "ReadMe from Honeywell Voyager 1200G User's Guide for use with TestExecutive.pdf" to program 1200 into USB HID mode.
+        //       - Scan PAP131 label from "Honeywell Voyager 1200G User's Guide ReadMe.pdf" to program 1200 into USB HID mode.
         //       - Both "ReadMe" & "User's Guide reside in this folder for convenience.
         // NOTE: Voyager 1200G won't scan ABT Serial #s into Notepad/Wordpad/Text Editor of Choice when in USB HID mode:
         //       - It will only deliver scanned data to a USB HID application like TestExecutive's SerialNumberDialog class.

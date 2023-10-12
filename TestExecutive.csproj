@@ -153,8 +153,8 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Logging\Honeywell Voyager 1200G User%27s Guide ReadMe.pdf" />
     <None Include="Logging\Honeywell Voyager 1200G User%27s Guide.pdf" />
-    <None Include="Logging\ReadMe from Honeywell Voyager 1200G User%27s Guide for use with TestExecutive.pdf" />
     <None Include="packages.config" />
     <None Include="Logging\LICENSE.txt" />
     <None Include="Resources\EmergencyStop.png" />
