@@ -47,7 +47,6 @@ namespace ABT.TestSpace.TestExec {
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
         internal readonly String _appAssemblyVersion;
         internal readonly String _libraryAssemblyVersion;
-        private readonly Boolean _LOGGER_SerialNumberDialogEnabled = Boolean.Parse(ConfigurationManager.AppSettings["LOGGER_SerialNumberDialogEnabled"]);
         private Boolean _cancelled = false;
 
         protected TestExecutive(Icon icon) {
@@ -153,7 +152,7 @@ namespace ABT.TestSpace.TestExec {
 
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
             String serialNumber;
-            if (_LOGGER_SerialNumberDialogEnabled) {
+            if (ConfigLogger.SerialNumberDialogEnabled) {
                 SerialNumberDialog.Only.Set(ConfigUUT.SerialNumber);
                 serialNumber = SerialNumberDialog.Only.ShowDialog(this).Equals(DialogResult.OK) ? SerialNumberDialog.Only.Get() : String.Empty;
                 SerialNumberDialog.Only.Hide();
