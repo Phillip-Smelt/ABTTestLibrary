@@ -154,8 +154,9 @@ namespace ABT.TestSpace.TestExec {
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
             String serialNumber;
             if (_LOGGER_SerialNumberDialogEnabled) {
-                SerialNumberDialog snd = new SerialNumberDialog(ConfigUUT.SerialNumber);
-                serialNumber = snd.ShowDialog().Equals(DialogResult.OK) ? snd.Get() : String.Empty;
+                SerialNumberDialog.Only.Set(ConfigUUT.SerialNumber);
+                serialNumber = SerialNumberDialog.Only.ShowDialog(this).Equals(DialogResult.OK) ? SerialNumberDialog.Only.Get() : String.Empty;
+                SerialNumberDialog.Only.Hide();
             } else serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: ConfigUUT.SerialNumber);
             if (String.Equals(serialNumber, String.Empty)) return;
             ConfigUUT.SerialNumber = serialNumber;

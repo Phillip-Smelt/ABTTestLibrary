@@ -18,8 +18,8 @@ using Windows.Devices.PointOfService;
 using Windows.Security.Cryptography;
 
 namespace ABT.TestSpace.TestExec.Logging {
-    public partial class SerialNumberDialog : Form {
-        // TODO: Convert to Singleton, like USB_TO_GPIO.  Also, debug on Windows 10.
+    public sealed partial class SerialNumberDialog : Form {
+        // TODO: Debug on Windows 10.
         // NOTE: SerialNumberDialog derived from https://learn.microsoft.com/en-us/samples/microsoft/windows-universal-samples/barcodescanner/.  Thanks Bill!
         // NOTE: SerialNumberDialog tested with Honeywell Voyager 1200G USB Barcode Scanner:
         //  - Works fine in:   Windows 11 Professional,    Version 22H2, OS Build 22621.2361, Windows Feature Experience Pack 1000.22674.1000.0.
@@ -36,16 +36,24 @@ namespace ABT.TestSpace.TestExec.Logging {
         //       - It will only deliver scanned data to a USB HID application like TestExecutive's SerialNumberDialog class.
         //       - You must either scan the Voyager 1200G's  DEFALT or PAP124 barcodes to restore "normal" scanning.
         // NOTE: The 1200G must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
-        private BarcodeScanner _scanner = null;
-        private ClaimedBarcodeScanner _claimedScanner = null;
+        public static SerialNumberDialog Only { get { return _only; } }
+        private static readonly SerialNumberDialog _only = new SerialNumberDialog();
+        private static BarcodeScanner _scanner = null;
+        private static ClaimedBarcodeScanner _claimedScanner = null;
 
-        public SerialNumberDialog(String InitialSerialNumber) {
+        static SerialNumberDialog() { }
+        // Singleton pattern requires explicit static constructor to tell C# compiler not to mark type as beforefieldinit.
+        // https://csharpindepth.com/articles/singleton
+
+        private SerialNumberDialog() {
             InitializeComponent();
             GetBarcodeScanner();
-            FormUpdate(InitialSerialNumber);
+            FormUpdate(String.Empty);
         }
 
-        public String Get() { return BarCodeText.Text; }
+        public void Set(String SerialNumber) { FormUpdate(SerialNumber); }
+
+        public String Get() { return _only.BarCodeText.Text; }
 
         private async void GetBarcodeScanner() {
             _scanner = await GetFirstBarcodeScannerAsync();
@@ -59,33 +67,33 @@ namespace ABT.TestSpace.TestExec.Logging {
             await _claimedScanner.EnableAsync(); // Scanner must be enabled in order to receive the DataReceived event.
         }
 
-        private void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
+        private static void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
 
-        private void ClaimedScanner_ErrorOccurred(ClaimedBarcodeScanner sender, BarcodeScannerErrorOccurredEventArgs args) {
+        private static void ClaimedScanner_ErrorOccurred(ClaimedBarcodeScanner sender, BarcodeScannerErrorOccurredEventArgs args) {
             _ = MessageBox.Show("ErrorOccurred!", "ErrorOccurred!", MessageBoxButtons.OK);
         }
 
-        private void ClaimedScanner_DataReceived(ClaimedBarcodeScanner sender, BarcodeScannerDataReceivedEventArgs args) { Invoke(new DataReceived(DelegateMethod), args); }
+        private static void ClaimedScanner_DataReceived(ClaimedBarcodeScanner sender, BarcodeScannerDataReceivedEventArgs args) { _only.Invoke(new DataReceived(DelegateMethod), args); }
 
         private delegate void DataReceived(BarcodeScannerDataReceivedEventArgs args);
 
-        private void DelegateMethod(BarcodeScannerDataReceivedEventArgs args) {
+        private static void DelegateMethod(BarcodeScannerDataReceivedEventArgs args) {
             if (args.Report.ScanDataLabel == null) return;
             FormUpdate(CryptographicBuffer.ConvertBinaryToString(BinaryStringEncoding.Utf8, args.Report.ScanDataLabel));
         }
 
-        private void OK_Clicked(Object sender, EventArgs e) { DialogResult = DialogResult.OK; }
+        private static void OK_Clicked(Object sender, EventArgs e) { _only.DialogResult = DialogResult.OK; }
 
-        private void Cancel_Clicked(Object sender, EventArgs e) { DialogResult = DialogResult.Cancel; }
+        private static void Cancel_Clicked(Object sender, EventArgs e) { _only.DialogResult = DialogResult.Cancel; }
 
-        private void FormUpdate(String text) {
-            BarCodeText.Text = text;
+        private static void FormUpdate(String text) {
+            _only.BarCodeText.Text = text;
             if (Regex.IsMatch(text, "^01BB2-[0-9]{5}$")) {
-                OK.Enabled = true;
-                OK.BackColor = System.Drawing.Color.Green;
+                _only.OK.Enabled = true;
+                _only.OK.BackColor = System.Drawing.Color.Green;
             } else {
-                OK.Enabled = false;
-                OK.BackColor = System.Drawing.Color.DimGray;
+                _only.OK.Enabled = false;
+                _only.OK.BackColor = System.Drawing.Color.DimGray;
             }
         }
 
