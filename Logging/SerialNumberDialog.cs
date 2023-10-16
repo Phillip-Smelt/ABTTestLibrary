@@ -9,7 +9,6 @@ using System.Xml.Linq;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
 using Windows.Security.Cryptography;
-using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.SCPI_VISA_Instrument;
 
 namespace ABT.TestSpace.TestExec.Logging {
     public sealed partial class SerialNumberDialog : Form {
@@ -35,8 +34,6 @@ namespace ABT.TestSpace.TestExec.Logging {
         public SerialNumberDialog() {
             GetBarcodeScanner();
             InitializeComponent();
-            Debug.Print($"Barcode Scanner ID: '{_scannerID}'.");
-            Debug.Print($"Serial Number RegEx: '{_regEx}'.");
             FormUpdate(String.Empty);
         }
 
@@ -69,14 +66,14 @@ namespace ABT.TestSpace.TestExec.Logging {
             IEnumerable<String> scannerID =
                 from bcs in XElement.Load("TestExecutive.config.xml").Elements("BarCodeScanner")
                 select bcs.Element("ID").Value;
-            return scannerID.First();
+            return scannerID.FirstOrDefault();
         }
 
         private static String GetSerialNumberRegEx() {
             IEnumerable<String> serialNumberRegEx =
                 from bcs in XElement.Load("TestExecutive.config.xml").Elements("SerialNumber")
-                select bcs.Element("RegEx").ToString();
-            return serialNumberRegEx.First();
+                select bcs.Element("RegEx").Value;
+            return serialNumberRegEx.FirstOrDefault();
         }
 
         private void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
