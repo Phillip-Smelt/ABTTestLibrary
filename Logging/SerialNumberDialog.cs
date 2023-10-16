@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Xml.Linq;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
 using Windows.Security.Cryptography;
+using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.SCPI_VISA_Instrument;
 
 namespace ABT.TestSpace.TestExec.Logging {
     public sealed partial class SerialNumberDialog : Form {
@@ -20,17 +22,17 @@ namespace ABT.TestSpace.TestExec.Logging {
         // NOTE: Honeywell Voyager 1200G USB Barcode Scanner is a Microsoft supported Point of Service peripheral.
         //  - https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support
         // NOTE: The 1200G must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
-        public static SerialNumberDialog Only { get; } = new SerialNumberDialog();
+        // public static SerialNumberDialog Only { get; } = new SerialNumberDialog();
         private BarcodeScanner _scanner = null;
         private ClaimedBarcodeScanner _claimedScanner = null;
         private static readonly String _scannerID = GetBarcodeScannerID();
         private static readonly String _regEx = GetSerialNumberRegEx();
 
-        static SerialNumberDialog() { }
+        // static SerialNumberDialog() { }
         // Singleton pattern requires explicit static constructor to tell C# compiler not to mark type as beforefieldinit.
         // https://csharpindepth.com/articles/singleton
 
-        private SerialNumberDialog() {
+        public SerialNumberDialog() {
             GetBarcodeScanner();
             InitializeComponent();
             Debug.Print($"Barcode Scanner ID: '{_scannerID}'.");
@@ -66,15 +68,15 @@ namespace ABT.TestSpace.TestExec.Logging {
         private static String GetBarcodeScannerID() {
             IEnumerable<String> scannerID =
                 from bcs in XElement.Load("TestExecutive.config.xml").Elements("BarCodeScanner")
-                select bcs.Element("ID").ToString();
-            return scannerID.ToString();
+                select bcs.Element("ID").Value;
+            return scannerID.First();
         }
 
         private static String GetSerialNumberRegEx() {
             IEnumerable<String> serialNumberRegEx =
                 from bcs in XElement.Load("TestExecutive.config.xml").Elements("SerialNumber")
                 select bcs.Element("RegEx").ToString();
-            return serialNumberRegEx.ToString();
+            return serialNumberRegEx.First();
         }
 
         private void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
