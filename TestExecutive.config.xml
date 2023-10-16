@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!--
-	This TestExecutive.config.xml file allows configuring TestExecutive SCPI VISA instruments easily:
+	This TestExecutive.config.xml file allows configuring TestExecutive settings easily:
+	SCPI VISA instruments:
 	- For calibration or replacement, swap identical SCPI VISA Instruments with others, then update Addresses.
 	- For additions/deletions, add/remove SCPI_VISA_Instruments.  Update TestExecutive if needed.
 
@@ -100,13 +101,21 @@
 	</SCPI_VISA_Instrument>
 
 	<BarCodeScanner>
-			<ID>\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner</ID>
-			<!-- Voyager 1200g -->
-	</BarCodeScanner>
+			<ID>\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner</ID> <!-- Honeywell Voyager USB 1200g -->
+    <!-- ID is the identifier used to find & claim the Barcode Scanner used by class SerialNumberDialog.
+					- A simple means to determine it is included in class SerialNumberDialog's Debug.Print() statements, in case it must be replaced.
+        When a TestExecutor's App.Config LOGGER_SerialNumberDialogEnabled = true:
+					- Class SerialNumberDialog is the Barcode Scanning method for prompting test operators for UUT Serial Numbers.
+					- SerialNumberDialog exclusively enforces Serial Number entry via Barcode Scanning of ABT's official Barcoded Serial Number.
+          - This enforces correct scanning of Serial Number.
+				When a TestExecutor's App.Config LOGGER_SerialNumberDialogEnabled = false:
+					- An Interaction.InputBox prompts test operator to enter ABT Serial Numbers.
+          - This permits both Barcode Scanning *and* manual keyboard entry of Serial Numbers (hand typed), with concommitant high rate of typographic errors. -->
+  </BarCodeScanner>
 
   <SerialNumber>
     <RegEx>^01BB2-[0-9]{5}$</RegEx>
-    <!-- SerialNumber.RegEx is the Regular Expression an ABT Serial Number is validated against.
+    <!-- RegEx is the Regular Expression an ABT Serial Number is validated against in class SerialNumberDialog when a TestExecutor's App.Config's LOGGER_SerialNumberDialogEnabled = true.
          ^01BB2-[0-9]{5}$ enforces Serial Numbers that match pattern "01BB2-######" where # is an integer in {0..9}.
          - 01BB2-12345 & 01BB2-00001 are valid.
          - 01bb2-12345 & 01BB2-OOOO1 are invalid.
