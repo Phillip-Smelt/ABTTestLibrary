@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -34,18 +33,24 @@ namespace ABT.TestSpace.TestExec.Logging {
         private SerialNumberDialog() {
             GetBarcodeScanner();
             InitializeComponent();
+            Debug.Print($"Barcode Scanner ID: '{_scannerID}'.");
+            Debug.Print($"Serial Number RegEx: '{_regEx}'.");
             FormUpdate(String.Empty);
         }
 
         public void Set(String SerialNumber) { FormUpdate(SerialNumber); }
 
-        public String Get() { return Only.BarCodeText.Text; }
+        public String Get() { return BarCodeText.Text; }
 
         private async void GetBarcodeScanner() {
             DeviceInformationCollection dic = await DeviceInformation.FindAllAsync(BarcodeScanner.GetDeviceSelector(PosConnectionTypes.Local));
-            foreach (DeviceInformation di in dic) { Debug.Print(di.Id); Debug.Print(di.Name); Debug.Print(di.Kind.ToString()); }
+            foreach (DeviceInformation di in dic) {
+                Debug.Print($"Name: '{di.Name}'.");
+                Debug.Print($"Kind: '{di.Kind}'.");
+                Debug.Print($"ID  : '{di.Id}'.{Environment.NewLine}");
             // NOTE: If ever change Barcode Scanners from current Voyager 1200g with ID "\\?\HID#VID_0C2E&PID_0A07&MI_00#7&1f27e379&0&0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner"
             // Can discover new Scanner's ID by running above code in Visual Studio in Debug Configuration.
+            }
             DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(_scannerID);
             _scanner = await BarcodeScanner.FromIdAsync(DI.Id);
             if (_scanner == null) throw new InvalidOperationException($"Barcode scanner Device ID:{Environment.NewLine}{Environment.NewLine}'{_scannerID}'{Environment.NewLine}{Environment.NewLine}not found.");
@@ -76,18 +81,18 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         private void ClaimedScanner_ErrorOccurred(ClaimedBarcodeScanner sender, BarcodeScannerErrorOccurredEventArgs args) { _ = MessageBox.Show("ErrorOccurred!", "ErrorOccurred!", MessageBoxButtons.OK); }
 
-        private void ClaimedScanner_DataReceived(ClaimedBarcodeScanner sender, BarcodeScannerDataReceivedEventArgs args) { Only.Invoke(new DataReceived(DelegateMethod), args); }
+        private void ClaimedScanner_DataReceived(ClaimedBarcodeScanner sender, BarcodeScannerDataReceivedEventArgs args) { Invoke(new DataReceived(DelegateMethod), args); }
 
         private delegate void DataReceived(BarcodeScannerDataReceivedEventArgs args);
 
         private void DelegateMethod(BarcodeScannerDataReceivedEventArgs args) {
             if (args.Report.ScanDataLabel == null) return;
-            Only.FormUpdate(CryptographicBuffer.ConvertBinaryToString(BinaryStringEncoding.Utf8, args.Report.ScanDataLabel));
+            FormUpdate(CryptographicBuffer.ConvertBinaryToString(BinaryStringEncoding.Utf8, args.Report.ScanDataLabel));
         }
 
-        private void OK_Clicked(Object sender, EventArgs e) { Only.DialogResult = DialogResult.OK; }
+        private void OK_Clicked(Object sender, EventArgs e) { DialogResult = DialogResult.OK; }
 
-        private void Cancel_Clicked(Object sender, EventArgs e) { Only.DialogResult = DialogResult.Cancel; }
+        private void Cancel_Clicked(Object sender, EventArgs e) { DialogResult = DialogResult.Cancel; }
 
         private void FormUpdate(String text) {
             BarCodeText.Text = text;
