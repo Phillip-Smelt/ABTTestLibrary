@@ -63,16 +63,12 @@ namespace ABT.TestSpace.TestExec.Logging {
         }
 
         private static String GetBarcodeScannerID() {
-            IEnumerable<String> scannerID =
-                from bcs in XElement.Load("TestExecutive.config.xml").Elements("BarCodeScanner")
-                select bcs.Element("ID").Value;
+            IEnumerable<String> scannerID = from bcs in XElement.Load("TestExecutive.config.xml").Elements("BarCodeScanner") select bcs.Element("ID").Value;
             return scannerID.FirstOrDefault();
         }
 
         private static String GetSerialNumberRegEx() {
-            IEnumerable<String> serialNumberRegEx =
-                from bcs in XElement.Load("TestExecutive.config.xml").Elements("SerialNumber")
-                select bcs.Element("RegEx").Value;
+            IEnumerable<String> serialNumberRegEx = from bcs in XElement.Load("TestExecutive.config.xml").Elements("SerialNumber") select bcs.Element("RegEx").Value;
             return serialNumberRegEx.FirstOrDefault();
         }
 
