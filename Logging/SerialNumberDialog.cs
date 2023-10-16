@@ -64,12 +64,12 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         private static String GetBarcodeScannerID() {
             IEnumerable<String> scannerID = from bcs in XElement.Load("TestExecutive.config.xml").Elements("BarCodeScanner") select bcs.Element("ID").Value;
-            return scannerID.FirstOrDefault();
+            return scannerID.First();
         }
 
         private static String GetSerialNumberRegEx() {
-            IEnumerable<String> serialNumberRegEx = from bcs in XElement.Load("TestExecutive.config.xml").Elements("SerialNumber") select bcs.Element("RegEx").Value;
-            return serialNumberRegEx.FirstOrDefault();
+            IEnumerable<String> serialNumberRegEx = from sn in XElement.Load("TestExecutive.config.xml").Elements("SerialNumber") select sn.Element("RegEx").Value;
+            return serialNumberRegEx.First();
         }
 
         private void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
