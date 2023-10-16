@@ -116,6 +116,7 @@ namespace ABT.TestSpace.TestExec {
                 CancelTokenSource = new CancellationTokenSource();
             }
             _cancelled = false;
+            ButtonCancel.Text = "Cancel";
             ButtonCancel.Enabled = enabled;
         }
 
