@@ -1,130 +1,94 @@
-﻿//*********************************************************
-//
-// Copyright (c) Microsoft. All rights reserved.
-// This code is licensed under the MIT License (MIT).
-// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-//
-//*********************************************************
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
 using Windows.Security.Cryptography;
 
 namespace ABT.TestSpace.TestExec.Logging {
     public sealed partial class SerialNumberDialog : Form {
-        // TODO: Debug on Windows 10.
-        // NOTE: SerialNumberDialog derived from https://learn.microsoft.com/en-us/samples/microsoft/windows-universal-samples/barcodescanner/.  Thanks Bill!
-        // NOTE: SerialNumberDialog tested with Honeywell Voyager 1200G USB Barcode Scanner:
-        //  - Works fine in:   Windows 11 Professional,    Version 22H2, OS Build 22621.2361, Windows Feature Experience Pack 1000.22674.1000.0.
-        //  - Doesn't work in: Windows 10 Enterprise,      Version 22H2, OS Build 19045.3570, Windows Feature Experience Pack 1000.19052.1000.0.
-        //  - Doesn't work in: Windows 10 Enterprise LTSC, Version 1809, OS Build 17763.4974, no Windows Feature Experience Pack listed.
-        //      - ClaimedBarcodeScanner Events don't fire in Windows 10 Enterprise, suspect same issue as
-        //      - https://learn.microsoft.com/en-us/answers/questions/820762/c-claimedbarcodescanner-events-not-firing-in-windo?orderBy=Newest.
-        // NOTE: Honeywell Voyager 1200G USB Barcode Scanner is a Microsoft supported Point of Service peripheral.
-        //  - https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support
         // NOTE: Honeywell Voyager 1200G Scanner must be programmed into USB HID mode to work correctly with TestExecutive to read ABT Serial #s.
         //       - Scan PAP131 label from "Honeywell Voyager 1200G User's Guide ReadMe.pdf" to program 1200 into USB HID mode.
-        //       - Both "ReadMe" & "User's Guide reside in this folder for convenience.
+        //       - Both "ReadMe" & "User's Guides" documents reside in this folder for convenience.
         // NOTE: Voyager 1200G won't scan ABT Serial #s into Notepad/Wordpad/Text Editor of Choice when in USB HID mode:
         //       - It will only deliver scanned data to a USB HID application like TestExecutive's SerialNumberDialog class.
-        //       - You must either scan the Voyager 1200G's  DEFALT or PAP124 barcodes to restore "normal" scanning.
+        //       - You must scan the Voyager 1200G's PAP124 barcodes to restore "normal" keyboard wedge mode.
+        // NOTE: Honeywell Voyager 1200G USB Barcode Scanner is a Microsoft supported Point of Service peripheral.
+        //  - https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support
         // NOTE: The 1200G must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
-        public static SerialNumberDialog Only { get { return _only; } }
-        private static readonly SerialNumberDialog _only = new SerialNumberDialog();
-        private static BarcodeScanner _scanner = null;
-        private static ClaimedBarcodeScanner _claimedScanner = null;
+        public static SerialNumberDialog Only { get; } = new SerialNumberDialog();
+        private BarcodeScanner _scanner = null;
+        private ClaimedBarcodeScanner _claimedScanner = null;
+        private static readonly String _id = GetID();
 
         static SerialNumberDialog() { }
         // Singleton pattern requires explicit static constructor to tell C# compiler not to mark type as beforefieldinit.
         // https://csharpindepth.com/articles/singleton
 
         private SerialNumberDialog() {
-            InitializeComponent();
             GetBarcodeScanner();
+            InitializeComponent();
             FormUpdate(String.Empty);
         }
 
         public void Set(String SerialNumber) { FormUpdate(SerialNumber); }
 
-        public String Get() { return _only.BarCodeText.Text; }
+        public String Get() { return Only.BarCodeText.Text; }
 
         private async void GetBarcodeScanner() {
-            _scanner = await GetFirstBarcodeScannerAsync();
-            if (_scanner == null) throw new InvalidOperationException("Barcode scanner not found.");
+            DeviceInformationCollection dic = await DeviceInformation.FindAllAsync(BarcodeScanner.GetDeviceSelector(PosConnectionTypes.Local));
+            foreach (DeviceInformation di in dic) { Debug.Print(di.Id); Debug.Print(di.Name); Debug.Print(di.Kind.ToString()); }
+            // NOTE: If ever change Barcode Scanners from current Voyager 1200g with ID "\\?\HID#VID_0C2E&PID_0A07&MI_00#7&1f27e379&0&0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner"
+            // Can discover new Scanner's ID by running above code in Visual Studio in Debug Configuration.
+            DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(_id);
+            _scanner = await BarcodeScanner.FromIdAsync(DI.Id);
+            if (_scanner == null) throw new InvalidOperationException($"Barcode scanner Device ID:{Environment.NewLine}{Environment.NewLine}'{_id}'{Environment.NewLine}{Environment.NewLine}not found.");
             _claimedScanner = await _scanner.ClaimScannerAsync(); // Claim exclusively.
-            if (_claimedScanner == null) throw new InvalidOperationException("Barcode scanner not found.");
-            _claimedScanner.ReleaseDeviceRequested += ClaimedScanner_ReleaseDeviceRequested;
+            if (_claimedScanner == null) throw new InvalidOperationException("Barcode scanner cannot be claimed.");
             _claimedScanner.DataReceived += ClaimedScanner_DataReceived;
             _claimedScanner.ErrorOccurred += ClaimedScanner_ErrorOccurred;
+            _claimedScanner.ReleaseDeviceRequested += ClaimedScanner_ReleaseDeviceRequested;
             _claimedScanner.IsDecodeDataEnabled = true; // Decode raw data from scanner and sends the ScanDataLabel and ScanDataType in the DataReceived event.
             await _claimedScanner.EnableAsync(); // Scanner must be enabled in order to receive the DataReceived event.
         }
 
-        private static void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
-
-        private static void ClaimedScanner_ErrorOccurred(ClaimedBarcodeScanner sender, BarcodeScannerErrorOccurredEventArgs args) {
-            _ = MessageBox.Show("ErrorOccurred!", "ErrorOccurred!", MessageBoxButtons.OK);
+        private static String GetID() {
+            IEnumerable<String> scannerID =
+                from bcs in XElement.Load("TestExecutive.config.xml").Elements("BarCodeScanner")
+                select bcs.Element("ID").ToString();
+            return scannerID.ToString();
         }
 
-        private static void ClaimedScanner_DataReceived(ClaimedBarcodeScanner sender, BarcodeScannerDataReceivedEventArgs args) { _only.Invoke(new DataReceived(DelegateMethod), args); }
+        private void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
+
+        private void ClaimedScanner_ErrorOccurred(ClaimedBarcodeScanner sender, BarcodeScannerErrorOccurredEventArgs args) { _ = MessageBox.Show("ErrorOccurred!", "ErrorOccurred!", MessageBoxButtons.OK); }
+
+        private void ClaimedScanner_DataReceived(ClaimedBarcodeScanner sender, BarcodeScannerDataReceivedEventArgs args) { Only.Invoke(new DataReceived(DelegateMethod), args); }
 
         private delegate void DataReceived(BarcodeScannerDataReceivedEventArgs args);
 
-        private static void DelegateMethod(BarcodeScannerDataReceivedEventArgs args) {
+        private void DelegateMethod(BarcodeScannerDataReceivedEventArgs args) {
             if (args.Report.ScanDataLabel == null) return;
-            FormUpdate(CryptographicBuffer.ConvertBinaryToString(BinaryStringEncoding.Utf8, args.Report.ScanDataLabel));
+            Only.FormUpdate(CryptographicBuffer.ConvertBinaryToString(BinaryStringEncoding.Utf8, args.Report.ScanDataLabel));
         }
 
-        private static void OK_Clicked(Object sender, EventArgs e) { _only.DialogResult = DialogResult.OK; }
+        private void OK_Clicked(Object sender, EventArgs e) { Only.DialogResult = DialogResult.OK; }
 
-        private static void Cancel_Clicked(Object sender, EventArgs e) { _only.DialogResult = DialogResult.Cancel; }
+        private void Cancel_Clicked(Object sender, EventArgs e) { Only.DialogResult = DialogResult.Cancel; }
 
-        private static void FormUpdate(String text) {
-            _only.BarCodeText.Text = text;
+        private void FormUpdate(String text) {
+            BarCodeText.Text = text;
             if (Regex.IsMatch(text, "^01BB2-[0-9]{5}$")) {
-                _only.OK.Enabled = true;
-                _only.OK.BackColor = System.Drawing.Color.Green;
+                OK.Enabled = true;
+                OK.BackColor = System.Drawing.Color.Green;
             } else {
-                _only.OK.Enabled = false;
-                _only.OK.BackColor = System.Drawing.Color.DimGray;
+                OK.Enabled = false;
+                OK.BackColor = System.Drawing.Color.DimGray;
             }
-        }
-
-        private static async Task<BarcodeScanner> GetFirstBarcodeScannerAsync(PosConnectionTypes connectionTypes = PosConnectionTypes.Local) {
-            return await GetFirstDeviceAsync(BarcodeScanner.GetDeviceSelector(connectionTypes), async (id) => await BarcodeScanner.FromIdAsync(id));
-        }
-
-        private static async Task<T> GetFirstDeviceAsync<T>(String selector, Func<String, Task<T>> convertAsync) where T : class {
-            TaskCompletionSource<T> completionSource = new TaskCompletionSource<T>();
-            List<Task> pendingTasks = new List<Task>();
-            DeviceWatcher watcher = DeviceInformation.CreateWatcher(selector);
-
-            watcher.Added += (DeviceWatcher sender, DeviceInformation device) => {
-                pendingTasks.Add(((Func<String, Task>)(async (id) => {
-                    T t = await convertAsync(id);
-                    if (t != null) completionSource.TrySetResult(t);
-                }))(device.Id));
-            };
-
-            watcher.EnumerationCompleted += async (DeviceWatcher sender, Object args) => {
-                await Task.WhenAll(pendingTasks);
-                completionSource.TrySetResult(null);
-            };
-
-            watcher.Removed += (DeviceWatcher sender, DeviceInformationUpdate args) => { }; // Event must be "handled" to enable realtime updates; empty block suffices.
-            watcher.Updated += (DeviceWatcher sender, DeviceInformationUpdate args) => { }; // Ditto.
-            watcher.Start();
-            T result = await completionSource.Task;
-            watcher.Stop();
-            return result;
         }
     }
 }
-
