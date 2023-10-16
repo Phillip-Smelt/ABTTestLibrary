@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -23,7 +24,8 @@ namespace ABT.TestSpace.TestExec.Logging {
         public static SerialNumberDialog Only { get; } = new SerialNumberDialog();
         private BarcodeScanner _scanner = null;
         private ClaimedBarcodeScanner _claimedScanner = null;
-        private static readonly String _id = GetID();
+        private static readonly String _scannerID = GetBarcodeScannerID();
+        private static readonly String _regEx = GetSerialNumberRegEx();
 
         static SerialNumberDialog() { }
         // Singleton pattern requires explicit static constructor to tell C# compiler not to mark type as beforefieldinit.
@@ -44,9 +46,9 @@ namespace ABT.TestSpace.TestExec.Logging {
             foreach (DeviceInformation di in dic) { Debug.Print(di.Id); Debug.Print(di.Name); Debug.Print(di.Kind.ToString()); }
             // NOTE: If ever change Barcode Scanners from current Voyager 1200g with ID "\\?\HID#VID_0C2E&PID_0A07&MI_00#7&1f27e379&0&0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner"
             // Can discover new Scanner's ID by running above code in Visual Studio in Debug Configuration.
-            DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(_id);
+            DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(_scannerID);
             _scanner = await BarcodeScanner.FromIdAsync(DI.Id);
-            if (_scanner == null) throw new InvalidOperationException($"Barcode scanner Device ID:{Environment.NewLine}{Environment.NewLine}'{_id}'{Environment.NewLine}{Environment.NewLine}not found.");
+            if (_scanner == null) throw new InvalidOperationException($"Barcode scanner Device ID:{Environment.NewLine}{Environment.NewLine}'{_scannerID}'{Environment.NewLine}{Environment.NewLine}not found.");
             _claimedScanner = await _scanner.ClaimScannerAsync(); // Claim exclusively.
             if (_claimedScanner == null) throw new InvalidOperationException("Barcode scanner cannot be claimed.");
             _claimedScanner.DataReceived += ClaimedScanner_DataReceived;
@@ -56,11 +58,18 @@ namespace ABT.TestSpace.TestExec.Logging {
             await _claimedScanner.EnableAsync(); // Scanner must be enabled in order to receive the DataReceived event.
         }
 
-        private static String GetID() {
+        private static String GetBarcodeScannerID() {
             IEnumerable<String> scannerID =
                 from bcs in XElement.Load("TestExecutive.config.xml").Elements("BarCodeScanner")
                 select bcs.Element("ID").ToString();
             return scannerID.ToString();
+        }
+
+        private static String GetSerialNumberRegEx() {
+            IEnumerable<String> serialNumberRegEx =
+                from bcs in XElement.Load("TestExecutive.config.xml").Elements("SerialNumber")
+                select bcs.Element("RegEx").ToString();
+            return serialNumberRegEx.ToString();
         }
 
         private void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
@@ -82,7 +91,7 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         private void FormUpdate(String text) {
             BarCodeText.Text = text;
-            if (Regex.IsMatch(text, "^01BB2-[0-9]{5}$")) {
+            if (Regex.IsMatch(text, _regEx)) {
                 OK.Enabled = true;
                 OK.BackColor = System.Drawing.Color.Green;
             } else {

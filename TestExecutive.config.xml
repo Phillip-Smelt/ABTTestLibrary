@@ -62,7 +62,7 @@
 	- https://www.ni.com/docs/en-US/bundle/labview/page/lvinstio/visa_resource_name_generic.html.
 	- https://www.ivifoundation.org/downloads/Architecture%20Specifications/vpp43_2022-05-19.pdf.
 -->
-<Devices>
+<Configuration>
 	<SCPI_VISA_Instrument>
 		<ID>PS1</ID>
 		<Description>Keysight E36103B Single-output Power Supply</Description>
@@ -101,7 +101,16 @@
 
 	<BarCodeScanner>
 			<ID>\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner</ID>
-			<Name>Voyager 1200g</Name>
-			<Kind></Kind>
+			<!-- Voyager 1200g -->
 	</BarCodeScanner>
-</Devices>
+
+  <SerialNumber>
+    <RegEx>^01BB2-[0-9]{5}$</RegEx>
+    <!-- SerialNumber.RegEx is the Regular Expression an ABT Serial Number is validated against.
+         ^01BB2-[0-9]{5}$ enforces Serial Numbers that match pattern "01BB2-######" where # is an integer in {0..9}.
+         - 01BB2-12345 & 01BB2-00001 are valid.
+         - 01bb2-12345 & 01BB2-OOOO1 are invalid.
+         - 1 & 00001 are invalid.
+    -->
+  </SerialNumber>
+</Configuration>
