@@ -23,16 +23,17 @@ namespace ABT.TestSpace.TestExec.Logging {
         // public static SerialNumberDialog Only { get; } = new SerialNumberDialog();
         private BarcodeScanner _scanner = null;
         private ClaimedBarcodeScanner _claimedScanner = null;
-        private static readonly String _scannerID = GetBarcodeScannerID();
-        private static readonly String _regEx = GetSerialNumberRegEx();
+        private String _scannerID = null;
+        private String _regEx = null;
 
         // static SerialNumberDialog() { }
         // Singleton pattern requires explicit static constructor to tell C# compiler not to mark type as beforefieldinit.
         // https://csharpindepth.com/articles/singleton
 
         public SerialNumberDialog() {
-            GetBarcodeScanner();
             InitializeComponent();
+            GetConfiguration();
+            GetBarcodeScanner();
             FormUpdate(String.Empty);
         }
 
@@ -61,14 +62,11 @@ namespace ABT.TestSpace.TestExec.Logging {
             await _claimedScanner.EnableAsync(); // Scanner must be enabled in order to receive the DataReceived event.
         }
 
-        private static String GetBarcodeScannerID() {
-            IEnumerable<String> scannerID = from bcs in XElement.Load("TestExecutive.config.xml").Elements("BarCodeScanner") select bcs.Element("ID").Value;
-            return scannerID.First();
-        }
-
-        private static String GetSerialNumberRegEx() {
-            IEnumerable<String> serialNumberRegEx = from sn in XElement.Load("TestExecutive.config.xml").Elements("SerialNumber") select sn.Element("RegEx").Value;
-            return serialNumberRegEx.First();
+        private void GetConfiguration() {
+            IEnumerable<String> scannerID = from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("BarCodeScannerID").Value;
+            _scannerID = scannerID.First();
+            IEnumerable<String> regEx = from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("SerialNumberRegEx").Value;
+            _regEx = regEx.First();
         }
 
         private void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
