@@ -110,7 +110,10 @@
           - This enforces correct scanning of Serial Number.
 				When a TestExecutor's App.Config LOGGER_SerialNumberDialogEnabled = false:
 					- An Interaction.InputBox prompts test operator to enter ABT Serial Numbers.
-          - This permits both Barcode Scanning *and* manual keyboard entry of Serial Numbers (hand typed), with concommitant high rate of typographic errors. -->
+          - This permits both Barcode Scanning *and* manual keyboard entry of Serial Numbers (hand typed), with concommitant high rate of typographic errors.
+        NOTE: To change Barcode Scanner from current Voyager 1200g with ID "\\?\HID#VID_0C2E&PID_0A07&MI_00#7&1f27e379&0&0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner",
+              discover new Scanner's ID by running #if DEBUG/#endif bracketed code in class SerialNumberDialog.
+		-->
     <SerialNumberRegEx>^01BB2-[0-9]{5}$</SerialNumberRegEx>
     <!-- SerialNumberRegEx is the Regular Expression an ABT Serial Number is validated against in class SerialNumberDialog when a TestExecutor's App.Config's LOGGER_SerialNumberDialogEnabled = true.
          ^01BB2-[0-9]{5}$ enforces Serial Numbers that match pattern "01BB2-######" where # is an integer in {0..9}.
