@@ -111,7 +111,7 @@
 				When a TestExecutor's App.Config LOGGER_SerialNumberDialogEnabled = false:
 					- An Interaction.InputBox prompts test operator to enter ABT Serial Numbers.
           - This permits both Barcode Scanning *and* manual keyboard entry of Serial Numbers (hand typed), with concommitant high rate of typographic errors.
-        NOTE: To change Barcode Scanner from current Voyager 1200g with ID "\\?\HID#VID_0C2E&PID_0A07&MI_00#7&1f27e379&0&0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner",
+        NOTE: To change BarcodeScannerID from current "\\?\HID#VID_0C2E&PID_0A07&MI_00#7&1f27e379&0&0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner",
               discover new Scanner's ID by running #if DEBUG/#endif bracketed code in class SerialNumberDialog.
 		-->
     <SerialNumberRegEx>^01BB2-[0-9]{5}$</SerialNumberRegEx>
