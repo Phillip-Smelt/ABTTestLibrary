@@ -111,7 +111,13 @@
 				When a TestExecutor's App.Config LOGGER_SerialNumberDialogEnabled = false:
 					- An Interaction.InputBox prompts test operator to enter ABT Serial Numbers.
           - This permits both Barcode Scanning *and* manual keyboard entry of Serial Numbers (hand typed), with concommitant high rate of typographic errors.
-        NOTE: To change BarcodeScannerID from current "\\?\HID#VID_0C2E&PID_0A07&MI_00#7&1f27e379&0&0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner",
+        NOTE: Barcode Scanner must be a corded USB scanner, explicitly supported by Microsoft Point of Service's namespace.
+         - List of such scanners at https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.
+				NOTE: Barcode Scanner must be programmed into USB HID mode to work correctly with TestExecutive's SerialNumberDialog class to read ABT Serial #s.
+              - For Voyager 1200g, scan PAP131 label from "Honeywell Voyager 1200G User's Guide ReadMe.pdf" to program 1200 into USB HID mode.
+              - Both "ReadMe" & "User's Guides" documents reside in Logging folder for convenience.
+        NOTE: The 1200G must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
+				NOTE: To change BarcodeScannerID from current "\\?\HID#VID_0C2E&PID_0A07&MI_00#7&1f27e379&0&0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner",
               discover new Scanner's ID by running #if DEBUG/#endif bracketed code in class SerialNumberDialog.
 		-->
     <SerialNumberRegEx>^01BB2-[0-9]{5}$</SerialNumberRegEx>
