@@ -53,6 +53,7 @@ namespace ABT.TestSpace.TestExec {
             InitializeComponent();
             _appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
             _libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog() : null;
             Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             UE24.Set(RelayForms.C.S.NO); // Relays should be energized/de-energized/re-energized occasionally as preventative maintenance.
@@ -154,7 +155,6 @@ namespace ABT.TestSpace.TestExec {
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
             String serialNumber;
             if (ConfigLogger.SerialNumberDialogEnabled) {
-                if (_serialNumberDialog == null) _serialNumberDialog = new SerialNumberDialog();
                 _serialNumberDialog.Set(ConfigUUT.SerialNumber);
                 serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : String.Empty;
                 _serialNumberDialog.Hide();
