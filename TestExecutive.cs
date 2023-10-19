@@ -37,6 +37,51 @@ using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
 ///  </para>
+
+// TODO: TestExecutive + TestExecutor:
+// Add must be overridden TestExecutive method ResetExecutor.
+// Add TestExecutor method Reset that invokes both ResetExecutive & ResetExecutor.
+//      -Rename TestExecutive's TestSystemReset to ResetExecutive.
+//      - For isoMicro, it will invoke Isou.ENABLE_N.Set(ENABLE_N.FLOATING).
+//      - Similar to TestExecutive's MeasurementTestsRun.
+//  Change Administrative menu to Self-Diagnostics, Configuration (TestExecutive + TestExecutor), System Documentation & Apps (Keysight, NI, MCC, Honeywell), Test Data (export & query via Access), UUT documentation (eDocs general + UUT eDoc specific)
+//  Add Administrative menu:
+//      - Edit configuration files via XML editor, after entering password:
+//      - TestExecutive.config.xml
+//      - App.Config
+//  Discover Windows.Devices.Pointofservice Barcodescanners.
+//      - Corded, Bluetooth & Wireless?
+//      - Or corded only.
+//  NI Tools
+//      - Launch NI-VISA
+//      - Launch NI's Measurement & Automation Explorer (MAX).
+//  Discover VISA Instruments & Addresses for TestExecutive.config.xml.
+//      - Keysight Tools
+//      - Launch Connection Expert
+//      - Discover VISA Instruments & Addresses for TestExecutive.config.xml.
+//      - Launch Command Expert
+//      - Launch BenchVue
+//      - Install BenchVue Instruments first!
+//  Open P:\Drive folder containing all Keysight Instrument manuals
+//      - Measurement Computing Corporation
+//      - Launch InstaCal
+//      - Open P:\Drive folder containing USB-ERB24 documentation & Univeral Library documentation.
+//  Self-Diagnostics
+//      - Run all SCPI VISA instrument self-tests.
+//      - Cobble together USB-ERB24 self-tests from MS-Tests of USB-ERB24.
+//  Barcode Scanner self-tests; open JPEG image of self-test barcode.
+//      - Honeywell Voyager 1200g Barcode Scanner
+//      - Open JPEG image of PAP131 USB-HID mode barcode.
+//      - Open JPEG image of factory reset barcode.
+//      - Open P:\Drive folder containing Voyager 1200g documentation.
+//  Databasing:
+//     - Launch Microsoft SQL Server Administration (password protected)
+//     - Launch Microsoft Access Queries for data-mining.
+//     - Add TestExecutive command Button specifically to query/export test data.
+//     - Add updateable paths to TestExecutive.config.xml for:
+//     - NI-VISA, NI-MAX, Connection Expert, Command Expert, BenchVue, MCC Instacal.
+//     - P:\Drive links to Keysight instrument manuals, MCC USB-ERB24 manual, MCC Universal Library documentation, Voyager 1200g documentation.
+
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
