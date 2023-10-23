@@ -42,7 +42,7 @@ using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 // Add must be overridden TestExecutive method ResetExecutor.
 // Add TestExecutor method Reset that invokes both ResetExecutive & ResetExecutor.
 //      -Rename TestExecutive's TestSystemReset to ResetExecutive.
-//      - For isoMicro, it will invoke Isou.ENABLE_N.Set(ENABLE_N.FLOATING).
+//      - For isoMicro, it will invoke Isou.ENABLE_N.Set(ENABLE_N.FLOAT_HIGH).
 //      - Similar to TestExecutive's MeasurementTestsRun.
 //  Change Administrative menu to Self-Diagnostics, Configuration (TestExecutive + TestExecutor), System Documentation & Apps (Keysight, NI, MCC, Honeywell), Test Data (export & query via Access), UUT documentation (eDocs general + UUT eDoc specific)
 //  Add Administrative menu:
