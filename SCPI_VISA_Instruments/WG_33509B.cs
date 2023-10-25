@@ -13,6 +13,11 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class WG_33509B {
         public const String MODEL = "33509B";
 
+        public static void FunctionSquare(SCPI_VISA_Instrument SVI, Double DutyCyclePercent, Double Hz) {
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FUNCtion.SQUare.DCYCle.Command(null, DutyCyclePercent, "PCT");
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FUNCtion.SQUare.PERiod.Command(null, 1/Hz);
+        }
+
         public static Boolean IsWG_33509(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(Ag33500B_33600A)); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
@@ -29,14 +34,27 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void Set(SCPI_VISA_Instrument SVI, STATE State) { ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.Command(null, (State is STATE.ON)); }
 
+        public static void SetVoltage(SCPI_VISA_Instrument SVI, Double V_Low, Double V_High, Double V_Offset) {
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.VOLTage.LOW.Command(null, V_Low);
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.VOLTage.HIGH.Command(null, V_High);
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.VOLTage.OFFSet.Command(null, V_Offset);
+        }
+
+        public static void ModulateFSK(SCPI_VISA_Instrument SVI, STATE State, Double HzHop, Double HzRate) {
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FSKey.SOURce.Command(null, "INTernal");
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FSKey.INTernal.RATE.Command(null, HzRate);
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FSKey.FREQuency.Command(null, HzHop);
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FSKey.STATe.Command(null, (State is STATE.ON));
+        }
+
         public static String WaveformGet(SCPI_VISA_Instrument SVI) {
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.APPLy.Query(null, out String Waveform);
             return Waveform;
         }
 
-        public static void WaveformSquareApply(SCPI_VISA_Instrument SVI, Double FrequencyHz, Double AmplitudeV, Double OffsetV) {
+        public static void WaveformSquareApply(SCPI_VISA_Instrument SVI, Double Hz, Double V_High, Double V_Offset) {
             ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.LOAD.Command(null, "INFinity");
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.APPLy.SQUare.Command(null, FrequencyHz, "HZ", AmplitudeV, "V", OffsetV, "V");
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.APPLy.SQUare.Command(null, Hz, "HZ", V_High, "V", V_Offset, "V");
         }
     }
 }
