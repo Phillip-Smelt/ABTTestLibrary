@@ -136,6 +136,70 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             }
         }
 
+        public static Boolean SlewRatesAre(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, LOAD_MODE LoadMode) {
+            return ((SlewRateRising, SlewRateFalling) == SlewRatesGet(SVI, LoadMode));
+        }
+
+        public static (Double SlewRateRising, Double SlewRateFalling) SlewRatesGet(SCPI_VISA_Instrument SVI, LOAD_MODE LoadMode) {
+            Double[] slewRateRising; Double[] slewRateFalling;
+            switch (LoadMode) {
+                case LOAD_MODE.CURR:
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.SLEW.POSitive.IMMediate.Query(null, null, out slewRateRising);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.SLEW.NEGative.IMMediate.Query(null, null, out slewRateFalling);
+                    break;
+                case LOAD_MODE.POW:
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.SLEW.POSitive.IMMediate.Query(null, null, out slewRateRising);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.SLEW.NEGative.IMMediate.Query(null, null, out slewRateFalling);
+                    break;                
+                case LOAD_MODE.RES:
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.SLEW.POSitive.IMMediate.Query(null, null, out slewRateRising);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.SLEW.NEGative.IMMediate.Query(null, null, out slewRateFalling);
+                    break;
+                case LOAD_MODE.VOLT:
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.POSitive.IMMediate.Query(null, null, out slewRateRising);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.NEGative.IMMediate.Query(null, null, out slewRateFalling);
+                    break;
+                default:
+                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
+            }
+                return (slewRateRising[0], slewRateFalling[0]);
+        }
+
+        public static void SlewRatesSet(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, LOAD_MODE LoadMode) {
+            switch (LoadMode) {
+                case LOAD_MODE.CURR:
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.SLEW.COUP.Command(false, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.SLEW.POSitive.MAXimum.Command(false, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.SLEW.POSitive.IMMediate.Command(SlewRateRising, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.SLEW.NEGative.MAXimum.Command(false, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.SLEW.NEGative.IMMediate.Command(SlewRateFalling, null);
+                    break;
+                case LOAD_MODE.POW:
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.SLEW.COUPle.Command(false, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.SLEW.POSitive.MAXimum.Command(false, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.SLEW.POSitive.IMMediate.Command(SlewRateRising, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.SLEW.NEGative.MAXimum.Command(false, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.SLEW.NEGative.IMMediate.Command(SlewRateFalling, null);
+                    break;
+                case LOAD_MODE.RES:
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.SLEW.COUPle.Command(false, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.SLEW.POSitive.MAXimum.Command(false, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.SLEW.POSitive.IMMediate.Command(SlewRateRising, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.SLEW.NEGative.MAXimum.Command(false, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.SLEW.NEGative.IMMediate.Command(SlewRateFalling, null);
+                    break;
+                case LOAD_MODE.VOLT:
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.COUPle.Command(false, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.POSitive.MAXimum.Command(false, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.POSitive.IMMediate.Command(SlewRateRising, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.NEGative.MAXimum.Command(false, null);
+                    ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.NEGative.IMMediate.Command(SlewRateFalling, null);
+                    break;
+                default:
+                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
+            }
+        }
+
         public static SENSE_MODE VoltageSenseModeGet(SCPI_VISA_Instrument SVI) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Query(null, out String SenseMode);
             return (SENSE_MODE)Enum.Parse(typeof(SENSE_MODE), SenseMode); 

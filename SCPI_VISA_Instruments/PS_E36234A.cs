@@ -101,9 +101,9 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static Boolean SlewRatesAre(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, CHANNEL Channel) { return ((SlewRateRising, SlewRateFalling) == SlewRatesGet(SVI, Channel)); }
 
         public static (Double SlewRateRising, Double SlewRateFalling) SlewRatesGet(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.RISing.IMMediate.Query(null, Channels[Channel], out Double[] srr);
-            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.FALLing.IMMediate.Query(null, Channels[Channel], out Double[] srf);
-            return (srr[(Int32)Channel], srf[(Int32)Channel]);
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.RISing.IMMediate.Query(null, Channels[Channel], out Double[] slewRateRising);
+            ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.FALLing.IMMediate.Query(null, Channels[Channel], out Double[] slewRateFalling);
+            return (slewRateRising[(Int32)Channel], slewRateFalling[(Int32)Channel]);
         }
 
         public static void SlewRatesSet(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, CHANNEL Channel) {
