@@ -38,12 +38,6 @@ using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
 ///  </para>
 
-// TODO: TestExecutive + TestExecutor:
-// Add must be overridden TestExecutive method ResetExecutor.
-// Add TestExecutor method Reset that invokes both ResetExecutive & ResetExecutor.
-//      -Rename TestExecutive's TestSystemReset to ResetExecutive.
-//      - For isoMicro, it will invoke Isou.ENABLE_N.Set(ENABLE_N.FLOAT_HIGH).
-//      - Similar to TestExecutive's MeasurementTestsRun.
 //  Change Administrative menu to Self-Diagnostics, Configuration (TestExecutive + TestExecutor), System Documentation & Apps (Keysight, NI, MCC, Honeywell), Test Data (export & query via Access), UUT documentation (eDocs general + UUT eDoc specific)
 //  Add Administrative menu:
 //      - Edit configuration files via XML editor, after entering password:
@@ -393,14 +387,7 @@ namespace ABT.TestSpace.TestExec {
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
 
-        public void TestSystemReset() {
-            SCPI99.ResetAll(SVIs);
-            UE24.Set(RelayForms.C.S.NC);
-        }
-
-        private void TestExecutive_Load(Object sender, EventArgs e) {
-
-        }
+        public abstract void TestSystemReset();
     }
 
     public class CancellationException : Exception {
