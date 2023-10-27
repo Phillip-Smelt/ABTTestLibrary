@@ -15,6 +15,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
     public static class EL_34143A {
         public const String MODEL = "EL34143A";
+
+        public const Boolean Stimulates = true;
  
         public static Boolean IsEL_34143A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgEL30000)); }
 

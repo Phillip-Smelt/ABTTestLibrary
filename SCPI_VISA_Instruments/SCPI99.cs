@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 // All Agilent.CommandExpert.ScpiNet drivers are procured by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
@@ -44,11 +45,11 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static Boolean Are(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs, STATE State) {
             Boolean Are = true;
-            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Are &= Is(kvp.Value, State);
+            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) if (kvp.Value.Stimulates) Are &= Is(kvp.Value, State);
             return Are;
         }
         
-        public static STATE Get(SCPI_VISA_Instrument SVI) { return (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) ? STATE.off : STATE.ON; }
+        public static STATE Get(SCPI_VISA_Instrument SVI) { return (String.Equals(Query(SVI, ":OUTPUT?"), "0")) ? STATE.off : STATE.ON; }
 
         public static Boolean Is(SCPI_VISA_Instrument SVI, STATE State) { return (Get(SVI) == State); }
      

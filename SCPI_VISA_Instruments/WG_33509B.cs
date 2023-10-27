@@ -13,6 +13,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class WG_33509B {
         public const String MODEL = "33509B";
 
+        public const Boolean Stimulates = true;
+
         public static void FunctionSquare(SCPI_VISA_Instrument SVI, Double DutyCyclePercent, Double Hz) {
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FUNCtion.SQUare.DCYCle.Command(null, DutyCyclePercent, "PCT");
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FUNCtion.SQUare.PERiod.Command(null, 1/Hz);
