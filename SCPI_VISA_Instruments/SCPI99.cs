@@ -34,7 +34,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void Clear(SCPI_VISA_Instrument SVI) { new AgSCPI99(SVI.Address).SCPI.CLS.Command(); }
 
-        public static void ClearAll(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value); }
+        public static void Clear(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value); }
 
         public static void Command(SCPI_VISA_Instrument SVI, String SCPI_Command) { new AgSCPI99(SVI.Address).Transport.Command.Invoke(SCPI_Command); }
 
@@ -42,10 +42,16 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         internal static String ErrorMessageGet(SCPI_VISA_Instrument SVI, String errorMessage) { return $"{ErrorMessageGet(SVI)}{errorMessage}{Environment.NewLine}"; }
 
+        public static Boolean Are(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs, STATE State) {
+            Boolean Are = true;
+            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Are &= Is(kvp.Value, State);
+            return Are;
+        }
+        
         public static STATE Get(SCPI_VISA_Instrument SVI) { return (String.Equals(SCPI99.Query(SVI, ":OUTPUT?"), "0")) ? STATE.off : STATE.ON; }
 
         public static Boolean Is(SCPI_VISA_Instrument SVI, STATE State) { return (Get(SVI) == State); }
-      
+     
         public static String IdentityGet(SCPI_VISA_Instrument SVI) { return IdentityGet(SVI.Address); }
 
         public static String IdentityGet(String Address) {
@@ -65,14 +71,14 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             Clear(SVI); // Clear all event registers & the Status Byte register.
         }
 
-        public static void InitializeAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) Initialize(kvp.Value); }
+        public static void Initialize(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) Initialize(kvp.Value); }
 
         internal static Boolean IsCloseEnough(Double D1, Double D2, Double Delta) { return Math.Abs(D1 - D2) <= Delta; }
         // Close is good enough for horseshoes, hand grenades, nuclear weapons, and Doubles!  Shamelessly plagiarized from the Internet!
 
         public static void Reset(SCPI_VISA_Instrument SVI) { new AgSCPI99(SVI.Address).SCPI.RST.Command(); }
 
-        public static void ResetAll(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Reset(kvp.Value); }
+        public static void Reset(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Reset(kvp.Value); }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
             try {
@@ -87,7 +93,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             }
         }
 
-        public static void SelfTestAll(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value); }
+        public static void SelfTest(Dictionary<String, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value); }
 
         public static void Set(SCPI_VISA_Instrument SVI, STATE State) { if(!Is(SVI, State)) Command(SVI, (State is STATE.off) ? ":OUTPUT 0" : ":OUTPUT 1"); }
 

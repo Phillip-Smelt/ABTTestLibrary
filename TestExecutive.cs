@@ -14,6 +14,8 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
+using static ABT.TestSpace.TestExec.Switching.RelayForms;
+using Windows.Security.EnterpriseData;
 
 /// <para>
 /// TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -161,7 +163,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            Reset();
+            Initialize();
             if (ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
 
@@ -280,7 +282,7 @@ namespace ABT.TestSpace.TestExec {
                 kvp.Value.Message = String.Empty;
             }
             ConfigUUT.EventCode = EventCodes.UNSET;
-            Reset();
+            Initialize();
         }
 
         private async Task MeasurementsRun() {
@@ -290,7 +292,7 @@ namespace ABT.TestSpace.TestExec {
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
-                        Reset();
+                        Initialize();
                         if (e.ToString().Contains(CancellationException.ClassName)) {
                             ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
                             while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
@@ -318,7 +320,7 @@ namespace ABT.TestSpace.TestExec {
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
-            Reset();
+            Initialize();
             ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
@@ -387,9 +389,15 @@ namespace ABT.TestSpace.TestExec {
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
 
-        public abstract void Reset();
+        public virtual void Initialize() {
+            SCPI99.Reset(SVIs);
+            UE24.Set(C.S.NC);
+        }
 
-        public abstract Boolean ResetIs();
+        public virtual Boolean Initialized() {
+            return SCPI99.Are(SVIs, STATE.off)
+                && UE24.Are(C.S.NC);
+        }
     }
 
     public class CancellationException : Exception {
