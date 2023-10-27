@@ -161,7 +161,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            TestSystemResetCommand();
+            Reset();
             if (ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
 
@@ -280,7 +280,7 @@ namespace ABT.TestSpace.TestExec {
                 kvp.Value.Message = String.Empty;
             }
             ConfigUUT.EventCode = EventCodes.UNSET;
-            TestSystemResetCommand();
+            Reset();
         }
 
         private async Task MeasurementsRun() {
@@ -290,7 +290,7 @@ namespace ABT.TestSpace.TestExec {
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
-                        TestSystemResetCommand();
+                        Reset();
                         if (e.ToString().Contains(CancellationException.ClassName)) {
                             ConfigTest.Measurements[measurementID].Result = EventCodes.CANCEL;
                             while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
@@ -318,7 +318,7 @@ namespace ABT.TestSpace.TestExec {
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
-            TestSystemResetCommand();
+            Reset();
             ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
@@ -387,9 +387,9 @@ namespace ABT.TestSpace.TestExec {
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
 
-        public abstract void TestSystemResetCommand();
+        public abstract void Reset();
 
-        public abstract Boolean TestSystemResetIs();
+        public abstract Boolean ResetIs();
     }
 
     public class CancellationException : Exception {
