@@ -16,6 +16,7 @@ using ABT.TestSpace.TestExec.Switching;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
 using Windows.Security.EnterpriseData;
+using System.IO;
 
 /// <para>
 /// TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -167,25 +168,6 @@ namespace ABT.TestSpace.TestExec {
             if (ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
        }
 
-        private void ButtonOpenTestDataFolder_Click(Object sender, EventArgs e) {
-            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{Logger.GetFilePath(this)}\"" };
-            Process.Start(psi);
-        }
-
-        private void ButtonSaveOutput_Click(Object sender, EventArgs e) {
-            SaveFileDialog saveFileDialog = new SaveFileDialog {
-                Title = "Save Test Results",
-                Filter = "Rich Text Format|*.rtf",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{ConfigUUT.Number}_{ConfigTest.TestElementID}_{ConfigUUT.SerialNumber}",
-                DefaultExt = "rtf",
-                CreatePrompt = false,
-                OverwritePrompt = true
-            };
-            DialogResult dialogResult = saveFileDialog.ShowDialog();
-            if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName);
-        }
-
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
             ConfigTest = AppConfigTest.Get();
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
@@ -227,21 +209,6 @@ namespace ABT.TestSpace.TestExec {
             FormModeReset();
             FormModeWait();
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}";
-#if !DEBUG
-            if (!String.Equals(String.Empty, ConfigUUT.DocumentationFolder)) {
-                if (Directory.Exists(ConfigUUT.DocumentationFolder)) {
-                    ProcessStartInfo psi = new ProcessStartInfo {
-                        FileName = "explorer.exe",
-                        WindowStyle = ProcessWindowStyle.Minimized,
-                        Arguments = $"\"{ConfigUUT.DocumentationFolder}\""
-                    };
-                    Process.Start(psi);
-                    // Paths with embedded spaces require enclosing double-quotes (").
-                    // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
-                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-                } else MessageBox.Show(Form.ActiveForm, $"Path {ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-#endif
         }
 
         private void FormModeReset() {
@@ -254,8 +221,7 @@ namespace ABT.TestSpace.TestExec {
             ButtonCancelReset(enabled: true);
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
-            ButtonSaveOutput.Enabled = false;
-            ButtonOpenTestDataFolder.Enabled = false;
+            fileToolStripMenuItem.Enabled = false;
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
@@ -263,13 +229,8 @@ namespace ABT.TestSpace.TestExec {
             ButtonSelectTests.Enabled = true;
             ButtonStartReset(enabled: (ConfigTest != null));
             ButtonCancelReset(enabled: false);
-            if (ConfigTest != null) {
-                ButtonSaveOutput.Enabled = !ConfigTest.IsOperation;
-                ButtonOpenTestDataFolder.Enabled = (ConfigTest.IsOperation && ConfigLogger.FileEnabled);
-            } else {
-                ButtonSaveOutput.Enabled = false;
-                ButtonOpenTestDataFolder.Enabled = false;
-            }
+            if (ConfigTest != null) fileToolStripMenuItem.Enabled = !ConfigTest.IsOperation;
+            else fileToolStripMenuItem.Enabled = false;
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
@@ -397,6 +358,49 @@ namespace ABT.TestSpace.TestExec {
         public virtual Boolean Initialized() {
             return SCPI99.Are(SVIs, STATE.off)
                 && UE24.Are(C.S.NC);
+        }
+
+        private void praiseToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void requestImprovementToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void eDocsToolStripMenuItem_Click(Object sender, EventArgs e) {
+            if (!String.Equals(String.Empty, ConfigUUT.DocumentationFolder)) {
+                if (Directory.Exists(ConfigUUT.DocumentationFolder)) {
+                    ProcessStartInfo psi = new ProcessStartInfo {
+                        FileName = "explorer.exe",
+                        WindowStyle = ProcessWindowStyle.Minimized,
+                        Arguments = $"\"{ConfigUUT.DocumentationFolder}\""
+                    };
+                    Process.Start(psi);
+                    // Paths with embedded spaces require enclosing double-quotes (").
+                    // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
+                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
+                } else MessageBox.Show(Form.ActiveForm, $"Path {ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void pDriveTDRFolderToolStripMenuItem_Click(Object sender, EventArgs e) {
+            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{Logger.GetFilePath(this)}\"" };
+            Process.Start(psi);
+        }
+
+        private void saveToolStripMenuItem_Click(Object sender, EventArgs e) {
+            SaveFileDialog saveFileDialog = new SaveFileDialog {
+                Title = "Save Test Results",
+                Filter = "Rich Text Format|*.rtf",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                FileName = $"{ConfigUUT.Number}_{ConfigTest.TestElementID}_{ConfigUUT.SerialNumber}",
+                DefaultExt = "rtf",
+                CreatePrompt = false,
+                OverwritePrompt = true
+            };
+            DialogResult dialogResult = saveFileDialog.ShowDialog();
+            if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName);
         }
     }
 
