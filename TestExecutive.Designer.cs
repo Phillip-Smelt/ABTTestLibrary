@@ -236,6 +236,7 @@ namespace ABT.TestSpace.TestExec {
             this.printToolStripMenuItem.Size = new System.Drawing.Size(188, 30);
             this.printToolStripMenuItem.Text = "&Print";
             this.printToolStripMenuItem.ToolTipText = "Print UUT results.";
+            this.printToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
             // 
             // printPreviewToolStripMenuItem
             // 
@@ -245,6 +246,7 @@ namespace ABT.TestSpace.TestExec {
             this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(188, 30);
             this.printPreviewToolStripMenuItem.Text = "Print Pre&view";
             this.printPreviewToolStripMenuItem.ToolTipText = "Preview UUT results.";
+            this.printPreviewToolStripMenuItem.Click += new System.EventHandler(this.printPreviewToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -257,6 +259,7 @@ namespace ABT.TestSpace.TestExec {
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(188, 30);
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.ToolTipText = "Close application.";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // operationToolStripMenuItem
             // 
@@ -272,7 +275,7 @@ namespace ABT.TestSpace.TestExec {
             // eDocsToolStripMenuItem
             // 
             this.eDocsToolStripMenuItem.Name = "eDocsToolStripMenuItem";
-            this.eDocsToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.eDocsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.eDocsToolStripMenuItem.Text = "&eDocs";
             this.eDocsToolStripMenuItem.ToolTipText = "UUT\'s P: drive eDocs folder.";
             this.eDocsToolStripMenuItem.Click += new System.EventHandler(this.eDocsToolStripMenuItem_Click);
@@ -283,7 +286,7 @@ namespace ABT.TestSpace.TestExec {
             this.pDriveTDRFolderToolStripMenuItem,
             this.sQLReportingQueryingToolStripMenuItem});
             this.testDataToolStripMenuItem.Name = "testDataToolStripMenuItem";
-            this.testDataToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.testDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.testDataToolStripMenuItem.Text = "&Test Data";
             // 
             // pDriveTDRFolderToolStripMenuItem
@@ -301,6 +304,7 @@ namespace ABT.TestSpace.TestExec {
             this.sQLReportingQueryingToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.sQLReportingQueryingToolStripMenuItem.Text = "&SQL Reporting && Querying";
             this.sQLReportingQueryingToolStripMenuItem.ToolTipText = "Coming soon!";
+            this.sQLReportingQueryingToolStripMenuItem.Click += new System.EventHandler(this.sQLReportingQueryingToolStripMenuItem_Click);
             // 
             // systemToolStripMenuItem
             // 
@@ -308,7 +312,7 @@ namespace ABT.TestSpace.TestExec {
             this.configureToolStripMenuItem,
             this.diagnosticsToolStripMenuItem});
             this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
-            this.systemToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.systemToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.systemToolStripMenuItem.Text = "&System";
             // 
             // configureToolStripMenuItem
@@ -316,7 +320,7 @@ namespace ABT.TestSpace.TestExec {
             this.configureToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.barcodeScannerToolStripMenuItem});
             this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
-            this.configureToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.configureToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.configureToolStripMenuItem.Text = "&Configure";
             // 
             // barcodeScannerToolStripMenuItem
@@ -325,22 +329,24 @@ namespace ABT.TestSpace.TestExec {
             this.discoverToolStripMenuItem,
             this.programDefaultsToolStripMenuItem});
             this.barcodeScannerToolStripMenuItem.Name = "barcodeScannerToolStripMenuItem";
-            this.barcodeScannerToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.barcodeScannerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.barcodeScannerToolStripMenuItem.Text = "&Barcode Scanner";
             // 
             // discoverToolStripMenuItem
             // 
             this.discoverToolStripMenuItem.Name = "discoverToolStripMenuItem";
-            this.discoverToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.discoverToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.discoverToolStripMenuItem.Text = "&Discover";
             this.discoverToolStripMenuItem.ToolTipText = "Corded scanners only; no Bluetooth or Wireless scanners.";
+            this.discoverToolStripMenuItem.Click += new System.EventHandler(this.discoverToolStripMenuItem_Click);
             // 
             // programDefaultsToolStripMenuItem
             // 
             this.programDefaultsToolStripMenuItem.Name = "programDefaultsToolStripMenuItem";
-            this.programDefaultsToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.programDefaultsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.programDefaultsToolStripMenuItem.Text = "&Program Defaults";
             this.programDefaultsToolStripMenuItem.ToolTipText = "Program Factory Reset & USB-HID mode.";
+            this.programDefaultsToolStripMenuItem.Click += new System.EventHandler(this.programDefaultsToolStripMenuItem_Click);
             // 
             // diagnosticsToolStripMenuItem
             // 
@@ -349,31 +355,34 @@ namespace ABT.TestSpace.TestExec {
             this.instrumentsToolStripMenuItem,
             this.relaysToolStripMenuItem});
             this.diagnosticsToolStripMenuItem.Name = "diagnosticsToolStripMenuItem";
-            this.diagnosticsToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.diagnosticsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.diagnosticsToolStripMenuItem.Text = "&Diagnostics";
             // 
             // barcodeScannerToolStripMenuItem1
             // 
             this.barcodeScannerToolStripMenuItem1.Name = "barcodeScannerToolStripMenuItem1";
-            this.barcodeScannerToolStripMenuItem1.Size = new System.Drawing.Size(162, 22);
+            this.barcodeScannerToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.barcodeScannerToolStripMenuItem1.Text = "&Barcode Scanner";
             this.barcodeScannerToolStripMenuItem1.ToolTipText = "Barcode Scanner\'s power-on self-test.";
+            this.barcodeScannerToolStripMenuItem1.Click += new System.EventHandler(this.barcodeScannerToolStripMenuItem1_Click);
             // 
             // instrumentsToolStripMenuItem
             // 
             this.instrumentsToolStripMenuItem.Name = "instrumentsToolStripMenuItem";
-            this.instrumentsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.instrumentsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.instrumentsToolStripMenuItem.Text = "&Instruments";
             this.instrumentsToolStripMenuItem.ToolTipText = "Multi-select ListBox auto-populated from TestExecutive.config.xml.  Invoke SCPI_V" +
     "ISA_Instruments self-tests.";
+            this.instrumentsToolStripMenuItem.Click += new System.EventHandler(this.instrumentsToolStripMenuItem_Click);
             // 
             // relaysToolStripMenuItem
             // 
             this.relaysToolStripMenuItem.Enabled = false;
             this.relaysToolStripMenuItem.Name = "relaysToolStripMenuItem";
-            this.relaysToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.relaysToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.relaysToolStripMenuItem.Text = "&Relays";
             this.relaysToolStripMenuItem.ToolTipText = "Adapt MS-Test Unit Tests of USB-ERB24 class.";
+            this.relaysToolStripMenuItem.Click += new System.EventHandler(this.relaysToolStripMenuItem_Click);
             // 
             // submissionsToolStripMenuItem
             // 
@@ -381,7 +390,7 @@ namespace ABT.TestSpace.TestExec {
             this.complimentsToolStripMenuItem,
             this.criticismToolStripMenuItem});
             this.submissionsToolStripMenuItem.Name = "submissionsToolStripMenuItem";
-            this.submissionsToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.submissionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.submissionsToolStripMenuItem.Text = "Su&bmissions";
             // 
             // complimentsToolStripMenuItem
@@ -390,7 +399,7 @@ namespace ABT.TestSpace.TestExec {
             this.praiseToolStripMenuItem,
             this.moneyToolStripMenuItem});
             this.complimentsToolStripMenuItem.Name = "complimentsToolStripMenuItem";
-            this.complimentsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.complimentsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.complimentsToolStripMenuItem.Text = "Co&mpliments";
             // 
             // praiseToolStripMenuItem
@@ -404,9 +413,10 @@ namespace ABT.TestSpace.TestExec {
             // moneyToolStripMenuItem
             // 
             this.moneyToolStripMenuItem.Name = "moneyToolStripMenuItem";
-            this.moneyToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.moneyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.moneyToolStripMenuItem.Text = "&Money!";
             this.moneyToolStripMenuItem.ToolTipText = "For a good cause! ";
+            this.moneyToolStripMenuItem.Click += new System.EventHandler(this.moneyToolStripMenuItem_Click);
             // 
             // criticismToolStripMenuItem
             // 
@@ -414,7 +424,7 @@ namespace ABT.TestSpace.TestExec {
             this.reportBugToolStripMenuItem,
             this.requestImprovementToolStripMenuItem});
             this.criticismToolStripMenuItem.Name = "criticismToolStripMenuItem";
-            this.criticismToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.criticismToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.criticismToolStripMenuItem.Text = "Cri&ticism";
             // 
             // reportBugToolStripMenuItem
@@ -423,6 +433,7 @@ namespace ABT.TestSpace.TestExec {
             this.reportBugToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.reportBugToolStripMenuItem.Text = "&Bug Report";
             this.reportBugToolStripMenuItem.ToolTipText = "Remember, \"The devil is is in the details.\" - Friedrich Nietzsche";
+            this.reportBugToolStripMenuItem.Click += new System.EventHandler(this.reportBugToolStripMenuItem_Click);
             // 
             // requestImprovementToolStripMenuItem
             // 
@@ -449,31 +460,34 @@ namespace ABT.TestSpace.TestExec {
             this.signOutToolStripMenuItem,
             this.changeToolStripMenuItem});
             this.passwordToolStripMenuItem.Name = "passwordToolStripMenuItem";
-            this.passwordToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.passwordToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.passwordToolStripMenuItem.Text = "&Password";
             // 
             // signInToolStripMenuItem
             // 
             this.signInToolStripMenuItem.Name = "signInToolStripMenuItem";
-            this.signInToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.signInToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.signInToolStripMenuItem.Text = "Sign &In";
             this.signInToolStripMenuItem.ToolTipText = "Sign in to enable Administration menu items.";
+            this.signInToolStripMenuItem.Click += new System.EventHandler(this.signInToolStripMenuItem_Click);
             // 
             // signOutToolStripMenuItem
             // 
             this.signOutToolStripMenuItem.Enabled = false;
             this.signOutToolStripMenuItem.Name = "signOutToolStripMenuItem";
-            this.signOutToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.signOutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.signOutToolStripMenuItem.Text = "Sign &Out";
             this.signOutToolStripMenuItem.ToolTipText = "Sign out to disable Administration menu items.";
+            this.signOutToolStripMenuItem.Click += new System.EventHandler(this.signOutToolStripMenuItem_Click);
             // 
             // changeToolStripMenuItem
             // 
             this.changeToolStripMenuItem.Enabled = false;
             this.changeToolStripMenuItem.Name = "changeToolStripMenuItem";
-            this.changeToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.changeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.changeToolStripMenuItem.Text = "&Change";
             this.changeToolStripMenuItem.ToolTipText = "Change Adminstrative password.";
+            this.changeToolStripMenuItem.Click += new System.EventHandler(this.changeToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -482,7 +496,7 @@ namespace ABT.TestSpace.TestExec {
             this.testExecutiveconfigxmlToolStripMenuItem});
             this.editToolStripMenuItem.Enabled = false;
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.editToolStripMenuItem.Text = "&Edit";
             // 
             // appconfigToolStripMenuItem
@@ -491,6 +505,7 @@ namespace ABT.TestSpace.TestExec {
             this.appconfigToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.appconfigToolStripMenuItem.Text = "&App.config";
             this.appconfigToolStripMenuItem.ToolTipText = "UUT\'s test configuration.";
+            this.appconfigToolStripMenuItem.Click += new System.EventHandler(this.appconfigToolStripMenuItem_Click);
             // 
             // testExecutiveconfigxmlToolStripMenuItem
             // 
@@ -498,6 +513,7 @@ namespace ABT.TestSpace.TestExec {
             this.testExecutiveconfigxmlToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.testExecutiveconfigxmlToolStripMenuItem.Text = "&TestExecutive.config.xml";
             this.testExecutiveconfigxmlToolStripMenuItem.ToolTipText = "Test System\'s configuration.";
+            this.testExecutiveconfigxmlToolStripMenuItem.Click += new System.EventHandler(this.testExecutiveconfigxmlToolStripMenuItem_Click);
             // 
             // launchToolStripMenuItem
             // 
@@ -507,7 +523,7 @@ namespace ABT.TestSpace.TestExec {
             this.microsoftToolStripMenuItem});
             this.launchToolStripMenuItem.Enabled = false;
             this.launchToolStripMenuItem.Name = "launchToolStripMenuItem";
-            this.launchToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.launchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.launchToolStripMenuItem.Text = "&Launch";
             // 
             // keysightToolStripMenuItem
@@ -523,23 +539,26 @@ namespace ABT.TestSpace.TestExec {
             // benchVueToolStripMenuItem
             // 
             this.benchVueToolStripMenuItem.Name = "benchVueToolStripMenuItem";
-            this.benchVueToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.benchVueToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.benchVueToolStripMenuItem.Text = "&BenchVue";
             this.benchVueToolStripMenuItem.ToolTipText = "Control Keysight Instruments via soft/virtual panels.";
+            this.benchVueToolStripMenuItem.Click += new System.EventHandler(this.benchVueToolStripMenuItem_Click);
             // 
             // commandExpertToolStripMenuItem
             // 
             this.commandExpertToolStripMenuItem.Name = "commandExpertToolStripMenuItem";
-            this.commandExpertToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.commandExpertToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.commandExpertToolStripMenuItem.Text = "Co&mmand Expert";
             this.commandExpertToolStripMenuItem.ToolTipText = "SCPI programming & debugging IDE.";
+            this.commandExpertToolStripMenuItem.Click += new System.EventHandler(this.commandExpertToolStripMenuItem_Click);
             // 
             // connectionExpertToolStripMenuItem
             // 
             this.connectionExpertToolStripMenuItem.Name = "connectionExpertToolStripMenuItem";
-            this.connectionExpertToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.connectionExpertToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.connectionExpertToolStripMenuItem.Text = "Co&nnection Expert";
             this.connectionExpertToolStripMenuItem.ToolTipText = "Discover VISA Instruments.";
+            this.connectionExpertToolStripMenuItem.Click += new System.EventHandler(this.connectionExpertToolStripMenuItem_Click);
             // 
             // measurementComputingToolStripMenuItem
             // 
@@ -552,9 +571,10 @@ namespace ABT.TestSpace.TestExec {
             // instaCalToolStripMenuItem
             // 
             this.instaCalToolStripMenuItem.Name = "instaCalToolStripMenuItem";
-            this.instaCalToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.instaCalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.instaCalToolStripMenuItem.Text = "&InstaCal";
             this.instaCalToolStripMenuItem.ToolTipText = "Configure & test MCC Instruments, like USB-ERB24 relays.";
+            this.instaCalToolStripMenuItem.Click += new System.EventHandler(this.instaCalToolStripMenuItem_Click);
             // 
             // microsoftToolStripMenuItem
             // 
@@ -572,6 +592,7 @@ namespace ABT.TestSpace.TestExec {
             this.sQLServerToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.sQLServerToolStripMenuItem.Text = "&SQL Server Management Studio";
             this.sQLServerToolStripMenuItem.ToolTipText = "Coming soon!";
+            this.sQLServerToolStripMenuItem.Click += new System.EventHandler(this.sQLServerToolStripMenuItem_Click);
             // 
             // visualStudioToolStripMenuItem
             // 
@@ -579,6 +600,7 @@ namespace ABT.TestSpace.TestExec {
             this.visualStudioToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.visualStudioToolStripMenuItem.Text = "&Visual Studio";
             this.visualStudioToolStripMenuItem.ToolTipText = "C# forever!";
+            this.visualStudioToolStripMenuItem.Click += new System.EventHandler(this.visualStudioToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -596,7 +618,7 @@ namespace ABT.TestSpace.TestExec {
             // contentsToolStripMenuItem
             // 
             this.contentsToolStripMenuItem.Name = "contentsToolStripMenuItem";
-            this.contentsToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.contentsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.contentsToolStripMenuItem.Text = "&Contents";
             // 
             // toolStripMenuItem1
@@ -606,52 +628,56 @@ namespace ABT.TestSpace.TestExec {
             this.toolStripMenuItem3,
             this.toolStripMenuItem4});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(122, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem1.Text = "&Manuals";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(162, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem2.Text = "&Barcode Scanner";
             this.toolStripMenuItem2.ToolTipText = "If you\'re bored...";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(162, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem3.Text = "&Instruments";
             this.toolStripMenuItem3.ToolTipText = "...really bored...";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(162, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem4.Text = "&Relays";
             this.toolStripMenuItem4.ToolTipText = "...zzzzzz...";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // indexToolStripMenuItem
             // 
             this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-            this.indexToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.indexToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.indexToolStripMenuItem.Text = "&Index";
             // 
             // searchToolStripMenuItem
             // 
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            this.searchToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.searchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.searchToolStripMenuItem.Text = "&Search";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(119, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // TestExecutive
             // 

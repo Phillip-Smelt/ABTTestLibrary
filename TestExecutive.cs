@@ -41,43 +41,11 @@ using System.IO;
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
 ///  </para>
 
-//  Change Administrative menu to Self-Diagnostics, Configuration (TestExecutive + TestExecutor), System Documentation & Apps (Keysight, NI, MCC, Honeywell), Test Data (export & query via Access), UUT documentation (eDocs general + UUT eDoc specific)
-//  Add Administrative menu:
-//      - Edit configuration files via XML editor, after entering password:
-//      - TestExecutive.config.xml
-//      - App.Config
-//  Discover Windows.Devices.Pointofservice Barcodescanners.
-//      - Corded, Bluetooth & Wireless?
-//      - Or corded only.
-//  NI Tools
-//      - Launch NI-VISA
-//      - Launch NI's Measurement & Automation Explorer (MAX).
-//  Discover VISA Instruments & Addresses for TestExecutive.config.xml.
-//      - Keysight Tools
-//      - Launch Connection Expert
-//      - Discover VISA Instruments & Addresses for TestExecutive.config.xml.
-//      - Launch Command Expert
-//      - Launch BenchVue
-//      - Install BenchVue Instruments first!
-//  Open P:\Drive folder containing all Keysight Instrument manuals
-//      - Measurement Computing Corporation
-//      - Launch InstaCal
-//      - Open P:\Drive folder containing USB-ERB24 documentation & Univeral Library documentation.
-//  Self-Diagnostics
-//      - Run all SCPI VISA instrument self-tests.
-//      - Cobble together USB-ERB24 self-tests from MS-Tests of USB-ERB24.
 //  Barcode Scanner self-tests; open JPEG image of self-test barcode.
 //      - Honeywell Voyager 1200g Barcode Scanner
 //      - Open JPEG image of PAP131 USB-HID mode barcode.
 //      - Open JPEG image of factory reset barcode.
 //      - Open P:\Drive folder containing Voyager 1200g documentation.
-//  Databasing:
-//     - Launch Microsoft SQL Server Administration (password protected)
-//     - Launch Microsoft Access Queries for data-mining.
-//     - Add TestExecutive command Button specifically to query/export test data.
-//     - Add updateable paths to TestExecutive.config.xml for:
-//     - NI-VISA, NI-MAX, Connection Expert, Command Expert, BenchVue, MCC Instacal.
-//     - P:\Drive links to Keysight instrument manuals, MCC USB-ERB24 manual, MCC Universal Library documentation, Voyager 1200g documentation.
 
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
@@ -401,6 +369,117 @@ namespace ABT.TestSpace.TestExec {
             };
             DialogResult dialogResult = saveFileDialog.ShowDialog();
             if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName);
+        }
+
+        private void fileToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void printToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void printPreviewToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void exitToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void sQLReportingQueryingToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void discoverToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void programDefaultsToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void barcodeScannerToolStripMenuItem1_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void instrumentsToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void relaysToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void moneyToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void reportBugToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void appconfigToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void testExecutiveconfigxmlToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void benchVueToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void commandExpertToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void connectionExpertToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void instaCalToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void sQLServerToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void visualStudioToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void signInToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void signOutToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void changeToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void toolStripMenuItem2_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void toolStripMenuItem3_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void toolStripMenuItem4_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void aboutToolStripMenuItem_Click(Object sender, EventArgs e) {
+            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName()} version {_appAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
+             $"{Assembly.GetExecutingAssembly().GetName()} version {_libraryAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
+             $"© 2022, Amphenol Borisch Technologies.",
+            "About...", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 
