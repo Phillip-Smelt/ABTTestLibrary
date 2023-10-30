@@ -225,15 +225,6 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_FilePrintPreview_Click(Object sender, EventArgs e) { }
         private void TSMI_FileExit_Click(Object sender, EventArgs e) { }
 
-        private void TSMI_OperationConfigureBarcodeScanner_Click(Object sender, EventArgs e) { }
-        private void TSMI_OperationDiagnosticsBarcodeScanner_Click(Object sender, EventArgs e) { }
-        private void TSMI_OperationDiagnosticsInstruments_Click(Object sender, EventArgs e) { }
-        private void TSMI_OperationDiagnosticsRelays_Click(Object sender, EventArgs e) { }
-        private void TSMI_OperationComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) { }
-        private void TSMI_OperationComplimentsMoney_Click(Object sender, EventArgs e) { }
-        private void TSMI_OperationCritiqueBugReport_Click(Object sender, EventArgs e) { }
-        private void TSMI_OperationCritiqueImprovementRequest_Click(Object sender, EventArgs e) { }
-
         private void TSMI_AdministrationPasswordLogIn_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationPasswordLogOut_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationPasswordChange_Click(Object sender, EventArgs e) { }
@@ -246,38 +237,20 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_AdministrationLaunchMicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationLaunchMicrosoftVisualStudio_Click(Object sender, EventArgs e) { }
 
-        private void TSMI_Help_eDocs_Click(Object sender, EventArgs e) { }
-        private void TSMI_Help_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { }
-        private void TSMI_Help_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
-        private void TSMI_Help_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { }
-        private void TSMI_Help_ManualsInstruments_Click(Object sender, EventArgs e) { }
-        private void TSMI_Help_ManualsRelays_Click(Object sender, EventArgs e) { }
-        private void TSMI_Help_Contents_Click(Object sender, EventArgs e) { }
-        private void TSMI_Help_Index_Click(Object sender, EventArgs e) { }
-        private void TSMI_Help_Search_Click(Object sender, EventArgs e) { }
-        private void TSMI_Help_About_Click(Object sender, EventArgs e) { }
-        
-        private void printToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void printPreviewToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void exitToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void praiseToolStripMenuItem_Click(Object sender, EventArgs e) {
+        private void TSMI_SystemConfigureBarcodeScanner_Click(Object sender, EventArgs e) { }
+        private void TSMI_SystemDiagnosticsBarcodeScanner_Click(Object sender, EventArgs e) { }
+        private void TSMI_SystemDiagnosticsInstruments_Click(Object sender, EventArgs e) { }
+        private void TSMI_SystemDiagnosticsRelays_Click(Object sender, EventArgs e) { }
+        private void TSMI_SystemComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"You are a kind & generous person, {System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
-        private void requestImprovementToolStripMenuItem_Click(Object sender, EventArgs e) {
-
+        private void TSMI_SystemComplimentsMoney_Click(Object sender, EventArgs e) {
+            _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+        private void TSMI_SystemCritiqueBugReport_Click(Object sender, EventArgs e) { }
+        private void TSMI_SystemCritiqueImprovementRequest_Click(Object sender, EventArgs e) { }
 
-        private void eDocsToolStripMenuItem_Click(Object sender, EventArgs e) {
+        private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) {
             if (!String.Equals(String.Empty, ConfigUUT.DocumentationFolder)) {
                 if (Directory.Exists(ConfigUUT.DocumentationFolder)) {
                     ProcessStartInfo psi = new ProcessStartInfo {
@@ -292,94 +265,50 @@ namespace ABT.TestSpace.TestExec {
                 } else MessageBox.Show(Form.ActiveForm, $"Path {ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
-
-        private void pDriveTDRFolderToolStripMenuItem_Click(Object sender, EventArgs e) {
+        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) {
             ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{Logger.GetFilePath(this)}\"" };
-            Process.Start(psi);
+            Process.Start(psi);      
         }
+        private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
+        private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { }
 
-        private void sQLReportingQueryingToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void discoverToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void programDefaultsToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void barcodeScannerToolStripMenuItem1_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void instrumentsToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void relaysToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void moneyToolStripMenuItem_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void reportBugToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void appconfigToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void testExecutiveconfigxmlToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void benchVueToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void commandExpertToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void connectionExpertToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void instaCalToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void sQLServerToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void visualStudioToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void signInToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void signOutToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void changeToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void aboutToolStripMenuItem_Click(Object sender, EventArgs e) {
+        private void TSMI_Help_Contents_Click(Object sender, EventArgs e) { }
+        private void TSMI_Help_Index_Click(Object sender, EventArgs e) { }
+        private void TSMI_Help_Search_Click(Object sender, EventArgs e) { }
+        private void TSMI_Help_About_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName()}, version {_appAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
              $"{Assembly.GetExecutingAssembly().GetName()}, version {_libraryAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
              $"© 2022, Amphenol Borisch Technologies.",
             "About...", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+        
+        private void printToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void printPreviewToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void exitToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void praiseToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void requestImprovementToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void eDocsToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void pDriveTDRFolderToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void sQLReportingQueryingToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void discoverToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void programDefaultsToolStripMenuItem_Click(Object sender, EventArgs e) {  }
+        private void barcodeScannerToolStripMenuItem1_Click(Object sender, EventArgs e) { }
+        private void instrumentsToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void relaysToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void moneyToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void reportBugToolStripMenuItem_Click(Object sender, EventArgs e) {  }
+        private void appconfigToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void testExecutiveconfigxmlToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void benchVueToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void commandExpertToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void connectionExpertToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void instaCalToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void sQLServerToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void visualStudioToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void signInToolStripMenuItem_Click(Object sender, EventArgs e) {}
+        private void signOutToolStripMenuItem_Click(Object sender, EventArgs e) {  }
+        private void changeToolStripMenuItem_Click(Object sender, EventArgs e) { }
+        private void aboutToolStripMenuItem_Click(Object sender, EventArgs e) { }
         #endregion Tool Strip Menu Items
         #endregion Form
 
