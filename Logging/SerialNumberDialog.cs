@@ -71,7 +71,7 @@ namespace ABT.TestSpace.TestExec.Logging {
         }
 
         private void GetConfiguration() {
-            IEnumerable<String> scannerID = from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("BarCodeScannerID").Value;
+            IEnumerable<String> scannerID = from xe in XElement.Load("TestExecutive.config.xml").Elements("ManualFolders") select xe.Element("BarCodeScanner").Value;
             _scannerID = scannerID.First();
             IEnumerable<String> regEx = from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("SerialNumberRegEx").Value;
             _regEx = regEx.First();

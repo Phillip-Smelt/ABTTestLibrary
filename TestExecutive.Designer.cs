@@ -34,17 +34,38 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonEmergencyStop = new System.Windows.Forms.Button();
             this.MS = new System.Windows.Forms.MenuStrip();
             this.TSMI_File = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_FileSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_File_Save = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_FileSeperator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.TSMI_FilePrint = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_FilePrintPreview = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_File_Print = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_File_PrintPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_FileSeperator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.TSMI_FileExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_File_Exit = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Administration = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Administration_Edit = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Administration_EditAppConfig = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Administration_EditTestExecutiveXML = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Administration_Launch = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Administration_LaunchKeysight = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Administration_LaunchKeysightBenchVue = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Administration_LaunchKeysightCommandExpert = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Administration_LaunchKeysightConnectionExpert = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Administration_LaunchMeasurementComputing = new System.Windows.Forms.ToolStripMenuItem();
+            this.instaCalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Administration_LaunchMicrosoft = new System.Windows.Forms.ToolStripMenuItem();
+            this.sQLServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.visualStudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_System = new System.Windows.Forms.ToolStripMenuItem();
+            this.TMSI_SystemBarcodeScanner = new System.Windows.Forms.ToolStripMenuItem();
+            this.TMSI_SystemBarcodeScannerDiscover = new System.Windows.Forms.ToolStripMenuItem();
+            this.TMSI_SystemBarcodeScannerProgramDefaults = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_SystemDiagnostics = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_SystemDiagnosticsBarcodeScanner = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_SystemDiagnosticsInstruments = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_SystemDiagnosticsRelays = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_SystemManuals = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_SystemManualsBarcodeScanner = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_SystemManualsInstruments = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_SystemManualsRelays = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_SystemSeperator1 = new System.Windows.Forms.ToolStripSeparator();
             this.TMSI_SystemCompliments = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_SystemComplimentsPraiseAndPlaudits = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,36 +73,15 @@ namespace ABT.TestSpace.TestExec {
             this.TMSI_SystemCritiques = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_SystemCritiquesBugReport = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_SystemCritiquesImprovementRequest = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Administration = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_AdministrationEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_AdministrationEditAppConfig = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_AdministrationEditTestExecutiveXML = new System.Windows.Forms.ToolStripMenuItem();
-            this.TMS = new System.Windows.Forms.ToolStripMenuItem();
-            this.keysightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.benchVueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.commandExpertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.connectionExpertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.measurementComputingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.instaCalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.microsoftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sQLServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.visualStudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TMSI_SystemSeperator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.TSMI_SystemAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_eDocs = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_UUT_Manuals = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_UUT_ManualsInstruments = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_TestData = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_TestDataP_DriveTDR_Folder = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_UUT_Manuals = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_UUT_ManualsInstruments = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_SystemManuals = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_SystemManualsBarcodeScanner = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_SystemManualsInstruments = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_SystemManualsRelays = new System.Windows.Forms.ToolStripMenuItem();
-            this.TMSI_SystemBarcodeScanner = new System.Windows.Forms.ToolStripMenuItem();
-            this.TMSI_SystemBarcodeScannerDiscover = new System.Windows.Forms.ToolStripMenuItem();
-            this.TMSI_SystemBarcodeScannerProgramDefaults = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_SystemAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.TMSI_SystemSeperator2 = new System.Windows.Forms.ToolStripSeparator();
             this.MS.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -187,65 +187,186 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_File
             // 
             this.TSMI_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_FileSave,
+            this.TSMI_File_Save,
             this.TMSI_FileSeperator1,
-            this.TSMI_FilePrint,
-            this.TSMI_FilePrintPreview,
+            this.TSMI_File_Print,
+            this.TSMI_File_PrintPreview,
             this.TMSI_FileSeperator2,
-            this.TSMI_FileExit});
+            this.TSMI_File_Exit});
             this.TSMI_File.Name = "TSMI_File";
             this.TSMI_File.Size = new System.Drawing.Size(37, 20);
             this.TSMI_File.Text = "&File";
             // 
-            // TSMI_FileSave
+            // TSMI_File_Save
             // 
-            this.TSMI_FileSave.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_FileSave.Image")));
-            this.TSMI_FileSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.TSMI_FileSave.Name = "TSMI_FileSave";
-            this.TSMI_FileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.TSMI_FileSave.Size = new System.Drawing.Size(188, 30);
-            this.TSMI_FileSave.Text = "&Save";
-            this.TSMI_FileSave.ToolTipText = "Save UUT results.";
-            this.TSMI_FileSave.Click += new System.EventHandler(this.TSMI_FileSave_Click);
+            this.TSMI_File_Save.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_File_Save.Image")));
+            this.TSMI_File_Save.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.TSMI_File_Save.Name = "TSMI_File_Save";
+            this.TSMI_File_Save.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.TSMI_File_Save.Size = new System.Drawing.Size(188, 30);
+            this.TSMI_File_Save.Text = "&Save";
+            this.TSMI_File_Save.ToolTipText = "Save UUT results.";
+            this.TSMI_File_Save.Click += new System.EventHandler(this.TSMI_File_Save_Click);
             // 
             // TMSI_FileSeperator1
             // 
             this.TMSI_FileSeperator1.Name = "TMSI_FileSeperator1";
             this.TMSI_FileSeperator1.Size = new System.Drawing.Size(185, 6);
             // 
-            // TSMI_FilePrint
+            // TSMI_File_Print
             // 
-            this.TSMI_FilePrint.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_FilePrint.Image")));
-            this.TSMI_FilePrint.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.TSMI_FilePrint.Name = "TSMI_FilePrint";
-            this.TSMI_FilePrint.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.TSMI_FilePrint.Size = new System.Drawing.Size(188, 30);
-            this.TSMI_FilePrint.Text = "&Print";
-            this.TSMI_FilePrint.ToolTipText = "Print UUT results.";
-            this.TSMI_FilePrint.Click += new System.EventHandler(this.TSMI_FilePrint_Click);
+            this.TSMI_File_Print.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_File_Print.Image")));
+            this.TSMI_File_Print.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.TSMI_File_Print.Name = "TSMI_File_Print";
+            this.TSMI_File_Print.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.TSMI_File_Print.Size = new System.Drawing.Size(188, 30);
+            this.TSMI_File_Print.Text = "&Print";
+            this.TSMI_File_Print.ToolTipText = "Print UUT results.";
+            this.TSMI_File_Print.Click += new System.EventHandler(this.TSMI_File_Print_Click);
             // 
-            // TSMI_FilePrintPreview
+            // TSMI_File_PrintPreview
             // 
-            this.TSMI_FilePrintPreview.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_FilePrintPreview.Image")));
-            this.TSMI_FilePrintPreview.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.TSMI_FilePrintPreview.Name = "TSMI_FilePrintPreview";
-            this.TSMI_FilePrintPreview.Size = new System.Drawing.Size(188, 30);
-            this.TSMI_FilePrintPreview.Text = "Print Pre&view";
-            this.TSMI_FilePrintPreview.ToolTipText = "Preview UUT results.";
-            this.TSMI_FilePrintPreview.Click += new System.EventHandler(this.TSMI_FilePrintPreview_Click);
+            this.TSMI_File_PrintPreview.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_File_PrintPreview.Image")));
+            this.TSMI_File_PrintPreview.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.TSMI_File_PrintPreview.Name = "TSMI_File_PrintPreview";
+            this.TSMI_File_PrintPreview.Size = new System.Drawing.Size(188, 30);
+            this.TSMI_File_PrintPreview.Text = "Print Pre&view";
+            this.TSMI_File_PrintPreview.ToolTipText = "Preview UUT results.";
+            this.TSMI_File_PrintPreview.Click += new System.EventHandler(this.TSMI_File_PrintPreview_Click);
             // 
             // TMSI_FileSeperator2
             // 
             this.TMSI_FileSeperator2.Name = "TMSI_FileSeperator2";
             this.TMSI_FileSeperator2.Size = new System.Drawing.Size(185, 6);
             // 
-            // TSMI_FileExit
+            // TSMI_File_Exit
             // 
-            this.TSMI_FileExit.Name = "TSMI_FileExit";
-            this.TSMI_FileExit.Size = new System.Drawing.Size(188, 30);
-            this.TSMI_FileExit.Text = "&Exit";
-            this.TSMI_FileExit.ToolTipText = "Close application.";
-            this.TSMI_FileExit.Click += new System.EventHandler(this.TSMI_FileExit_Click);
+            this.TSMI_File_Exit.Name = "TSMI_File_Exit";
+            this.TSMI_File_Exit.Size = new System.Drawing.Size(188, 30);
+            this.TSMI_File_Exit.Text = "&Exit";
+            this.TSMI_File_Exit.ToolTipText = "Close application.";
+            this.TSMI_File_Exit.Click += new System.EventHandler(this.TSMI_File_Exit_Click);
+            // 
+            // TSMI_Administration
+            // 
+            this.TSMI_Administration.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TSMI_Administration_Edit,
+            this.TSMI_Administration_Launch});
+            this.TSMI_Administration.Enabled = false;
+            this.TSMI_Administration.Name = "TSMI_Administration";
+            this.TSMI_Administration.Size = new System.Drawing.Size(98, 20);
+            this.TSMI_Administration.Text = "&Administration";
+            // 
+            // TSMI_Administration_Edit
+            // 
+            this.TSMI_Administration_Edit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TSMI_Administration_EditAppConfig,
+            this.TSMI_Administration_EditTestExecutiveXML});
+            this.TSMI_Administration_Edit.Name = "TSMI_Administration_Edit";
+            this.TSMI_Administration_Edit.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_Administration_Edit.Text = "&Edit";
+            // 
+            // TSMI_Administration_EditAppConfig
+            // 
+            this.TSMI_Administration_EditAppConfig.Name = "TSMI_Administration_EditAppConfig";
+            this.TSMI_Administration_EditAppConfig.Size = new System.Drawing.Size(204, 22);
+            this.TSMI_Administration_EditAppConfig.Text = "&App.config";
+            this.TSMI_Administration_EditAppConfig.ToolTipText = "UUT\'s test configuration.";
+            this.TSMI_Administration_EditAppConfig.Click += new System.EventHandler(this.TSMI_Administration_EditAppConfig_Click);
+            // 
+            // TSMI_Administration_EditTestExecutiveXML
+            // 
+            this.TSMI_Administration_EditTestExecutiveXML.Name = "TSMI_Administration_EditTestExecutiveXML";
+            this.TSMI_Administration_EditTestExecutiveXML.Size = new System.Drawing.Size(204, 22);
+            this.TSMI_Administration_EditTestExecutiveXML.Text = "&TestExecutive.config.xml";
+            this.TSMI_Administration_EditTestExecutiveXML.ToolTipText = "Test System\'s configuration.";
+            this.TSMI_Administration_EditTestExecutiveXML.Click += new System.EventHandler(this.TSMI_Administration_EditTestExecutiveConfigXML_Click);
+            // 
+            // TSMI_Administration_Launch
+            // 
+            this.TSMI_Administration_Launch.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TSMI_Administration_LaunchKeysight,
+            this.TSMI_Administration_LaunchMeasurementComputing,
+            this.TSMI_Administration_LaunchMicrosoft});
+            this.TSMI_Administration_Launch.Name = "TSMI_Administration_Launch";
+            this.TSMI_Administration_Launch.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_Administration_Launch.Text = "&Launch";
+            // 
+            // TSMI_Administration_LaunchKeysight
+            // 
+            this.TSMI_Administration_LaunchKeysight.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TSMI_Administration_LaunchKeysightBenchVue,
+            this.TSMI_Administration_LaunchKeysightCommandExpert,
+            this.TSMI_Administration_LaunchKeysightConnectionExpert});
+            this.TSMI_Administration_LaunchKeysight.Name = "TSMI_Administration_LaunchKeysight";
+            this.TSMI_Administration_LaunchKeysight.Size = new System.Drawing.Size(211, 22);
+            this.TSMI_Administration_LaunchKeysight.Text = "&Keysight";
+            // 
+            // TSMI_Administration_LaunchKeysightBenchVue
+            // 
+            this.TSMI_Administration_LaunchKeysightBenchVue.Name = "TSMI_Administration_LaunchKeysightBenchVue";
+            this.TSMI_Administration_LaunchKeysightBenchVue.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_Administration_LaunchKeysightBenchVue.Text = "&BenchVue";
+            this.TSMI_Administration_LaunchKeysightBenchVue.ToolTipText = "Control Keysight Instruments via soft/virtual panels.";
+            this.TSMI_Administration_LaunchKeysightBenchVue.Click += new System.EventHandler(this.TSMI_AdministrationLaunchKeysightBenchVue_Click);
+            // 
+            // TSMI_Administration_LaunchKeysightCommandExpert
+            // 
+            this.TSMI_Administration_LaunchKeysightCommandExpert.Name = "TSMI_Administration_LaunchKeysightCommandExpert";
+            this.TSMI_Administration_LaunchKeysightCommandExpert.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_Administration_LaunchKeysightCommandExpert.Text = "Co&mmand Expert";
+            this.TSMI_Administration_LaunchKeysightCommandExpert.ToolTipText = "SCPI programming & debugging IDE.";
+            this.TSMI_Administration_LaunchKeysightCommandExpert.Click += new System.EventHandler(this.TSMI_AdministrationLaunchKeysightCommandExpert_Click);
+            // 
+            // TSMI_Administration_LaunchKeysightConnectionExpert
+            // 
+            this.TSMI_Administration_LaunchKeysightConnectionExpert.Name = "TSMI_Administration_LaunchKeysightConnectionExpert";
+            this.TSMI_Administration_LaunchKeysightConnectionExpert.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_Administration_LaunchKeysightConnectionExpert.Text = "Co&nnection Expert";
+            this.TSMI_Administration_LaunchKeysightConnectionExpert.ToolTipText = "Discover VISA Instruments.";
+            this.TSMI_Administration_LaunchKeysightConnectionExpert.Click += new System.EventHandler(this.TSMI_AdministrationLaunchKeysightConnectionExpert_Click);
+            // 
+            // TSMI_Administration_LaunchMeasurementComputing
+            // 
+            this.TSMI_Administration_LaunchMeasurementComputing.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.instaCalToolStripMenuItem});
+            this.TSMI_Administration_LaunchMeasurementComputing.Name = "TSMI_Administration_LaunchMeasurementComputing";
+            this.TSMI_Administration_LaunchMeasurementComputing.Size = new System.Drawing.Size(211, 22);
+            this.TSMI_Administration_LaunchMeasurementComputing.Text = "Measurement &Computing";
+            // 
+            // instaCalToolStripMenuItem
+            // 
+            this.instaCalToolStripMenuItem.Name = "instaCalToolStripMenuItem";
+            this.instaCalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.instaCalToolStripMenuItem.Text = "&InstaCal";
+            this.instaCalToolStripMenuItem.ToolTipText = "Configure & test MCC Instruments, like USB-ERB24 relays.";
+            this.instaCalToolStripMenuItem.Click += new System.EventHandler(this.TSMI_AdministrationLaunchKeysightMeasurementComputingInstaCal_Click);
+            // 
+            // TSMI_Administration_LaunchMicrosoft
+            // 
+            this.TSMI_Administration_LaunchMicrosoft.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sQLServerToolStripMenuItem,
+            this.visualStudioToolStripMenuItem});
+            this.TSMI_Administration_LaunchMicrosoft.Name = "TSMI_Administration_LaunchMicrosoft";
+            this.TSMI_Administration_LaunchMicrosoft.Size = new System.Drawing.Size(211, 22);
+            this.TSMI_Administration_LaunchMicrosoft.Text = "&Microsoft";
+            // 
+            // sQLServerToolStripMenuItem
+            // 
+            this.sQLServerToolStripMenuItem.Enabled = false;
+            this.sQLServerToolStripMenuItem.Name = "sQLServerToolStripMenuItem";
+            this.sQLServerToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.sQLServerToolStripMenuItem.Text = "&SQL Server Management Studio";
+            this.sQLServerToolStripMenuItem.ToolTipText = "Coming soon!";
+            this.sQLServerToolStripMenuItem.Click += new System.EventHandler(this.TSMI_AdministrationLaunchMicrosoftSQL_ServerManagementStudio_Click);
+            // 
+            // visualStudioToolStripMenuItem
+            // 
+            this.visualStudioToolStripMenuItem.Name = "visualStudioToolStripMenuItem";
+            this.visualStudioToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.visualStudioToolStripMenuItem.Text = "&Visual Studio";
+            this.visualStudioToolStripMenuItem.ToolTipText = "C# forever!";
+            this.visualStudioToolStripMenuItem.Click += new System.EventHandler(this.TSMI_AdministrationLaunchMicrosoftVisualStudio_Click);
             // 
             // TMSI_System
             // 
@@ -261,6 +382,31 @@ namespace ABT.TestSpace.TestExec {
             this.TMSI_System.Name = "TMSI_System";
             this.TMSI_System.Size = new System.Drawing.Size(57, 20);
             this.TMSI_System.Text = "S&ystem";
+            // 
+            // TMSI_SystemBarcodeScanner
+            // 
+            this.TMSI_SystemBarcodeScanner.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TMSI_SystemBarcodeScannerDiscover,
+            this.TMSI_SystemBarcodeScannerProgramDefaults});
+            this.TMSI_SystemBarcodeScanner.Name = "TMSI_SystemBarcodeScanner";
+            this.TMSI_SystemBarcodeScanner.Size = new System.Drawing.Size(180, 22);
+            this.TMSI_SystemBarcodeScanner.Text = "&Barcode Scanner";
+            // 
+            // TMSI_SystemBarcodeScannerDiscover
+            // 
+            this.TMSI_SystemBarcodeScannerDiscover.Name = "TMSI_SystemBarcodeScannerDiscover";
+            this.TMSI_SystemBarcodeScannerDiscover.Size = new System.Drawing.Size(180, 22);
+            this.TMSI_SystemBarcodeScannerDiscover.Text = "&Discover";
+            this.TMSI_SystemBarcodeScannerDiscover.ToolTipText = "Corded scanners only; no Bluetooth or Wireless scanners.";
+            this.TMSI_SystemBarcodeScannerDiscover.Click += new System.EventHandler(this.TSMI_SystemBarcodeScannerDiscover_Click);
+            // 
+            // TMSI_SystemBarcodeScannerProgramDefaults
+            // 
+            this.TMSI_SystemBarcodeScannerProgramDefaults.Name = "TMSI_SystemBarcodeScannerProgramDefaults";
+            this.TMSI_SystemBarcodeScannerProgramDefaults.Size = new System.Drawing.Size(180, 22);
+            this.TMSI_SystemBarcodeScannerProgramDefaults.Text = "&Program Defaults";
+            this.TMSI_SystemBarcodeScannerProgramDefaults.ToolTipText = "Program Factory Reset & USB-HID mode.";
+            this.TMSI_SystemBarcodeScannerProgramDefaults.Click += new System.EventHandler(this.TSMI_SystemBarcodeScannerProgramDefaults_Click);
             // 
             // TMSI_SystemDiagnostics
             // 
@@ -297,6 +443,40 @@ namespace ABT.TestSpace.TestExec {
             this.TMSI_SystemDiagnosticsRelays.Text = "&Relays";
             this.TMSI_SystemDiagnosticsRelays.ToolTipText = "Adapt MS-Test Unit Tests of USB-ERB24 class.";
             this.TMSI_SystemDiagnosticsRelays.Click += new System.EventHandler(this.TSMI_SystemDiagnosticsRelays_Click);
+            // 
+            // TSMI_SystemManuals
+            // 
+            this.TSMI_SystemManuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TSMI_SystemManualsBarcodeScanner,
+            this.TSMI_SystemManualsInstruments,
+            this.TSMI_SystemManualsRelays});
+            this.TSMI_SystemManuals.Name = "TSMI_SystemManuals";
+            this.TSMI_SystemManuals.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_SystemManuals.Text = "&Manuals";
+            // 
+            // TSMI_SystemManualsBarcodeScanner
+            // 
+            this.TSMI_SystemManualsBarcodeScanner.Name = "TSMI_SystemManualsBarcodeScanner";
+            this.TSMI_SystemManualsBarcodeScanner.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_SystemManualsBarcodeScanner.Text = "&Barcode Scanner";
+            this.TSMI_SystemManualsBarcodeScanner.ToolTipText = "If you\'re bored...";
+            this.TSMI_SystemManualsBarcodeScanner.Click += new System.EventHandler(this.TSMI_SystemManualsBarcodeScanner_Click);
+            // 
+            // TSMI_SystemManualsInstruments
+            // 
+            this.TSMI_SystemManualsInstruments.Name = "TSMI_SystemManualsInstruments";
+            this.TSMI_SystemManualsInstruments.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_SystemManualsInstruments.Text = "&Instruments";
+            this.TSMI_SystemManualsInstruments.ToolTipText = "...really bored...";
+            this.TSMI_SystemManualsInstruments.Click += new System.EventHandler(this.TSMI_SystemManualsInstruments_Click);
+            // 
+            // TSMI_SystemManualsRelays
+            // 
+            this.TSMI_SystemManualsRelays.Name = "TSMI_SystemManualsRelays";
+            this.TSMI_SystemManualsRelays.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_SystemManualsRelays.Text = "&Relays";
+            this.TSMI_SystemManualsRelays.ToolTipText = "...zzzzzz...";
+            this.TSMI_SystemManualsRelays.Click += new System.EventHandler(this.TSMI_SystemManualsRelays_Click);
             // 
             // TMSI_SystemSeperator1
             // 
@@ -353,126 +533,17 @@ namespace ABT.TestSpace.TestExec {
             this.TMSI_SystemCritiquesImprovementRequest.ToolTipText = "Remember, \"God is in the details.\" - Mies van der Rohe";
             this.TMSI_SystemCritiquesImprovementRequest.Click += new System.EventHandler(this.TSMI_SystemCritiqueImprovementRequest_Click);
             // 
-            // TSMI_Administration
+            // TMSI_SystemSeperator2
             // 
-            this.TSMI_Administration.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_AdministrationEdit,
-            this.TMS});
-            this.TSMI_Administration.Enabled = false;
-            this.TSMI_Administration.Name = "TSMI_Administration";
-            this.TSMI_Administration.Size = new System.Drawing.Size(98, 20);
-            this.TSMI_Administration.Text = "&Administration";
+            this.TMSI_SystemSeperator2.Name = "TMSI_SystemSeperator2";
+            this.TMSI_SystemSeperator2.Size = new System.Drawing.Size(177, 6);
             // 
-            // TSMI_AdministrationEdit
+            // TSMI_SystemAbout
             // 
-            this.TSMI_AdministrationEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_AdministrationEditAppConfig,
-            this.TSMI_AdministrationEditTestExecutiveXML});
-            this.TSMI_AdministrationEdit.Name = "TSMI_AdministrationEdit";
-            this.TSMI_AdministrationEdit.Size = new System.Drawing.Size(180, 22);
-            this.TSMI_AdministrationEdit.Text = "&Edit";
-            // 
-            // TSMI_AdministrationEditAppConfig
-            // 
-            this.TSMI_AdministrationEditAppConfig.Name = "TSMI_AdministrationEditAppConfig";
-            this.TSMI_AdministrationEditAppConfig.Size = new System.Drawing.Size(204, 22);
-            this.TSMI_AdministrationEditAppConfig.Text = "&App.config";
-            this.TSMI_AdministrationEditAppConfig.ToolTipText = "UUT\'s test configuration.";
-            this.TSMI_AdministrationEditAppConfig.Click += new System.EventHandler(this.TSMI_AdministrationEditAppConfig_Click);
-            // 
-            // TSMI_AdministrationEditTestExecutiveXML
-            // 
-            this.TSMI_AdministrationEditTestExecutiveXML.Name = "TSMI_AdministrationEditTestExecutiveXML";
-            this.TSMI_AdministrationEditTestExecutiveXML.Size = new System.Drawing.Size(204, 22);
-            this.TSMI_AdministrationEditTestExecutiveXML.Text = "&TestExecutive.config.xml";
-            this.TSMI_AdministrationEditTestExecutiveXML.ToolTipText = "Test System\'s configuration.";
-            this.TSMI_AdministrationEditTestExecutiveXML.Click += new System.EventHandler(this.TSMI_AdministrationEditTestExecutiveConfigXML_Click);
-            // 
-            // TMS
-            // 
-            this.TMS.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.keysightToolStripMenuItem,
-            this.measurementComputingToolStripMenuItem,
-            this.microsoftToolStripMenuItem});
-            this.TMS.Name = "TMS";
-            this.TMS.Size = new System.Drawing.Size(180, 22);
-            this.TMS.Text = "&Launch";
-            // 
-            // keysightToolStripMenuItem
-            // 
-            this.keysightToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.benchVueToolStripMenuItem,
-            this.commandExpertToolStripMenuItem,
-            this.connectionExpertToolStripMenuItem});
-            this.keysightToolStripMenuItem.Name = "keysightToolStripMenuItem";
-            this.keysightToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
-            this.keysightToolStripMenuItem.Text = "&Keysight";
-            // 
-            // benchVueToolStripMenuItem
-            // 
-            this.benchVueToolStripMenuItem.Name = "benchVueToolStripMenuItem";
-            this.benchVueToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.benchVueToolStripMenuItem.Text = "&BenchVue";
-            this.benchVueToolStripMenuItem.ToolTipText = "Control Keysight Instruments via soft/virtual panels.";
-            this.benchVueToolStripMenuItem.Click += new System.EventHandler(this.TSMI_AdministrationLaunchKeysightBenchVue_Click);
-            // 
-            // commandExpertToolStripMenuItem
-            // 
-            this.commandExpertToolStripMenuItem.Name = "commandExpertToolStripMenuItem";
-            this.commandExpertToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.commandExpertToolStripMenuItem.Text = "Co&mmand Expert";
-            this.commandExpertToolStripMenuItem.ToolTipText = "SCPI programming & debugging IDE.";
-            this.commandExpertToolStripMenuItem.Click += new System.EventHandler(this.TSMI_AdministrationLaunchKeysightCommandExpert_Click);
-            // 
-            // connectionExpertToolStripMenuItem
-            // 
-            this.connectionExpertToolStripMenuItem.Name = "connectionExpertToolStripMenuItem";
-            this.connectionExpertToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.connectionExpertToolStripMenuItem.Text = "Co&nnection Expert";
-            this.connectionExpertToolStripMenuItem.ToolTipText = "Discover VISA Instruments.";
-            this.connectionExpertToolStripMenuItem.Click += new System.EventHandler(this.TSMI_AdministrationLaunchKeysightConnectionExpert_Click);
-            // 
-            // measurementComputingToolStripMenuItem
-            // 
-            this.measurementComputingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.instaCalToolStripMenuItem});
-            this.measurementComputingToolStripMenuItem.Name = "measurementComputingToolStripMenuItem";
-            this.measurementComputingToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
-            this.measurementComputingToolStripMenuItem.Text = "Measurement &Computing";
-            // 
-            // instaCalToolStripMenuItem
-            // 
-            this.instaCalToolStripMenuItem.Name = "instaCalToolStripMenuItem";
-            this.instaCalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.instaCalToolStripMenuItem.Text = "&InstaCal";
-            this.instaCalToolStripMenuItem.ToolTipText = "Configure & test MCC Instruments, like USB-ERB24 relays.";
-            this.instaCalToolStripMenuItem.Click += new System.EventHandler(this.TSMI_AdministrationLaunchKeysightMeasurementComputingInstaCal_Click);
-            // 
-            // microsoftToolStripMenuItem
-            // 
-            this.microsoftToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sQLServerToolStripMenuItem,
-            this.visualStudioToolStripMenuItem});
-            this.microsoftToolStripMenuItem.Name = "microsoftToolStripMenuItem";
-            this.microsoftToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
-            this.microsoftToolStripMenuItem.Text = "&Microsoft";
-            // 
-            // sQLServerToolStripMenuItem
-            // 
-            this.sQLServerToolStripMenuItem.Enabled = false;
-            this.sQLServerToolStripMenuItem.Name = "sQLServerToolStripMenuItem";
-            this.sQLServerToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.sQLServerToolStripMenuItem.Text = "&SQL Server Management Studio";
-            this.sQLServerToolStripMenuItem.ToolTipText = "Coming soon!";
-            this.sQLServerToolStripMenuItem.Click += new System.EventHandler(this.TSMI_AdministrationLaunchMicrosoftSQL_ServerManagementStudio_Click);
-            // 
-            // visualStudioToolStripMenuItem
-            // 
-            this.visualStudioToolStripMenuItem.Name = "visualStudioToolStripMenuItem";
-            this.visualStudioToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.visualStudioToolStripMenuItem.Text = "&Visual Studio";
-            this.visualStudioToolStripMenuItem.ToolTipText = "C# forever!";
-            this.visualStudioToolStripMenuItem.Click += new System.EventHandler(this.TSMI_AdministrationLaunchMicrosoftVisualStudio_Click);
+            this.TSMI_SystemAbout.Name = "TSMI_SystemAbout";
+            this.TSMI_SystemAbout.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_SystemAbout.Text = "&About...";
+            this.TSMI_SystemAbout.Click += new System.EventHandler(this.TSMI_SystemAbout_Click);
             // 
             // TSMI_UUT
             // 
@@ -491,6 +562,22 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_eDocs.Text = "&eDocs";
             this.TSMI_UUT_eDocs.ToolTipText = "UUT\'s P: drive eDocs folder.";
             this.TSMI_UUT_eDocs.Click += new System.EventHandler(this.TSMI_UUT_eDocs_Click);
+            // 
+            // TSMI_UUT_Manuals
+            // 
+            this.TSMI_UUT_Manuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TSMI_UUT_ManualsInstruments});
+            this.TSMI_UUT_Manuals.Name = "TSMI_UUT_Manuals";
+            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_UUT_Manuals.Text = "&Manuals";
+            // 
+            // TSMI_UUT_ManualsInstruments
+            // 
+            this.TSMI_UUT_ManualsInstruments.Name = "TSMI_UUT_ManualsInstruments";
+            this.TSMI_UUT_ManualsInstruments.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_UUT_ManualsInstruments.Text = "&Instruments";
+            this.TSMI_UUT_ManualsInstruments.ToolTipText = "...really bored...";
+            this.TSMI_UUT_ManualsInstruments.Click += new System.EventHandler(this.TSMI_UUT_ManualsInstruments_Click);
             // 
             // TSMI_UUT_TestData
             // 
@@ -517,93 +604,6 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.Text = "&SQL Reporting && Querying";
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.ToolTipText = "Coming soon!";
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.Click += new System.EventHandler(this.TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click);
-            // 
-            // TSMI_UUT_Manuals
-            // 
-            this.TSMI_UUT_Manuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_UUT_ManualsInstruments});
-            this.TSMI_UUT_Manuals.Name = "TSMI_UUT_Manuals";
-            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(180, 22);
-            this.TSMI_UUT_Manuals.Text = "&Manuals";
-            // 
-            // TSMI_UUT_ManualsInstruments
-            // 
-            this.TSMI_UUT_ManualsInstruments.Name = "TSMI_UUT_ManualsInstruments";
-            this.TSMI_UUT_ManualsInstruments.Size = new System.Drawing.Size(180, 22);
-            this.TSMI_UUT_ManualsInstruments.Text = "&Instruments";
-            this.TSMI_UUT_ManualsInstruments.ToolTipText = "...really bored...";
-            this.TSMI_UUT_ManualsInstruments.Click += new System.EventHandler(this.TSMI_UUT_ManualsInstruments_Click);
-            // 
-            // TSMI_SystemManuals
-            // 
-            this.TSMI_SystemManuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_SystemManualsBarcodeScanner,
-            this.TSMI_SystemManualsInstruments,
-            this.TSMI_SystemManualsRelays});
-            this.TSMI_SystemManuals.Name = "TSMI_SystemManuals";
-            this.TSMI_SystemManuals.Size = new System.Drawing.Size(180, 22);
-            this.TSMI_SystemManuals.Text = "&Manuals";
-            // 
-            // TSMI_SystemManualsBarcodeScanner
-            // 
-            this.TSMI_SystemManualsBarcodeScanner.Name = "TSMI_SystemManualsBarcodeScanner";
-            this.TSMI_SystemManualsBarcodeScanner.Size = new System.Drawing.Size(180, 22);
-            this.TSMI_SystemManualsBarcodeScanner.Text = "&Barcode Scanner";
-            this.TSMI_SystemManualsBarcodeScanner.ToolTipText = "If you\'re bored...";
-            this.TSMI_SystemManualsBarcodeScanner.Click += new System.EventHandler(this.TSMI_SystemManualsBarcodeScanner_Click);
-            // 
-            // TSMI_SystemManualsInstruments
-            // 
-            this.TSMI_SystemManualsInstruments.Name = "TSMI_SystemManualsInstruments";
-            this.TSMI_SystemManualsInstruments.Size = new System.Drawing.Size(180, 22);
-            this.TSMI_SystemManualsInstruments.Text = "&Instruments";
-            this.TSMI_SystemManualsInstruments.ToolTipText = "...really bored...";
-            this.TSMI_SystemManualsInstruments.Click += new System.EventHandler(this.TSMI_SystemManualsInstruments_Click);
-            // 
-            // TSMI_SystemManualsRelays
-            // 
-            this.TSMI_SystemManualsRelays.Name = "TSMI_SystemManualsRelays";
-            this.TSMI_SystemManualsRelays.Size = new System.Drawing.Size(180, 22);
-            this.TSMI_SystemManualsRelays.Text = "&Relays";
-            this.TSMI_SystemManualsRelays.ToolTipText = "...zzzzzz...";
-            this.TSMI_SystemManualsRelays.Click += new System.EventHandler(this.TSMI_SystemManualsRelays_Click);
-            // 
-            // TMSI_SystemBarcodeScanner
-            // 
-            this.TMSI_SystemBarcodeScanner.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TMSI_SystemBarcodeScannerDiscover,
-            this.TMSI_SystemBarcodeScannerProgramDefaults});
-            this.TMSI_SystemBarcodeScanner.Name = "TMSI_SystemBarcodeScanner";
-            this.TMSI_SystemBarcodeScanner.Size = new System.Drawing.Size(180, 22);
-            this.TMSI_SystemBarcodeScanner.Text = "&Barcode Scanner";
-            // 
-            // TMSI_SystemBarcodeScannerDiscover
-            // 
-            this.TMSI_SystemBarcodeScannerDiscover.Name = "TMSI_SystemBarcodeScannerDiscover";
-            this.TMSI_SystemBarcodeScannerDiscover.Size = new System.Drawing.Size(180, 22);
-            this.TMSI_SystemBarcodeScannerDiscover.Text = "&Discover";
-            this.TMSI_SystemBarcodeScannerDiscover.ToolTipText = "Corded scanners only; no Bluetooth or Wireless scanners.";
-            this.TMSI_SystemBarcodeScannerDiscover.Click += new System.EventHandler(this.TSMI_SystemBarcodeScannerDiscover_Click);
-            // 
-            // TMSI_SystemBarcodeScannerProgramDefaults
-            // 
-            this.TMSI_SystemBarcodeScannerProgramDefaults.Name = "TMSI_SystemBarcodeScannerProgramDefaults";
-            this.TMSI_SystemBarcodeScannerProgramDefaults.Size = new System.Drawing.Size(180, 22);
-            this.TMSI_SystemBarcodeScannerProgramDefaults.Text = "&Program Defaults";
-            this.TMSI_SystemBarcodeScannerProgramDefaults.ToolTipText = "Program Factory Reset & USB-HID mode.";
-            this.TMSI_SystemBarcodeScannerProgramDefaults.Click += new System.EventHandler(this.TSMI_SystemBarcodeScannerProgramDefaults_Click);
-            // 
-            // TSMI_SystemAbout
-            // 
-            this.TSMI_SystemAbout.Name = "TSMI_SystemAbout";
-            this.TSMI_SystemAbout.Size = new System.Drawing.Size(180, 22);
-            this.TSMI_SystemAbout.Text = "&About...";
-            this.TSMI_SystemAbout.Click += new System.EventHandler(this.TSMI_SystemAbout_Click);
-            // 
-            // TMSI_SystemSeperator2
-            // 
-            this.TMSI_SystemSeperator2.Name = "TMSI_SystemSeperator2";
-            this.TMSI_SystemSeperator2.Size = new System.Drawing.Size(177, 6);
             // 
             // TestExecutive
             // 
@@ -641,25 +641,25 @@ namespace ABT.TestSpace.TestExec {
         private Button ButtonEmergencyStop;
         private MenuStrip MS;
         private ToolStripMenuItem TSMI_File;
-        private ToolStripMenuItem TSMI_FileSave;
+        private ToolStripMenuItem TSMI_File_Save;
         private ToolStripSeparator TMSI_FileSeperator1;
-        private ToolStripMenuItem TSMI_FilePrint;
-        private ToolStripMenuItem TSMI_FilePrintPreview;
+        private ToolStripMenuItem TSMI_File_Print;
+        private ToolStripMenuItem TSMI_File_PrintPreview;
         private ToolStripSeparator TMSI_FileSeperator2;
-        private ToolStripMenuItem TSMI_FileExit;
+        private ToolStripMenuItem TSMI_File_Exit;
         private ToolStripMenuItem TMSI_System;
         private ToolStripMenuItem TSMI_Administration;
-        private ToolStripMenuItem TSMI_AdministrationEdit;
-        private ToolStripMenuItem TSMI_AdministrationEditAppConfig;
-        private ToolStripMenuItem TSMI_AdministrationEditTestExecutiveXML;
-        private ToolStripMenuItem TMS;
-        private ToolStripMenuItem keysightToolStripMenuItem;
-        private ToolStripMenuItem benchVueToolStripMenuItem;
-        private ToolStripMenuItem commandExpertToolStripMenuItem;
-        private ToolStripMenuItem connectionExpertToolStripMenuItem;
-        private ToolStripMenuItem measurementComputingToolStripMenuItem;
+        private ToolStripMenuItem TSMI_Administration_Edit;
+        private ToolStripMenuItem TSMI_Administration_EditAppConfig;
+        private ToolStripMenuItem TSMI_Administration_EditTestExecutiveXML;
+        private ToolStripMenuItem TSMI_Administration_Launch;
+        private ToolStripMenuItem TSMI_Administration_LaunchKeysight;
+        private ToolStripMenuItem TSMI_Administration_LaunchKeysightBenchVue;
+        private ToolStripMenuItem TSMI_Administration_LaunchKeysightCommandExpert;
+        private ToolStripMenuItem TSMI_Administration_LaunchKeysightConnectionExpert;
+        private ToolStripMenuItem TSMI_Administration_LaunchMeasurementComputing;
         private ToolStripMenuItem instaCalToolStripMenuItem;
-        private ToolStripMenuItem microsoftToolStripMenuItem;
+        private ToolStripMenuItem TSMI_Administration_LaunchMicrosoft;
         private ToolStripMenuItem sQLServerToolStripMenuItem;
         private ToolStripMenuItem visualStudioToolStripMenuItem;
         private ToolStripMenuItem TMSI_SystemDiagnostics;

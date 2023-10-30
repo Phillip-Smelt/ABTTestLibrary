@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -15,7 +16,8 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
-using System.IO;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 /// <para>
 /// TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -55,8 +57,11 @@ namespace ABT.TestSpace.TestExec {
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
         internal readonly String _appAssemblyVersion;
         internal readonly String _libraryAssemblyVersion;
-        private readonly SerialNumberDialog _serialNumberDialog;
         private Boolean _cancelled = false;
+        private readonly SerialNumberDialog _serialNumberDialog;
+        private readonly String _manualFoldersBarcodeScanner;
+        private readonly String _manualFoldersInstruments;
+        private readonly String _manualFoldersRelays;
 
         protected TestExecutive(Icon icon) {
             InitializeComponent();
@@ -66,6 +71,13 @@ namespace ABT.TestSpace.TestExec {
             Icon = icon;
             TSMI_Administration.Enabled = String.Equals(UserPrincipal.Current.DisplayName, "Phillip Smelt") ? true : false;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
+            IEnumerable<String> manualFolders;
+            manualFolders = from xe in XElement.Load("TestExecutive.config.xml").Elements("ManualFolders") select xe.Element("BarCodeScanner").Value;
+            _manualFoldersBarcodeScanner = manualFolders.First();
+            manualFolders = from xe in XElement.Load("TestExecutive.config.xml").Elements("ManualFolders") select xe.Element("Instruments").Value;
+            _manualFoldersInstruments = manualFolders.First();
+            manualFolders = from xe in XElement.Load("TestExecutive.config.xml").Elements("ManualFolders") select xe.Element("Relays").Value;
+            _manualFoldersRelays = manualFolders.First();
             UE24.Set(C.S.NO); // Relays should be energized/de-energized/re-energized occasionally as preventative maintenance.
             UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
         }
@@ -149,6 +161,20 @@ namespace ABT.TestSpace.TestExec {
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
+        private void FolderOpen(String FolderPath) {
+            if (Directory.Exists(FolderPath)) {
+                ProcessStartInfo psi = new ProcessStartInfo {
+                    FileName = "explorer.exe",
+                    WindowStyle = ProcessWindowStyle.Minimized,
+                    Arguments = $"\"{FolderPath}\""
+                };
+                Process.Start(psi);
+                // Paths with embedded spaces require enclosing double-quotes (").
+                // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
+                // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
+            } else MessageBox.Show(Form.ActiveForm, $"Path {FolderPath} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         #region Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             CancelTokenSource.Cancel();
@@ -220,13 +246,13 @@ namespace ABT.TestSpace.TestExec {
         #endregion Command Buttons
 
         #region Tool Strip Menu Items
-        private void TSMI_FileSave_Click(Object sender, EventArgs e) { }
-        private void TSMI_FilePrint_Click(Object sender, EventArgs e) { }
-        private void TSMI_FilePrintPreview_Click(Object sender, EventArgs e) { }
-        private void TSMI_FileExit_Click(Object sender, EventArgs e) { }
+        private void TSMI_File_Save_Click(Object sender, EventArgs e) { }
+        private void TSMI_File_Print_Click(Object sender, EventArgs e) { }
+        private void TSMI_File_PrintPreview_Click(Object sender, EventArgs e) { }
+        private void TSMI_File_Exit_Click(Object sender, EventArgs e) { }
 
-        private void TSMI_AdministrationEditAppConfig_Click(Object sender, EventArgs e) { }
-        private void TSMI_AdministrationEditTestExecutiveConfigXML_Click(Object sender, EventArgs e) { }
+        private void TSMI_Administration_EditAppConfig_Click(Object sender, EventArgs e) { }
+        private void TSMI_Administration_EditTestExecutiveConfigXML_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationLaunchKeysightBenchVue_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationLaunchKeysightCommandExpert_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationLaunchKeysightConnectionExpert_Click(Object sender, EventArgs e) { }
@@ -239,15 +265,11 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_SystemDiagnosticsBarcodeScanner_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemDiagnosticsInstruments_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemDiagnosticsRelays_Click(Object sender, EventArgs e) { }
-        private void TSMI_SystemManualsBarcodeScanner_Click(Object sender, EventArgs e) { }
-        private void TSMI_SystemManualsInstruments_Click(Object sender, EventArgs e) { }
-        private void TSMI_SystemManualsRelays_Click(Object sender, EventArgs e) { }
-        private void TSMI_SystemComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"You are a kind & generous person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        private void TSMI_SystemComplimentsMoney_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
+        private void TSMI_SystemManualsBarcodeScanner_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersBarcodeScanner); }
+        private void TSMI_SystemManualsInstruments_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersInstruments); }
+        private void TSMI_SystemManualsRelays_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersRelays); }
+        private void TSMI_SystemComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+        private void TSMI_SystemComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_SystemCritiqueBugReport_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemCritiqueImprovementRequest_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemAbout_Click(Object sender, EventArgs e) {
@@ -257,29 +279,14 @@ namespace ABT.TestSpace.TestExec {
             "About...", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) {
-            if (!String.Equals(String.Empty, ConfigUUT.DocumentationFolder)) {
-                if (Directory.Exists(ConfigUUT.DocumentationFolder)) {
-                    ProcessStartInfo psi = new ProcessStartInfo {
-                        FileName = "explorer.exe",
-                        WindowStyle = ProcessWindowStyle.Minimized,
-                        Arguments = $"\"{ConfigUUT.DocumentationFolder}\""
-                    };
-                    Process.Start(psi);
-                    // Paths with embedded spaces require enclosing double-quotes (").
-                    // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
-                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-                } else MessageBox.Show(Form.ActiveForm, $"Path {ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-        }
-        private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { }
-        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) {
-            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{Logger.GetFilePath(this)}\"" };
-            Process.Start(psi);      
-        }
+        private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { FolderOpen(ConfigUUT.DocumentationFolder); }
+        private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { FolderOpen(ConfigUUT.ManualsFolder); }
+        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { FolderOpen(ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         #endregion Tool Strip Menu Items
         #endregion Form
+
+
 
         #region Measurements
         private void MeasurementsPreRun() {

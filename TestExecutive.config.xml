@@ -64,6 +64,12 @@
 	- https://www.ivifoundation.org/downloads/Architecture%20Specifications/vpp43_2022-05-19.pdf.
 -->
 <Configuration>
+  <ManualFolders>
+    <BarcodeScanner></BarcodeScanner>		<!-- Honeywell Voyager USB 1200g -->
+    <Instruments></Instruments>         <!-- Keysight SCPI VISA -->
+    <Relays></Relays>								    <!-- MCC USB-ERB24 -->
+  </ManualFolders>
+  
 	<SCPI_VISA_Instrument>
 		<ID>PS1</ID>
 		<Description>Keysight E36103B Single-output Power Supply</Description>

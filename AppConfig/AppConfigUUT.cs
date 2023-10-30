@@ -10,6 +10,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String Description = ConfigurationManager.AppSettings["UUT_Description"].Trim();
         public readonly String TestSpecification = ConfigurationManager.AppSettings["UUT_TestSpecification"].Trim();
         public readonly String DocumentationFolder = ConfigurationManager.AppSettings["UUT_DocumentationFolder"].Trim();
+        public readonly String ManualsFolder = ConfigurationManager.AppSettings["UUT_ManualsFolder"].Trim();
         public String SerialNumber { get; set; } = String.Empty; // Input during testing.
         public String EventCode { get; set; } = EventCodes.UNSET; // Determined post-test.
 
