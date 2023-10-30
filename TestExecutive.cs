@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.DirectoryServices.AccountManagement;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -12,10 +13,8 @@ using Microsoft.VisualBasic;
 using ABT.TestSpace.TestExec.AppConfig;
 using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
-using ABT.TestSpace.TestExec.Switching;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
-using Windows.Security.EnterpriseData;
 using System.IO;
 
 /// <para>
@@ -65,6 +64,7 @@ namespace ABT.TestSpace.TestExec {
             _libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog() : null;
             Icon = icon;
+            TSMI_Administration.Enabled = String.Equals(UserPrincipal.Current.DisplayName, "Phillip Smelt") ? true : false;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             UE24.Set(C.S.NO); // Relays should be energized/de-energized/re-energized occasionally as preventative maintenance.
             UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
@@ -225,9 +225,6 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_FilePrintPreview_Click(Object sender, EventArgs e) { }
         private void TSMI_FileExit_Click(Object sender, EventArgs e) { }
 
-        private void TSMI_AdministrationPasswordLogIn_Click(Object sender, EventArgs e) { }
-        private void TSMI_AdministrationPasswordLogOut_Click(Object sender, EventArgs e) { }
-        private void TSMI_AdministrationPasswordChange_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationEditAppConfig_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationEditTestExecutiveConfigXML_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationLaunchKeysightBenchVue_Click(Object sender, EventArgs e) { }
@@ -237,18 +234,28 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_AdministrationLaunchMicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationLaunchMicrosoftVisualStudio_Click(Object sender, EventArgs e) { }
 
-        private void TSMI_SystemConfigureBarcodeScanner_Click(Object sender, EventArgs e) { }
+        private void TSMI_SystemBarcodeScannerDiscover_Click(Object sender, EventArgs e) { }
+        private void TSMI_SystemBarcodeScannerProgramDefaults_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemDiagnosticsBarcodeScanner_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemDiagnosticsInstruments_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemDiagnosticsRelays_Click(Object sender, EventArgs e) { }
+        private void TSMI_SystemManualsBarcodeScanner_Click(Object sender, EventArgs e) { }
+        private void TSMI_SystemManualsInstruments_Click(Object sender, EventArgs e) { }
+        private void TSMI_SystemManualsRelays_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"You are a kind & generous person, {System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            _ = MessageBox.Show($"You are a kind & generous person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private void TSMI_SystemComplimentsMoney_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private void TSMI_SystemCritiqueBugReport_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemCritiqueImprovementRequest_Click(Object sender, EventArgs e) { }
+        private void TSMI_SystemAbout_Click(Object sender, EventArgs e) {
+            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName()}, version {_appAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
+             $"{Assembly.GetExecutingAssembly().GetName()}, version {_libraryAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
+             $"© 2022, Amphenol Borisch Technologies.",
+            "About...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
 
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) {
             if (!String.Equals(String.Empty, ConfigUUT.DocumentationFolder)) {
@@ -265,50 +272,12 @@ namespace ABT.TestSpace.TestExec {
                 } else MessageBox.Show(Form.ActiveForm, $"Path {ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
+        private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) {
             ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{Logger.GetFilePath(this)}\"" };
             Process.Start(psi);      
         }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
-        private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { }
-
-        private void TSMI_Help_Contents_Click(Object sender, EventArgs e) { }
-        private void TSMI_Help_Index_Click(Object sender, EventArgs e) { }
-        private void TSMI_Help_Search_Click(Object sender, EventArgs e) { }
-        private void TSMI_Help_About_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName()}, version {_appAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
-             $"{Assembly.GetExecutingAssembly().GetName()}, version {_libraryAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
-             $"© 2022, Amphenol Borisch Technologies.",
-            "About...", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        
-        private void printToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void printPreviewToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void exitToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void praiseToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void requestImprovementToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void eDocsToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void pDriveTDRFolderToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void sQLReportingQueryingToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void discoverToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void programDefaultsToolStripMenuItem_Click(Object sender, EventArgs e) {  }
-        private void barcodeScannerToolStripMenuItem1_Click(Object sender, EventArgs e) { }
-        private void instrumentsToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void relaysToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void moneyToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void reportBugToolStripMenuItem_Click(Object sender, EventArgs e) {  }
-        private void appconfigToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void testExecutiveconfigxmlToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void benchVueToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void commandExpertToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void connectionExpertToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void instaCalToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void sQLServerToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void visualStudioToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void signInToolStripMenuItem_Click(Object sender, EventArgs e) {}
-        private void signOutToolStripMenuItem_Click(Object sender, EventArgs e) {  }
-        private void changeToolStripMenuItem_Click(Object sender, EventArgs e) { }
-        private void aboutToolStripMenuItem_Click(Object sender, EventArgs e) { }
         #endregion Tool Strip Menu Items
         #endregion Form
 
