@@ -56,7 +56,7 @@ namespace ABT.TestSpace.TestExec {
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
         internal readonly String _appAssemblyVersion;
         internal readonly String _libraryAssemblyVersion;
-        private SerialNumberDialog _serialNumberDialog;
+        private readonly SerialNumberDialog _serialNumberDialog;
         private Boolean _cancelled = false;
 
         protected TestExecutive(Icon icon) {
@@ -66,8 +66,20 @@ namespace ABT.TestSpace.TestExec {
             _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog() : null;
             Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            UE24.Set(RelayForms.C.S.NO); // Relays should be energized/de-energized/re-energized occasionally as preventative maintenance.
-            UE24.Set(RelayForms.C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
+            UE24.Set(C.S.NO); // Relays should be energized/de-energized/re-energized occasionally as preventative maintenance.
+            UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
+        }
+
+        public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
+
+        public virtual void Initialize() {
+            SCPI99.Reset(SVIs);
+            UE24.Set(C.S.NC);
+        }
+
+        public virtual Boolean Initialized() {
+            return SCPI99.Are(SVIs, STATE.off)
+                && UE24.Are(C.S.NC);
         }
         /// <summary>
         /// NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
@@ -105,6 +117,39 @@ namespace ABT.TestSpace.TestExec {
         ///       inside the TestExecutive.MeasurementsRun() loop.
         /// </para>
         /// </summary>
+
+
+        #region Form
+        private void Form_Shown(Object sender, EventArgs e) {
+            FormModeReset();
+            FormModeWait();
+            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}";
+        }
+
+        private void FormModeReset() {
+            TextResult.Text = String.Empty;
+            TextResult.BackColor = Color.White;
+            rtfResults.Text = String.Empty;
+        }
+
+        private void FormModeRun() {
+            ButtonCancelReset(enabled: true);
+            ButtonSelectTests.Enabled = false;
+            ButtonStartReset(enabled: false);
+            TSMI_File.Enabled = false;
+            ButtonEmergencyStop.Enabled = true; // Always enabled.
+        }
+
+        private void FormModeWait() {
+            ButtonSelectTests.Enabled = true;
+            ButtonStartReset(enabled: (ConfigTest != null));
+            ButtonCancelReset(enabled: false);
+            if (ConfigTest != null) TSMI_File.Enabled = !ConfigTest.IsOperation;
+            else TSMI_File.Enabled = false;
+            ButtonEmergencyStop.Enabled = true; // Always enabled.
+        }
+
+        #region Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             CancelTokenSource.Cancel();
             _cancelled = true;
@@ -172,36 +217,190 @@ namespace ABT.TestSpace.TestExec {
             }
             ButtonStart.Enabled = enabled;
         }
+        #endregion Command Buttons
 
-        private void Form_Shown(Object sender, EventArgs e) {
-            FormModeReset();
-            FormModeWait();
-            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}";
+        #region Tool Strip Menu Items
+        private void TSMI_FileSave_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_FilePrint_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_FilePrintPreview_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_FileExit_Click(Object sender, EventArgs e) {
+
         }
 
-        private void FormModeReset() {
-            TextResult.Text = String.Empty;
-            TextResult.BackColor = Color.White;
-            rtfResults.Text = String.Empty;
+        private void TSMI_OperationConfigureBarcodeScanner_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_OperationDiagnosticsBarcodeScanner_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_OperationDiagnosticsInstruments_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_OperationDiagnosticsRelays_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_OperationComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_OperationComplimentsMoney_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_OperationCritiqueBugReport_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_OperationCritiqueImprovementRequest_Click(Object sender, EventArgs e) {
+
         }
 
-        private void FormModeRun() {
-            ButtonCancelReset(enabled: true);
-            ButtonSelectTests.Enabled = false;
-            ButtonStartReset(enabled: false);
-            fileToolStripMenuItem.Enabled = false;
-            ButtonEmergencyStop.Enabled = true; // Always enabled.
+        private void TSMI_AdministrationPasswordLogIn_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_AdministrationPasswordLogOut_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_AdministrationPasswordChange_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_AdministrationEditAppConfig_Click(Object sender, EventArgs e) {
+
+        }
+        private void TSMI_AdministrationEditTestExecutiveConfigXML_Click(Object sender, EventArgs e) {
+
         }
 
-        private void FormModeWait() {
-            ButtonSelectTests.Enabled = true;
-            ButtonStartReset(enabled: (ConfigTest != null));
-            ButtonCancelReset(enabled: false);
-            if (ConfigTest != null) fileToolStripMenuItem.Enabled = !ConfigTest.IsOperation;
-            else fileToolStripMenuItem.Enabled = false;
-            ButtonEmergencyStop.Enabled = true; // Always enabled.
+        private void printToolStripMenuItem_Click(Object sender, EventArgs e) {
+
         }
 
+        private void printPreviewToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void exitToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void praiseToolStripMenuItem_Click(Object sender, EventArgs e) {
+            _ = MessageBox.Show($"You are a kind & generous person, {System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void requestImprovementToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void eDocsToolStripMenuItem_Click(Object sender, EventArgs e) {
+            if (!String.Equals(String.Empty, ConfigUUT.DocumentationFolder)) {
+                if (Directory.Exists(ConfigUUT.DocumentationFolder)) {
+                    ProcessStartInfo psi = new ProcessStartInfo {
+                        FileName = "explorer.exe",
+                        WindowStyle = ProcessWindowStyle.Minimized,
+                        Arguments = $"\"{ConfigUUT.DocumentationFolder}\""
+                    };
+                    Process.Start(psi);
+                    // Paths with embedded spaces require enclosing double-quotes (").
+                    // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
+                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
+                } else MessageBox.Show(Form.ActiveForm, $"Path {ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void pDriveTDRFolderToolStripMenuItem_Click(Object sender, EventArgs e) {
+            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{Logger.GetFilePath(this)}\"" };
+            Process.Start(psi);
+        }
+
+        private void sQLReportingQueryingToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void discoverToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void programDefaultsToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void barcodeScannerToolStripMenuItem1_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void instrumentsToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void relaysToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void moneyToolStripMenuItem_Click(Object sender, EventArgs e) {
+            _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void reportBugToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void appconfigToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void testExecutiveconfigxmlToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void benchVueToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void commandExpertToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void connectionExpertToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void instaCalToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void sQLServerToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void visualStudioToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void signInToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void signOutToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void changeToolStripMenuItem_Click(Object sender, EventArgs e) {
+
+        }
+
+        private void aboutToolStripMenuItem_Click(Object sender, EventArgs e) {
+            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName()}, version {_appAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
+             $"{Assembly.GetExecutingAssembly().GetName()}, version {_libraryAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
+             $"© 2022, Amphenol Borisch Technologies.",
+            "About...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        #endregion Tool Strip Menu Items
+        #endregion Form
+
+        #region Measurements
         private void MeasurementsPreRun() {
             Logger.Start(this, ref rtfResults);
             foreach (KeyValuePair<String, Measurement> kvp in ConfigTest.Measurements) {
@@ -315,172 +514,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private Int32 MeasurementResultsCount(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Result, eventCode) select measurement).Count(); }
-
-        public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{{{String.Join(",", Enum.GetNames(enumType))}}}'."; }
-
-        public virtual void Initialize() {
-            SCPI99.Reset(SVIs);
-            UE24.Set(C.S.NC);
-        }
-
-        public virtual Boolean Initialized() {
-            return SCPI99.Are(SVIs, STATE.off)
-                && UE24.Are(C.S.NC);
-        }
-
-        private void praiseToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void requestImprovementToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void eDocsToolStripMenuItem_Click(Object sender, EventArgs e) {
-            if (!String.Equals(String.Empty, ConfigUUT.DocumentationFolder)) {
-                if (Directory.Exists(ConfigUUT.DocumentationFolder)) {
-                    ProcessStartInfo psi = new ProcessStartInfo {
-                        FileName = "explorer.exe",
-                        WindowStyle = ProcessWindowStyle.Minimized,
-                        Arguments = $"\"{ConfigUUT.DocumentationFolder}\""
-                    };
-                    Process.Start(psi);
-                    // Paths with embedded spaces require enclosing double-quotes (").
-                    // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
-                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-                } else MessageBox.Show(Form.ActiveForm, $"Path {ConfigUUT.DocumentationFolder} invalid.", "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-        }
-
-        private void pDriveTDRFolderToolStripMenuItem_Click(Object sender, EventArgs e) {
-            ProcessStartInfo psi = new ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{Logger.GetFilePath(this)}\"" };
-            Process.Start(psi);
-        }
-
-        private void saveToolStripMenuItem_Click(Object sender, EventArgs e) {
-            SaveFileDialog saveFileDialog = new SaveFileDialog {
-                Title = "Save Test Results",
-                Filter = "Rich Text Format|*.rtf",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{ConfigUUT.Number}_{ConfigTest.TestElementID}_{ConfigUUT.SerialNumber}",
-                DefaultExt = "rtf",
-                CreatePrompt = false,
-                OverwritePrompt = true
-            };
-            DialogResult dialogResult = saveFileDialog.ShowDialog();
-            if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName);
-        }
-
-        private void fileToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void printToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void printPreviewToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void exitToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void sQLReportingQueryingToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void discoverToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void programDefaultsToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void barcodeScannerToolStripMenuItem1_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void instrumentsToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void relaysToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void moneyToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void reportBugToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void appconfigToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void testExecutiveconfigxmlToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void benchVueToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void commandExpertToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void connectionExpertToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void instaCalToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void sQLServerToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void visualStudioToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void signInToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void signOutToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void changeToolStripMenuItem_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void toolStripMenuItem2_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void toolStripMenuItem3_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void toolStripMenuItem4_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void aboutToolStripMenuItem_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName()} version {_appAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
-             $"{Assembly.GetExecutingAssembly().GetName()} version {_libraryAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
-             $"© 2022, Amphenol Borisch Technologies.",
-            "About...", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
+        #endregion Measurements
     }
 
     public class CancellationException : Exception {
