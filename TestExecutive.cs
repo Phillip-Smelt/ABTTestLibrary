@@ -220,60 +220,43 @@ namespace ABT.TestSpace.TestExec {
         #endregion Command Buttons
 
         #region Tool Strip Menu Items
-        private void TSMI_FileSave_Click(Object sender, EventArgs e) {
+        private void TSMI_FileSave_Click(Object sender, EventArgs e) { }
+        private void TSMI_FilePrint_Click(Object sender, EventArgs e) { }
+        private void TSMI_FilePrintPreview_Click(Object sender, EventArgs e) { }
+        private void TSMI_FileExit_Click(Object sender, EventArgs e) { }
 
-        }
-        private void TSMI_FilePrint_Click(Object sender, EventArgs e) {
+        private void TSMI_OperationConfigureBarcodeScanner_Click(Object sender, EventArgs e) { }
+        private void TSMI_OperationDiagnosticsBarcodeScanner_Click(Object sender, EventArgs e) { }
+        private void TSMI_OperationDiagnosticsInstruments_Click(Object sender, EventArgs e) { }
+        private void TSMI_OperationDiagnosticsRelays_Click(Object sender, EventArgs e) { }
+        private void TSMI_OperationComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) { }
+        private void TSMI_OperationComplimentsMoney_Click(Object sender, EventArgs e) { }
+        private void TSMI_OperationCritiqueBugReport_Click(Object sender, EventArgs e) { }
+        private void TSMI_OperationCritiqueImprovementRequest_Click(Object sender, EventArgs e) { }
 
-        }
-        private void TSMI_FilePrintPreview_Click(Object sender, EventArgs e) {
+        private void TSMI_AdministrationPasswordLogIn_Click(Object sender, EventArgs e) { }
+        private void TSMI_AdministrationPasswordLogOut_Click(Object sender, EventArgs e) { }
+        private void TSMI_AdministrationPasswordChange_Click(Object sender, EventArgs e) { }
+        private void TSMI_AdministrationEditAppConfig_Click(Object sender, EventArgs e) { }
+        private void TSMI_AdministrationEditTestExecutiveConfigXML_Click(Object sender, EventArgs e) { }
+        private void TSMI_AdministrationLaunchKeysightBenchVue_Click(Object sender, EventArgs e) { }
+        private void TSMI_AdministrationLaunchKeysightCommandExpert_Click(Object sender, EventArgs e) { }
+        private void TSMI_AdministrationLaunchKeysightConnectionExpert_Click(Object sender, EventArgs e) { }
+        private void TSMI_AdministrationLaunchKeysightMeasurementComputingInstaCal_Click(Object sender, EventArgs e) { }
+        private void TSMI_AdministrationLaunchMicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { }
+        private void TSMI_AdministrationLaunchMicrosoftVisualStudio_Click(Object sender, EventArgs e) { }
 
-        }
-        private void TSMI_FileExit_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void TSMI_OperationConfigureBarcodeScanner_Click(Object sender, EventArgs e) {
-
-        }
-        private void TSMI_OperationDiagnosticsBarcodeScanner_Click(Object sender, EventArgs e) {
-
-        }
-        private void TSMI_OperationDiagnosticsInstruments_Click(Object sender, EventArgs e) {
-
-        }
-        private void TSMI_OperationDiagnosticsRelays_Click(Object sender, EventArgs e) {
-
-        }
-        private void TSMI_OperationComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) {
-
-        }
-        private void TSMI_OperationComplimentsMoney_Click(Object sender, EventArgs e) {
-
-        }
-        private void TSMI_OperationCritiqueBugReport_Click(Object sender, EventArgs e) {
-
-        }
-        private void TSMI_OperationCritiqueImprovementRequest_Click(Object sender, EventArgs e) {
-
-        }
-
-        private void TSMI_AdministrationPasswordLogIn_Click(Object sender, EventArgs e) {
-
-        }
-        private void TSMI_AdministrationPasswordLogOut_Click(Object sender, EventArgs e) {
-
-        }
-        private void TSMI_AdministrationPasswordChange_Click(Object sender, EventArgs e) {
-
-        }
-        private void TSMI_AdministrationEditAppConfig_Click(Object sender, EventArgs e) {
-
-        }
-        private void TSMI_AdministrationEditTestExecutiveConfigXML_Click(Object sender, EventArgs e) {
-
-        }
-
+        private void TSMI_Help_eDocs_Click(Object sender, EventArgs e) { }
+        private void TSMI_Help_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { }
+        private void TSMI_Help_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
+        private void TSMI_Help_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { }
+        private void TSMI_Help_ManualsInstruments_Click(Object sender, EventArgs e) { }
+        private void TSMI_Help_ManualsRelays_Click(Object sender, EventArgs e) { }
+        private void TSMI_Help_Contents_Click(Object sender, EventArgs e) { }
+        private void TSMI_Help_Index_Click(Object sender, EventArgs e) { }
+        private void TSMI_Help_Search_Click(Object sender, EventArgs e) { }
+        private void TSMI_Help_About_Click(Object sender, EventArgs e) { }
+        
         private void printToolStripMenuItem_Click(Object sender, EventArgs e) {
 
         }
