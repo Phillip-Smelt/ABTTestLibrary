@@ -308,8 +308,8 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_SystemCritiqueBugReport_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemCritiqueImprovementRequest_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemAbout_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName()}, version {_appAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
-             $"{Assembly.GetExecutingAssembly().GetName()}, version {_libraryAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
+            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName().Name}, version {_appAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
+             $"{Assembly.GetExecutingAssembly().GetName().Name}, version {_libraryAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
              $"© 2022, Amphenol Borisch Technologies.",
             "About...", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
