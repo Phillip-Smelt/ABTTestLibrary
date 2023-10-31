@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -46,18 +45,6 @@ namespace ABT.TestSpace.TestExec.Logging {
         public String Get() { return BarCodeText.Text; }
 
         private async void GetBarcodeScanner() {
-#if DEBUG
-            DeviceInformationCollection dic = await DeviceInformation.FindAllAsync(BarcodeScanner.GetDeviceSelector(PosConnectionTypes.Local));
-            foreach (DeviceInformation di in dic) {
-                Debug.Print($"Name: '{di.Name}'.");
-                Debug.Print($"Kind: '{di.Kind}'.");
-                Debug.Print($"ID  : '{di.Id}'.{Environment.NewLine}");
-            // NOTE: If ever change USB corded Barcode Scanner from current Voyager 1200g with ID "\\?\HID#VID_0C2E&PID_0A07&MI_00#7&1f27e379&0&0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner":
-            //       - Can discover new corded USB Scanner's ID by running above code in Visual Studio in Debug Configuration.
-            // NOTE: Above enumeration will only work on explicitly Microsoft supported corded USB Barcode Scanners, listed at https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.
-            // NOTE: Avove enumeration code will not work with BlueTooth or Wireless Barcode Scanners, even if explicitly Microsoft supported.
-            }
-#endif
             DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(_scannerID);
             _scanner = await BarcodeScanner.FromIdAsync(DI.Id);
             if (_scanner == null) throw new InvalidOperationException($"Barcode scanner Device ID:{Environment.NewLine}{Environment.NewLine}'{_scannerID}'{Environment.NewLine}{Environment.NewLine}not found.");

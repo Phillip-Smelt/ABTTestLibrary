@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using ABT.TestSpace.TestExec.AppConfig;
@@ -16,8 +17,9 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
+using Windows.Devices.Enumeration;
+using Windows.Devices.PointOfService;
+using System.Text;
 
 /// <para>
 /// TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -69,7 +71,6 @@ namespace ABT.TestSpace.TestExec {
             _libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog() : null;
             Icon = icon;
-            TSMI_Administration.Enabled = String.Equals(UserPrincipal.Current.DisplayName, "Phillip Smelt") ? true : false;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             IEnumerable<String> manualFolders;
             manualFolders = from xe in XElement.Load("TestExecutive.config.xml").Elements("ManualFolders") select xe.Element("BarcodeScanner").Value;
@@ -129,7 +130,6 @@ namespace ABT.TestSpace.TestExec {
         ///       inside the TestExecutive.MeasurementsRun() loop.
         /// </para>
         /// </summary>
-
 
         #region Form
         private void Form_Shown(Object sender, EventArgs e) {
@@ -202,7 +202,7 @@ namespace ABT.TestSpace.TestExec {
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             Initialize();
             if (ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
-       }
+        }
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
             ConfigTest = AppConfigTest.Get();
@@ -260,8 +260,8 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_File_PrintPreview_Click(Object sender, EventArgs e) { }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) { }
 
-        private void TSMI_Administration_EditAppConfig_Click(Object sender, EventArgs e) { }
-        private void TSMI_Administration_EditTestExecutiveConfigXML_Click(Object sender, EventArgs e) { }
+        private void TSMI_Administration_ViewAppConfig_Click(Object sender, EventArgs e) { }
+        private void TSMI_Administration_ViewTestExecutiveConfigXML_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationLaunchKeysightBenchVue_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationLaunchKeysightCommandExpert_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationLaunchKeysightConnectionExpert_Click(Object sender, EventArgs e) { }
@@ -269,8 +269,34 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_AdministrationLaunchMicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { }
         private void TSMI_AdministrationLaunchMicrosoftVisualStudio_Click(Object sender, EventArgs e) { }
 
-        private void TSMI_SystemBarcodeScannerDiscover_Click(Object sender, EventArgs e) { }
-        private void TSMI_SystemBarcodeScannerProgramDefaults_Click(Object sender, EventArgs e) { }
+        private async void TSMI_SystemBarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
+            _  = MessageBox.Show("Will discover Barcode Scanner(s) for subsequent File/Save.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            DeviceInformationCollection dic = await DeviceInformation.FindAllAsync(BarcodeScanner.GetDeviceSelector(PosConnectionTypes.Local));
+            StringBuilder sb = new StringBuilder($"Discovering Microsoft supported, corded Barcode Scanner(s):{Environment.NewLine}");
+            sb.AppendLine($"  - See https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.");
+            sb.AppendLine($"  - Note that only corded Barcode Scanners are discovered; cordless BlueTooth & Wireless scanners are ignored.");
+            sb.AppendLine($"  - Modify TestExecutive.config.xml to use a discovered Barcode Scanner.");
+            sb.AppendLine($"  - Scanners must be programmed into USB-HID mode to function properly:");
+            sb.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment%20Manuals/Raytheon%20Functional%20Test%20for%20D4522137%20&%20D4522142%20isoMicro/Honeywell%20Voyager%201200g/Honeywell%20Voyager%201200G%20User's%20Guide%20ReadMe.pdf");
+            sb.AppendLine($"    - Or:  https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/ppr/en-us/public/products/barcode-scanners/general-purpose-handheld/1200g/documents/sps-ppr-vg1200-ug.pdf{Environment.NewLine}");
+            foreach (DeviceInformation di in dic) {
+                sb.AppendLine($"Name: '{di.Name}'.");
+                sb.AppendLine($"Kind: '{di.Kind}'.");
+                sb.AppendLine($"ID  : '{di.Id}'.{Environment.NewLine}");
+            }
+            rtfResults.AppendText(sb.ToString());
+            SaveFileDialog saveFileDialog = new SaveFileDialog {
+                Title = "Save Discovered Corded Barcode Scanner(s)",
+                Filter = "Rich Text Format|*.rtf",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                FileName = $"Discovered Corded Barcode Scanner(s)",
+                DefaultExt = "rtf",
+                CreatePrompt = false,
+                OverwritePrompt = true
+            };
+            DialogResult dialogResult = saveFileDialog.ShowDialog();
+            if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName);
+        }
         private void TSMI_SystemDiagnosticsBarcodeScanner_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemDiagnosticsInstruments_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemDiagnosticsRelays_Click(Object sender, EventArgs e) { }
@@ -339,7 +365,7 @@ namespace ABT.TestSpace.TestExec {
                 if (MeasurementsCancelNotPassed(groupID)) return;
             }
         }
-        
+
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
