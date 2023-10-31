@@ -72,7 +72,7 @@ namespace ABT.TestSpace.TestExec {
             TSMI_Administration.Enabled = String.Equals(UserPrincipal.Current.DisplayName, "Phillip Smelt") ? true : false;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             IEnumerable<String> manualFolders;
-            manualFolders = from xe in XElement.Load("TestExecutive.config.xml").Elements("ManualFolders") select xe.Element("BarCodeScanner").Value;
+            manualFolders = from xe in XElement.Load("TestExecutive.config.xml").Elements("ManualFolders") select xe.Element("BarcodeScanner").Value;
             _manualFoldersBarcodeScanner = manualFolders.First();
             manualFolders = from xe in XElement.Load("TestExecutive.config.xml").Elements("ManualFolders") select xe.Element("Instruments").Value;
             _manualFoldersInstruments = manualFolders.First();
@@ -148,7 +148,6 @@ namespace ABT.TestSpace.TestExec {
             ButtonCancelReset(enabled: true);
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
-            TSMI_File.Enabled = false;
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
@@ -156,8 +155,6 @@ namespace ABT.TestSpace.TestExec {
             ButtonSelectTests.Enabled = true;
             ButtonStartReset(enabled: (ConfigTest != null));
             ButtonCancelReset(enabled: false);
-            if (ConfigTest != null) TSMI_File.Enabled = !ConfigTest.IsOperation;
-            else TSMI_File.Enabled = false;
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 

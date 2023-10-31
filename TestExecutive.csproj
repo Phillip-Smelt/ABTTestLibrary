@@ -86,6 +86,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="TestExecutive.resx">
       <DependentUpon>TestExecutive.cs</DependentUpon>
@@ -148,11 +149,8 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Logging\Honeywell Voyager 1200G User%27s Guide ReadMe.pdf" />
-    <None Include="Logging\Honeywell Voyager 1200G User%27s Guide.pdf" />
     <None Include="packages.config" />
     <None Include="Resources\EmergencyStop.png" />
-    <Content Include="Resources\BMC5486%27s PICKit4 Connector Polarity.jpg" />
     <Content Include="TestExecutive.config.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
