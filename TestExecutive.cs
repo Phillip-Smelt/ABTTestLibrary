@@ -246,7 +246,19 @@ namespace ABT.TestSpace.TestExec {
         #endregion Command Buttons
 
         #region Tool Strip Menu Items
-        private void TSMI_File_Save_Click(Object sender, EventArgs e) { }
+        private void TSMI_File_Save_Click(Object sender, EventArgs e) {
+            SaveFileDialog saveFileDialog = new SaveFileDialog {
+                Title = "Save Test Results",
+                Filter = "Rich Text Format|*.rtf",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                FileName = $"{ConfigUUT.Number}_{ConfigTest.TestElementID}_{ConfigUUT.SerialNumber}",
+                DefaultExt = "rtf",
+                CreatePrompt = false,
+                OverwritePrompt = true
+            };
+            DialogResult dialogResult = saveFileDialog.ShowDialog();
+            if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName);
+        }
         private void TSMI_File_Print_Click(Object sender, EventArgs e) { }
         private void TSMI_File_PrintPreview_Click(Object sender, EventArgs e) { }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) { }
@@ -285,8 +297,6 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         #endregion Tool Strip Menu Items
         #endregion Form
-
-
 
         #region Measurements
         private void MeasurementsPreRun() {
