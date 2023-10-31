@@ -208,7 +208,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File_Save.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.TSMI_File_Save.Name = "TSMI_File_Save";
             this.TSMI_File_Save.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.TSMI_File_Save.Size = new System.Drawing.Size(177, 26);
+            this.TSMI_File_Save.Size = new System.Drawing.Size(228, 30);
             this.TSMI_File_Save.Text = "&Save";
             this.TSMI_File_Save.ToolTipText = "Save UUT results.";
             this.TSMI_File_Save.Click += new System.EventHandler(this.TSMI_File_Save_Click);
@@ -375,8 +375,8 @@ namespace ABT.TestSpace.TestExec {
             // TMSI_System
             // 
             this.TMSI_System.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TMSI_SystemDiagnostics,
             this.TMSI_SystemBarcodeScannerDiscovery,
+            this.TMSI_SystemDiagnostics,
             this.TSMI_SystemManuals,
             this.TMSI_SystemSeparator1,
             this.TMSI_SystemCompliments,
