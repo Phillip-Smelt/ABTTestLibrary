@@ -66,13 +66,6 @@ namespace ABT.TestSpace.TestExec {
             _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog() : null;
             Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            IEnumerable<String> manualFolders;
-            manualFolders = from xe in XElement.Load("TestExecutive.config.xml").Elements("ManualFolders") select xe.Element("BarcodeScanner").Value;
-            _manualFoldersBarcodeScanner = manualFolders.First();
-            manualFolders = from xe in XElement.Load("TestExecutive.config.xml").Elements("ManualFolders") select xe.Element("Instruments").Value;
-            _manualFoldersInstruments = manualFolders.First();
-            manualFolders = from xe in XElement.Load("TestExecutive.config.xml").Elements("ManualFolders") select xe.Element("Relays").Value;
-            _manualFoldersRelays = manualFolders.First();
             UE24.Set(C.S.NO); // Relays should be energized/de-energized/re-energized occasionally as preventative maintenance.
             UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
         }
@@ -152,8 +145,8 @@ namespace ABT.TestSpace.TestExec {
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
-        private void OpenApp(String Company, String App, String arguments="") {
-            IEnumerable<String> app = from xe in XElement.Load("TestExecutive.config.xml").Elements("Apps").Elements(Company) select xe.Element(App).Value;
+        private void OpenApp(String CompanyID, String AppID, String arguments="") {
+            IEnumerable<String> app = from xe in XElement.Load("TestExecutive.config.xml").Elements("Apps").Elements(CompanyID) select xe.Element(AppID).Value;
             
             if (File.Exists($"{app.First()}")) {
                 ProcessStartInfo psi = new ProcessStartInfo {
@@ -165,21 +158,28 @@ namespace ABT.TestSpace.TestExec {
                 Process.Start(psi);
                 // Strings with embedded spaces require enclosing double-quotes (").
                 // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-            } else MessageBox.Show(Form.ActiveForm, $"Path {App} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } else MessageBox.Show(Form.ActiveForm, $"Path {AppID} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private void OpenFolder(String PathFolder) {
-            if (Directory.Exists(PathFolder)) {
+        private String GetFile(String FileID) {
+            IEnumerable<String> file = from xe in XElement.Load("TestExecutive.config.xml").Elements("Files") select xe.Element(FileID).Value;
+            return file.First();
+        }
+
+        private void OpenFolder(String FolderID) {
+            IEnumerable<String> folder = from xe in XElement.Load("TestExecutive.config.xml").Elements("Folder") select xe.Element(FolderID).Value;
+
+            if (Directory.Exists(folder.First())) {
                 ProcessStartInfo psi = new ProcessStartInfo {
                     FileName = "explorer.exe",
                     WindowStyle = ProcessWindowStyle.Normal,
-                    Arguments = $"\"{PathFolder}\""
+                    Arguments = $"\"{folder.First()}\""
                 };
                 Process.Start(psi);
                 // Paths with embedded spaces require enclosing double-quotes (").
                 // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - thus using ProcessStartInfo class.
                 // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-            } else MessageBox.Show(Form.ActiveForm, $"Path {PathFolder} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } else MessageBox.Show(ActiveForm, $"Path {folder.First()} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         #region Command Buttons
@@ -311,10 +311,10 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) { }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
-        private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(_manualFoldersBarcodeScanner); }
-        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(_manualFoldersInstruments); }
-        private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder(_manualFoldersRelays); }
-        private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", @"..\..\TestExecutive.config.xml"); }
+        private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder("BarcodeScanner"); }
+        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder("Instruments"); }
+        private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder("Relays"); }
+        private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", GetFile("TestExecutiveConfigXML")); }
         private void TSMI_System_ComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_System_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_System_CritiqueBugReport_Click(Object sender, EventArgs e) { }
@@ -325,7 +325,7 @@ namespace ABT.TestSpace.TestExec {
             "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", @"..\..\App.config"); }
+        private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", GetFile("AppConfig")); }
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.DocumentationFolder); }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }

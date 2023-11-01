@@ -80,11 +80,16 @@
     </Microsoft>
   </Apps>
   
-  <ManualFolders>
+  <Files>
+    <AppConfig>..\..\App.Config</AppConfig>
+    <TestExecutiveConfigXMO>C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml</TestExecutiveConfigXMO>
+  </Files>
+  
+  <Folders>
     <BarcodeScanner>P:\Test\Engineers\Equipment Manuals\Raytheon Functional Test for D4522137 &amp; D4522142 isoMicro\Honeywell Voyager 1200g</BarcodeScanner>		<!-- Honeywell Voyager USB 1200g corded Barcode Scanner -->
     <Instruments>P:\Test\Engineers\Equipment Manuals\Raytheon Functional Test for D4522137 &amp; D4522142 isoMicro\Keysight</Instruments>													<!-- Keysight SCPI VISA -->
     <Relays>P:\Test\Engineers\Equipment Manuals\Raytheon Functional Test for D4522137 &amp; D4522142 isoMicro\Measurement Computing</Relays>											<!-- MCC USB-ERB24, ULI & InstaCal -->
-  </ManualFolders>
+  </Folders>
   
 	<SCPI_VISA_Instrument>
 		<ID>PS1</ID>
