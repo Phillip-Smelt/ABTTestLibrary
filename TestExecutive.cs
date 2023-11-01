@@ -262,12 +262,12 @@ namespace ABT.TestSpace.TestExec {
 
         private void TSMI_Apps_ViewAppConfig_Click(Object sender, EventArgs e) { }
         private void TSMI_Apps_ViewTestExecutiveConfigXML_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_Launch_KeysightBenchVue_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_Launch_KeysightCommandExpert_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_Launch_KeysightConnectionExpert_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_Launch_KeysightMeasurementComputingInstaCal_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_Launch_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_Launch_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_KeysightMeasurementComputingInstaCal_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { }
 
         private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
             DialogResult dr = MessageBox.Show($"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
