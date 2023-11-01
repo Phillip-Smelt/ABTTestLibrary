@@ -166,20 +166,23 @@ namespace ABT.TestSpace.TestExec {
             return file.First();
         }
 
-        private void OpenFolder(String FolderID) {
+        private String GetFolder(String FolderID) {
             IEnumerable<String> folder = from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element(FolderID).Value;
+            return folder.First();
+        }
 
-            if (Directory.Exists(folder.First())) {
+        private void OpenFolder(String FolderPath) {
+            if (Directory.Exists(FolderPath)) {
                 ProcessStartInfo psi = new ProcessStartInfo {
                     FileName = "explorer.exe",
                     WindowStyle = ProcessWindowStyle.Normal,
-                    Arguments = $"\"{folder.First()}\""
+                    Arguments = $"\"{FolderPath}\""
                 };
                 Process.Start(psi);
                 // Paths with embedded spaces require enclosing double-quotes (").
                 // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - thus using ProcessStartInfo class.
                 // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-            } else MessageBox.Show(ActiveForm, $"Path {folder.First()} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } else MessageBox.Show(ActiveForm, $"Path {FolderPath} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         #region Command Buttons
@@ -311,9 +314,9 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) { }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
-        private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder("BarcodeScanner"); }
-        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder("Instruments"); }
-        private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder("Relays"); }
+        private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
+        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
+        private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Relays")); }
         private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", GetFile("TestExecutiveConfigXML")); }
         private void TSMI_System_ComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_System_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
