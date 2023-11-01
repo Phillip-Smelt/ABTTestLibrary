@@ -82,7 +82,7 @@
   
   <Files>
     <AppConfig>..\..\App.Config</AppConfig>
-    <TestExecutiveConfigXMO>C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml</TestExecutiveConfigXMO>
+    <TestExecutiveConfigXML>C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml</TestExecutiveConfigXMO>
   </Files>
   
   <Folders>

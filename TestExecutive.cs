@@ -167,7 +167,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void OpenFolder(String FolderID) {
-            IEnumerable<String> folder = from xe in XElement.Load("TestExecutive.config.xml").Elements("Folder") select xe.Element(FolderID).Value;
+            IEnumerable<String> folder = from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element(FolderID).Value;
 
             if (Directory.Exists(folder.First())) {
                 ProcessStartInfo psi = new ProcessStartInfo {
