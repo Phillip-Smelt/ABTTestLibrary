@@ -260,18 +260,18 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_File_PrintPreview_Click(Object sender, EventArgs e) { }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) { }
 
-        private void TSMI_Administration_ViewAppConfig_Click(Object sender, EventArgs e) { }
-        private void TSMI_Administration_ViewTestExecutiveConfigXML_Click(Object sender, EventArgs e) { }
-        private void TSMI_AdministrationLaunchKeysightBenchVue_Click(Object sender, EventArgs e) { }
-        private void TSMI_AdministrationLaunchKeysightCommandExpert_Click(Object sender, EventArgs e) { }
-        private void TSMI_AdministrationLaunchKeysightConnectionExpert_Click(Object sender, EventArgs e) { }
-        private void TSMI_AdministrationLaunchKeysightMeasurementComputingInstaCal_Click(Object sender, EventArgs e) { }
-        private void TSMI_AdministrationLaunchMicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { }
-        private void TSMI_AdministrationLaunchMicrosoftVisualStudio_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_ViewAppConfig_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_ViewTestExecutiveConfigXML_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_Launch_KeysightBenchVue_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_Launch_KeysightCommandExpert_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_Launch_KeysightConnectionExpert_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_Launch_KeysightMeasurementComputingInstaCal_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_Launch_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_Launch_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { }
 
-        private async void TSMI_SystemBarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
+        private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
             DialogResult dr = MessageBox.Show($"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
-                $"Please Cancel & File/Save results if needed, then re-run Discovery", "Alert", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                $"Please Cancel & File/Save results if needed, then re-run Discovery.", "Alert", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (dr == DialogResult.Cancel) return;
             rtfResults.Clear();
             DeviceInformationCollection dic = await DeviceInformation.FindAllAsync(BarcodeScanner.GetDeviceSelector(PosConnectionTypes.Local));
@@ -300,17 +300,17 @@ namespace ABT.TestSpace.TestExec {
             DialogResult dialogResult = saveFileDialog.ShowDialog();
             if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
-        private void TSMI_SystemDiagnosticsBarcodeScanner_Click(Object sender, EventArgs e) { }
-        private void TSMI_SystemDiagnosticsInstruments_Click(Object sender, EventArgs e) { }
-        private void TSMI_SystemDiagnosticsRelays_Click(Object sender, EventArgs e) { }
-        private void TSMI_SystemManualsBarcodeScanner_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersBarcodeScanner); }
-        private void TSMI_SystemManualsInstruments_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersInstruments); }
-        private void TSMI_SystemManualsRelays_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersRelays); }
-        private void TSMI_SystemComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-        private void TSMI_SystemComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-        private void TSMI_SystemCritiqueBugReport_Click(Object sender, EventArgs e) { }
-        private void TSMI_SystemCritiqueImprovementRequest_Click(Object sender, EventArgs e) { }
-        private void TSMI_SystemAbout_Click(Object sender, EventArgs e) {
+        private void TSMI_System_DiagnosticsBarcodeScanner_Click(Object sender, EventArgs e) { }
+        private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) { }
+        private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
+        private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersBarcodeScanner); }
+        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersInstruments); }
+        private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersRelays); }
+        private void TSMI_System_ComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+        private void TSMI_System_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+        private void TSMI_System_CritiqueBugReport_Click(Object sender, EventArgs e) { }
+        private void TSMI_System_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { }
+        private void TSMI_System_About_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, version {_libraryAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
              $"© 2022, Amphenol Borisch Technologies.",
             "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
