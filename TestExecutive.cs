@@ -152,18 +152,33 @@ namespace ABT.TestSpace.TestExec {
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
-        private void FolderOpen(String FolderPath) {
-            if (Directory.Exists(FolderPath)) {
+        private void OpenApp(String workingDirectory, String fileName, String arguments ) {
+            workingDirectory = $"\"{workingDirectory}\""; fileName = $"\"{fileName}\""; arguments = $"\"{arguments}\"";
+            if (File.Exists(workingDirectory + fileName)) {
+                ProcessStartInfo psi = new ProcessStartInfo {
+                    FileName = fileName,
+                    WindowStyle = ProcessWindowStyle.Normal,
+                    WorkingDirectory = workingDirectory,
+                    Arguments = arguments
+                };
+                Process.Start(psi);
+                // Strings with embedded spaces require enclosing double-quotes (").
+                // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
+            } else MessageBox.Show(Form.ActiveForm, $"App {fileName} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void OpenFolder(String PathFolder) {
+            if (Directory.Exists(PathFolder)) {
                 ProcessStartInfo psi = new ProcessStartInfo {
                     FileName = "explorer.exe",
-                    WindowStyle = ProcessWindowStyle.Minimized,
-                    Arguments = $"\"{FolderPath}\""
+                    WindowStyle = ProcessWindowStyle.Normal,
+                    Arguments = $"\"{PathFolder}\""
                 };
                 Process.Start(psi);
                 // Paths with embedded spaces require enclosing double-quotes (").
-                // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - must use ProcessStartInfo class.
+                // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - thus using ProcessStartInfo class.
                 // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-            } else MessageBox.Show(Form.ActiveForm, $"Path {FolderPath} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } else MessageBox.Show(Form.ActiveForm, $"Path {PathFolder} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         #region Command Buttons
@@ -294,10 +309,10 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) { }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
-        private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersBarcodeScanner); }
-        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersInstruments); }
-        private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersRelays); }
-        private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) { }
+        private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(_manualFoldersBarcodeScanner); }
+        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(_manualFoldersInstruments); }
+        private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder(_manualFoldersRelays); }
+        private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) { OpenApp(@"C:\Program Files (x86)\LovettSoftware\XmlNotepad\", "XmlNotepad.exe", @"C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml"); }
         private void TSMI_System_ComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_System_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_System_CritiqueBugReport_Click(Object sender, EventArgs e) { }
@@ -309,9 +324,9 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) { }
-        private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { FolderOpen(ConfigUUT.DocumentationFolder); }
-        private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { FolderOpen(ConfigUUT.ManualsFolder); }
-        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { FolderOpen(ConfigLogger.FilePath); }
+        private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.DocumentationFolder); }
+        private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
+        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName().Name}, version {_appAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
