@@ -270,7 +270,10 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_AdministrationLaunchMicrosoftVisualStudio_Click(Object sender, EventArgs e) { }
 
         private async void TSMI_SystemBarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
-            _  = MessageBox.Show("Will discover Barcode Scanner(s) for subsequent File/Save.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            DialogResult dr = MessageBox.Show($"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
+                $"Please Cancel & File/Save results if needed, then re-run Discovery", "Alert", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (dr == DialogResult.Cancel) return;
+            rtfResults.Clear();
             DeviceInformationCollection dic = await DeviceInformation.FindAllAsync(BarcodeScanner.GetDeviceSelector(PosConnectionTypes.Local));
             StringBuilder sb = new StringBuilder($"Discovering Microsoft supported, corded Barcode Scanner(s):{Environment.NewLine}");
             sb.AppendLine($"  - See https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.");
@@ -284,7 +287,7 @@ namespace ABT.TestSpace.TestExec {
                 sb.AppendLine($"Kind: '{di.Kind}'.");
                 sb.AppendLine($"ID  : '{di.Id}'.{Environment.NewLine}");
             }
-            rtfResults.AppendText(sb.ToString());
+            rtfResults.Text = sb.ToString();
             SaveFileDialog saveFileDialog = new SaveFileDialog {
                 Title = "Save Discovered Corded Barcode Scanner(s)",
                 Filter = "Rich Text Format|*.rtf",
@@ -295,7 +298,7 @@ namespace ABT.TestSpace.TestExec {
                 OverwritePrompt = true
             };
             DialogResult dialogResult = saveFileDialog.ShowDialog();
-            if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName);
+            if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
         private void TSMI_SystemDiagnosticsBarcodeScanner_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemDiagnosticsInstruments_Click(Object sender, EventArgs e) { }
@@ -308,16 +311,20 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_SystemCritiqueBugReport_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemCritiqueImprovementRequest_Click(Object sender, EventArgs e) { }
         private void TSMI_SystemAbout_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName().Name}, version {_appAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
-             $"{Assembly.GetExecutingAssembly().GetName().Name}, version {_libraryAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
+            _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, version {_libraryAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
              $"© 2022, Amphenol Borisch Technologies.",
-            "About...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { FolderOpen(ConfigUUT.DocumentationFolder); }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { FolderOpen(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { FolderOpen(ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
+        private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
+            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName().Name}, version {_appAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
+             $"© 2022, Amphenol Borisch Technologies.",
+            "About TestExecutor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
         #endregion Tool Strip Menu Items
         #endregion Form
 
