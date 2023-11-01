@@ -32,10 +32,8 @@ using System.Text;
 ///       TIDP.SAA actually appears to be compiled to .Net FrameWork 4.5, but that's still not necessarily compatible with .Net 7.0.
 ///  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
 /// TODO: Update to WinUI 3 or WPF instead of WinForms when possible.
-/// TODO: Add/Debug TestExecutive control access keys; embedded '&' in control's Text properties for Alt-key quick-keys.
-///       - Had them for all controls, worked as quick-keys with their Alt-keys, but didn't display as underlined characters except in Designer view.
-///       - Removed access keying '&'s from all control Test properties until resolved.
-/// https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-create-access-keys-for-windows-forms-controls?view=netframeworkdesktop-4.8.
+/// TODO: Ensure Borisch Domain Group "Test - Engineers" has read & write permissions on all TestExecutor & isoMicro folder/files.
+/// TODO: Ensure Borisch Domain Groups ≠ "Test - Engineers" have only read permissions on all TestExecutor & isoMicro folder/files.
 /// NOTE: Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
 /// With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 ///
