@@ -64,6 +64,10 @@
 	- https://www.ivifoundation.org/downloads/Architecture%20Specifications/vpp43_2022-05-19.pdf.
 -->
 <Configuration>
+  <Apps>
+    
+  </Apps>
+  
   <ManualFolders>
     <BarcodeScanner>P:\Test\Engineers\Equipment Manuals\Raytheon Functional Test for D4522137 &amp; D4522142 isoMicro\Honeywell Voyager 1200g</BarcodeScanner>		<!-- Honeywell Voyager USB 1200g corded Barcode Scanner -->
     <Instruments>P:\Test\Engineers\Equipment Manuals\Raytheon Functional Test for D4522137 &amp; D4522142 isoMicro\Keysight</Instruments>													<!-- Keysight SCPI VISA -->

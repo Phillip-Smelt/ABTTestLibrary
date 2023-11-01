@@ -79,6 +79,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_UUT_About = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_MicrosoftXML_Notepad = new System.Windows.Forms.ToolStripMenuItem();
             this.MS.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -315,7 +316,8 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.TSMI_Apps_Microsoft.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio,
-            this.TSMI_Apps_MicrosoftVisualStudio});
+            this.TSMI_Apps_MicrosoftVisualStudio,
+            this.TSMI_Apps_MicrosoftXML_Notepad});
             this.TSMI_Apps_Microsoft.Name = "TSMI_Apps_Microsoft";
             this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(260, 26);
             this.TSMI_Apps_Microsoft.Text = "&Microsoft";
@@ -373,7 +375,7 @@ namespace ABT.TestSpace.TestExec {
             // TMSI_System_DiagnosticsInstruments
             // 
             this.TMSI_System_DiagnosticsInstruments.Name = "TMSI_System_DiagnosticsInstruments";
-            this.TMSI_System_DiagnosticsInstruments.Size = new System.Drawing.Size(224, 26);
+            this.TMSI_System_DiagnosticsInstruments.Size = new System.Drawing.Size(168, 26);
             this.TMSI_System_DiagnosticsInstruments.Text = "&Instruments";
             this.TMSI_System_DiagnosticsInstruments.ToolTipText = "Multi-select ListBox auto-populated from TestExecutive.config.xml.  Invoke SCPI_V" +
     "ISA_Instruments self-tests.";
@@ -383,7 +385,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.TMSI_System_DiagnosticsRelays.Enabled = false;
             this.TMSI_System_DiagnosticsRelays.Name = "TMSI_System_DiagnosticsRelays";
-            this.TMSI_System_DiagnosticsRelays.Size = new System.Drawing.Size(224, 26);
+            this.TMSI_System_DiagnosticsRelays.Size = new System.Drawing.Size(168, 26);
             this.TMSI_System_DiagnosticsRelays.Text = "&Relays";
             this.TMSI_System_DiagnosticsRelays.ToolTipText = "Adapt MS-Test Unit Tests of USB-ERB24 class.";
             this.TMSI_System_DiagnosticsRelays.Click += new System.EventHandler(this.TSMI_System_DiagnosticsRelays_Click);
@@ -401,7 +403,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_System_ManualsBarcodeScanner
             // 
             this.TSMI_System_ManualsBarcodeScanner.Name = "TSMI_System_ManualsBarcodeScanner";
-            this.TSMI_System_ManualsBarcodeScanner.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_System_ManualsBarcodeScanner.Size = new System.Drawing.Size(203, 26);
             this.TSMI_System_ManualsBarcodeScanner.Text = "&Barcode Scanner";
             this.TSMI_System_ManualsBarcodeScanner.ToolTipText = "If you\'re bored...";
             this.TSMI_System_ManualsBarcodeScanner.Click += new System.EventHandler(this.TSMI_System_ManualsBarcodeScanner_Click);
@@ -409,7 +411,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_System_ManualsInstruments
             // 
             this.TSMI_System_ManualsInstruments.Name = "TSMI_System_ManualsInstruments";
-            this.TSMI_System_ManualsInstruments.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_System_ManualsInstruments.Size = new System.Drawing.Size(203, 26);
             this.TSMI_System_ManualsInstruments.Text = "&Instruments";
             this.TSMI_System_ManualsInstruments.ToolTipText = "...really bored...";
             this.TSMI_System_ManualsInstruments.Click += new System.EventHandler(this.TSMI_System_ManualsInstruments_Click);
@@ -417,7 +419,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_System_ManualsRelays
             // 
             this.TSMI_System_ManualsRelays.Name = "TSMI_System_ManualsRelays";
-            this.TSMI_System_ManualsRelays.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_System_ManualsRelays.Size = new System.Drawing.Size(203, 26);
             this.TSMI_System_ManualsRelays.Text = "&Relays";
             this.TSMI_System_ManualsRelays.ToolTipText = "...zzzzzz...";
             this.TSMI_System_ManualsRelays.Click += new System.EventHandler(this.TSMI_System_ManualsRelays_Click);
@@ -580,6 +582,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_About.Text = "&About...";
             this.TSMI_UUT_About.Click += new System.EventHandler(this.TSMI_UUT_About_Click);
             // 
+            // TSMI_Apps_MicrosoftXML_Notepad
+            // 
+            this.TSMI_Apps_MicrosoftXML_Notepad.Name = "TSMI_Apps_MicrosoftXML_Notepad";
+            this.TSMI_Apps_MicrosoftXML_Notepad.Size = new System.Drawing.Size(302, 26);
+            this.TSMI_Apps_MicrosoftXML_Notepad.Text = "&XML Notepad";
+            this.TSMI_Apps_MicrosoftXML_Notepad.Click += new System.EventHandler(this.TSMI_Apps_MicrosoftXML_Notepad_Click);
+            // 
             // TestExecutive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -661,5 +670,6 @@ namespace ABT.TestSpace.TestExec {
         private ToolStripMenuItem TSMI_Apps_Microsoft;
         private ToolStripMenuItem TSMI_Apps_MicrosoftSQLServerManagementStudio;
         private ToolStripMenuItem TSMI_Apps_MicrosoftVisualStudio;
+        private ToolStripMenuItem TSMI_Apps_MicrosoftXML_Notepad;
     }
 }
