@@ -184,7 +184,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT});
             this.MS.Location = new System.Drawing.Point(0, 0);
             this.MS.Name = "MS";
-            this.MS.Size = new System.Drawing.Size(1393, 28);
+            this.MS.Size = new System.Drawing.Size(1393, 30);
             this.MS.TabIndex = 6;
             this.MS.TabStop = true;
             this.MS.Text = "menuStrip1";
@@ -208,7 +208,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File_Save.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.TSMI_File_Save.Name = "TSMI_File_Save";
             this.TSMI_File_Save.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.TSMI_File_Save.Size = new System.Drawing.Size(177, 26);
+            this.TSMI_File_Save.Size = new System.Drawing.Size(228, 30);
             this.TSMI_File_Save.Text = "&Save";
             this.TSMI_File_Save.ToolTipText = "Save UUT results.";
             this.TSMI_File_Save.Click += new System.EventHandler(this.TSMI_File_Save_Click);
@@ -259,7 +259,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MeasurementComputing,
             this.TSMI_Apps_Microsoft});
             this.TSMI_Apps.Name = "TSMI_Apps";
-            this.TSMI_Apps.Size = new System.Drawing.Size(61, 24);
+            this.TSMI_Apps.Size = new System.Drawing.Size(61, 26);
             this.TSMI_Apps.Text = " &Apps";
             // 
             // TSMI_Apps_Keysight
@@ -278,6 +278,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_KeysightBenchVue.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_KeysightBenchVue.Text = "&BenchVue";
             this.TSMI_Apps_KeysightBenchVue.ToolTipText = "Control Keysight Instruments via soft/virtual panels.";
+            this.TSMI_Apps_KeysightBenchVue.Click += new System.EventHandler(this.TSMI_Apps_KeysightBenchVue_Click);
             // 
             // TSMI_Apps_KeysightCommandExpert
             // 
@@ -285,6 +286,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_KeysightCommandExpert.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_KeysightCommandExpert.Text = "Co&mmand Expert";
             this.TSMI_Apps_KeysightCommandExpert.ToolTipText = "SCPI programming & debugging IDE.";
+            this.TSMI_Apps_KeysightCommandExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightCommandExpert_Click);
             // 
             // TSMI_Apps_KeysightConnectionExpert
             // 
@@ -292,6 +294,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_KeysightConnectionExpert.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_KeysightConnectionExpert.Text = "Co&nnection Expert";
             this.TSMI_Apps_KeysightConnectionExpert.ToolTipText = "Discover VISA Instruments.";
+            this.TSMI_Apps_KeysightConnectionExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightConnectionExpert_Click);
             // 
             // TSMI_Apps_MeasurementComputing
             // 
@@ -307,6 +310,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MeasurementComputingInstaCal.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_MeasurementComputingInstaCal.Text = "&InstaCal";
             this.TSMI_Apps_MeasurementComputingInstaCal.ToolTipText = "Configure & test MCC Instruments, like USB-ERB24 relays.";
+            this.TSMI_Apps_MeasurementComputingInstaCal.Click += new System.EventHandler(this.TSMI_Apps_MeasurementComputingInstaCal_Click);
             // 
             // TSMI_Apps_Microsoft
             // 
@@ -324,6 +328,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio.Size = new System.Drawing.Size(302, 26);
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio.Text = "&SQL Server Management Studio";
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio.ToolTipText = "Coming soon!";
+            this.TSMI_Apps_MicrosoftSQLServerManagementStudio.Click += new System.EventHandler(this.TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click);
             // 
             // TSMI_Apps_MicrosoftVisualStudio
             // 
@@ -331,6 +336,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MicrosoftVisualStudio.Size = new System.Drawing.Size(302, 26);
             this.TSMI_Apps_MicrosoftVisualStudio.Text = "&Visual Studio";
             this.TSMI_Apps_MicrosoftVisualStudio.ToolTipText = "C# forever!";
+            this.TSMI_Apps_MicrosoftVisualStudio.Click += new System.EventHandler(this.TSMI_Apps_MicrosoftVisualStudio_Click);
             // 
             // TMSI_System
             // 
@@ -432,6 +438,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_System_TestExecutiveConfigXML.Size = new System.Drawing.Size(271, 26);
             this.TSMI_System_TestExecutiveConfigXML.Text = "&TestExecutive.config.xml";
             this.TSMI_System_TestExecutiveConfigXML.ToolTipText = "Test System\'s configuration.";
+            this.TSMI_System_TestExecutiveConfigXML.Click += new System.EventHandler(this.TSMI_System_TestExecutiveConfigXML_Click);
             // 
             // TMSI_System_Separator1
             // 
@@ -516,9 +523,10 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_AppConfig
             // 
             this.TSMI_UUT_AppConfig.Name = "TSMI_UUT_AppConfig";
-            this.TSMI_UUT_AppConfig.Size = new System.Drawing.Size(165, 26);
+            this.TSMI_UUT_AppConfig.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_AppConfig.Text = "&App.config";
             this.TSMI_UUT_AppConfig.ToolTipText = "UUT\'s test configuration.";
+            this.TSMI_UUT_AppConfig.Click += new System.EventHandler(this.TSMI_UUT_AppConfig_Click);
             // 
             // TSMI_UUT_eDocs
             // 
@@ -578,8 +586,9 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_About
             // 
             this.TSMI_UUT_About.Name = "TSMI_UUT_About";
-            this.TSMI_UUT_About.Size = new System.Drawing.Size(165, 26);
+            this.TSMI_UUT_About.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_About.Text = "&About...";
+            this.TSMI_UUT_About.Click += new System.EventHandler(this.TSMI_UUT_About_Click);
             // 
             // TestExecutive
             // 

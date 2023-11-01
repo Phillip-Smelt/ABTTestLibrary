@@ -260,12 +260,10 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_File_PrintPreview_Click(Object sender, EventArgs e) { }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) { }
 
-        private void TSMI_Apps_ViewAppConfig_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_ViewTestExecutiveConfigXML_Click(Object sender, EventArgs e) { }
         private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { }
         private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_KeysightMeasurementComputingInstaCal_Click(Object sender, EventArgs e) { }
+        private void TSMI_Apps_MeasurementComputingInstaCal_Click(Object sender, EventArgs e) { }
         private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { }
         private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { }
 
@@ -306,6 +304,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersBarcodeScanner); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersInstruments); }
         private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersRelays); }
+        private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) { }
         private void TSMI_System_ComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_System_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_System_CritiqueBugReport_Click(Object sender, EventArgs e) { }
@@ -316,6 +315,7 @@ namespace ABT.TestSpace.TestExec {
             "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { FolderOpen(ConfigUUT.DocumentationFolder); }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { FolderOpen(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { FolderOpen(ConfigLogger.FilePath); }
