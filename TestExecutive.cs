@@ -44,12 +44,6 @@ using System.Text;
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
 ///  </para>
 
-//  Barcode Scanner self-tests; open JPEG image of self-test barcode.
-//      - Honeywell Voyager 1200g Barcode Scanner
-//      - Open JPEG image of PAP131 USB-HID mode barcode.
-//      - Open JPEG image of factory reset barcode.
-//      - Open P:\Drive folder containing Voyager 1200g documentation.
-
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
@@ -298,7 +292,6 @@ namespace ABT.TestSpace.TestExec {
             DialogResult dialogResult = saveFileDialog.ShowDialog();
             if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
-        private void TSMI_System_DiagnosticsBarcodeScanner_Click(Object sender, EventArgs e) { }
         private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) { }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { FolderOpen(_manualFoldersBarcodeScanner); }
