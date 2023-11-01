@@ -152,18 +152,20 @@ namespace ABT.TestSpace.TestExec {
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
-        private void OpenApp(String workingDirectory, String fileName, String arguments ) {
-            if (File.Exists($"{workingDirectory}{fileName}")) {
+        private void OpenApp(String Company, String App, String arguments="") {
+            IEnumerable<String> app = from xe in XElement.Load("TestExecutive.config.xml").Elements("Apps").Elements(Company) select xe.Element(App).Value;
+            
+            if (File.Exists($"{app.First()}")) {
                 ProcessStartInfo psi = new ProcessStartInfo {
-                    FileName = fileName,
+                    FileName = app.First(),
                     WindowStyle = ProcessWindowStyle.Normal,
-                    WorkingDirectory = workingDirectory,
+                    WorkingDirectory = "",
                     Arguments = arguments
                 };
                 Process.Start(psi);
                 // Strings with embedded spaces require enclosing double-quotes (").
                 // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-            } else MessageBox.Show(Form.ActiveForm, $"Path {workingDirectory}{fileName} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } else MessageBox.Show(Form.ActiveForm, $"Path {App} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void OpenFolder(String PathFolder) {
@@ -268,13 +270,13 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_File_PrintPreview_Click(Object sender, EventArgs e) { }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) { }
 
-        private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_MeasurementComputingInstaCal_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { }
-        private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp(@"", @"C:\Program Files (x86)\LovettSoftware\XmlNotepad\XmlNotepad.exe", @""); }
+        private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { OpenApp("Keysight", "BenchVue"); }
+        private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "CommandExpert"); }
+        private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "ConnectionExpert"); }
+        private void TSMI_Apps_MeasurementComputingInstaCal_Click(Object sender, EventArgs e) { OpenApp("MeasurementComputing", "InstaCal"); }
+        private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "SQLServerManagementStudio"); }
+        private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "VisualStudio"); }
+        private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad"); }
 
         private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
             DialogResult dr = MessageBox.Show($"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
@@ -312,7 +314,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(_manualFoldersBarcodeScanner); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(_manualFoldersInstruments); }
         private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder(_manualFoldersRelays); }
-        private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) { OpenApp(@"", @"C:\Program Files (x86)\LovettSoftware\XmlNotepad\XmlNotepad.exe", @"C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml"); }
+        private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", @"..\..\TestExecutive.config.xml"); }
         private void TSMI_System_ComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_System_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_System_CritiqueBugReport_Click(Object sender, EventArgs e) { }
@@ -323,7 +325,7 @@ namespace ABT.TestSpace.TestExec {
             "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) { OpenApp(@"", @"C:\Program Files (x86)\LovettSoftware\XmlNotepad\XmlNotepad.exe", @"..\..\App.config"); }
+        private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", @"..\..\App.config"); }
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.DocumentationFolder); }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }

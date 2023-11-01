@@ -8,7 +8,6 @@ using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
-using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 using ABT.TestSpace.TestExec.Logging;
 
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
