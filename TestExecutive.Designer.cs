@@ -51,6 +51,8 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_MicrosoftVisualStudio = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_MicrosoftXML_Notepad = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_TexasInstruments = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_System = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_System_BarcodeScannerDiscovery = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_System_Diagnostics = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,8 +82,6 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_UUT_About = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Apps_TexasInstruments = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool = new System.Windows.Forms.ToolStripMenuItem();
             this.MS.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -272,7 +272,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_KeysightBenchVue
             // 
             this.TSMI_Apps_KeysightBenchVue.Name = "TSMI_Apps_KeysightBenchVue";
-            this.TSMI_Apps_KeysightBenchVue.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_Apps_KeysightBenchVue.Size = new System.Drawing.Size(171, 22);
             this.TSMI_Apps_KeysightBenchVue.Text = "&BenchVue";
             this.TSMI_Apps_KeysightBenchVue.ToolTipText = "Control Keysight Instruments via soft/virtual panels.";
             this.TSMI_Apps_KeysightBenchVue.Click += new System.EventHandler(this.TSMI_Apps_KeysightBenchVue_Click);
@@ -280,7 +280,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_KeysightCommandExpert
             // 
             this.TSMI_Apps_KeysightCommandExpert.Name = "TSMI_Apps_KeysightCommandExpert";
-            this.TSMI_Apps_KeysightCommandExpert.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_Apps_KeysightCommandExpert.Size = new System.Drawing.Size(171, 22);
             this.TSMI_Apps_KeysightCommandExpert.Text = "Co&mmand Expert";
             this.TSMI_Apps_KeysightCommandExpert.ToolTipText = "SCPI programming & debugging IDE.";
             this.TSMI_Apps_KeysightCommandExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightCommandExpert_Click);
@@ -288,7 +288,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_KeysightConnectionExpert
             // 
             this.TSMI_Apps_KeysightConnectionExpert.Name = "TSMI_Apps_KeysightConnectionExpert";
-            this.TSMI_Apps_KeysightConnectionExpert.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_Apps_KeysightConnectionExpert.Size = new System.Drawing.Size(171, 22);
             this.TSMI_Apps_KeysightConnectionExpert.Text = "Co&nnection Expert";
             this.TSMI_Apps_KeysightConnectionExpert.ToolTipText = "Discover VISA Instruments.";
             this.TSMI_Apps_KeysightConnectionExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightConnectionExpert_Click);
@@ -304,7 +304,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_MeasurementComputingInstaCal
             // 
             this.TSMI_Apps_MeasurementComputingInstaCal.Name = "TSMI_Apps_MeasurementComputingInstaCal";
-            this.TSMI_Apps_MeasurementComputingInstaCal.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_Apps_MeasurementComputingInstaCal.Size = new System.Drawing.Size(116, 22);
             this.TSMI_Apps_MeasurementComputingInstaCal.Text = "&InstaCal";
             this.TSMI_Apps_MeasurementComputingInstaCal.ToolTipText = "Configure & test MCC Instruments, like USB-ERB24 relays.";
             this.TSMI_Apps_MeasurementComputingInstaCal.Click += new System.EventHandler(this.TSMI_Apps_MeasurementComputingInstaCal_Click);
@@ -342,6 +342,21 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MicrosoftXML_Notepad.Size = new System.Drawing.Size(241, 22);
             this.TSMI_Apps_MicrosoftXML_Notepad.Text = "&XML Notepad";
             this.TSMI_Apps_MicrosoftXML_Notepad.Click += new System.EventHandler(this.TSMI_Apps_MicrosoftXML_Notepad_Click);
+            // 
+            // TSMI_Apps_TexasInstruments
+            // 
+            this.TSMI_Apps_TexasInstruments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool});
+            this.TSMI_Apps_TexasInstruments.Name = "TSMI_Apps_TexasInstruments";
+            this.TSMI_Apps_TexasInstruments.Size = new System.Drawing.Size(211, 22);
+            this.TSMI_Apps_TexasInstruments.Text = "&Texas Instruments";
+            // 
+            // TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool
+            // 
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Name = "TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool";
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Size = new System.Drawing.Size(197, 22);
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Text = "&SMBus / I2C / SAA Tool";
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Click += new System.EventHandler(this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool_Click);
             // 
             // TMSI_System
             // 
@@ -543,7 +558,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_ManualsInstruments
             // 
             this.TSMI_UUT_ManualsInstruments.Name = "TSMI_UUT_ManualsInstruments";
-            this.TSMI_UUT_ManualsInstruments.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_UUT_ManualsInstruments.Size = new System.Drawing.Size(137, 22);
             this.TSMI_UUT_ManualsInstruments.Text = "&Instruments";
             this.TSMI_UUT_ManualsInstruments.ToolTipText = "...really bored...";
             this.TSMI_UUT_ManualsInstruments.Click += new System.EventHandler(this.TSMI_UUT_ManualsInstruments_Click);
@@ -586,21 +601,6 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_About.Text = "&About...";
             this.TSMI_UUT_About.Click += new System.EventHandler(this.TSMI_UUT_About_Click);
             // 
-            // TSMI_Apps_TexasInstruments
-            // 
-            this.TSMI_Apps_TexasInstruments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool});
-            this.TSMI_Apps_TexasInstruments.Name = "TSMI_Apps_TexasInstruments";
-            this.TSMI_Apps_TexasInstruments.Size = new System.Drawing.Size(211, 22);
-            this.TSMI_Apps_TexasInstruments.Text = "&Texas Instruments";
-            // 
-            // TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool
-            // 
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Name = "TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool";
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Size = new System.Drawing.Size(194, 22);
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Text = "&SMBus / I2C /SAA Tool";
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Click += new System.EventHandler(this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool_Click);
-            // 
             // TestExecutive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -615,7 +615,7 @@ namespace ABT.TestSpace.TestExec {
             this.Controls.Add(this.ButtonStart);
             this.Controls.Add(this.MS);
             this.MainMenuStrip = this.MS;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "TestExecutive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Test Program";
