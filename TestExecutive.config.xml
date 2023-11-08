@@ -78,6 +78,9 @@
       <VisualStudio>C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe</VisualStudio>
       <XMLNotepad>C:\Program Files (x86)\LovettSoftware\XmlNotepad\XmlNotepad.exe</XMLNotepad>
     </Microsoft>
+    <TexasInstruments>
+      <SMBus_I2C_SAA_Tool>C:\Program Files (x86)\Texas Instruments\Fusion Digital Power Designer\bin\Fusion Tool Launcher.exe</SMBus_I2C_SAA_Tool>
+    </TexasInstruments>
   </Apps>
   
   <Files>
