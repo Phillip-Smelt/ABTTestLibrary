@@ -204,7 +204,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File_Save.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.TSMI_File_Save.Name = "TSMI_File_Save";
             this.TSMI_File_Save.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.TSMI_File_Save.Size = new System.Drawing.Size(143, 22);
+            this.TSMI_File_Save.Size = new System.Drawing.Size(188, 30);
             this.TSMI_File_Save.Text = "&Save";
             this.TSMI_File_Save.ToolTipText = "Save UUT results.";
             this.TSMI_File_Save.Click += new System.EventHandler(this.TSMI_File_Save_Click);
@@ -212,7 +212,7 @@ namespace ABT.TestSpace.TestExec {
             // TMSI_FileSeparator1
             // 
             this.TMSI_FileSeparator1.Name = "TMSI_FileSeparator1";
-            this.TMSI_FileSeparator1.Size = new System.Drawing.Size(140, 6);
+            this.TMSI_FileSeparator1.Size = new System.Drawing.Size(185, 6);
             // 
             // TSMI_File_Print
             // 
@@ -220,7 +220,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File_Print.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.TSMI_File_Print.Name = "TSMI_File_Print";
             this.TSMI_File_Print.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.TSMI_File_Print.Size = new System.Drawing.Size(143, 22);
+            this.TSMI_File_Print.Size = new System.Drawing.Size(188, 30);
             this.TSMI_File_Print.Text = "&Print";
             this.TSMI_File_Print.ToolTipText = "Print UUT results.";
             this.TSMI_File_Print.Click += new System.EventHandler(this.TSMI_File_Print_Click);
@@ -230,7 +230,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File_PrintPreview.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_File_PrintPreview.Image")));
             this.TSMI_File_PrintPreview.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.TSMI_File_PrintPreview.Name = "TSMI_File_PrintPreview";
-            this.TSMI_File_PrintPreview.Size = new System.Drawing.Size(143, 22);
+            this.TSMI_File_PrintPreview.Size = new System.Drawing.Size(188, 30);
             this.TSMI_File_PrintPreview.Text = "Print Pre&view";
             this.TSMI_File_PrintPreview.ToolTipText = "Preview UUT results.";
             this.TSMI_File_PrintPreview.Click += new System.EventHandler(this.TSMI_File_PrintPreview_Click);
@@ -238,12 +238,12 @@ namespace ABT.TestSpace.TestExec {
             // TMSI_FileSeparator2
             // 
             this.TMSI_FileSeparator2.Name = "TMSI_FileSeparator2";
-            this.TMSI_FileSeparator2.Size = new System.Drawing.Size(140, 6);
+            this.TMSI_FileSeparator2.Size = new System.Drawing.Size(185, 6);
             // 
             // TSMI_File_Exit
             // 
             this.TSMI_File_Exit.Name = "TSMI_File_Exit";
-            this.TSMI_File_Exit.Size = new System.Drawing.Size(143, 22);
+            this.TSMI_File_Exit.Size = new System.Drawing.Size(188, 30);
             this.TSMI_File_Exit.Text = "&Exit";
             this.TSMI_File_Exit.ToolTipText = "Close application.";
             this.TSMI_File_Exit.Click += new System.EventHandler(this.TSMI_File_Exit_Click);
@@ -272,7 +272,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_KeysightBenchVue
             // 
             this.TSMI_Apps_KeysightBenchVue.Name = "TSMI_Apps_KeysightBenchVue";
-            this.TSMI_Apps_KeysightBenchVue.Size = new System.Drawing.Size(171, 22);
+            this.TSMI_Apps_KeysightBenchVue.Size = new System.Drawing.Size(180, 22);
             this.TSMI_Apps_KeysightBenchVue.Text = "&BenchVue";
             this.TSMI_Apps_KeysightBenchVue.ToolTipText = "Control Keysight Instruments via soft/virtual panels.";
             this.TSMI_Apps_KeysightBenchVue.Click += new System.EventHandler(this.TSMI_Apps_KeysightBenchVue_Click);
@@ -280,7 +280,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_KeysightCommandExpert
             // 
             this.TSMI_Apps_KeysightCommandExpert.Name = "TSMI_Apps_KeysightCommandExpert";
-            this.TSMI_Apps_KeysightCommandExpert.Size = new System.Drawing.Size(171, 22);
+            this.TSMI_Apps_KeysightCommandExpert.Size = new System.Drawing.Size(180, 22);
             this.TSMI_Apps_KeysightCommandExpert.Text = "Co&mmand Expert";
             this.TSMI_Apps_KeysightCommandExpert.ToolTipText = "SCPI programming & debugging IDE.";
             this.TSMI_Apps_KeysightCommandExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightCommandExpert_Click);
@@ -288,7 +288,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_KeysightConnectionExpert
             // 
             this.TSMI_Apps_KeysightConnectionExpert.Name = "TSMI_Apps_KeysightConnectionExpert";
-            this.TSMI_Apps_KeysightConnectionExpert.Size = new System.Drawing.Size(171, 22);
+            this.TSMI_Apps_KeysightConnectionExpert.Size = new System.Drawing.Size(180, 22);
             this.TSMI_Apps_KeysightConnectionExpert.Text = "Co&nnection Expert";
             this.TSMI_Apps_KeysightConnectionExpert.ToolTipText = "Discover VISA Instruments.";
             this.TSMI_Apps_KeysightConnectionExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightConnectionExpert_Click);
@@ -304,7 +304,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_MeasurementComputingInstaCal
             // 
             this.TSMI_Apps_MeasurementComputingInstaCal.Name = "TSMI_Apps_MeasurementComputingInstaCal";
-            this.TSMI_Apps_MeasurementComputingInstaCal.Size = new System.Drawing.Size(116, 22);
+            this.TSMI_Apps_MeasurementComputingInstaCal.Size = new System.Drawing.Size(180, 22);
             this.TSMI_Apps_MeasurementComputingInstaCal.Text = "&InstaCal";
             this.TSMI_Apps_MeasurementComputingInstaCal.ToolTipText = "Configure & test MCC Instruments, like USB-ERB24 relays.";
             this.TSMI_Apps_MeasurementComputingInstaCal.Click += new System.EventHandler(this.TSMI_Apps_MeasurementComputingInstaCal_Click);
@@ -341,6 +341,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MicrosoftXML_Notepad.Name = "TSMI_Apps_MicrosoftXML_Notepad";
             this.TSMI_Apps_MicrosoftXML_Notepad.Size = new System.Drawing.Size(241, 22);
             this.TSMI_Apps_MicrosoftXML_Notepad.Text = "&XML Notepad";
+            this.TSMI_Apps_MicrosoftXML_Notepad.ToolTipText = "XML made easy.";
             this.TSMI_Apps_MicrosoftXML_Notepad.Click += new System.EventHandler(this.TSMI_Apps_MicrosoftXML_Notepad_Click);
             // 
             // TSMI_Apps_TexasInstruments
@@ -350,6 +351,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_TexasInstruments.Name = "TSMI_Apps_TexasInstruments";
             this.TSMI_Apps_TexasInstruments.Size = new System.Drawing.Size(211, 22);
             this.TSMI_Apps_TexasInstruments.Text = "&Texas Instruments";
+            this.TSMI_Apps_TexasInstruments.ToolTipText = "Directly control USB-TO-GPIO.";
             // 
             // TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool
             // 
