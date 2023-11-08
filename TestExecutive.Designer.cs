@@ -351,13 +351,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_TexasInstruments.Name = "TSMI_Apps_TexasInstruments";
             this.TSMI_Apps_TexasInstruments.Size = new System.Drawing.Size(211, 22);
             this.TSMI_Apps_TexasInstruments.Text = "&Texas Instruments";
-            this.TSMI_Apps_TexasInstruments.ToolTipText = "Directly control USB-TO-GPIO.";
             // 
             // TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool
             // 
             this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Name = "TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool";
             this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Size = new System.Drawing.Size(197, 22);
             this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Text = "&SMBus / I2C / SAA Tool";
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.ToolTipText = "Directly control USB-TO-GPIO.";
             this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Click += new System.EventHandler(this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool_Click);
             // 
             // TMSI_System
