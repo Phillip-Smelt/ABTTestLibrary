@@ -1,4 +1,4 @@
-﻿#define DISABLE_INITIALIZE
+﻿#undef DISABLE_INITIALIZE
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
