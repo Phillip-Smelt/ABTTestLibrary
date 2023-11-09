@@ -118,11 +118,7 @@ namespace ABT.TestSpace.TestExec {
         /// </summary>
 
         #region Form
-        private void Form_Shown(Object sender, EventArgs e) {
-            FormModeReset();
-            FormModeWait();
-            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}";
-        }
+        private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
 
         private void FormModeReset() {
             TextResult.Text = String.Empty;
