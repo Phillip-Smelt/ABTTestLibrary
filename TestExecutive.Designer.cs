@@ -476,7 +476,7 @@ namespace ABT.TestSpace.TestExec {
             this.TMSI_System_CritiquesBugReport.Name = "TMSI_System_CritiquesBugReport";
             this.TMSI_System_CritiquesBugReport.Size = new System.Drawing.Size(238, 26);
             this.TMSI_System_CritiquesBugReport.Text = "&Bug Report";
-            this.TMSI_System_CritiquesBugReport.ToolTipText = "Remember, \"The devil is is in the details.\" - Friedrich Nietzsche";
+            this.TMSI_System_CritiquesBugReport.ToolTipText = "\"The devil is is in the details.\" - Friedrich Nietzsche";
             this.TMSI_System_CritiquesBugReport.Click += new System.EventHandler(this.TSMI_System_CritiqueBugReport_Click);
             // 
             // TMSI_System_CritiquesImprovementRequest
@@ -484,7 +484,7 @@ namespace ABT.TestSpace.TestExec {
             this.TMSI_System_CritiquesImprovementRequest.Name = "TMSI_System_CritiquesImprovementRequest";
             this.TMSI_System_CritiquesImprovementRequest.Size = new System.Drawing.Size(238, 26);
             this.TMSI_System_CritiquesImprovementRequest.Text = "&Improvement Request";
-            this.TMSI_System_CritiquesImprovementRequest.ToolTipText = "Remember, \"God is in the details.\" - Mies van der Rohe";
+            this.TMSI_System_CritiquesImprovementRequest.ToolTipText = "\"God is in the details.\" - Mies van der Rohe";
             this.TMSI_System_CritiquesImprovementRequest.Click += new System.EventHandler(this.TSMI_System_CritiqueImprovementRequest_Click);
             // 
             // TMSI_System_Separator2

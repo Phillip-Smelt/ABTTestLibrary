@@ -156,8 +156,7 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         public static void LogError(String logMessage, Boolean ShowMessage) {
             Log.Error(logMessage);
-            if (ShowMessage) _ = MessageBox.Show(Form.ActiveForm, $"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
-                "Please contact Test Engineering if assistance required.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            TestExecutive.ErrorMessage();
         }
 
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {

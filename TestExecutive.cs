@@ -79,6 +79,11 @@ namespace ABT.TestSpace.TestExec {
             return SCPI99.Are(SVIs, STATE.off)
                 && UE24.Are(C.S.NC);
         }
+
+        public static void ErrorMessage(String ErrorMessage="") {
+            _ = MessageBox.Show(ActiveForm, $"Unexpected error.{Environment.NewLine}{Environment.NewLine}{ErrorMessage}" +
+                "Please contact Test Engineering if assistance required.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
         /// <summary>
         /// NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
         /// <para>
@@ -367,8 +372,7 @@ namespace ABT.TestSpace.TestExec {
                         } else {
                             ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
                             ConfigTest.Measurements[measurementID].Message += $"{Environment.NewLine}{e}";
-                            _ = MessageBox.Show(Form.ActiveForm, $"Unexpected error.  Details logged for analysis & resolution.{Environment.NewLine}{Environment.NewLine}" +
-                                "Please contact Test Engineering if assistance required.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ErrorMessage();
                         }
                         return;
                     } finally {
