@@ -20,6 +20,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
 using System.Text;
+using System.ComponentModel.Design;
 
 /// <para>
 /// TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -161,7 +162,7 @@ namespace ABT.TestSpace.TestExec {
                 Process.Start(psi);
                 // Strings with embedded spaces require enclosing double-quotes (").
                 // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-            } else MessageBox.Show(Form.ActiveForm, $"Path {AppID} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } else MessageBox.Show(ActiveForm, $"Path {AppID} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private String GetFile(String FileID) {
@@ -332,6 +333,22 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", GetFile("AppConfig")); }
+        private void TSMI_UUT_Change_Click(Object sender, EventArgs e) {
+            using (OpenFileDialog ofd = new OpenFileDialog()) {
+                IEnumerable<String> folder = from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element("TestExecutorLinks").Value;
+                ofd.InitialDirectory = folder.First();
+                ofd.Filter = "Windows Shortcuts (*.lnk)";
+                ofd.DereferenceLinks = true;
+                ofd.RestoreDirectory = true;
+
+                if (ofd.ShowDialog() == DialogResult.OK && (File.Exists(ofd.FileName))) {
+                    ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
+                    Process.Start(psi);
+                    Thread.Sleep(millisecondsTimeout: 1000);
+                    Application.Exit();
+                } else MessageBox.Show(ActiveForm, $"Path {ofd.FileName} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.DocumentationFolder); }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
