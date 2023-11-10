@@ -274,7 +274,7 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_File_Print_Click(Object sender, EventArgs e) { }
         private void TSMI_File_PrintPreview_Click(Object sender, EventArgs e) { }
-        private void TSMI_File_Exit_Click(Object sender, EventArgs e) { }
+        private void TSMI_File_Exit_Click(Object sender, EventArgs e) { Application.Exit(); }
 
         private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { OpenApp("Keysight", "BenchVue"); }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "CommandExpert"); }
