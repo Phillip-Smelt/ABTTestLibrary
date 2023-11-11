@@ -116,19 +116,19 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("POWer", null);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.RANGe.Command(MAXimum, null);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.LEVel.IMMediate.AMPLitude.Command(LoadValue, null);
-                    // TODO: ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
+                    // TODO: Eventually ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
                     break;
                 case LOAD_MODE.RES:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("RESistance", null);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.RANGe.Command(MAXimum, null);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.LEVel.IMMediate.AMPLitude.Command(LoadValue, null);
-                    // TODO: ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
+                    // TODO: Eventually ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
                     break;
                 case LOAD_MODE.VOLT:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("VOLTage", null);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.RANGe.Command(MAXimum, null);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(LoadValue, null);
-                    // TODO: ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
+                    // TODO: Eventually ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
                     break;
                 default:
                     throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));

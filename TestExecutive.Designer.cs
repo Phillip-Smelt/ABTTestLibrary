@@ -419,12 +419,12 @@ namespace ABT.TestSpace.TestExec {
             this.TMSI_System_ComplimentsMoney});
             this.TMSI_System_Compliments.Name = "TMSI_System_Compliments";
             this.TMSI_System_Compliments.Size = new System.Drawing.Size(271, 26);
-            this.TMSI_System_Compliments.Text = "Co&mpliments";
+            this.TMSI_System_Compliments.Text = "&Compliments";
             // 
             // TMSI_System_ComplimentsPraiseAndPlaudits
             // 
             this.TMSI_System_ComplimentsPraiseAndPlaudits.Name = "TMSI_System_ComplimentsPraiseAndPlaudits";
-            this.TMSI_System_ComplimentsPraiseAndPlaudits.Size = new System.Drawing.Size(203, 26);
+            this.TMSI_System_ComplimentsPraiseAndPlaudits.Size = new System.Drawing.Size(224, 26);
             this.TMSI_System_ComplimentsPraiseAndPlaudits.Text = "&Praise && Plaudits";
             this.TMSI_System_ComplimentsPraiseAndPlaudits.ToolTipText = "\"I can live for two months on a good compliment.\" - Mark Twain";
             this.TMSI_System_ComplimentsPraiseAndPlaudits.Click += new System.EventHandler(this.TSMI_System_ComplimentsPraiseAndPlaudits_Click);
@@ -432,7 +432,7 @@ namespace ABT.TestSpace.TestExec {
             // TMSI_System_ComplimentsMoney
             // 
             this.TMSI_System_ComplimentsMoney.Name = "TMSI_System_ComplimentsMoney";
-            this.TMSI_System_ComplimentsMoney.Size = new System.Drawing.Size(203, 26);
+            this.TMSI_System_ComplimentsMoney.Size = new System.Drawing.Size(224, 26);
             this.TMSI_System_ComplimentsMoney.Text = "&Money!";
             this.TMSI_System_ComplimentsMoney.ToolTipText = "For a good cause! ";
             this.TMSI_System_ComplimentsMoney.Click += new System.EventHandler(this.TSMI_System_ComplimentsMoney_Click);
@@ -444,7 +444,7 @@ namespace ABT.TestSpace.TestExec {
             this.TMSI_System_CritiquesImprovementRequest});
             this.TMSI_System_Critiques.Name = "TMSI_System_Critiques";
             this.TMSI_System_Critiques.Size = new System.Drawing.Size(271, 26);
-            this.TMSI_System_Critiques.Text = "Cri&tiques";
+            this.TMSI_System_Critiques.Text = "Criti&ques";
             // 
             // TMSI_System_CritiquesBugReport
             // 
@@ -491,16 +491,15 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_AppConfig
             // 
             this.TSMI_UUT_AppConfig.Name = "TSMI_UUT_AppConfig";
-            this.TSMI_UUT_AppConfig.Size = new System.Drawing.Size(165, 26);
+            this.TSMI_UUT_AppConfig.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_AppConfig.Text = "&App.config";
             this.TSMI_UUT_AppConfig.ToolTipText = "UUT\'s test configuration.";
             this.TSMI_UUT_AppConfig.Click += new System.EventHandler(this.TSMI_UUT_AppConfig_Click);
             // 
             // TSMI_UUT_Change
             // 
-            this.TSMI_UUT_Change.Enabled = false;
             this.TSMI_UUT_Change.Name = "TSMI_UUT_Change";
-            this.TSMI_UUT_Change.Size = new System.Drawing.Size(165, 26);
+            this.TSMI_UUT_Change.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_Change.Text = "&Change";
             this.TSMI_UUT_Change.ToolTipText = "Test a different UUT.";
             this.TSMI_UUT_Change.Click += new System.EventHandler(this.TSMI_UUT_Change_Click);
@@ -508,7 +507,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_eDocs
             // 
             this.TSMI_UUT_eDocs.Name = "TSMI_UUT_eDocs";
-            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(165, 26);
+            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_eDocs.Text = "&eDocs";
             this.TSMI_UUT_eDocs.ToolTipText = "UUT\'s P: drive eDocs folder.";
             this.TSMI_UUT_eDocs.Click += new System.EventHandler(this.TSMI_UUT_eDocs_Click);
@@ -518,7 +517,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_Manuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_UUT_ManualsInstruments});
             this.TSMI_UUT_Manuals.Name = "TSMI_UUT_Manuals";
-            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(165, 26);
+            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_Manuals.Text = "&Manuals";
             // 
             // TSMI_UUT_ManualsInstruments
@@ -535,7 +534,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_TestDataP_DriveTDR_Folder,
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying});
             this.TSMI_UUT_TestData.Name = "TSMI_UUT_TestData";
-            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(165, 26);
+            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_TestData.Text = "&Test Data";
             // 
             // TSMI_UUT_TestDataP_DriveTDR_Folder
@@ -558,12 +557,12 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_Separator1
             // 
             this.TSMI_UUT_Separator1.Name = "TSMI_UUT_Separator1";
-            this.TSMI_UUT_Separator1.Size = new System.Drawing.Size(162, 6);
+            this.TSMI_UUT_Separator1.Size = new System.Drawing.Size(221, 6);
             // 
             // TSMI_UUT_About
             // 
             this.TSMI_UUT_About.Name = "TSMI_UUT_About";
-            this.TSMI_UUT_About.Size = new System.Drawing.Size(165, 26);
+            this.TSMI_UUT_About.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_About.Text = "&About...";
             this.TSMI_UUT_About.Click += new System.EventHandler(this.TSMI_UUT_About_Click);
             // 
