@@ -106,9 +106,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static void Set(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode, SENSE_MODE KelvinSense) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense));
             VoltageSenseModeSet(SVI, KelvinSense);
-            Double min, max;
-            Double[] min2, max2;
-            String LoadType = Enum.GetName(typeof(LOAD_MODE), LoadMode);
             switch (LoadMode) {
                 case LOAD_MODE.CURR:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Command("CURRent", null);
