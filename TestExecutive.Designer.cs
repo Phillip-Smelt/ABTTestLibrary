@@ -192,7 +192,6 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File_Save,
             this.TMSI_FileSeparator1,
             this.TSMI_File_Exit});
-            this.TSMI_File.Enabled = false;
             this.TSMI_File.Name = "TSMI_File";
             this.TSMI_File.Size = new System.Drawing.Size(46, 24);
             this.TSMI_File.Text = "&File";
