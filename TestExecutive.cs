@@ -7,20 +7,19 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
+using Windows.Devices.Enumeration;
+using Windows.Devices.PointOfService;
 using ABT.TestSpace.TestExec.AppConfig;
 using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
-using Windows.Devices.Enumeration;
-using Windows.Devices.PointOfService;
-using System.Text;
-using System.ComponentModel.Design;
 
 /// <para>
 /// TODO: Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -157,7 +156,7 @@ namespace ABT.TestSpace.TestExec {
                 Process.Start(psi);
                 // Strings with embedded spaces require enclosing double-quotes (").
                 // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-            } else MessageBox.Show(ActiveForm, $"Path {AppID} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } else InvalidPathError(app.First());
         }
 
         private String GetFile(String FileID) {
@@ -181,10 +180,12 @@ namespace ABT.TestSpace.TestExec {
                 // Paths with embedded spaces require enclosing double-quotes (").
                 // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - thus using ProcessStartInfo class.
                 // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-            } else MessageBox.Show(ActiveForm, $"Path {FolderPath} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } else InvalidPathError(FolderPath);
         }
 
-        private void PreExit() {
+        private void InvalidPathError(String InvalidPath) { MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+
+        private void PreApplicationExit() {
             Initialize();
             _serialNumberDialog?.Close();
         }
@@ -269,16 +270,12 @@ namespace ABT.TestSpace.TestExec {
                 CreatePrompt = false,
                 OverwritePrompt = true
             };
-            DialogResult dialogResult = saveFileDialog.ShowDialog();
-            if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName);
+            if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName);
         }
-        private void TSMI_File_Print_Click(Object sender, EventArgs e) { }
-        private void TSMI_File_PrintPreview_Click(Object sender, EventArgs e) { }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
-            PreExit();
+            PreApplicationExit();
             Application.Exit();
         }
-
         private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { OpenApp("Keysight", "BenchVue"); }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "CommandExpert"); }
         private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "ConnectionExpert"); }
@@ -315,8 +312,7 @@ namespace ABT.TestSpace.TestExec {
                 CreatePrompt = false,
                 OverwritePrompt = true
             };
-            DialogResult dialogResult = saveFileDialog.ShowDialog();
-            if ((dialogResult == DialogResult.OK) && !String.Equals(saveFileDialog.FileName, String.Empty)) rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)  rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
         private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) { }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
@@ -343,13 +339,13 @@ namespace ABT.TestSpace.TestExec {
                 ofd.DereferenceLinks = true;
                 ofd.RestoreDirectory = true;
 
-                if (ofd.ShowDialog() == DialogResult.OK && (File.Exists(ofd.FileName))) {
-                    PreExit();
+                if (ofd.ShowDialog() == DialogResult.OK) {
+                    PreApplicationExit();
                     ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
                     Process.Start(psi);
                     Thread.Sleep(millisecondsTimeout: 1000);
                     Application.Exit();
-                } else MessageBox.Show(ActiveForm, $"Path {ofd.FileName} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.DocumentationFolder); }
