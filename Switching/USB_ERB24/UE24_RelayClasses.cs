@@ -119,27 +119,27 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public SwitchedRoutes(Dictionary<SwitchedRoute, HashSet<State>> RouteStates) { SRs = RouteStates; }
 
         public Boolean Are(SwitchedNet SN1, SwitchedNet SN2, SWITCHED_STATE SwitchedState) {
-            Boolean ac = true;
-            foreach (State s in SRs[SwitchedRouteGet(SN1, SN2)]) ac &= Is(s.UE, s.R, s.S); 
+            Boolean are = true;
+            foreach (State s in SRs[SwitchedRouteGet(SN1, SN2)]) are &= Is(s.UE, s.R, s.S); 
             switch(SwitchedState) {
-                case SWITCHED_STATE.disconnected:  return !ac;
-                case SWITCHED_STATE.CONNECTED:     return ac;
+                case SWITCHED_STATE.disconnected:  return !are;
+                case SWITCHED_STATE.CONNECTED:     return are;
                 default:                           throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(SWITCHED_STATE)));
             }
         }
 
         public Boolean Are(SwitchedNet SN, HashSet<SwitchedNet> SNs, SWITCHED_STATE SwitchedState) {
-            Boolean ac = true;
-            foreach (SwitchedNet sn in SNs) ac &= Are(SN, sn, SwitchedState);
-            return ac;
+            Boolean are = true;
+            foreach (SwitchedNet sn in SNs) are &= Are(SN, sn, SwitchedState);
+            return are;
         }
 
         public Boolean Connectable(SwitchedNet SN1, SwitchedNet SN2) { return SRs.ContainsKey(new SwitchedRoute(Tuple.Create(SN1, SN2))); }
 
         public Boolean Connectable(SwitchedNet SN, HashSet<SwitchedNet> SNs) {
-            Boolean ac = true;
-            foreach (SwitchedNet sn in SNs) ac &= Connectable(SN, sn);
-            return ac;
+            Boolean connectable = true;
+            foreach (SwitchedNet sn in SNs) connectable &= Connectable(SN, sn);
+            return connectable;
         }
 
         public HashSet<SwitchedRoute> RoutesGet(SwitchedNet SN) {
@@ -191,10 +191,6 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public Relays(HashSet<Relay> rs) {
             Rs = rs;
             Validate();
-
-            //foreach (Relay r in Rs) {
-            //    if (!SNTs.ContainsKey(r.C)) 
-            //}
         }
 
         private void Validate() {

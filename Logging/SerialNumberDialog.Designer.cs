@@ -27,6 +27,7 @@
             this.Cancel = new System.Windows.Forms.Button();
             this.BarCodeText = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReleaseScanner);
             // 
             // OK
             // 

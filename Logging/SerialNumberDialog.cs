@@ -91,5 +91,12 @@ namespace ABT.TestSpace.TestExec.Logging {
                 OK.BackColor = System.Drawing.Color.DimGray;
             }
         }
+
+        private void ReleaseScanner(Object sender, FormClosingEventArgs e) {
+            _claimedScanner.Dispose();
+            _claimedScanner = null;
+            _scanner.Dispose();
+            _scanner = null;
+        }
     }
 }

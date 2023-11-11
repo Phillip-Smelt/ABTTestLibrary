@@ -50,18 +50,15 @@ namespace ABT.TestSpace.TestExec {
         public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by button_click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
-        internal readonly String _appAssemblyVersion;
-        internal readonly String _libraryAssemblyVersion;
+        internal readonly String _VersionTestExecutor;
+        internal readonly String _VersionTestExecutive;
         private Boolean _cancelled = false;
         private readonly SerialNumberDialog _serialNumberDialog;
-        private readonly String _manualFoldersBarcodeScanner;
-        private readonly String _manualFoldersInstruments;
-        private readonly String _manualFoldersRelays;
 
         protected TestExecutive(Icon icon) {
             InitializeComponent();
-            _appAssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
-            _libraryAssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            _VersionTestExecutor = Assembly.GetEntryAssembly().GetName().Version.ToString();
+            _VersionTestExecutive = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog() : null;
             Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
@@ -76,12 +73,10 @@ namespace ABT.TestSpace.TestExec {
             UE24.Set(C.S.NC);
         }
 
-        public virtual Boolean Initialized() {
-            return SCPI99.Are(SVIs, STATE.off)
-                && UE24.Are(C.S.NC);
-        }
+        public virtual Boolean Initialized() { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
 
         public static void ErrorMessage(String ErrorMessage="") {
+            ErrorMessage = String.Equals(ErrorMessage, "") ? String.Empty : ErrorMessage + Environment.NewLine + Environment.NewLine; // If ErrorMessage ≠ "", append 2 NewLines for formatting.
             _ = MessageBox.Show(ActiveForm, $"Unexpected error.{Environment.NewLine}{Environment.NewLine}{ErrorMessage}" +
                 "Please contact Test Engineering if assistance required.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -189,6 +184,10 @@ namespace ABT.TestSpace.TestExec {
             } else MessageBox.Show(ActiveForm, $"Path {FolderPath} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        private void PreExit() {
+            Initialize();
+            _serialNumberDialog?.Close();
+        }
         #region Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             CancelTokenSource.Cancel();
@@ -275,7 +274,10 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_File_Print_Click(Object sender, EventArgs e) { }
         private void TSMI_File_PrintPreview_Click(Object sender, EventArgs e) { }
-        private void TSMI_File_Exit_Click(Object sender, EventArgs e) { Application.Exit(); }
+        private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
+            PreExit();
+            Application.Exit();
+        }
 
         private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { OpenApp("Keysight", "BenchVue"); }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "CommandExpert"); }
@@ -327,7 +329,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_CritiqueBugReport_Click(Object sender, EventArgs e) { }
         private void TSMI_System_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, version {_libraryAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
+            _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, version {_VersionTestExecutive}.{Environment.NewLine}{Environment.NewLine}" +
              $"© 2022, Amphenol Borisch Technologies.",
             "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -342,6 +344,7 @@ namespace ABT.TestSpace.TestExec {
                 ofd.RestoreDirectory = true;
 
                 if (ofd.ShowDialog() == DialogResult.OK && (File.Exists(ofd.FileName))) {
+                    PreExit();
                     ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
                     Process.Start(psi);
                     Thread.Sleep(millisecondsTimeout: 1000);
@@ -354,7 +357,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName().Name}, version {_appAssemblyVersion}.{Environment.NewLine}{Environment.NewLine}" +
+            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName().Name}, version {_VersionTestExecutor}.{Environment.NewLine}{Environment.NewLine}" +
              $"© 2022, Amphenol Borisch Technologies.",
             "About TestExecutor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }

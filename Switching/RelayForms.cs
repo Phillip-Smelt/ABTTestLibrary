@@ -14,8 +14,8 @@
             public enum T { C, NO }
             /// <summary>
             /// Form A Terminals.
-            /// T.C; Form A relay Common terminal.
-            /// T.NO; Form A relay Normally Open terminal.
+            /// T.C; Form A relay Common Terminal.
+            /// T.NO; Form A relay Normally Open Terminal.
             /// </summary>
         }
 
@@ -30,8 +30,8 @@
             public enum T { C, NC }
             /// <summary>
             /// Form B Terminals.
-            /// T.C; Form B relay Common terminal.
-            /// T.NC; Form B relay Normally Closed terminal.
+            /// T.C; Form B relay Common Terminal.
+            /// T.NC; Form B relay Normaly Closed Terminal.
             /// </summary>
         }
 
@@ -46,9 +46,9 @@
             public enum T { C, NC, NO }
             /// <summary>
             /// Form C Terminals.
-            /// T.C; Form C relay Common terminal.
-            /// T.NO; Form C relay Normally Closed terminal.
-            /// T.NO; Form C relay Normally Open terminal.
+            /// T.C; Form C relay Common Terminal.
+            /// T.NO; Form C relay Normally Closed Terminal.
+            /// T.NO; Form C relay Normally Open Terminal.
             /// </summary>
         }
     }
