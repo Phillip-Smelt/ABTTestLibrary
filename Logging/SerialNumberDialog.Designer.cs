@@ -1,5 +1,7 @@
-﻿namespace ABT.TestSpace.TestExec.Logging {
-    partial class SerialNumberDialog {
+﻿using System.Windows.Forms;
+
+namespace ABT.TestSpace.TestExec.Logging {
+    public sealed partial class SerialNumberDialog : Form {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -90,7 +92,6 @@
             this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
