@@ -22,16 +22,13 @@ namespace ABT.TestSpace.TestExec.Logging {
         // NOTE: Annoyingly, Voyager 1200g isn't recognized when plugged into USB hub and both PC & equipment rack powered off/on.
         //       - May work better if plugged directly into PC, rather than rack's hub.  May not; didn't test this thought.
         //       - Well, what can you expect for $100?
-        //       - https://sps-support.honeywell.com/s/article/Voyager-1202g-is-not-recognized-by-the-host-after-PC-boot-up.        // NOTE: The 1200G must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
-        // public static SerialNumberDialog Only { get; } = new SerialNumberDialog();
+        //       - https://sps-support.honeywell.com/s/article/Voyager-1202g-is-not-recognized-by-the-host-after-PC-boot-up.
+        // NOTE: The 1200G must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
+
         private BarcodeScanner _scanner = null;
         private ClaimedBarcodeScanner _claimedScanner = null;
         private String _scannerID = null;
         private String _regEx = null;
-
-        // static SerialNumberDialog() { }
-        // Singleton pattern requires explicit static constructor to tell C# compiler not to mark type as beforefieldinit.
-        // https://csharpindepth.com/articles/singleton
 
         public SerialNumberDialog() {
             InitializeComponent();
@@ -91,8 +88,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 OK.BackColor = System.Drawing.Color.DimGray;
             }
         }
-
-        private void ReleaseScanner(Object sender, FormClosingEventArgs e) {
+        private void Form_Closing(Object sender, FormClosingEventArgs e) {
             _claimedScanner.Dispose();
             _claimedScanner = null;
             _scanner.Dispose();
