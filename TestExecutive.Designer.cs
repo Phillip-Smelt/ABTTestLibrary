@@ -48,6 +48,14 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_MicrosoftVisualStudio = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_MicrosoftXML_Notepad = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_TexasInstruments = new System.Windows.Forms.ToolStripMenuItem();
+            this.TMSI_Feedback = new System.Windows.Forms.ToolStripMenuItem();
+            this.TMSI_Feedback_Compliments = new System.Windows.Forms.ToolStripMenuItem();
+            this.TMSI_Feedback_ComplimentsPraiseεPlaudits = new System.Windows.Forms.ToolStripMenuItem();
+            this.TMSI_Feedback_ComplimentsMoney = new System.Windows.Forms.ToolStripMenuItem();
+            this.TMSI_Feedback_Critiques = new System.Windows.Forms.ToolStripMenuItem();
+            this.TMSI_Feedback_CritiquesBugReport = new System.Windows.Forms.ToolStripMenuItem();
+            this.TMSI_Feedback_CritiquesImprovementRequest = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_System = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_System_BarcodeScannerDiscovery = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_System_Diagnostics = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,13 +67,6 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_System_ManualsRelays = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_TestExecutiveConfigXML = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_System_Separator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.TMSI_System_Compliments = new System.Windows.Forms.ToolStripMenuItem();
-            this.TMSI_System_ComplimentsPraiseAndPlaudits = new System.Windows.Forms.ToolStripMenuItem();
-            this.TMSI_System_ComplimentsMoney = new System.Windows.Forms.ToolStripMenuItem();
-            this.TMSI_System_Critiques = new System.Windows.Forms.ToolStripMenuItem();
-            this.TMSI_System_CritiquesBugReport = new System.Windows.Forms.ToolStripMenuItem();
-            this.TMSI_System_CritiquesImprovementRequest = new System.Windows.Forms.ToolStripMenuItem();
-            this.TMSI_System_Separator2 = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_System_About = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_AppConfig = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,6 +79,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_UUT_About = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool = new System.Windows.Forms.ToolStripMenuItem();
             this.MS.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -178,6 +180,7 @@ namespace ABT.TestSpace.TestExec {
             this.MS.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_File,
             this.TSMI_Apps,
+            this.TMSI_Feedback,
             this.TMSI_System,
             this.TSMI_UUT});
             this.MS.Location = new System.Drawing.Point(0, 0);
@@ -202,7 +205,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File_Save.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.TSMI_File_Save.Name = "TSMI_File_Save";
             this.TSMI_File_Save.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.TSMI_File_Save.Size = new System.Drawing.Size(228, 30);
+            this.TSMI_File_Save.Size = new System.Drawing.Size(173, 26);
             this.TSMI_File_Save.Text = "&Save";
             this.TSMI_File_Save.ToolTipText = "Save UUT results.";
             this.TSMI_File_Save.Click += new System.EventHandler(this.TSMI_File_Save_Click);
@@ -210,12 +213,12 @@ namespace ABT.TestSpace.TestExec {
             // TMSI_FileSeparator1
             // 
             this.TMSI_FileSeparator1.Name = "TMSI_FileSeparator1";
-            this.TMSI_FileSeparator1.Size = new System.Drawing.Size(225, 6);
+            this.TMSI_FileSeparator1.Size = new System.Drawing.Size(170, 6);
             // 
             // TSMI_File_Exit
             // 
             this.TSMI_File_Exit.Name = "TSMI_File_Exit";
-            this.TSMI_File_Exit.Size = new System.Drawing.Size(228, 30);
+            this.TSMI_File_Exit.Size = new System.Drawing.Size(173, 26);
             this.TSMI_File_Exit.Text = "&Exit";
             this.TSMI_File_Exit.ToolTipText = "Close application.";
             this.TSMI_File_Exit.Click += new System.EventHandler(this.TSMI_File_Exit_Click);
@@ -225,7 +228,8 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_Apps_Keysight,
             this.TSMI_Apps_MeasurementComputing,
-            this.TSMI_Apps_Microsoft});
+            this.TSMI_Apps_Microsoft,
+            this.TSMI_Apps_TexasInstruments});
             this.TSMI_Apps.Name = "TSMI_Apps";
             this.TSMI_Apps.Size = new System.Drawing.Size(61, 24);
             this.TSMI_Apps.Text = " &Apps";
@@ -314,6 +318,73 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MicrosoftXML_Notepad.Text = "&XML Notepad";
             this.TSMI_Apps_MicrosoftXML_Notepad.Click += new System.EventHandler(this.TSMI_Apps_MicrosoftXML_Notepad_Click);
             // 
+            // TSMI_Apps_TexasInstruments
+            // 
+            this.TSMI_Apps_TexasInstruments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool});
+            this.TSMI_Apps_TexasInstruments.Name = "TSMI_Apps_TexasInstruments";
+            this.TSMI_Apps_TexasInstruments.Size = new System.Drawing.Size(260, 26);
+            this.TSMI_Apps_TexasInstruments.Text = "&Texas Instruments";
+            // 
+            // TMSI_Feedback
+            // 
+            this.TMSI_Feedback.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TMSI_Feedback_Compliments,
+            this.TMSI_Feedback_Critiques});
+            this.TMSI_Feedback.Name = "TMSI_Feedback";
+            this.TMSI_Feedback.Size = new System.Drawing.Size(86, 24);
+            this.TMSI_Feedback.Text = "&Feedback";
+            // 
+            // TMSI_Feedback_Compliments
+            // 
+            this.TMSI_Feedback_Compliments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TMSI_Feedback_ComplimentsPraiseεPlaudits,
+            this.TMSI_Feedback_ComplimentsMoney});
+            this.TMSI_Feedback_Compliments.Name = "TMSI_Feedback_Compliments";
+            this.TMSI_Feedback_Compliments.Size = new System.Drawing.Size(180, 26);
+            this.TMSI_Feedback_Compliments.Text = "&Compliments";
+            // 
+            // TMSI_Feedback_ComplimentsPraiseεPlaudits
+            // 
+            this.TMSI_Feedback_ComplimentsPraiseεPlaudits.Name = "TMSI_Feedback_ComplimentsPraiseεPlaudits";
+            this.TMSI_Feedback_ComplimentsPraiseεPlaudits.Size = new System.Drawing.Size(203, 26);
+            this.TMSI_Feedback_ComplimentsPraiseεPlaudits.Text = "&Praise && Plaudits";
+            this.TMSI_Feedback_ComplimentsPraiseεPlaudits.ToolTipText = "\"I can live for two months on a good compliment.\" - Mark Twain";
+            this.TMSI_Feedback_ComplimentsPraiseεPlaudits.Click += new System.EventHandler(this.TSMI_Feedback_ComplimentsPraiseεPlaudits_Click);
+            // 
+            // TMSI_Feedback_ComplimentsMoney
+            // 
+            this.TMSI_Feedback_ComplimentsMoney.Name = "TMSI_Feedback_ComplimentsMoney";
+            this.TMSI_Feedback_ComplimentsMoney.Size = new System.Drawing.Size(203, 26);
+            this.TMSI_Feedback_ComplimentsMoney.Text = "&Money!";
+            this.TMSI_Feedback_ComplimentsMoney.ToolTipText = "For a good cause! ";
+            this.TMSI_Feedback_ComplimentsMoney.Click += new System.EventHandler(this.TSMI_Feedback_ComplimentsMoney_Click);
+            // 
+            // TMSI_Feedback_Critiques
+            // 
+            this.TMSI_Feedback_Critiques.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TMSI_Feedback_CritiquesBugReport,
+            this.TMSI_Feedback_CritiquesImprovementRequest});
+            this.TMSI_Feedback_Critiques.Name = "TMSI_Feedback_Critiques";
+            this.TMSI_Feedback_Critiques.Size = new System.Drawing.Size(180, 26);
+            this.TMSI_Feedback_Critiques.Text = "Criti&ques";
+            // 
+            // TMSI_Feedback_CritiquesBugReport
+            // 
+            this.TMSI_Feedback_CritiquesBugReport.Name = "TMSI_Feedback_CritiquesBugReport";
+            this.TMSI_Feedback_CritiquesBugReport.Size = new System.Drawing.Size(238, 26);
+            this.TMSI_Feedback_CritiquesBugReport.Text = "&Bug Report";
+            this.TMSI_Feedback_CritiquesBugReport.ToolTipText = "\"The devil is is in the details.\" - Friedrich Nietzsche";
+            this.TMSI_Feedback_CritiquesBugReport.Click += new System.EventHandler(this.TSMI_Feedback_CritiqueBugReport_Click);
+            // 
+            // TMSI_Feedback_CritiquesImprovementRequest
+            // 
+            this.TMSI_Feedback_CritiquesImprovementRequest.Name = "TMSI_Feedback_CritiquesImprovementRequest";
+            this.TMSI_Feedback_CritiquesImprovementRequest.Size = new System.Drawing.Size(238, 26);
+            this.TMSI_Feedback_CritiquesImprovementRequest.Text = "&Improvement Request";
+            this.TMSI_Feedback_CritiquesImprovementRequest.ToolTipText = "\"God is in the details.\" - Mies van der Rohe";
+            this.TMSI_Feedback_CritiquesImprovementRequest.Click += new System.EventHandler(this.TSMI_Feedback_CritiqueImprovementRequest_Click);
+            // 
             // TMSI_System
             // 
             this.TMSI_System.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -322,9 +393,6 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_System_Manuals,
             this.TSMI_System_TestExecutiveConfigXML,
             this.TMSI_System_Separator1,
-            this.TMSI_System_Compliments,
-            this.TMSI_System_Critiques,
-            this.TMSI_System_Separator2,
             this.TSMI_System_About});
             this.TMSI_System.Name = "TMSI_System";
             this.TMSI_System.Size = new System.Drawing.Size(70, 24);
@@ -412,61 +480,6 @@ namespace ABT.TestSpace.TestExec {
             this.TMSI_System_Separator1.Name = "TMSI_System_Separator1";
             this.TMSI_System_Separator1.Size = new System.Drawing.Size(268, 6);
             // 
-            // TMSI_System_Compliments
-            // 
-            this.TMSI_System_Compliments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TMSI_System_ComplimentsPraiseAndPlaudits,
-            this.TMSI_System_ComplimentsMoney});
-            this.TMSI_System_Compliments.Name = "TMSI_System_Compliments";
-            this.TMSI_System_Compliments.Size = new System.Drawing.Size(271, 26);
-            this.TMSI_System_Compliments.Text = "&Compliments";
-            // 
-            // TMSI_System_ComplimentsPraiseAndPlaudits
-            // 
-            this.TMSI_System_ComplimentsPraiseAndPlaudits.Name = "TMSI_System_ComplimentsPraiseAndPlaudits";
-            this.TMSI_System_ComplimentsPraiseAndPlaudits.Size = new System.Drawing.Size(224, 26);
-            this.TMSI_System_ComplimentsPraiseAndPlaudits.Text = "&Praise && Plaudits";
-            this.TMSI_System_ComplimentsPraiseAndPlaudits.ToolTipText = "\"I can live for two months on a good compliment.\" - Mark Twain";
-            this.TMSI_System_ComplimentsPraiseAndPlaudits.Click += new System.EventHandler(this.TSMI_System_ComplimentsPraiseAndPlaudits_Click);
-            // 
-            // TMSI_System_ComplimentsMoney
-            // 
-            this.TMSI_System_ComplimentsMoney.Name = "TMSI_System_ComplimentsMoney";
-            this.TMSI_System_ComplimentsMoney.Size = new System.Drawing.Size(224, 26);
-            this.TMSI_System_ComplimentsMoney.Text = "&Money!";
-            this.TMSI_System_ComplimentsMoney.ToolTipText = "For a good cause! ";
-            this.TMSI_System_ComplimentsMoney.Click += new System.EventHandler(this.TSMI_System_ComplimentsMoney_Click);
-            // 
-            // TMSI_System_Critiques
-            // 
-            this.TMSI_System_Critiques.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TMSI_System_CritiquesBugReport,
-            this.TMSI_System_CritiquesImprovementRequest});
-            this.TMSI_System_Critiques.Name = "TMSI_System_Critiques";
-            this.TMSI_System_Critiques.Size = new System.Drawing.Size(271, 26);
-            this.TMSI_System_Critiques.Text = "Criti&ques";
-            // 
-            // TMSI_System_CritiquesBugReport
-            // 
-            this.TMSI_System_CritiquesBugReport.Name = "TMSI_System_CritiquesBugReport";
-            this.TMSI_System_CritiquesBugReport.Size = new System.Drawing.Size(238, 26);
-            this.TMSI_System_CritiquesBugReport.Text = "&Bug Report";
-            this.TMSI_System_CritiquesBugReport.ToolTipText = "\"The devil is is in the details.\" - Friedrich Nietzsche";
-            this.TMSI_System_CritiquesBugReport.Click += new System.EventHandler(this.TSMI_System_CritiqueBugReport_Click);
-            // 
-            // TMSI_System_CritiquesImprovementRequest
-            // 
-            this.TMSI_System_CritiquesImprovementRequest.Name = "TMSI_System_CritiquesImprovementRequest";
-            this.TMSI_System_CritiquesImprovementRequest.Size = new System.Drawing.Size(238, 26);
-            this.TMSI_System_CritiquesImprovementRequest.Text = "&Improvement Request";
-            this.TMSI_System_CritiquesImprovementRequest.ToolTipText = "\"God is in the details.\" - Mies van der Rohe";
-            this.TMSI_System_CritiquesImprovementRequest.Click += new System.EventHandler(this.TSMI_System_CritiqueImprovementRequest_Click);
-            // 
-            // TMSI_System_Separator2
-            // 
-            this.TMSI_System_Separator2.Name = "TMSI_System_Separator2";
-            this.TMSI_System_Separator2.Size = new System.Drawing.Size(268, 6);
-            // 
             // TSMI_System_About
             // 
             this.TSMI_System_About.Name = "TSMI_System_About";
@@ -491,7 +504,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_AppConfig
             // 
             this.TSMI_UUT_AppConfig.Name = "TSMI_UUT_AppConfig";
-            this.TSMI_UUT_AppConfig.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_AppConfig.Size = new System.Drawing.Size(165, 26);
             this.TSMI_UUT_AppConfig.Text = "&App.config";
             this.TSMI_UUT_AppConfig.ToolTipText = "UUT\'s test configuration.";
             this.TSMI_UUT_AppConfig.Click += new System.EventHandler(this.TSMI_UUT_AppConfig_Click);
@@ -499,7 +512,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_Change
             // 
             this.TSMI_UUT_Change.Name = "TSMI_UUT_Change";
-            this.TSMI_UUT_Change.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_Change.Size = new System.Drawing.Size(165, 26);
             this.TSMI_UUT_Change.Text = "&Change";
             this.TSMI_UUT_Change.ToolTipText = "Test a different UUT.";
             this.TSMI_UUT_Change.Click += new System.EventHandler(this.TSMI_UUT_Change_Click);
@@ -507,7 +520,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_eDocs
             // 
             this.TSMI_UUT_eDocs.Name = "TSMI_UUT_eDocs";
-            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(165, 26);
             this.TSMI_UUT_eDocs.Text = "&eDocs";
             this.TSMI_UUT_eDocs.ToolTipText = "UUT\'s P: drive eDocs folder.";
             this.TSMI_UUT_eDocs.Click += new System.EventHandler(this.TSMI_UUT_eDocs_Click);
@@ -517,7 +530,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_Manuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_UUT_ManualsInstruments});
             this.TSMI_UUT_Manuals.Name = "TSMI_UUT_Manuals";
-            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(165, 26);
             this.TSMI_UUT_Manuals.Text = "&Manuals";
             // 
             // TSMI_UUT_ManualsInstruments
@@ -534,7 +547,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_TestDataP_DriveTDR_Folder,
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying});
             this.TSMI_UUT_TestData.Name = "TSMI_UUT_TestData";
-            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(165, 26);
             this.TSMI_UUT_TestData.Text = "&Test Data";
             // 
             // TSMI_UUT_TestDataP_DriveTDR_Folder
@@ -557,14 +570,21 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_Separator1
             // 
             this.TSMI_UUT_Separator1.Name = "TSMI_UUT_Separator1";
-            this.TSMI_UUT_Separator1.Size = new System.Drawing.Size(221, 6);
+            this.TSMI_UUT_Separator1.Size = new System.Drawing.Size(162, 6);
             // 
             // TSMI_UUT_About
             // 
             this.TSMI_UUT_About.Name = "TSMI_UUT_About";
-            this.TSMI_UUT_About.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_About.Size = new System.Drawing.Size(165, 26);
             this.TSMI_UUT_About.Text = "&About...";
             this.TSMI_UUT_About.Click += new System.EventHandler(this.TSMI_UUT_About_Click);
+            // 
+            // TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool
+            // 
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Name = "TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool";
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Size = new System.Drawing.Size(246, 26);
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Text = "&SMBus / I2C / SAA Tool";
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Click += new System.EventHandler(this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool_Click);
             // 
             // TestExecutive
             // 
@@ -611,12 +631,6 @@ namespace ABT.TestSpace.TestExec {
         private ToolStripMenuItem TMSI_System_DiagnosticsInstruments;
         private ToolStripMenuItem TMSI_System_DiagnosticsRelays;
         private ToolStripSeparator TMSI_System_Separator1;
-        private ToolStripMenuItem TMSI_System_Compliments;
-        private ToolStripMenuItem TMSI_System_ComplimentsPraiseAndPlaudits;
-        private ToolStripMenuItem TMSI_System_ComplimentsMoney;
-        private ToolStripMenuItem TMSI_System_Critiques;
-        private ToolStripMenuItem TMSI_System_CritiquesBugReport;
-        private ToolStripMenuItem TMSI_System_CritiquesImprovementRequest;
         private ToolStripMenuItem TSMI_UUT;
         private ToolStripMenuItem TSMI_UUT_eDocs;
         private ToolStripMenuItem TSMI_UUT_TestData;
@@ -628,7 +642,6 @@ namespace ABT.TestSpace.TestExec {
         private ToolStripMenuItem TSMI_System_ManualsBarcodeScanner;
         private ToolStripMenuItem TSMI_System_ManualsInstruments;
         private ToolStripMenuItem TSMI_System_ManualsRelays;
-        private ToolStripSeparator TMSI_System_Separator2;
         private ToolStripMenuItem TSMI_System_About;
         private ToolStripMenuItem TMSI_System_BarcodeScannerDiscovery;
         private ToolStripSeparator TSMI_UUT_Separator1;
@@ -646,5 +659,14 @@ namespace ABT.TestSpace.TestExec {
         private ToolStripMenuItem TSMI_Apps_MicrosoftVisualStudio;
         private ToolStripMenuItem TSMI_Apps_MicrosoftXML_Notepad;
         private ToolStripMenuItem TSMI_UUT_Change;
+        private ToolStripMenuItem TMSI_Feedback;
+        private ToolStripMenuItem TMSI_Feedback_Compliments;
+        private ToolStripMenuItem TMSI_Feedback_ComplimentsPraiseεPlaudits;
+        private ToolStripMenuItem TMSI_Feedback_ComplimentsMoney;
+        private ToolStripMenuItem TMSI_Feedback_Critiques;
+        private ToolStripMenuItem TMSI_Feedback_CritiquesBugReport;
+        private ToolStripMenuItem TMSI_Feedback_CritiquesImprovementRequest;
+        private ToolStripMenuItem TSMI_Apps_TexasInstruments;
+        private ToolStripMenuItem TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool;
     }
 }

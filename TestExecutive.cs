@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -20,6 +21,9 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
+using System.Collections;
+using System.Net.Mime;
+using System.Net;
 
 /// <para>
 /// TODO: Eventually Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -117,6 +121,28 @@ namespace ABT.TestSpace.TestExec {
         /// </summary>
 
         #region Form
+
+        private void SendMailMessageWithAttachment(String subject) {
+            String attachmentFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
+            rtfResults.SaveFile(attachmentFile);
+
+            Attachment attachment = new Attachment(attachmentFile, MediaTypeNames.Application.Octet);
+            ContentDisposition disposition = attachment.ContentDisposition;
+            disposition.CreationDate = File.GetCreationTime(attachmentFile);
+            disposition.ModificationDate = File.GetLastWriteTime(attachmentFile);
+            disposition.ReadDate = File.GetLastAccessTime(attachmentFile);
+
+            MailMessage mailMessage = new MailMessage(to: ConfigUUT.TestEngineer, from: ConfigUUT.TestEngineer);
+            mailMessage.Subject = subject;
+            mailMessage.Attachments.Add(attachment);
+
+            IEnumerable<String> smtpServer = from xe in XElement.Load("TestExecutive.config.xml").Elements("SMTP") select xe.Element("Server").Value;
+            SmtpClient smtpClient = new SmtpClient(smtpServer.First());
+            smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
+            smtpClient.Send(mailMessage);
+            attachment.Dispose();
+        }
+
         private void Form_Shown(Object sender, EventArgs e) {
             FormModeReset();
             FormModeWait();
@@ -276,6 +302,7 @@ namespace ABT.TestSpace.TestExec {
             PreApplicationExit();
             Application.Exit();
         }
+
         private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { OpenApp("Keysight", "BenchVue"); }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "CommandExpert"); }
         private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "ConnectionExpert"); }
@@ -283,6 +310,12 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "SQLServerManagementStudio"); }
         private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "VisualStudio"); }
         private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad"); }
+        private void TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool_Click(Object sender, EventArgs e) { OpenApp("TexasInstruments", "SMBus_I2C_SAA_Tool", "--smbus-gui"); }
+
+        private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+        private void TSMI_Feedback_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+        private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report for {ConfigUUT.Number}, {ConfigUUT.Description}."); }
+        private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request for {ConfigUUT.Number}, {ConfigUUT.Description}."); }
 
         private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
             DialogResult dr = MessageBox.Show($"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
@@ -320,10 +353,6 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
         private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Relays")); }
         private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", GetFile("TestExecutiveConfigXML")); }
-        private void TSMI_System_ComplimentsPraiseAndPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-        private void TSMI_System_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-        private void TSMI_System_CritiqueBugReport_Click(Object sender, EventArgs e) { }
-        private void TSMI_System_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, version {_VersionTestExecutive}.{Environment.NewLine}{Environment.NewLine}" +
              $"© 2022, Amphenol Borisch Technologies.",
