@@ -6,7 +6,9 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -21,9 +23,6 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
-using System.Collections;
-using System.Net.Mime;
-using System.Net;
 
 /// <para>
 /// TODO: Eventually Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -347,7 +346,7 @@ namespace ABT.TestSpace.TestExec {
             };
             if (saveFileDialog.ShowDialog() == DialogResult.OK)  rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
-        private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) { }
+        private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) { foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) SCPI99.SelfTest(kvp.Value); }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
