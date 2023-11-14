@@ -42,11 +42,12 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.VOLTage.OFFSet.Command(null, V_Offset);
         }
 
-        public static void ModulateFSK(SCPI_VISA_Instrument SVI, STATE State, Double HzHop, Double HzRate) {
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FSKey.SOURce.Command(null, "INTernal");
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FSKey.INTernal.RATE.Command(null, HzRate);
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FSKey.FREQuency.Command(null, HzHop);
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FSKey.STATe.Command(null, (State is STATE.ON));
+        public static void ModulateFM_SquareWave(SCPI_VISA_Instrument SVI, Double HzDeviation, Double HzFM, STATE State) {
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FM.INTernal.FUNCtion.Command(null, "SQUare");
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FM.INTernal.FREQuency.Command(null, HzFM, "HZ");
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FM.DEViation.Command(null, HzDeviation, "HZ");
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FM.SOURce.Command(null, "INTernal");
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FM.STATe.Command(null, (State is STATE.ON));
         }
 
         public static String WaveformGet(SCPI_VISA_Instrument SVI) {
