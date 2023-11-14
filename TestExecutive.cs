@@ -1,4 +1,5 @@
-﻿using System;
+﻿#undef DISABLE_INITIALIZE
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
@@ -120,7 +121,6 @@ namespace ABT.TestSpace.TestExec {
         /// </summary>
 
         #region Form
-
         private void SendMailMessageWithAttachment(String subject) {
             String attachmentFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
             rtfResults.SaveFile(attachmentFile);
@@ -398,7 +398,9 @@ namespace ABT.TestSpace.TestExec {
                 kvp.Value.Message = String.Empty;
             }
             ConfigUUT.EventCode = EventCodes.UNSET;
+#if !DISABLE_INITIALIZE
             Initialize();
+#endif
         }
 
         private async Task MeasurementsRun() {
@@ -435,7 +437,9 @@ namespace ABT.TestSpace.TestExec {
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
+#if !DISABLE_INITIALIZE
             Initialize();
+#endif
             ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
