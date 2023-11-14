@@ -1,4 +1,5 @@
-﻿using System;
+﻿#undef DISABLE_INITIALIZE
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
@@ -131,7 +132,7 @@ namespace ABT.TestSpace.TestExec {
             disposition.ModificationDate = File.GetLastWriteTime(attachmentFile);
             disposition.ReadDate = File.GetLastAccessTime(attachmentFile);
 
-            MailMessage mailMessage = new MailMessage(to: ConfigUUT.TestEngineer, from: ConfigUUT.TestEngineer);
+            MailMessage mailMessage = new MailMessage(to: ConfigUUT.TestEngineerEmail, from: ConfigUUT.TestEngineerEmail);
             mailMessage.Subject = subject;
             mailMessage.Attachments.Add(attachment);
 
@@ -142,11 +143,7 @@ namespace ABT.TestSpace.TestExec {
             attachment.Dispose();
         }
 
-        private void Form_Shown(Object sender, EventArgs e) {
-            FormModeReset();
-            FormModeWait();
-            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}";
-        }
+        private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
 
         private void FormModeReset() {
             TextResult.Text = String.Empty;
@@ -398,7 +395,9 @@ namespace ABT.TestSpace.TestExec {
                 kvp.Value.Message = String.Empty;
             }
             ConfigUUT.EventCode = EventCodes.UNSET;
+#if !DISABLE_INITIALIZE
             Initialize();
+#endif
         }
 
         private async Task MeasurementsRun() {
@@ -435,7 +434,9 @@ namespace ABT.TestSpace.TestExec {
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
+#if !DISABLE_INITIALIZE
             Initialize();
+#endif
             ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
