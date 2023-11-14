@@ -53,15 +53,11 @@ namespace ABT.TestSpace.TestExec {
         public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by button_click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
-        internal readonly String _VersionTestExecutor;
-        internal readonly String _VersionTestExecutive;
         private Boolean _cancelled = false;
         private readonly SerialNumberDialog _serialNumberDialog;
 
         protected TestExecutive(Icon icon) {
             InitializeComponent();
-            _VersionTestExecutor = Assembly.GetEntryAssembly().GetName().Version.ToString();
-            _VersionTestExecutive = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog() : null;
             Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
@@ -350,7 +346,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Relays")); }
         private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", GetFile("TestExecutiveConfigXML")); }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, version {_VersionTestExecutive}.{Environment.NewLine}{Environment.NewLine}" +
+            _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}.{Environment.NewLine}{Environment.NewLine}" +
              $"© 2022, Amphenol Borisch Technologies.",
             "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -378,7 +374,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName().Name}, version {_VersionTestExecutor}.{Environment.NewLine}{Environment.NewLine}" +
+            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}.{Environment.NewLine}{Environment.NewLine}" +
              $"© 2022, Amphenol Borisch Technologies.",
             "About TestExecutor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
