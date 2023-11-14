@@ -39,7 +39,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static void SetVoltage(SCPI_VISA_Instrument SVI, Double V_Low, Double V_High, Double V_Offset) {
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.VOLTage.LOW.Command(null, V_Low);
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.VOLTage.HIGH.Command(null, V_High);
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.VOLTage.OFFSet.Command(null, V_Offset); 
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.VOLTage.OFFSet.Command(null, V_Offset);
         }
 
         public static void ModulateFM_SquareWave(SCPI_VISA_Instrument SVI, Double HzDeviation, Double HzFM, STATE State) {
