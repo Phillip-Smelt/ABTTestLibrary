@@ -121,7 +121,6 @@ namespace ABT.TestSpace.TestExec {
         /// </summary>
 
         #region Form
-
         private void SendMailMessageWithAttachment(String subject) {
             String attachmentFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
             rtfResults.SaveFile(attachmentFile);
@@ -211,6 +210,7 @@ namespace ABT.TestSpace.TestExec {
             Initialize();
             _serialNumberDialog?.Close();
         }
+        
         #region Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             CancelTokenSource.Cancel();
