@@ -1,4 +1,5 @@
-﻿using System;
+﻿#undef DISABLE_INITIALIZE
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
@@ -64,8 +65,8 @@ namespace ABT.TestSpace.TestExec {
             _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog() : null;
             Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            UE24.Set(C.S.NO); // Relays should be energized/de-energized/re-energized occasionally as preventative maintenance.
-            UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
+            // TODO: UE24.Set(C.S.NO); // Relays should be energized/de-energized/re-energized occasionally as preventative maintenance.
+            // TODO: UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
         }
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
@@ -120,28 +121,6 @@ namespace ABT.TestSpace.TestExec {
         /// </summary>
 
         #region Form
-
-        private void SendMailMessageWithAttachment(String subject) {
-            String attachmentFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
-            rtfResults.SaveFile(attachmentFile);
-
-            Attachment attachment = new Attachment(attachmentFile, MediaTypeNames.Application.Octet);
-            ContentDisposition disposition = attachment.ContentDisposition;
-            disposition.CreationDate = File.GetCreationTime(attachmentFile);
-            disposition.ModificationDate = File.GetLastWriteTime(attachmentFile);
-            disposition.ReadDate = File.GetLastAccessTime(attachmentFile);
-
-            MailMessage mailMessage = new MailMessage(to: ConfigUUT.TestEngineer, from: ConfigUUT.TestEngineer);
-            mailMessage.Subject = subject;
-            mailMessage.Attachments.Add(attachment);
-
-            IEnumerable<String> smtpServer = from xe in XElement.Load("TestExecutive.config.xml").Elements("SMTP") select xe.Element("Server").Value;
-            SmtpClient smtpClient = new SmtpClient(smtpServer.First());
-            smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
-            smtpClient.Send(mailMessage);
-            attachment.Dispose();
-        }
-
         private void Form_Shown(Object sender, EventArgs e) {
             FormModeReset();
             FormModeWait();
@@ -309,12 +288,6 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "SQLServerManagementStudio"); }
         private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "VisualStudio"); }
         private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad"); }
-        private void TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool_Click(Object sender, EventArgs e) { OpenApp("TexasInstruments", "SMBus_I2C_SAA_Tool", "--smbus-gui"); }
-
-        private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-        private void TSMI_Feedback_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-        private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report for {ConfigUUT.Number}, {ConfigUUT.Description}."); }
-        private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request for {ConfigUUT.Number}, {ConfigUUT.Description}."); }
 
         private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
             DialogResult dr = MessageBox.Show($"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
@@ -398,7 +371,9 @@ namespace ABT.TestSpace.TestExec {
                 kvp.Value.Message = String.Empty;
             }
             ConfigUUT.EventCode = EventCodes.UNSET;
+#if !DISABLE_INITIALIZE
             Initialize();
+#endif
         }
 
         private async Task MeasurementsRun() {
@@ -435,7 +410,9 @@ namespace ABT.TestSpace.TestExec {
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
+#if !DISABLE_INITIALIZE
             Initialize();
+#endif
             ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
@@ -501,7 +478,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private Int32 MeasurementResultsCount(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Result, eventCode) select measurement).Count(); }
-        #endregion Measurements
+#endregion Measurements
     }
 
     public class CancellationException : Exception {

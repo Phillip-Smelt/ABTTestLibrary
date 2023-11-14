@@ -84,8 +84,8 @@
   </Apps>
   
   <Files>
-    <AppConfig>..\..\App.Config</AppConfig>
-    <TestExecutiveConfigXML>C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml</TestExecutiveConfigXML>
+    <AppConfig>isoMicro.exe.config</AppConfig>
+    <TestExecutiveConfigXML>TestExecutive.config.xml</TestExecutiveConfigXML>
   </Files>
 
   <Folders>
