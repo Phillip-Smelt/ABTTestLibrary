@@ -131,7 +131,7 @@ namespace ABT.TestSpace.TestExec {
             disposition.ModificationDate = File.GetLastWriteTime(attachmentFile);
             disposition.ReadDate = File.GetLastAccessTime(attachmentFile);
 
-            MailMessage mailMessage = new MailMessage(to: ConfigUUT.TestEngineer, from: ConfigUUT.TestEngineer);
+            MailMessage mailMessage = new MailMessage(to: ConfigUUT.TestEngineerEmail, from: ConfigUUT.TestEngineerEmail);
             mailMessage.Subject = subject;
             mailMessage.Attachments.Add(attachment);
 
@@ -142,11 +142,7 @@ namespace ABT.TestSpace.TestExec {
             attachment.Dispose();
         }
 
-        private void Form_Shown(Object sender, EventArgs e) {
-            FormModeReset();
-            FormModeWait();
-            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}";
-        }
+        private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
 
         private void FormModeReset() {
             TextResult.Text = String.Empty;
@@ -214,6 +210,7 @@ namespace ABT.TestSpace.TestExec {
             Initialize();
             _serialNumberDialog?.Close();
         }
+        
         #region Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             CancelTokenSource.Cancel();
