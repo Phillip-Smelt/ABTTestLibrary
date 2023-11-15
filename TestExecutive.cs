@@ -46,6 +46,7 @@ using static System.Net.Mime.MediaTypeNames;
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
 ///  </para>
+///  <para>
 /// NOTE: ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below error when sychronizing with
 ///       TestExecutive's GitHub repository at https://github.com/Amphenol-Borisch-Technologies/TestExecutive:
 ///             Opening repositories:
@@ -59,6 +60,7 @@ using static System.Net.Mime.MediaTypeNames;
 ///  - Disabling Zero Trust resolves above error.
 ///  - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
 ///  - FYI, synchronizing with IsoMicro's repository doesn't error out, as it doesn't utilize a Git server.
+///  </para>
 
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
