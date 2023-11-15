@@ -45,6 +45,9 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
 ///  </para>
+/// NOTE: ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below failure:
+///  
+///  - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
 
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
