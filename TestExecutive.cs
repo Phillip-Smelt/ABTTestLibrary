@@ -24,6 +24,7 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
+using static System.Net.Mime.MediaTypeNames;
 
 /// <para>
 /// TODO: Eventually Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -45,9 +46,19 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
 ///  </para>
-/// NOTE: ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below failure:
-///  
+/// NOTE: ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below error when sychronizing with
+///       TestExecutive's GitHub repository at https://github.com/Amphenol-Borisch-Technologies/TestExecutive:
+///             Opening repositories:
+///             P:\Test\Engineers\repos\IsoMicro
+///             Opening repositories:
+///             P:\Test\Engineers\repos\IsoMicro
+///             C:\Users\phils\source\repos\TestExecutive
+///             Git failed with a fatal error.
+///             Git failed with a fatal error.
+///             unable to access 'https://github.com/Amphenol-Borisch-Technologies/TestLibrary/': schannel: CertGetCertificateChain trust error CERT_TRUST_IS_PARTIAL_CHAIN
+///  - Disabling Zero Trust resolves above error.
 ///  - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
+///  - FYI, synchronizing with IsoMicro's repository doesn't error out, as it doesn't utilize a Git server.
 
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
@@ -295,7 +306,7 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
             PreApplicationExit();
-            Application.Exit();
+            System.Windows.Forms.Application.Exit();
         }
 
         private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { OpenApp("Keysight", "BenchVue"); }
@@ -368,7 +379,7 @@ namespace ABT.TestSpace.TestExec {
                     ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
                     Process.Start(psi);
                     Thread.Sleep(millisecondsTimeout: 1000);
-                    Application.Exit();
+                    System.Windows.Forms.Application.Exit();
                 }
             }
         }

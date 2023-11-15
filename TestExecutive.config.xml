@@ -96,7 +96,7 @@
   </Folders>
   
   <SMTP>
-    <Server>borisch-com.mail.protection.outlook.com</Server>
+    <Server>VM-INT-ADC-02.borisch.local</Server>
   </SMTP>
   
 	<SCPI_VISA_Instrument>
