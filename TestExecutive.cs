@@ -136,10 +136,10 @@ namespace ABT.TestSpace.TestExec {
         #region Form
         private void SendMailMessageWithAttachment(String subject) {
             // TODO: Eventually resolve SMTP server's DNS address so smtpClient.Send(mailMessage); doesn't timeout/error out.
-            // Likely will require IS providing correct SMTP DNS address, and possibly additionally whitelisting TestExecutive's
-            // permission to access & send Mail.
-            // Sigh... I was auto-emailing from a Linux based Java application in the late 1990s; this is pretty pedestrian
-            // functionality, but security layers make it problematic.
+            // Likely will require IS providing correct SMTP DNS address, as nslookup doesn't seem to return a valid SMTP DNS address.
+            // May also require whitelisting TestExecutive's permission to access & send Mail.
+            // Sigh... I was auto-emailing from a Linux based Java application in the late 1990s; it's pretty pedestrian
+            // functionality, but modern security layers make it problematic.
             String attachmentFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
             rtfResults.SaveFile(attachmentFile);
 
@@ -149,13 +149,11 @@ namespace ABT.TestSpace.TestExec {
             disposition.ModificationDate = File.GetLastWriteTime(attachmentFile);
             disposition.ReadDate = File.GetLastAccessTime(attachmentFile);
 
-            MailMessage mailMessage = new MailMessage(to: ConfigUUT.TestEngineerEmail, from: ConfigUUT.TestEngineerEmail);
-            mailMessage.Subject = subject;
+            MailMessage mailMessage = new MailMessage(to: ConfigUUT.TestEngineerEmail, from: ConfigUUT.TestEngineerEmail) { Subject = subject };
             mailMessage.Attachments.Add(attachment);
 
             IEnumerable<String> smtpServer = from xe in XElement.Load("TestExecutive.config.xml").Elements("SMTP") select xe.Element("Server").Value;
-            SmtpClient smtpClient = new SmtpClient(smtpServer.First());
-            smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
+            SmtpClient smtpClient = new SmtpClient(smtpServer.First()) { Credentials = CredentialCache.DefaultNetworkCredentials };
             smtpClient.Send(mailMessage);
             attachment.Dispose();
         }
