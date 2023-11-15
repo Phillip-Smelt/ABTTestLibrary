@@ -56,7 +56,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void WaveformSquareApply(SCPI_VISA_Instrument SVI, Double Hz, Double V_High, Double V_Offset) {
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.LOAD.Command(null, "INFinity");
+            // TODO: ?
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.LOAD.Command(null, 50D, "OHM");
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.APPLy.SQUare.Command(null, Hz, "HZ", V_High, "V", V_Offset, "V");
         }
     }

@@ -57,7 +57,8 @@ using static System.Net.Mime.MediaTypeNames;
 ///             Git failed with a fatal error.
 ///             Git failed with a fatal error.
 ///             unable to access 'https://github.com/Amphenol-Borisch-Technologies/TestLibrary/': schannel: CertGetCertificateChain trust error CERT_TRUST_IS_PARTIAL_CHAIN
-///  - Disabling Zero Trust resolves above error.
+///  - Temporarily disabling Zero Trust by "pausing" it resolves above error.
+///    - Zero Trust's "pause" eventually times out, and Zero Trust eventually re-enables itself silently, without notifying you.
 ///  - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
 ///  - FYI, synchronizing with IsoMicro's repository doesn't error out, as it doesn't utilize a Git server.
 ///  </para>
@@ -134,6 +135,11 @@ namespace ABT.TestSpace.TestExec {
 
         #region Form
         private void SendMailMessageWithAttachment(String subject) {
+            // TODO: Eventually resolve SMTP server's DNS address so smtpClient.Send(mailMessage); doesn't timeout/error out.
+            // Likely will require IS providing correct SMTP DNS address, and possibly additionally whitelisting TestExecutive's
+            // permission to access & send Mail.
+            // Sigh... I was auto-emailing from a Linux based Java application in the late 1990s; this is pretty pedestrian
+            // functionality, but security layers make it problematic.
             String attachmentFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
             rtfResults.SaveFile(attachmentFile);
 
