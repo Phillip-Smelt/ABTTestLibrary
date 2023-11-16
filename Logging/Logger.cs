@@ -154,10 +154,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             }
         }
 
-        public static void LogError(String logMessage, Boolean ShowMessage) {
-            Log.Error(logMessage);
-            TestExecutive.ErrorMessage();
-        }
+        public static void LogError(String logMessage, Boolean ShowMessage) { Log.Error(logMessage); }
 
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
             Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);

@@ -91,11 +91,7 @@ namespace ABT.TestSpace.TestExec {
 
         public virtual Boolean Initialized() { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
 
-        public static void ErrorMessage(String ErrorMessage="") {
-            ErrorMessage = String.Equals(ErrorMessage, "") ? String.Empty : ErrorMessage + Environment.NewLine + Environment.NewLine; // If ErrorMessage ≠ "", append 2 NewLines for formatting.
-            _ = MessageBox.Show(ActiveForm, $"Unexpected error.{Environment.NewLine}{Environment.NewLine}{ErrorMessage}" +
-                "Please contact Test Engineering if assistance required.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
+        public abstract void ErrorMessage(String ErrorMessage = "");
         /// <summary>
         /// NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
         /// <para>
