@@ -89,7 +89,6 @@
             this.Name = "SerialNumberDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SerialNumberDialog";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_Closing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

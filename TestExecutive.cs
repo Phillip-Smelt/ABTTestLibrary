@@ -225,10 +225,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void InvalidPathError(String InvalidPath) { MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
-        private void PreApplicationExit() {
-            Initialize();
-            _serialNumberDialog?.Close();
-        }
+        private void PreApplicationExit() { Initialize(); }
         
         #region Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
