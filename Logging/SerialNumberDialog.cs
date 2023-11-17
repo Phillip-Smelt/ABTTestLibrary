@@ -89,9 +89,9 @@ namespace ABT.TestSpace.TestExec.Logging {
             }
         }
         private void Form_Closing(Object sender, FormClosingEventArgs e) {
-            _claimedScanner.Dispose();
+            _claimedScanner?.Dispose();
             _claimedScanner = null;
-            _scanner.Dispose();
+            _scanner?.Dispose();
             _scanner = null;
         }
     }
