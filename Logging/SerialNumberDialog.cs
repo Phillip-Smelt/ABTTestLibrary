@@ -83,6 +83,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             if (Regex.IsMatch(text, _regEx)) {
                 OK.Enabled = true;
                 OK.BackColor = System.Drawing.Color.Green;
+                OK.Focus();
             } else {
                 OK.Enabled = false;
                 OK.BackColor = System.Drawing.Color.DimGray;
