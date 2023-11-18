@@ -11,11 +11,13 @@ using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Windows.Forms;
+using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.VisualBasic;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
@@ -136,29 +138,49 @@ namespace ABT.TestSpace.TestExec {
             // May also require whitelisting UserPrincipal.Current.DisplayName's permission to access & send Mail.
             // Sigh... I was auto-emailing from a Linux based Java application in the late 1990s; it's pretty pedestrian
             // functionality, but modern security makes it problematic.
-            String attachmentFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
-            rtfResults.SaveFile(attachmentFile);
 
-            Attachment attachment = new Attachment(attachmentFile, MediaTypeNames.Application.Octet);
-            ContentDisposition disposition = attachment.ContentDisposition;
-            disposition.CreationDate = File.GetCreationTime(attachmentFile);
-            disposition.ModificationDate = File.GetLastWriteTime(attachmentFile);
-            disposition.ReadDate = File.GetLastAccessTime(attachmentFile);
+            Outlook.Application outlook = null;
+            if (Process.GetProcessesByName("OUTLOOK").Count() > 0) {
+                outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
+            } else {
+                outlook = new Outlook.Application();`
+                Outlook.NameSpace nameSpace = outlook.GetNamespace("MAPI");
+                nameSpace.Logon("", "", Missing.Value, Missing.Value);
+                nameSpace = null;
+            }
+            Outlook.MailItem mailItem = outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            mailItem.Subject = subject;
+            mailItem.To = ConfigUUT.TestEngineerEmail;
+            mailItem.CC = ConfigUUT.TestEngineerEmail;
+            mailItem.Body = "This is the message.";
+            mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
+            mailItem.Attachments.Add($"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf", Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
+            mailItem.Display(true);
+            // mailItem.SendUsingAccount = new Outlook.Account()
 
-            MailMessage mailMessage = new MailMessage(to: ConfigUUT.TestEngineerEmail, from: ConfigUUT.TestEngineerEmail) {
-                Subject = subject,
-                Body = $"{UserPrincipal.Current.DisplayName} sends attached details."
-            };
-            mailMessage.Attachments.Add(attachment);
+            //String attachmentFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
+            //rtfResults.SaveFile(attachmentFile);
 
-            IEnumerable<String> smtpServer = from xe in XElement.Load("TestExecutive.config.xml").Elements("SMTP") select xe.Element("Server").Value;
-            SmtpClient smtpClient = new SmtpClient(smtpServer.First()) {
-                Credentials = CredentialCache.DefaultNetworkCredentials,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network
-            };
-            smtpClient.Send(mailMessage);
-            attachment.Dispose();
+            //Attachment attachment = new Attachment(attachmentFile, MediaTypeNames.Application.Octet);
+            //ContentDisposition disposition = attachment.ContentDisposition;
+            //disposition.CreationDate = File.GetCreationTime(attachmentFile);
+            //disposition.ModificationDate = File.GetLastWriteTime(attachmentFile);
+            //disposition.ReadDate = File.GetLastAccessTime(attachmentFile);
+
+            //MailMessage mailMessage = new MailMessage(to: ConfigUUT.TestEngineerEmail, from: ConfigUUT.TestEngineerEmail) {
+            //    Subject = subject,
+            //    Body = $"{UserPrincipal.Current.DisplayName} sends attached details."
+            //};
+            //mailMessage.Attachments.Add(attachment);
+
+            //IEnumerable<String> smtpServer = from xe in XElement.Load("TestExecutive.config.xml").Elements("SMTP") select xe.Element("Server").Value;
+            //SmtpClient smtpClient = new SmtpClient(smtpServer.First()) {
+            //    Credentials = CredentialCache.DefaultNetworkCredentials,
+            //    EnableSsl = true,
+            //    DeliveryMethod = SmtpDeliveryMethod.Network
+            //};
+            //smtpClient.Send(mailMessage);
+            //attachment.Dispose();
         }
 
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
@@ -367,7 +389,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", GetFile("TestExecutiveConfigXML")); }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}.{Environment.NewLine}{Environment.NewLine}" +
-             $"© 2022, Amphenol Borisch Technologies.",
+                $"© 2022, Amphenol Borisch Technologies.",
             "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -395,7 +417,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}.{Environment.NewLine}{Environment.NewLine}" +
-             $"© 2022, Amphenol Borisch Technologies.",
+                $"© 2022, Amphenol Borisch Technologies.",
             "About TestExecutor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         #endregion Tool Strip Menu Items
@@ -411,9 +433,9 @@ namespace ABT.TestSpace.TestExec {
                 kvp.Value.Message = String.Empty;
             }
             ConfigUUT.EventCode = EventCodes.UNSET;
-#if !DISABLE_INITIALIZE
+    #if !DISABLE_INITIALIZE
             Initialize();
-#endif
+    #endif
         }
 
         private async Task MeasurementsRun() {
@@ -450,9 +472,9 @@ namespace ABT.TestSpace.TestExec {
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
-#if !DISABLE_INITIALIZE
+    #if !DISABLE_INITIALIZE
             Initialize();
-#endif
+    #endif
             ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
