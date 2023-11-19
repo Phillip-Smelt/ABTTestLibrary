@@ -7,9 +7,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Net.Mime;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -67,7 +64,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
-        public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs;
+        public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs; // = SCPI_VISA_Instrument.Get();
         public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by button_click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
@@ -79,16 +76,15 @@ namespace ABT.TestSpace.TestExec {
             _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog() : null;
             Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            UE24.Set(C.S.NO); // Relays should be energized/de-energized/re-energized occasionally as preventative maintenance.
-            UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
-            if (! ConfigUUT.DisableSVIs) SVIs = SCPI_VISA_Instrument.Get();
+            // UE24.Set(C.S.NO); // Relays should be energized/de-energized/re-energized occasionally as preventative maintenance.
+            // UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
         }
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
 
         public virtual void Initialize() {
-            SCPI99.Reset(SVIs);
-            UE24.Set(C.S.NC);
+            // SCPI99.Reset(SVIs);
+            // UE24.Set(C.S.NC);
         }
 
         public virtual Boolean Initialized() { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
@@ -133,17 +129,11 @@ namespace ABT.TestSpace.TestExec {
 
         #region Form
         private void SendMailMessageWithAttachment(String subject) {
-            // TODO: Eventually resolve SMTP server's DNS address so smtpClient.Send(mailMessage); doesn't timeout/error out.
-            // Likely will require IS providing correct SMTP DNS address, as nslookup doesn't seem to return a valid SMTP DNS address.
-            // May also require whitelisting UserPrincipal.Current.DisplayName's permission to access & send Mail.
-            // Sigh... I was auto-emailing from a Linux based Java application in the late 1990s; it's pretty pedestrian
-            // functionality, but modern security makes it problematic.
-
             Outlook.Application outlook = null;
             if (Process.GetProcessesByName("OUTLOOK").Count() > 0) {
                 outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
             } else {
-                outlook = new Outlook.Application();`
+                outlook = new Outlook.Application();
                 Outlook.NameSpace nameSpace = outlook.GetNamespace("MAPI");
                 nameSpace.Logon("", "", Missing.Value, Missing.Value);
                 nameSpace = null;
@@ -156,7 +146,16 @@ namespace ABT.TestSpace.TestExec {
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             mailItem.Attachments.Add($"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf", Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
             mailItem.Display(true);
-            // mailItem.SendUsingAccount = new Outlook.Account()
+            mailItem.SendUsingAccount = new Outlook.Account();
+
+            // TODO: Eventually resolve SMTP server's DNS address so smtpClient.Send(mailMessage); doesn't timeout/error out.
+            // Likely will require IS providing correct SMTP DNS address, as nslookup doesn't seem to return a valid SMTP DNS address.
+            // May also require whitelisting UserPrincipal.Current.DisplayName's permission to access & send Mail.
+            // Sigh... I was auto-emailing error notifications from a Linux based Java application in the late 1990s;
+            // it's pretty pedestrian functionality, but modern security makes it problematic.
+            // NOTE: Suspect Microsoft 365's Outlook object model may serve better than the MailMessage class, hence below commented code 
+            // and above added Outlook code.  May the best technology win, though for PCs lacking Microsoft 365, the best technology is
+            // the available one, that is, MailMessage.
 
             //String attachmentFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
             //rtfResults.SaveFile(attachmentFile);
