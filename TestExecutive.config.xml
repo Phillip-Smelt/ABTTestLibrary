@@ -152,8 +152,6 @@
               - For Voyager 1200g, scan PAP131 label from "Honeywell Voyager 1200G User's Guide ReadMe.pdf" to program 1200g into USB HID mode.
               - Both "ReadMe" & "User's Guides" documents reside in Logging folder for convenience.
         NOTE: The 1200g must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
-				NOTE: To change BarcodeScannerID from current "\\?\HID#VID_0C2E&PID_0A07&MI_00#7&1f27e379&0&0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner",
-              discover new Scanner's ID by running #if DEBUG/#endif bracketed code in class SerialNumberDialog.
 		-->
     <SerialNumberRegEx>^01BB2-[0-9]{5}$</SerialNumberRegEx>
     <!-- SerialNumberRegEx is the Regular Expression an ABT Serial Number is validated against in class SerialNumberDialog when a TestExecutor's App.Config's LOGGER_SerialNumberDialogEnabled = true.

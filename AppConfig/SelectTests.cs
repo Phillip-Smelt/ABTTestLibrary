@@ -13,13 +13,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             Operations = testOperations;
             Groups = testGroups;
             ListSelections.MultiSelect = false;
-#if DEBUG
-            radioButtonTestOperations.Checked = false;
-            radioButtonTestGroups.Checked = true;
-#else
             radioButtonTestOperations.Checked = true;
             radioButtonTestGroups.Checked = false;
-#endif
             ListViewRefresh();
             FormRefresh();
         }
