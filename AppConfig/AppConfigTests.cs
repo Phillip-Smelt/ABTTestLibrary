@@ -123,7 +123,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $@"   Example: '{_PROCESS_EXECUTABLE}{SK}ipecmd.exe{SA}{Environment.NewLine}
-                                {_PROCESS_FOLDER}{SK}C:\Program Files\Microchip\MPLABX\v6.15\mplab_platform\mplab_ipe\{SA}{Environment.NewLine}
+                                {_PROCESS_FOLDER}{SK}C:\Program Files\Microchip\MPLABX\v6.05\mplab_platform\mplab_ipe\{SA}{Environment.NewLine}
                                 {_PROCESS_ARGUMENTS}{SK}C:\TBD\U1_Firmware.hex{SA}{Environment.NewLine}
                                 {_PROCESS_EXPECTED}{SK}0xAC0E'{Environment.NewLine}" +
                  $"   Actual : '{arguments}'");
