@@ -121,7 +121,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public Boolean Are(SwitchedNet SN1, SwitchedNet SN2, SWITCHED_STATE SwitchedState) {
             Boolean are = true;
             foreach (State s in SRs[SwitchedRouteGet(SN1, SN2)]) are &= Is(s.UE, s.R, s.S); 
-            switch(SwitchedState) {
+            switch (SwitchedState) {
                 case SWITCHED_STATE.disconnected:  return !are;
                 case SWITCHED_STATE.CONNECTED:     return are;
                 default:                           throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(SWITCHED_STATE)));
@@ -161,7 +161,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         private static C.S StateNegate(C.S State) { return (State == C.S.NO) ? C.S.NC : C.S.NO; }
 
         public void Set(SwitchedNet SN1, SwitchedNet SN2, SWITCHED_STATE SwitchedState) {
-            switch(SwitchedState) {
+            switch (SwitchedState) {
                 case SWITCHED_STATE.disconnected:  foreach (State s in SRs[SwitchedRouteGet(SN1, SN2)]) UE24.Set(s.UE, s.R, StateNegate(s.S));  break;
                 case SWITCHED_STATE.CONNECTED:     foreach (State s in SRs[SwitchedRouteGet(SN1, SN2)]) UE24.Set(s.UE, s.R, s.S);               break;
                 default:                           throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(SWITCHED_STATE)));

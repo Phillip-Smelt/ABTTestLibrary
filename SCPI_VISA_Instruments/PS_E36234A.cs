@@ -68,7 +68,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         
         public static Double Get(SCPI_VISA_Instrument SVI, PS_DC DC, CHANNEL Channel, SENSE_MODE KelvinSense) {
             VoltageSenseModeSet(SVI, KelvinSense, Channel);
-            switch(DC) {
+            switch (DC) {
                 case PS_DC.Amps:
                     ((AgE36200)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(Channels[Channel], out Double[] ampsDC);
                     return ampsDC[(Int32)(Channel)];

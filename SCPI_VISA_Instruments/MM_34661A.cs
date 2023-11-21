@@ -40,7 +40,7 @@ public enum PROPERTY { AmperageAC, AmperageDC, Capacitance, Continuity, Frequenc
 
         public static Double Get(SCPI_VISA_Instrument SVI, PROPERTY property) {
             // SCPI FORMAT:DATA(ASCii/REAL) command unavailable on KS 34661A.
-            switch(property) {
+            switch (property) {
                 case PROPERTY.AmperageAC:
                     ((Ag3466x)SVI.Instrument).SCPI.MEASure.CURRent.AC.QueryAsciiReal(AUTO, DEFault, out Double acCurrent);
                     return acCurrent;

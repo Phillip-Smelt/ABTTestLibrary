@@ -35,7 +35,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static Double Get(SCPI_VISA_Instrument SVI, LOAD_MEASURE LoadMeasure, SENSE_MODE KelvinSense) {
             VoltageSenseModeSet(SVI, KelvinSense);
-            switch(LoadMeasure) {
+            switch (LoadMeasure) {
                 case LOAD_MEASURE.CURR:
                     ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(null, out Double[] ampsDC);
                     return ampsDC[0];
@@ -52,7 +52,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static Double Get(SCPI_VISA_Instrument SVI, PS_DC DC, CHANNEL Channel, SENSE_MODE KelvinSense) {
             VoltageSenseModeSet(SVI, KelvinSense);
-            switch(DC) {
+            switch (DC) {
                 case PS_DC.Amps:
                     ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.CURRent.DC.Query(Channels[Channel], out Double[] ampsDC);
                     return ampsDC[(Int32)(Channel)];
