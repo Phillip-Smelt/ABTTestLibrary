@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace ABT.TestSpace.TestExec.AppConfig {
     public class TestOperationsSection : ConfigurationSection {
@@ -46,7 +47,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
         [ConfigurationProperty("Selectable", IsKey = false, IsRequired = true)] public Boolean Selectable { get { return ((Boolean)base["Selectable"]); } }
         [ConfigurationProperty("CancelNotPassed", IsKey = false, IsRequired = true)] public Boolean CancelNotPassed { get { return ((Boolean)base["CancelNotPassed"]); } }
-        [ConfigurationProperty("TestMeasurementIDs", IsKey = false, IsRequired = true)] public String TestMeasurementIDs { get { return ((String)base["TestMeasurementIDs"]).Trim(); } }
+        [ConfigurationProperty("TestMeasurementIDs", IsKey = false, IsRequired = true)] public String TestMeasurementIDs { get { return Regex.Replace(((String)base["TestMeasurementIDs"]), @"\s+", ""); } }
     }
 
     public class TestMeasurementsSection : ConfigurationSection {
@@ -65,7 +66,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         protected override Object GetElementKey(ConfigurationElement element) { return ((TestMeasurement)(element)).ID; }
     }
     public class TestMeasurement : ConfigurationElement {
-        [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
+        [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return Regex.Replace(((String)base["ID"]), @"\s+", ""); } }
         [ConfigurationProperty("Revision", IsKey = false, IsRequired = true)] public String Revision { get { return ((String)base["Revision"]).Trim(); } }
         [ConfigurationProperty("Description", IsKey = false, IsRequired = true)] public String Description { get { return ((String)base["Description"]).Trim(); } }
         [ConfigurationProperty("ClassName", IsKey = false, IsRequired = true)] public String ClassName { get { return ((String)base["ClassName"]).Trim(); } }
