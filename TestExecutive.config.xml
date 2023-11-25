@@ -76,6 +76,7 @@
     <Microsoft>
       <SQLServerManagementStudio></SQLServerManagementStudio>
       <VisualStudio>C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe</VisualStudio>
+      <VisualStudioCode>C:\Users\phils\AppData\Local\Programs\Microsoft VS Code\Code.exe</VisualStudioCode>
       <XMLNotepad>C:\Program Files (x86)\LovettSoftware\XmlNotepad\XmlNotepad.exe</XMLNotepad>
     </Microsoft>
     <TexasInstruments>
