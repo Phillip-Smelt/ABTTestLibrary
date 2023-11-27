@@ -549,6 +549,19 @@ namespace ABT.TestSpace.TestExec {
         public const String ClassName = nameof(CancellationException);
     }
 
+    public class MilliSecondTimer {
+        private readonly Int32 _milliSeconds;
+        private readonly DateTime _start;
+        public MilliSecondTimer(Int32 MilliSeconds) { _milliSeconds = MilliSeconds;  _start = DateTime.Now; }
+
+        public DateTime GetStart() { return _start; }
+        public Int32 GetMilliSecondsTotal() { return _milliSeconds; }
+        public Int32 GetMilliSecondsElapsed() { return (Int32)Math.Round((DateTime.Now - _start).TotalMilliseconds); }
+        public Int32 GetMilliSecondsRemaining() { return Expired() ? 0 : _milliSeconds - GetMilliSecondsElapsed(); }
+        public Boolean Expired() { return GetMilliSecondsElapsed() >= _milliSeconds; }
+        public Boolean NotExpired() { return !Expired(); }
+    }
+
     public static class EventCodes {
         public const String CANCEL = "CANCEL";
         public const String ERROR = "ERROR";
