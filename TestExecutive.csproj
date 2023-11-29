@@ -49,8 +49,9 @@
     <Compile Include="Logging\SerialNumberDialog.Designer.cs">
       <DependentUpon>SerialNumberDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Miscellaneous\Miscellaneous.cs" />
     <Compile Include="Processes\ProcessExternal.cs" />
-    <Compile Include="SCPI_VISA_Instruments\ConfigSCPI_VISA_Instruments.cs" />
+    <Compile Include="SCPI_VISA_Instruments\SCPI_VISA_Instrument.cs" />
     <Compile Include="SCPI_VISA_Instruments\PS_E3610xB.cs" />
     <Compile Include="SCPI_VISA_Instruments\Keysight.cs" />
     <Compile Include="SCPI_VISA_Instruments\SCPI99.cs" />
