@@ -297,7 +297,7 @@ namespace ABT.TestSpace.TestExec {
                 serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: ConfigUUT.SerialNumber);
             }
             if (String.Equals(serialNumber, String.Empty)) return;
-            ConfigUUT.SerialNumber = serialNumber;
+            ConfigUUT.SerialNumber = serialNumber.ToUpper().Trim();
             FormModeReset();
             FormModeRun();
             MeasurementsPreRun();
