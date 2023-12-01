@@ -14,8 +14,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Windows.Forms;
-using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.VisualBasic;
+using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
 using ABT.TestSpace.TestExec.AppConfig;
@@ -129,57 +129,30 @@ namespace ABT.TestSpace.TestExec {
 
         #region Form
         private void SendMailMessageWithAttachment(String subject) {
-            Outlook.Application outlook = null;
-            if (Process.GetProcessesByName("OUTLOOK").Count() > 0) {
+            Outlook.Application outlook;
+            Boolean existingOutlookSession = Process.GetProcessesByName("OUTLOOK").Length > 0;
+            if (existingOutlookSession) {
                 outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
             } else {
                 outlook = new Outlook.Application();
                 Outlook.NameSpace nameSpace = outlook.GetNamespace("MAPI");
-                nameSpace.Logon("", "", Missing.Value, Missing.Value);
+                nameSpace.Logon("", "", true, true);
                 nameSpace = null;
             }
             Outlook.MailItem mailItem = outlook.CreateItem(Outlook.OlItemType.olMailItem);
             mailItem.Subject = subject;
             mailItem.To = ConfigUUT.TestEngineerEmail;
-            mailItem.CC = ConfigUUT.TestEngineerEmail;
-            mailItem.Body = "This is the message.";
+            mailItem.Body =
+                $"Please detail desires Improvement Request or Bug Report:{Environment.NewLine}" +
+                $"- Please attach relevant files, and/or embed relevant screen-captures.{Environment.NewLine}" +
+                $"- Be specific! Be verbose!  Unleash your inner author!  It' your time to shine!{Environment.NewLine}{Environment.NewLine}";
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
-            mailItem.Attachments.Add($"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf", Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
+            String rtfTempFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
+            rtfResults.SaveFile(rtfTempFile);
+            _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
             mailItem.Display(true);
-            mailItem.SendUsingAccount = new Outlook.Account();
-
-            // TODO: Eventually, resolve SMTP server's DNS address so smtpClient.Send(mailMessage); doesn't timeout/error out.
-            // Likely will require IS providing correct SMTP DNS address, as nslookup doesn't seem to return a valid SMTP DNS address.
-            // May also require whitelisting UserPrincipal.Current.DisplayName's permission to access & send Mail.
-            // Sigh... I was auto-emailing error notifications from a Linux based Java application in the late 1990s;
-            // it's pretty pedestrian functionality, but modern security makes it problematic.
-            // NOTE: Suspect Microsoft 365's Outlook object model may serve better than the MailMessage class, hence below commented code 
-            // and above added Outlook code.  May the best technology win, though for PCs lacking Microsoft 365, the best technology is
-            // the available one, that is, MailMessage.
-
-            //String attachmentFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
-            //rtfResults.SaveFile(attachmentFile);
-
-            //Attachment attachment = new Attachment(attachmentFile, MediaTypeNames.Application.Octet);
-            //ContentDisposition disposition = attachment.ContentDisposition;
-            //disposition.CreationDate = File.GetCreationTime(attachmentFile);
-            //disposition.ModificationDate = File.GetLastWriteTime(attachmentFile);
-            //disposition.ReadDate = File.GetLastAccessTime(attachmentFile);
-
-            //MailMessage mailMessage = new MailMessage(to: ConfigUUT.TestEngineerEmail, from: ConfigUUT.TestEngineerEmail) {
-            //    Subject = subject,
-            //    Body = $"{UserPrincipal.Current.DisplayName} sends attached details."
-            //};
-            //mailMessage.Attachments.Add(attachment);
-
-            //IEnumerable<String> smtpServer = from xe in XElement.Load("TestExecutive.config.xml").Elements("SMTP") select xe.Element("Server").Value;
-            //SmtpClient smtpClient = new SmtpClient(smtpServer.First()) {
-            //    Credentials = CredentialCache.DefaultNetworkCredentials,
-            //    EnableSsl = true,
-            //    DeliveryMethod = SmtpDeliveryMethod.Network
-            //};
-            //smtpClient.Send(mailMessage);
-            //attachment.Dispose();
+            while (mailItem != null) { Thread.Sleep(millisecondsTimeout: 100); } // mailItem becomes null after sending; wait until then.
+            if (!existingOutlookSession) outlook.Session.Logoff();
         }
 
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
