@@ -142,17 +142,11 @@ namespace ABT.TestSpace.TestExec {
             Outlook.MailItem mailItem = outlook.CreateItem(Outlook.OlItemType.olMailItem);
             mailItem.Subject = subject;
             mailItem.To = ConfigUUT.TestEngineerEmail;
-            mailItem.Body =
-                $"Please detail desires Improvement Request or Bug Report:{Environment.NewLine}" +
-                $" - Please attach relevant files, and/or embed relevant screen-captures.{Environment.NewLine}" +
-                $" - Be specific! Be verbose!  Unleash your inner author!  It's your time to shine!{Environment.NewLine}{Environment.NewLine}";
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             String rtfTempFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
             rtfResults.SaveFile(rtfTempFile);
             _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
-            mailItem.Display(true);
-
-            while ((mailItem != null) && !mailItem.Submitted) { Thread.Sleep(millisecondsTimeout: 100); } // mailItem becomes null after sending; wait until then.
+            mailItem.Send();
             if (!existingOutlookSession) outlook.Session.Logoff();
         }
 
