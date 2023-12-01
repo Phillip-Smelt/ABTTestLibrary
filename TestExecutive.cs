@@ -151,7 +151,7 @@ namespace ABT.TestSpace.TestExec {
             rtfResults.SaveFile(rtfTempFile);
             _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
             mailItem.Display(true);
-            while (mailItem != null) { Thread.Sleep(millisecondsTimeout: 100); } // mailItem becomes null after sending; wait until then.
+            while (!mailItem.Sent) { Thread.Sleep(millisecondsTimeout: 100); } // mailItem becomes null after sending; wait until then.
             if (!existingOutlookSession) outlook.Session.Logoff();
         }
 
