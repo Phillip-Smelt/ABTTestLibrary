@@ -130,8 +130,7 @@ namespace ABT.TestSpace.TestExec {
         #region Form
         private void SendMailMessageWithAttachment(String subject) {
             Outlook.Application outlook;
-            Boolean existingOutlookSession = Process.GetProcessesByName("OUTLOOK").Length > 0;
-            if (existingOutlookSession) {
+            if (Process.GetProcessesByName("OUTLOOK").Length > 0) {
                 outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
             } else {
                 outlook = new Outlook.Application();
@@ -146,8 +145,7 @@ namespace ABT.TestSpace.TestExec {
             String rtfTempFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
             rtfResults.SaveFile(rtfTempFile);
             _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
-            mailItem.Send();
-            if (!existingOutlookSession) outlook.Session.Logoff();
+            mailItem.Display();
         }
 
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
