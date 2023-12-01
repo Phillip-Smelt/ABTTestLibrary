@@ -144,14 +144,15 @@ namespace ABT.TestSpace.TestExec {
             mailItem.To = ConfigUUT.TestEngineerEmail;
             mailItem.Body =
                 $"Please detail desires Improvement Request or Bug Report:{Environment.NewLine}" +
-                $"- Please attach relevant files, and/or embed relevant screen-captures.{Environment.NewLine}" +
-                $"- Be specific! Be verbose!  Unleash your inner author!  It' your time to shine!{Environment.NewLine}{Environment.NewLine}";
+                $" - Please attach relevant files, and/or embed relevant screen-captures.{Environment.NewLine}" +
+                $" - Be specific! Be verbose!  Unleash your inner author!  It's your time to shine!{Environment.NewLine}{Environment.NewLine}";
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             String rtfTempFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
             rtfResults.SaveFile(rtfTempFile);
             _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
             mailItem.Display(true);
-            while (!mailItem.Sent) { Thread.Sleep(millisecondsTimeout: 100); } // mailItem becomes null after sending; wait until then.
+
+            while ((mailItem != null) && !mailItem.Submitted) { Thread.Sleep(millisecondsTimeout: 100); } // mailItem becomes null after sending; wait until then.
             if (!existingOutlookSession) outlook.Session.Logoff();
         }
 
@@ -321,8 +322,8 @@ namespace ABT.TestSpace.TestExec {
 
         private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_Feedback_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-        private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report for {ConfigUUT.Number}, {ConfigUUT.Description}."); }
-        private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request for {ConfigUUT.Number}, {ConfigUUT.Description}."); }
+        private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report from {UserPrincipal.Current.DisplayName} for {ConfigUUT.Number}, {ConfigUUT.Description}."); }
+        private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request from {UserPrincipal.Current.DisplayName} for {ConfigUUT.Number}, {ConfigUUT.Description}."); }
 
         private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
             DialogResult dr = MessageBox.Show($"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
