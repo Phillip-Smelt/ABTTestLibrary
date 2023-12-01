@@ -142,6 +142,10 @@ namespace ABT.TestSpace.TestExec {
             mailItem.Subject = subject;
             mailItem.To = ConfigUUT.TestEngineerEmail;
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
+            mailItem.Body =
+                $"Please detail desired Improvement Request or Bug Report:{Environment.NewLine}" +
+                $" - Please attach relevant files, and/or embed relevant screen-captures.{Environment.NewLine}" +
+                $" - Be specific! Be verbose!  Unleash your inner author!  It's your time to shine!{Environment.NewLine}{Environment.NewLine}";
             String rtfTempFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
             rtfResults.SaveFile(rtfTempFile);
             _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
