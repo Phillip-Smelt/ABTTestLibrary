@@ -168,9 +168,10 @@
     <SerialNumberRegEx>^01BB2-[0-9]{5}$</SerialNumberRegEx>
     <!-- SerialNumberRegEx is the Regular Expression an ABT Serial Number is validated against in class SerialNumberDialog when a TestExecutor's App.Config's LOGGER_SerialNumberDialogEnabled = true.
          ^01BB2-[0-9]{5}$ enforces Serial Numbers that match pattern "01BB2-#####" where # is an integer in {0..9}.
-         - 01BB2-12345 & 01BB2-00001 are valid.
-         - 01bb2-12345 & 01BB2-OOOO1 are invalid.
-         - 1 & 00001 are invalid.
+         - 01BB2-01234 & 01BB2-56789 are valid.
+         - 01234 is invalid; need 01BB2- prefix.
+         - 01BB2-1234 is invalid; need 5 digits after 01BB2-.
+         - 01BB2-O1234 is invalid, because "O1234" ≠ "01234" as "O" ≠ "0".
     -->
   </SerialNumberDialog>
 </Configuration>
