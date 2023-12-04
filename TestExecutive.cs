@@ -373,15 +373,15 @@ namespace ABT.TestSpace.TestExec {
 
         private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Adopting Doug Gwyn philosophy here: 'Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things.'{Environment.NewLine}");
+            sb.AppendLine($"Adapting Doug Gwyn philosophy here: 'Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things.'{Environment.NewLine}");
             sb.AppendLine($"Visual Studio's MS Build copies isoMicro's 'app.config' file into the isoMicro's executable folder as file 'isoMicro.exe.config'.{Environment.NewLine}");
             sb.AppendLine("Under normal circumstances, directly editing 'isoMicro.exe.config' is highly unadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.");
             sb.AppendLine("- Directly editing 'isoMicro.exe.config' allows temporary runtime execution changes, but they're overwritten when MS Build is subsequently executed.");
             sb.AppendLine("- Changes to 'isoMicro.exe.config' aren't incorporated into the source 'app.config' file, therefore permanently lost the next time MS Build is executed.");
             sb.AppendLine("- For the niche case when it's useful to temporarily experiment with isoMicro.exe.config's behavior, and a C# compiler and/or");
             sb.AppendLine("- isoMicro source code are unavailable on the isoMicro tester's PC, directly editing isoMicro.exe.config may prove useful.");
-            sb.AppendLine("- Be sure to backport any permanently desired isoMicro.exe.config changes to app.config, then re-compile/re-deploy the resulting executable folder.");
-            sb.AppendLine("- Also be sure to undo any undesired temporary isoMicro.exe.config changes after experimention is completed.");
+            sb.AppendLine("- Be sure to backport any permanently desired isoMicro.exe.config changes to app.config.");
+            sb.AppendLine("- Also be sure to undo any temporary undesired isoMicro.exe.config changes after experimention is completed.");
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Caution", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GetFile("AppConfig"));
         }
