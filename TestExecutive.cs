@@ -24,6 +24,8 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
+using static System.Net.Mime.MediaTypeNames;
+using Windows.UI.Xaml.Documents;
 
 /// <para>
 /// TODO: Eventually, Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -359,14 +361,30 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
         private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Relays")); }
-        private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", GetFile("TestExecutiveConfigXML")); }
+        private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) {
+            DialogResult dr = MessageBox.Show("Same as for isoMicro.exe.config, TestExecutive.config.xml can be temporarily changed until next MS Build overwrites it.", $"Caution", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+            if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GetFile("AppConfig"));
+        }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}.{Environment.NewLine}{Environment.NewLine}" +
                 $"© 2022, Amphenol Borisch Technologies.",
             "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", GetFile("AppConfig")); }
+        private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Adopting Doug Gwyn philosophy here: 'Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things.'{Environment.NewLine}");
+            sb.AppendLine($"Visual Studio's MS Build copies isoMicro's 'app.config' file into the isoMicro's executable folder as file 'isoMicro.exe.config'.{Environment.NewLine}");
+            sb.AppendLine("Under normal circumstances, directly editing 'isoMicro.exe.config' is highly unadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.");
+            sb.AppendLine("- Directly editing 'isoMicro.exe.config' allows temporary runtime execution changes, but they're overwritten when MS Build is subsequently executed.");
+            sb.AppendLine("- Changes to 'isoMicro.exe.config' aren't incorporated into the source 'app.config' file, therefore permanently lost the next time MS Build is executed.");
+            sb.AppendLine("- For the niche case when it's useful to temporarily experiment with isoMicro.exe.config's behavior, and a C# compiler and/or");
+            sb.AppendLine("- isoMicro source code are unavailable on the isoMicro tester's PC, directly editing isoMicro.exe.config may prove useful.");
+            sb.AppendLine("- Be sure to backport any permanently desired isoMicro.exe.config changes to app.config, then re-compile/re-deploy the resulting executable folder.");
+            sb.AppendLine("- Also be sure to undo any undesired temporary isoMicro.exe.config changes after experimention is completed.");
+            DialogResult dr = MessageBox.Show(sb.ToString(), $"Caution", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+            if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GetFile("AppConfig"));
+        }
         private void TSMI_UUT_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
                 IEnumerable<String> folder = from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element("TestExecutorLinks").Value;
