@@ -24,8 +24,6 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
-using static System.Net.Mime.MediaTypeNames;
-using Windows.UI.Xaml.Documents;
 
 /// <para>
 /// TODO: Eventually, Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -269,7 +267,7 @@ namespace ABT.TestSpace.TestExec {
                 _serialNumberDialog.Hide();
             } else {
                 serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: ConfigUUT.SerialNumber).Trim().ToUpper();
-                if (!Regex.IsMatch(serialNumber, SerialNumberRegEx)) serialNumber = String.Empty;
+                serialNumber = Regex.IsMatch(serialNumber, SerialNumberRegEx) ? serialNumber : String.Empty;
             }
             if (String.Equals(serialNumber, String.Empty)) return;
             ConfigUUT.SerialNumber = serialNumber;
