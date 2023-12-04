@@ -88,7 +88,7 @@
     <!-- Adopting Doug Gwyn's philosophy here; "Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things." -->
     <AppConfig>isoMicro.exe.config</AppConfig>
     <!-- Visual Studio's MS Build copies the isoMicro's "app.config" file into the isoMicro's executable folder as file "isoMicro.exe.config".
-				 - Under normal circumstances, directly editing "isoMicro.exe.config" file is highly unadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.
+				 - Under normal circumstances, directly editing "isoMicro.exe.config" is highly unadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.
            - Directly editing "isoMicro.exe.config" allows temporary runtime execution changes, but they'll be overwritten the next time MS Build is executed.
            - Changes to "isoMicro.exe.config" also won't be incorporated into the source program's "app.config" file, and are permanently lost the next time MS Build is executed.
            - For the niche case when it's useful to temporarily experiment with isoMicro.exe.config's behavior, and a C# compiler and/or 

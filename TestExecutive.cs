@@ -23,7 +23,6 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
-using static System.Net.Mime.MediaTypeNames;
 using System.Text.RegularExpressions;
 
 /// <para>

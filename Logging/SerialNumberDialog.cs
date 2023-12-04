@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -39,10 +38,10 @@ namespace ABT.TestSpace.TestExec.Logging {
         public String Get() { return BarCodeText.Text; }
 
         private async void GetBarcodeScanner() {
-            String _scannerID = (from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("BarCodeScannerID").Value).First();
-            DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(_scannerID);
+            String scannerID = (from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("BarCodeScannerID").Value).First();
+            DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(scannerID);
             _scanner = await BarcodeScanner.FromIdAsync(DI.Id);
-            if (_scanner == null) throw new InvalidOperationException($"Barcode scanner Device ID:{Environment.NewLine}{Environment.NewLine}'{_scannerID}'{Environment.NewLine}{Environment.NewLine}not found.");
+            if (_scanner == null) throw new InvalidOperationException($"Barcode scanner Device ID:{Environment.NewLine}{Environment.NewLine}'{scannerID}'{Environment.NewLine}{Environment.NewLine}not found.");
             _claimedScanner = await _scanner.ClaimScannerAsync(); // Claim exclusively.
             if (_claimedScanner == null) throw new InvalidOperationException("Barcode scanner cannot be claimed.");
             _claimedScanner.DataReceived += ClaimedScanner_DataReceived;
