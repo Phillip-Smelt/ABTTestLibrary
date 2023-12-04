@@ -18,7 +18,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class PS_E3610xB {
         public static Boolean IsPS_E3610xB(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgE3610XB)); }
 
-        public const Boolean Stimulates = true;
+        public const Boolean LoadOrStimulus = true;
 
         public static Boolean CurrentAmplitudeIs(SCPI_VISA_Instrument SVI, Double AmpsDC, Double Delta) { return SCPI99.IsCloseEnough(CurrentAmplitudeGet(SVI), AmpsDC, Delta); }
 

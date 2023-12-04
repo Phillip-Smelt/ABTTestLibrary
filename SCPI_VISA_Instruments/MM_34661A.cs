@@ -18,7 +18,7 @@ public enum PROPERTY { AmperageAC, AmperageDC, Capacitance, Continuity, Frequenc
     public static class MM_34661A {
         public const String MODEL = "34461A";
 
-        public const Boolean Stimulates = false;
+        public const Boolean LoadOrStimulus = false;
 
         public static Boolean IsMM_34661A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(Ag3466x)); }
 

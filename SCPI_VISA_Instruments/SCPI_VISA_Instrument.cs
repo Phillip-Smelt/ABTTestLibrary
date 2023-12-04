@@ -20,7 +20,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public readonly String Description;
         public readonly String Address;
         public readonly String Identity;
-        public readonly Boolean Stimulates;
+        public readonly Boolean LoadOrStimulus;
         public readonly Object Instrument; // NOTE: The assumption, thus far proven correct, is that Keysight's SCPI drivers don't contain state, thus can be readonly.
 
         private SCPI_VISA_Instrument(Alias id, String description, String address) {
@@ -34,28 +34,28 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 switch (Identity) {
                     case EL_34143A.MODEL:
                         Instrument = new AgEL30000(Address);
-                        Stimulates = EL_34143A.Stimulates;
+                        LoadOrStimulus = EL_34143A.LoadOrStimulus;
                         EL_34143A.Initialize(this);
                         break;
                     case MM_34661A.MODEL:
                         Instrument = new Ag3466x(Address);
-                        Stimulates = MM_34661A.Stimulates;
+                        LoadOrStimulus = MM_34661A.LoadOrStimulus;
                         MM_34661A.Initialize(this);
                         break;
                     case PS_E36103B.MODEL:
                     case PS_E36105B.MODEL:
                         Instrument = new AgE3610XB(Address);
-                        Stimulates = PS_E3610xB.Stimulates;
+                        LoadOrStimulus = PS_E3610xB.LoadOrStimulus;
                         PS_E3610xB.Initialize(this);
                         break;
                     case PS_E36234A.MODEL:
                         Instrument = new AgE36200(Address);
-                        Stimulates = PS_E36234A.Stimulates;
+                        LoadOrStimulus = PS_E36234A.LoadOrStimulus;
                         PS_E36234A.Initialize(this);
                         break;
                     case WG_33509B.MODEL:
                         Instrument = new Ag33500B_33600A(Address);
-                        Stimulates = WG_33509B.Stimulates;
+                        LoadOrStimulus = WG_33509B.LoadOrStimulus;
                         WG_33509B.Initialize(this);
                         break;
                     default:
