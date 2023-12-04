@@ -27,12 +27,9 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         private BarcodeScanner _scanner = null;
         private ClaimedBarcodeScanner _claimedScanner = null;
-        private String _scannerID = null;
-        private String _regEx = null;
 
         public SerialNumberDialog() {
             InitializeComponent();
-            GetConfiguration();
             GetBarcodeScanner();
             FormUpdate(String.Empty);
         }
@@ -42,6 +39,7 @@ namespace ABT.TestSpace.TestExec.Logging {
         public String Get() { return BarCodeText.Text; }
 
         private async void GetBarcodeScanner() {
+            String _scannerID = (from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("BarCodeScannerID").Value).First();
             DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(_scannerID);
             _scanner = await BarcodeScanner.FromIdAsync(DI.Id);
             if (_scanner == null) throw new InvalidOperationException($"Barcode scanner Device ID:{Environment.NewLine}{Environment.NewLine}'{_scannerID}'{Environment.NewLine}{Environment.NewLine}not found.");
@@ -52,13 +50,6 @@ namespace ABT.TestSpace.TestExec.Logging {
             _claimedScanner.ReleaseDeviceRequested += ClaimedScanner_ReleaseDeviceRequested;
             _claimedScanner.IsDecodeDataEnabled = true; // Decode raw data from scanner and sends the ScanDataLabel and ScanDataType in the DataReceived event.
             await _claimedScanner.EnableAsync(); // Scanner must be enabled in order to receive the DataReceived event.
-        }
-
-        private void GetConfiguration() {
-            IEnumerable<String> scannerID = from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("BarCodeScannerID").Value;
-            _scannerID = scannerID.First();
-            IEnumerable<String> regEx = from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("SerialNumberRegEx").Value;
-            _regEx = regEx.First();
         }
 
         private void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
@@ -80,7 +71,7 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         private void FormUpdate(String text) {
             BarCodeText.Text = text;
-            if (Regex.IsMatch(text, _regEx)) {
+            if (Regex.IsMatch(text, TestExecutive.SerialNumberRegEx)) {
                 OK.Enabled = true;
                 OK.BackColor = System.Drawing.Color.Green;
                 OK.Focus();

@@ -23,6 +23,8 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
+using static System.Net.Mime.MediaTypeNames;
+using System.Text.RegularExpressions;
 
 /// <para>
 /// TODO: Eventually, Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -68,13 +70,14 @@ namespace ABT.TestSpace.TestExec {
         public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by button_click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
-        private Boolean _cancelled = false;
+        public static readonly String SerialNumberRegEx = (from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("SerialNumberRegEx").Value).First();
         private readonly SerialNumberDialog _serialNumberDialog;
+        private Boolean _cancelled = false;
 
         protected TestExecutive(Icon icon) {
             InitializeComponent();
-            _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog() : null;
             Icon = icon;
+            _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog() : null;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.
             UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
@@ -264,10 +267,11 @@ namespace ABT.TestSpace.TestExec {
                 serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : String.Empty;
                 _serialNumberDialog.Hide();
             } else {
-                serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: ConfigUUT.SerialNumber);
+                serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: ConfigUUT.SerialNumber).Trim().ToUpper();
+                if (!Regex.IsMatch(serialNumber, SerialNumberRegEx)) serialNumber = String.Empty;
             }
             if (String.Equals(serialNumber, String.Empty)) return;
-            ConfigUUT.SerialNumber = serialNumber.Trim().ToUpper();
+            ConfigUUT.SerialNumber = serialNumber;
             FormModeReset();
             FormModeRun();
             MeasurementsPreRun();

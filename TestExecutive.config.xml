@@ -85,8 +85,19 @@
   </Apps>
   
   <Files>
+    <!-- Adopting Doug Gwyn's philosophy here; "Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things." -->
     <AppConfig>isoMicro.exe.config</AppConfig>
+    <!-- Visual Studio's MS Build copies the isoMicro's "app.config" file into the isoMicro's executable folder as file "isoMicro.exe.config".
+				 - Under normal circumstances, directly editing "isoMicro.exe.config" file is highly unadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.
+           - Directly editing "isoMicro.exe.config" allows temporary runtime execution changes, but they'll be overwritten the next time MS Build is executed.
+           - Changes to "isoMicro.exe.config" also won't be incorporated into the source program's "app.config" file, and are permanently lost the next time MS Build is executed.
+           - For the niche case when it's useful to temporarily experiment with isoMicro.exe.config's behavior, and a C# compiler and/or 
+             isoMicro source code are unavailable on the isoMicro tester's PC, directly editing isoMicro.exe.config may prove useful.
+           - Be sure to backport any permanently desired isoMicro.exe.config changes to file app.config, then re-compile/re-deploy the resulting executable.
+           - Also be sure to undo any undesired temporary isoMicro.exe.config changes after experimention is completed.
+    -->
     <TestExecutiveConfigXML>TestExecutive.config.xml</TestExecutiveConfigXML>
+    <!-- Same as for isoMicro.exe.config, TestExecutive.config.xml can be temporarily changed until next MS Build overwrites it.-->
   </Files>
 
   <Folders>
@@ -156,7 +167,7 @@
 		-->
     <SerialNumberRegEx>^01BB2-[0-9]{5}$</SerialNumberRegEx>
     <!-- SerialNumberRegEx is the Regular Expression an ABT Serial Number is validated against in class SerialNumberDialog when a TestExecutor's App.Config's LOGGER_SerialNumberDialogEnabled = true.
-         ^01BB2-[0-9]{5}$ enforces Serial Numbers that match pattern "01BB2-######" where # is an integer in {0..9}.
+         ^01BB2-[0-9]{5}$ enforces Serial Numbers that match pattern "01BB2-#####" where # is an integer in {0..9}.
          - 01BB2-12345 & 01BB2-00001 are valid.
          - 01bb2-12345 & 01BB2-OOOO1 are invalid.
          - 1 & 00001 are invalid.
