@@ -44,7 +44,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static Boolean Are(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs, STATE State) {
             Boolean Are = true;
-            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) if (kvp.Value.Stimulates) Are &= Is(kvp.Value, State);
+            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) if (kvp.Value.LoadOrStimulus) Are &= Is(kvp.Value, State);
             return Are;
         }
         
