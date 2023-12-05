@@ -177,11 +177,11 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void OpenApp(String CompanyID, String AppID, String arguments="") {
-            IEnumerable<String> app = from xe in XElement.Load("TestExecutive.config.xml").Elements("Apps").Elements(CompanyID) select xe.Element(AppID).Value;
+            String app = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Apps").Elements(CompanyID) select xe.Element(AppID).Value).First();
             
-            if (File.Exists($"{app.First()}")) {
+            if (File.Exists($"{app}")) {
                 ProcessStartInfo psi = new ProcessStartInfo {
-                    FileName = app.First(),
+                    FileName = app,
                     WindowStyle = ProcessWindowStyle.Normal,
                     WorkingDirectory = "",
                     Arguments = arguments
@@ -189,18 +189,12 @@ namespace ABT.TestSpace.TestExec {
                 Process.Start(psi);
                 // Strings with embedded spaces require enclosing double-quotes (").
                 // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-            } else InvalidPathError(app.First());
+            } else InvalidPathError(app);
         }
 
-        private String GetFile(String FileID) {
-            IEnumerable<String> file = from xe in XElement.Load("TestExecutive.config.xml").Elements("Files") select xe.Element(FileID).Value;
-            return file.First();
-        }
+        private String GetFile(String FileID) { return (from xe in XElement.Load("TestExecutive.config.xml").Elements("Files") select xe.Element(FileID).Value).First(); }
 
-        private String GetFolder(String FolderID) {
-            IEnumerable<String> folder = from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element(FolderID).Value;
-            return folder.First();
-        }
+        private String GetFolder(String FolderID) { return (from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element(FolderID).Value).First(); }
 
         private void OpenFolder(String FolderPath) {
             if (Directory.Exists(FolderPath)) {
@@ -385,8 +379,7 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_UUT_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
-                IEnumerable<String> folder = from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element("TestExecutorLinks").Value;
-                ofd.InitialDirectory = folder.First();
+                ofd.InitialDirectory = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element("TestExecutorLinks").Value).First();
                 ofd.Filter = "Windows Shortcuts (*.lnk)";
                 ofd.DereferenceLinks = true;
                 ofd.RestoreDirectory = true;
