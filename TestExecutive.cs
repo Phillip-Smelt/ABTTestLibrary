@@ -82,6 +82,16 @@ namespace ABT.TestSpace.TestExec {
             UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
         }
 
+        public static void SendAdministratorMailMessage(String Subject, Exception e) {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Machine Name          : {Environment.MachineName}");
+            sb.AppendLine($"User Principal        : {UserPrincipal.Current.DisplayName}");
+            sb.AppendLine($"Exception Message     : {e.Message}");
+            sb.AppendLine($"Exception Source      : {e.Source}");
+            sb.AppendLine($"Exception Stack Trace : {Environment.NewLine}{e.StackTrace}");
+            SendAdministratorMailMessage(Subject, Body: sb.ToString());
+        }
+
         public static void SendAdministratorMailMessage(String Subject, String Body) {
             Outlook.Application outlook;
             if (Process.GetProcessesByName("OUTLOOK").Length > 0) {
@@ -96,7 +106,7 @@ namespace ABT.TestSpace.TestExec {
             mailItem.Subject = Subject;
             mailItem.To = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Administrator") select xe.Element("EMail").Value).First();
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
-            mailItem.Body = $"UNC Name: {Environment.MachineName}{Environment.NewLine}Personnel: {UserPrincipal.Current.DisplayName}{Environment.NewLine}{Environment.NewLine}{Body}";
+            mailItem.Body = Body;
             mailItem.Send();
         }
 
@@ -401,7 +411,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
                 ofd.InitialDirectory = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element("TestExecutorLinks").Value).First();
-                ofd.Filter = "Windows Shortcuts|*.lnk";
+                ofd.Filter = "Windows Shortcuts";//|*.lnk";
                 ofd.DereferenceLinks = true;
                 ofd.RestoreDirectory = true;
 
