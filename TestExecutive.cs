@@ -380,15 +380,16 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
                 ofd.InitialDirectory = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element("TestExecutorLinks").Value).First();
-                ofd.Filter = "Windows Shortcuts (*.lnk)";
+                ofd.Filter = "Windows Shortcuts|*.lnk";
                 ofd.DereferenceLinks = true;
                 ofd.RestoreDirectory = true;
 
                 if (ofd.ShowDialog() == DialogResult.OK) {
                     PreApplicationExit();
+                    if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
                     ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
                     Process.Start(psi);
-                    Thread.Sleep(millisecondsTimeout: 1000);
+                    Thread.Sleep(millisecondsTimeout: 500);
                     System.Windows.Forms.Application.Exit();
                 }
             }
