@@ -107,9 +107,9 @@
     <Relays>P:\Test\Engineers\Equipment Manuals\Raytheon Functional Test for D4522137 &amp; D4522142 isoMicro\Measurement Computing</Relays>										<!-- MCC USB-ERB24, ULI & InstaCal -->
   </Folders>
   
-  <SMTP>
-    <Server>VM-INT-ADC-02.borisch.local</Server>
-  </SMTP>
+  <Administrator>
+    <EMail>Phillip.Smelt@Borisch.Com/></EMail>
+  </Administrator>
   
 	<SCPI_VISA_Instrument>
 		<ID>PS1</ID>

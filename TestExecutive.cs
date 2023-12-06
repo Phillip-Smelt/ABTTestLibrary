@@ -82,6 +82,24 @@ namespace ABT.TestSpace.TestExec {
             UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
         }
 
+        public static void SendAdministratorMailMessage(String Subject, String Body) {
+            Outlook.Application outlook;
+            if (Process.GetProcessesByName("OUTLOOK").Length > 0) {
+                outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
+            } else {
+                outlook = new Outlook.Application();
+                Outlook.NameSpace nameSpace = outlook.GetNamespace("MAPI");
+                nameSpace.Logon("", "", true, true);
+                nameSpace = null;
+            }
+            Outlook.MailItem mailItem = outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            mailItem.Subject = Subject;
+            mailItem.To = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Administrator") select xe.Element("EMail").Value).First();
+            mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
+            mailItem.Body = $"UNC Name: {Environment.MachineName}{Environment.NewLine}Personnel: {UserPrincipal.Current.DisplayName}{Environment.NewLine}{Environment.NewLine}{Body}";
+            mailItem.Send();
+        }
+
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
 
         public virtual void Initialize() {
