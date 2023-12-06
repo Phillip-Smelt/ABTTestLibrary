@@ -411,7 +411,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
                 ofd.InitialDirectory = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element("TestExecutorLinks").Value).First();
-                ofd.Filter = "Windows Shortcuts";//|*.lnk";
+                ofd.Filter = "Windows Shortcuts|*.lnk";
                 ofd.DereferenceLinks = true;
                 ofd.RestoreDirectory = true;
 
