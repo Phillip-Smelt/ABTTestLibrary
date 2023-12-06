@@ -348,7 +348,10 @@ namespace ABT.TestSpace.TestExec {
             };
             if (saveFileDialog.ShowDialog() == DialogResult.OK)  rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
-        private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) { foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) SCPI99.SelfTest(kvp.Value); }
+        private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) {
+            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) SCPI99.SelfTest(kvp.Value);
+            MessageBox.Show("If you didn't receive an InvalidOperationException, SCPI VISA Instruments passed their self-tests.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
@@ -389,7 +392,7 @@ namespace ABT.TestSpace.TestExec {
                     if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
                     ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
                     Process.Start(psi);
-                    Thread.Sleep(millisecondsTimeout: 500);
+                    Thread.Sleep(millisecondsTimeout: 1000);
                     System.Windows.Forms.Application.Exit();
                 }
             }
