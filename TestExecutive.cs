@@ -91,7 +91,7 @@ namespace ABT.TestSpace.TestExec {
 
         public void ErrorMessage(Exception Ex) {
             ErrorMessage($"Will attempt to E-Mail details to Administrator {EMailAdministrator}.{Environment.NewLine}{Environment.NewLine}Please select appropriate Outlook profile if dialog appears.");
-            SendAdministratorMailMessage("Exception caught!", Ex);
+            SendAdministratorMailMessage("Exception caught!", Ex, ConfigUUT.EMailTestEngineer);
         }
 
         public virtual void Initialize() {
@@ -101,19 +101,20 @@ namespace ABT.TestSpace.TestExec {
 
         public virtual Boolean Initialized() { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
 
-        public static void SendAdministratorMailMessage(String Subject, Exception e) {
+        public static void SendAdministratorMailMessage(String Subject, Exception Ex, String CC="") {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Machine Name          : {Environment.MachineName}");
             sb.AppendLine($"User Principal        : {UserPrincipal.Current.DisplayName}");
-            sb.AppendLine($"Exception Message     : {e.Message}{Environment.NewLine}");
-            sb.AppendLine($"Exception Stack Trace : {e.StackTrace}");
-            SendAdministratorMailMessage(Subject, Body: sb.ToString());
+            sb.AppendLine($"Exception Message     : {Ex.Message}{Environment.NewLine}");
+            sb.AppendLine($"Exception Stack Trace : {Ex.StackTrace}");
+            SendAdministratorMailMessage(Subject, Body: sb.ToString(), CC);
         }
 
-        public static void SendAdministratorMailMessage(String Subject, String Body) {
+        public static void SendAdministratorMailMessage(String Subject, String Body, String CC="") {
             Outlook.MailItem mailItem = GetMailItem();
             mailItem.Subject = Subject;
             mailItem.To = EMailAdministrator;
+            if (!String.Equals(CC, EMailAdministrator) && !String.Equals(CC, "")) mailItem.CC = CC;
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             mailItem.Body = Body;
             mailItem.Send();
