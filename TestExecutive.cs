@@ -83,6 +83,24 @@ namespace ABT.TestSpace.TestExec {
             UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
         }
 
+        public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
+
+        public void ErrorMessage(String Error) {
+            _ = MessageBox.Show(ActiveForm, $"Unexpected error.{Environment.NewLine}{Environment.NewLine}{Error}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        public void ErrorMessage(Exception Ex) {
+            ErrorMessage($"Will attempt to E-Mail details to Administrator {EMailAdministrator}.{Environment.NewLine}{Environment.NewLine}Please select appropriate Outlook profile if dialog appears.");
+            SendAdministratorMailMessage("Exception caught!", Ex);
+        }
+
+        public virtual void Initialize() {
+            SCPI99.Reset(SVIs);
+            UE24.Set(C.S.NC);
+        }
+
+        public virtual Boolean Initialized() { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
+
         public static void SendAdministratorMailMessage(String Subject, Exception e) {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Machine Name          : {Environment.MachineName}");
@@ -110,25 +128,6 @@ namespace ABT.TestSpace.TestExec {
             mailItem.Send();
         }
 
-        public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
-
-        public virtual void Initialize() {
-            SCPI99.Reset(SVIs);
-            UE24.Set(C.S.NC);
-        }
-
-        public virtual Boolean Initialized() { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
-
-        public void ErrorMessage(String Error = "") {
-            Error = String.Equals(Error, "") ? String.Empty : Error + Environment.NewLine + Environment.NewLine; // If Error ≠ "", append 2 NewLines for formatting.
-            _ = MessageBox.Show(ActiveForm, $"Unexpected error.{Environment.NewLine}{Environment.NewLine}{Error}" +
-            $"Will attempt to E-Mail details to Administrator {EMailAdministrator}.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        public void ErrorMessage(Exception Ex, String Error = "") {
-            ErrorMessage(Error);
-            SendAdministratorMailMessage("Exception caught!", Ex);
-        }
         /// <summary>
         /// NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
         /// <para>
@@ -479,7 +478,7 @@ namespace ABT.TestSpace.TestExec {
                         } else {
                             ConfigTest.Measurements[measurementID].Result = EventCodes.ERROR;
                             ConfigTest.Measurements[measurementID].Message += $"{Environment.NewLine}{e}";
-                            ErrorMessage();
+                            ErrorMessage(e);
                         }
                         return;
                     } finally {
