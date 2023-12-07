@@ -69,6 +69,7 @@ namespace ABT.TestSpace.TestExec {
         public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by button_click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
+        public static readonly String EMailAdministrator = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Administrator") select xe.Element("EMail").Value).First();
         public static readonly String SerialNumberRegEx = (from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("SerialNumberRegEx").Value).First();
         private readonly SerialNumberDialog _serialNumberDialog;
         private Boolean _cancelled = false;
@@ -86,9 +87,8 @@ namespace ABT.TestSpace.TestExec {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Machine Name          : {Environment.MachineName}");
             sb.AppendLine($"User Principal        : {UserPrincipal.Current.DisplayName}");
-            sb.AppendLine($"Exception Message     : {e.Message}");
-            sb.AppendLine($"Exception Source      : {e.Source}");
-            sb.AppendLine($"Exception Stack Trace : {Environment.NewLine}{e.StackTrace}");
+            sb.AppendLine($"Exception Message     : {e.Message}{Environment.NewLine}");
+            sb.AppendLine($"Exception Stack Trace : {e.StackTrace}");
             SendAdministratorMailMessage(Subject, Body: sb.ToString());
         }
 
@@ -104,7 +104,7 @@ namespace ABT.TestSpace.TestExec {
             }
             Outlook.MailItem mailItem = outlook.CreateItem(Outlook.OlItemType.olMailItem);
             mailItem.Subject = Subject;
-            mailItem.To = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Administrator") select xe.Element("EMail").Value).First();
+            mailItem.To = EMailAdministrator;
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             mailItem.Body = Body;
             mailItem.Send();
@@ -119,7 +119,16 @@ namespace ABT.TestSpace.TestExec {
 
         public virtual Boolean Initialized() { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
 
-        public abstract void ErrorMessage(String ErrorMessage = "");
+        public void ErrorMessage(String Error = "") {
+            Error = String.Equals(Error, "") ? String.Empty : Error + Environment.NewLine + Environment.NewLine; // If Error ≠ "", append 2 NewLines for formatting.
+            _ = MessageBox.Show(ActiveForm, $"Unexpected error.{Environment.NewLine}{Environment.NewLine}{Error}" +
+            $"Will attempt to E-Mail details to Administrator {EMailAdministrator}.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        public void ErrorMessage(Exception Ex, String Error = "") {
+            ErrorMessage(Error);
+            SendAdministratorMailMessage("Exception caught!", Ex);
+        }
         /// <summary>
         /// NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
         /// <para>
@@ -170,7 +179,8 @@ namespace ABT.TestSpace.TestExec {
             }
             Outlook.MailItem mailItem = outlook.CreateItem(Outlook.OlItemType.olMailItem);
             mailItem.Subject = subject;
-            mailItem.To = ConfigUUT.TestEngineerEmail;
+            mailItem.To = EMailAdministrator;
+            if (!String.Equals(EMailAdministrator, ConfigUUT.EMailTestEngineer)) mailItem.CC = ConfigUUT.EMailTestEngineer;
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             mailItem.Body =
                 $"Please detail desired Bug Report or Improvement Request:{Environment.NewLine}" +
@@ -240,7 +250,10 @@ namespace ABT.TestSpace.TestExec {
 
         private void InvalidPathError(String InvalidPath) { MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
-        private void PreApplicationExit() { Initialize(); }
+        private void PreApplicationExit() {
+            if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
+            Initialize();
+        }
         
         #region Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
@@ -417,7 +430,6 @@ namespace ABT.TestSpace.TestExec {
 
                 if (ofd.ShowDialog() == DialogResult.OK) {
                     PreApplicationExit();
-                    if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
                     ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
                     Process.Start(psi);
                     Thread.Sleep(millisecondsTimeout: 1000);
