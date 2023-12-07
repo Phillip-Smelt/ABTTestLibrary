@@ -111,16 +111,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public static void SendAdministratorMailMessage(String Subject, String Body) {
-            Outlook.Application outlook;
-            if (Process.GetProcessesByName("OUTLOOK").Length > 0) {
-                outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
-            } else {
-                outlook = new Outlook.Application();
-                Outlook.NameSpace nameSpace = outlook.GetNamespace("MAPI");
-                nameSpace.Logon("", "", true, true);
-                nameSpace = null;
-            }
-            Outlook.MailItem mailItem = outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            Outlook.MailItem mailItem = GetMailItem();
             mailItem.Subject = Subject;
             mailItem.To = EMailAdministrator;
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
@@ -166,7 +157,7 @@ namespace ABT.TestSpace.TestExec {
         /// </summary>
 
         #region Form
-        private void SendMailMessageWithAttachment(String subject) {
+        private static Outlook.MailItem GetMailItem() {
             Outlook.Application outlook;
             if (Process.GetProcessesByName("OUTLOOK").Length > 0) {
                 outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
@@ -176,7 +167,11 @@ namespace ABT.TestSpace.TestExec {
                 nameSpace.Logon("", "", true, true);
                 nameSpace = null;
             }
-            Outlook.MailItem mailItem = outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            return outlook.CreateItem(Outlook.OlItemType.olMailItem);
+        }
+
+        private void SendMailMessageWithAttachment(String subject) {
+            Outlook.MailItem mailItem = GetMailItem();
             mailItem.Subject = subject;
             mailItem.To = EMailAdministrator;
             if (!String.Equals(EMailAdministrator, ConfigUUT.EMailTestEngineer)) mailItem.CC = ConfigUUT.EMailTestEngineer;

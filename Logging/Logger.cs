@@ -80,6 +80,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"\tSTART             : {DateTime.Now}");
             Log.Information($"\t{MESSAGE_STOP}");
             Log.Information($"\tOperator          : {UserPrincipal.Current.DisplayName}"); // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
+            Log.Information($"\tMachine Name      : {Environment.MachineName}");
             Log.Information($"\tTestExecutive     : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Information($"\tTestExecutor      : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}");
             Log.Information($"\tSpecification     : {testExecutive.ConfigUUT.TestSpecification}");
@@ -138,7 +139,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Result));
         }
 
-        private static String MessageFormat(String label, String message) { return $"  {label}".PadRight(Logger.SPACES_21.Length) + $" : {message}"; }
+        private static String MessageFormat(String label, String message) { return $"  {label}".PadRight(SPACES_21.Length) + $" : {message}"; }
 
         public static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
