@@ -404,7 +404,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Adapting Doug Gwyn philosophy here: 'Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things.'{Environment.NewLine}");
+            sb.AppendLine($"Adapting Doug Gwyn's philosophy here: 'Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things.'{Environment.NewLine}");
             sb.AppendLine($"Visual Studio's MS Build copies isoMicro's 'app.config' file into the isoMicro's executable folder as file 'isoMicro.exe.config'.{Environment.NewLine}");
             sb.AppendLine($"Under normal circumstances, directly editing 'isoMicro.exe.config' is highly unadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.{Environment.NewLine}");
             sb.AppendLine($"- Directly editing 'isoMicro.exe.config' allows temporary runtime execution changes, but they're overwritten when MS Build is subsequently executed.{Environment.NewLine}");
