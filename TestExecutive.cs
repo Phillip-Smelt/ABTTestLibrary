@@ -160,15 +160,20 @@ namespace ABT.TestSpace.TestExec {
         #region Form
         private static Outlook.MailItem GetMailItem() {
             Outlook.Application outlook;
-            if (Process.GetProcessesByName("OUTLOOK").Length > 0) {
-                outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
-            } else {
-                outlook = new Outlook.Application();
-                Outlook.NameSpace nameSpace = outlook.GetNamespace("MAPI");
-                nameSpace.Logon("", "", true, true);
-                nameSpace = null;
+            try {
+                if (Process.GetProcessesByName("OUTLOOK").Length > 0) {
+                    outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
+                } else {
+                    outlook = new Outlook.Application();
+                    Outlook.NameSpace nameSpace = outlook.GetNamespace("MAPI");
+                    nameSpace.Logon("", "", true, true);
+                    nameSpace = null;
+                }
+                return outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            } catch {
+                _ = MessageBox.Show(ActiveForm, "Could not open Outlook Profile.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw;
             }
-            return outlook.CreateItem(Outlook.OlItemType.olMailItem);
         }
 
         private void SendMailMessageWithAttachment(String subject) {
