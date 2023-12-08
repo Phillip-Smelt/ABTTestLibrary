@@ -171,7 +171,7 @@ namespace ABT.TestSpace.TestExec {
                 }
                 return outlook.CreateItem(Outlook.OlItemType.olMailItem);
             } catch {
-                _ = MessageBox.Show(ActiveForm, "Could not open Outlook Profile.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _ = MessageBox.Show(ActiveForm, "Could not open Outlook.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
         }
