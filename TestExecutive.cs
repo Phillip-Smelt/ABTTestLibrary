@@ -306,11 +306,13 @@ namespace ABT.TestSpace.TestExec {
             }
             if (String.Equals(serialNumber, String.Empty)) return;
             ConfigUUT.SerialNumber = serialNumber;
+            //while (true) {
             FormModeReset();
             FormModeRun();
-            MeasurementsPreRun();
-            await MeasurementsRun();
-            MeasurementsPostRun();
+                MeasurementsPreRun();
+                await MeasurementsRun();
+                MeasurementsPostRun();
+            //}
             FormModeWait();
         }
 

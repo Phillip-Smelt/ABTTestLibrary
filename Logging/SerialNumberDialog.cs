@@ -29,6 +29,7 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         public SerialNumberDialog() {
             InitializeComponent();
+            
             GetBarcodeScanner();
             FormUpdate(String.Empty);
         }
