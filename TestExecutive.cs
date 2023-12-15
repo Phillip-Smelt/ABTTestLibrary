@@ -37,7 +37,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 ///  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
 /// TODO: Eventually, update to WinUI 3 or WPF instead of WinForms when possible.
 /// TODO: Soon, ensure Borisch Domain Group "Test - Engineers" has read & write permissions on all TestExecutor & isoMicro folder/files.
-/// TODO: Soon, eorisch Domain Groups ≠ "Test - Engineers" have only read permissions on all TestExecutor & isoMicro folder/files.
+/// TODO: Soon, ensure Borisch Domain Groups ≠ "Test - Engineers" have only read permissions on all TestExecutor & isoMicro folder/files.
 /// NOTE: Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
 /// With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 ///
