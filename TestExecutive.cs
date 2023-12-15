@@ -26,18 +26,18 @@ using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
 /// <para>
-/// TODO: Eventually, Refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
+/// TODO: Eventually, refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 /// NOTE: For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
 ///  - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
 ///  - Invoking public methods with named arguments is a superb, self-documenting coding technique, improved by PascalCasing.
-/// TODO: Eventually, Add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
-/// TODO: Eventually, Update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.3 when possible.
+/// TODO: Eventually, add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
+/// TODO: Eventually, update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.3 when possible.
 /// NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library supposedly compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & WinUI 3.
 ///       TIDP.SAA actually appears to be compiled to .Net FrameWork 4.5, but that's still not necessarily compatible with .Net 7.0.
 ///  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
-/// TODO: Eventually, Update to WinUI 3 or WPF instead of WinForms when possible.
-/// TODO: Soon, Ensure Borisch Domain Group "Test - Engineers" has read & write permissions on all TestExecutor & isoMicro folder/files.
-/// TODO: Soon, Borisch Domain Groups ≠ "Test - Engineers" have only read permissions on all TestExecutor & isoMicro folder/files.
+/// TODO: Eventually, update to WinUI 3 or WPF instead of WinForms when possible.
+/// TODO: Soon, ensure Borisch Domain Group "Test - Engineers" has read & write permissions on all TestExecutor & isoMicro folder/files.
+/// TODO: Soon, eorisch Domain Groups ≠ "Test - Engineers" have only read permissions on all TestExecutor & isoMicro folder/files.
 /// NOTE: Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
 /// With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 ///
@@ -57,7 +57,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 ///             Git failed with a fatal error.
 ///             unable to access 'https://github.com/Amphenol-Borisch-Technologies/TestLibrary/': schannel: CertGetCertificateChain trust error CERT_TRUST_IS_PARTIAL_CHAIN
 ///  - Temporarily disabling Zero Trust by "pausing" it resolves above error.
-///    - Zero Trust's "pause" Eventually, times out, and Zero Trust Eventually, re-enables itself silently, without notifying you.
+///    - Zero Trust's "pause" eventually, times out, and Zero Trust eventually, re-enables itself silently, without notifying you.
 ///  - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
 ///  - FYI, synchronizing with IsoMicro's repository doesn't error out, as it doesn't utilize a Git server.
 ///  </para>
@@ -306,13 +306,11 @@ namespace ABT.TestSpace.TestExec {
             }
             if (String.Equals(serialNumber, String.Empty)) return;
             ConfigUUT.SerialNumber = serialNumber;
-            //while (true) {
             FormModeReset();
             FormModeRun();
-                MeasurementsPreRun();
-                await MeasurementsRun();
-                MeasurementsPostRun();
-            //}
+            MeasurementsPreRun();
+            await MeasurementsRun();
+            MeasurementsPostRun();
             FormModeWait();
         }
 
