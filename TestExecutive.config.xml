@@ -5,7 +5,7 @@
 	- For calibration or replacement, swap identical SCPI VISA Instruments with others, then update Addresses.
 	- For additions/deletions, add/remove SCPI_VISA_Instruments.  Update TestExecutive if needed.
 
-	NOTE: Each TestExecutor must utilize sealed class 'SVIA' in file TestExecutor.cs to map generic SCPI VISA
+	NOTE:  Each TestExecutor must utilize sealed class 'SVIA' in file TestExecutor.cs to map generic SCPI VISA
 	      Instrument IDs to, optimally, more meaningful domain specific aliases:
 		  
 			  internal static class SVIA {
@@ -59,7 +59,7 @@
 						- VISA instrument addresses are easily determined using Keysight's Connection Expert app
 							- https://www.keysight.com/us/en/assets/7018-03222/data-sheets/5990-9362.pdf.
 							- Example VISA address for USB instrument: USB0::0x2A8D::0x1602::MY61001983::0::INSTR.
-	NOTE: VISA addresses (AKA VISA Resource Names) are explained at:
+	NOTE:  VISA addresses (AKA VISA Resource Names) are explained at:
 	- https://www.ni.com/docs/en-US/bundle/labview/page/lvinstio/visa_resource_name_generic.html.
 	- https://www.ivifoundation.org/downloads/Architecture%20Specifications/vpp43_2022-05-19.pdf.
 -->
@@ -158,12 +158,12 @@
 				When a TestExecutor's App.Config LOGGER_SerialNumberDialogEnabled = false:
 					- An Interaction.InputBox prompts test operator to enter ABT Serial Numbers.
           - This permits both Barcode Scanning *and* manual keyboard entry of Serial Numbers (hand typing), with its concommitant high rate of typographic errors.
-        NOTE: Barcode Scanner must be a corded USB scanner, explicitly supported by Microsoft's Windows.Devices.PointOfService namespace.
+        NOTE:  Barcode Scanner must be a corded USB scanner, explicitly supported by Microsoft's Windows.Devices.PointOfService namespace.
          - List of supported scanners at https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.
-				NOTE: Barcode Scanner must be programmed into USB HID mode to work correctly with TestExecutive's SerialNumberDialog class to read ABT Serial #s.
+				NOTE:  Barcode Scanner must be programmed into USB HID mode to work correctly with TestExecutive's SerialNumberDialog class to read ABT Serial #s.
               - For Voyager 1200g, scan PAP131 label from "Honeywell Voyager 1200G User's Guide ReadMe.pdf" to program 1200g into USB HID mode.
               - Both "ReadMe" & "User's Guides" documents reside in Logging folder for convenience.
-        NOTE: The 1200g must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
+        NOTE:  The 1200g must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
 		-->
     <SerialNumberRegEx>^01BB2-[0-9]{5}$</SerialNumberRegEx>
     <!-- SerialNumberRegEx is the Regular Expression an ABT Serial Number is validated against in class SerialNumberDialog when a TestExecutor's App.Config's LOGGER_SerialNumberDialogEnabled = true.

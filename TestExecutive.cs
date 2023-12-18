@@ -25,19 +25,19 @@ using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
 /// <para>
-/// TODO: Eventually, refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
-/// NOTE: For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
+/// TODO:  Eventually; refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
+/// NOTE:  For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
 ///  - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
 ///  - Invoking public methods with named arguments is a superb, self-documenting coding technique, improved by PascalCasing.
-/// TODO: Eventually, add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
-/// TODO: Eventually, update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.3 when possible.
-/// NOTE: Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library supposedly compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & WinUI 3.
+/// TODO:  Eventually; add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
+/// TODO:  Eventually; update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.3 when possible.
+/// NOTE:  Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library supposedly compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & WinUI 3.
 ///       TIDP.SAA actually appears to be compiled to .Net FrameWork 4.5, but that's still not necessarily compatible with .Net 7.0.
 ///  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
-/// TODO: Eventually, update to WinUI 3 or WPF instead of WinForms when possible.
-/// TODO: Soon, ensure Borisch Domain Group "Test - Engineers" has read & write permissions on all TestExecutor & isoMicro folder/files.
-/// TODO: Soon, ensure Borisch Domain Groups ≠ "Test - Engineers" have only read permissions on all TestExecutor & isoMicro folder/files.
-/// NOTE: Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
+/// TODO:  Eventually; update to WinUI 3 or WPF instead of WinForms when possible.
+/// TODO:  Soon; ensure Borisch Domain Group "Test - Engineers" has read & write permissions on all TestExecutor & isoMicro folder/files.
+/// TODO:  Soon; ensure Borisch Domain Groups ≠ "Test - Engineers" have only read permissions on all TestExecutor & isoMicro folder/files.
+/// NOTE:  Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
 /// With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 ///
 ///  References:
@@ -45,7 +45,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
 ///  </para>
 ///  <para>
-/// NOTE: ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below error when sychronizing with
+/// NOTE:  ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below error when sychronizing with
 ///       TestExecutive's GitHub repository at https://github.com/Amphenol-Borisch-Technologies/TestExecutive:
 ///             Opening repositories:
 ///             P:\Test\Engineers\repos\IsoMicro
@@ -120,7 +120,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         /// <summary>
-        /// NOTE: Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
+        /// NOTE:  Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
         /// <para>
         /// A) Spontaneous Operator Initiated Cancellations:
         ///      1)  Operator Proactive:
@@ -149,9 +149,9 @@ namespace ABT.TestSpace.TestExec {
         ///            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
         ///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
         ///
-        /// NOTE: The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
+        /// NOTE:  The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
         ///       thrown CancellationExceptions.
-        /// NOTE: The Operator Reactive & App.Config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
+        /// NOTE:  The Operator Reactive & App.Config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
         ///       inside the TestExecutive.MeasurementsRun() loop.
         /// </para>
         /// </summary>

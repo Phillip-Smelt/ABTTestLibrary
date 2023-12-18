@@ -11,7 +11,7 @@ using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 using ABT.TestSpace.TestExec.Logging;
 
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
-    // NOTE: https://forums.ni.com/t5/Instrument-Control-GPIB-Serial/IVI-Drivers-Pros-and-Cons/td-p/4165671.
+    // NOTE:  https://forums.ni.com/t5/Instrument-Control-GPIB-Serial/IVI-Drivers-Pros-and-Cons/td-p/4165671.
     public enum SCPI_IDENTITY { Manufacturer, Model, SerialNumber, FirmwareRevision }
     // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".
 
@@ -21,7 +21,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public readonly String Address;
         public readonly String Identity;
         public readonly Boolean LoadOrStimulus;
-        public readonly Object Instrument; // NOTE: The assumption, thus far proven correct, is that Keysight's SCPI drivers don't contain state, thus can be readonly.
+        public readonly Object Instrument; // NOTE:  The assumption, thus far proven correct, is that Keysight's SCPI drivers don't contain state, thus can be readonly.
 
         private SCPI_VISA_Instrument(Alias id, String description, String address) {
             ID = id;

@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.TestSpace.TestExec.AppConfig;
 
-// TODO: Eventually, Persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement results therein.
+// TODO:  Eventually; persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement results therein.
 // - Stop writing TestMeasurement results to RichTextBoxSink when testing full Operations; only write TestGroups results to RichTextBoxSink.
 // - Continue writing TestMeasurement results to RichTextBoxSink when only testing Groups.
 // - Stop saving RichTextBoxSink as RTF files, except allow manual export for Troubleshooting.
@@ -55,10 +55,10 @@ namespace ABT.TestSpace.TestExec.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
             } else if (!testExecutive.ConfigLogger.FileEnabled && testExecutive.ConfigLogger.SQLEnabled) {
-                // TODO: Eventually, RichTextBox + SQL.
+                // TODO:  Eventually; RichTextBox + SQL.
                 SQLStart(testExecutive);
             } else if (testExecutive.ConfigLogger.FileEnabled && testExecutive.ConfigLogger.SQLEnabled) {
-                // TODO: Eventually, RichTextBox + File + SQL.
+                // TODO:  Eventually; RichTextBox + File + SQL.
                 SQLStart(testExecutive);
             } else {
                 // RichTextBox only; customer doesn't require saved measurement data, unusual for Functional testing, but potentially not for other testing methodologies.
@@ -79,7 +79,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"TestOperation:");
             Log.Information($"\tSTART             : {DateTime.Now}");
             Log.Information($"\t{MESSAGE_STOP}");
-            Log.Information($"\tOperator          : {UserPrincipal.Current.DisplayName}"); // NOTE: UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
+            Log.Information($"\tOperator          : {UserPrincipal.Current.DisplayName}"); // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             Log.Information($"\tMachine Name      : {Environment.MachineName}");
             Log.Information($"\tTestExecutive     : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Information($"\tTestExecutor      : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}");
@@ -206,11 +206,11 @@ namespace ABT.TestSpace.TestExec.Logging {
         }
 
         private static void SQLStart(TestExecutive testExecutive) {
-            // TODO: Eventually, SQL Server Express: SQLStart.
+            // TODO:  Eventually; SQL Server Express: SQLStart.
         }
 
         private static void SQLStop(TestExecutive testExecutive) {
-            // TODO: Eventually, SQL Server Express: SQLStop.
+            // TODO:  Eventually; SQL Server Express: SQLStop.
         }
 
         private static void TestEvents(AppConfigUUT uut) {
@@ -234,7 +234,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 default:
                     throw new NotImplementedException($"Unrecognized EventCode '{uut.EventCode}'.");
             }
-            // TODO: Eventually, Invoke TestEvents with $"{uut.Number} {uut.SerialNumber} {uut.eventCode}";
+            // TODO:  Eventually; invoke TestEvents with $"{uut.Number} {uut.SerialNumber} {uut.eventCode}";
         }
     }
 }

@@ -9,20 +9,20 @@ using Windows.Security.Cryptography;
 
 namespace ABT.TestSpace.TestExec.Logging {
     public sealed partial class SerialNumberDialog : Form {
-        // NOTE: Honeywell Voyager 1200g Scanner must be programmed into USB HID mode to work correctly with TestExecutive to read ABT Serial #s.
+        // NOTE:  Honeywell Voyager 1200g Scanner must be programmed into USB HID mode to work correctly with TestExecutive to read ABT Serial #s.
         //       - Scan PAP131 label from "Honeywell Voyager 1200G User's Guide ReadMe.pdf" to program 1200 into USB HID mode.
         //       - Both "ReadMe" & "User's Guides" documents reside in this folder for convenience.
         //       - https://sps-support.honeywell.com/s/article/The-scanner-is-not-recognized-by-Microsoft-Universal-Windows-Platform-application
-        // NOTE: Voyager 1200g won't scan ABT Serial #s into Notepad/Wordpad/Text Editor of Choice when in USB HID mode:
+        // NOTE:  Voyager 1200g won't scan ABT Serial #s into Notepad/Wordpad/Text Editor of Choice when in USB HID mode:
         //       - It will only deliver scanned data to a USB HID application like TestExecutive's SerialNumberDialog class.
         //       - You must scan the Voyager 1200G's PAP124 barcodes to restore "normal" keyboard wedge mode.
-        // NOTE: Honeywell Voyager 1200g USB Barcode Scanner is a Microsoft supported Point of Service peripheral.
+        // NOTE:  Honeywell Voyager 1200g USB Barcode Scanner is a Microsoft supported Point of Service peripheral.
         //  - https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support
-        // NOTE: Annoyingly, Voyager 1200g isn't recognized when plugged into USB hub and both PC & equipment rack powered off/on.
+        // NOTE:  Annoyingly, Voyager 1200g isn't recognized when plugged into USB hub and both PC & equipment rack powered off/on.
         //       - May work better if plugged directly into PC, rather than rack's hub.  May not; didn't test this thought.
         //       - Well, what can you expect for $100?
         //       - https://sps-support.honeywell.com/s/article/Voyager-1202g-is-not-recognized-by-the-host-after-PC-boot-up.
-        // NOTE: The 1200G must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
+        // NOTE:  The 1200G must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
 
         private BarcodeScanner _scanner = null;
         private ClaimedBarcodeScanner _claimedScanner = null;

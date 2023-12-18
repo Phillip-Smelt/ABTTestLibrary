@@ -9,7 +9,7 @@ using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 // Enthusiastically recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 // https://www.keysight.com/us/en/search.html/command+expert
 //
-// NOTE: Unlike all other classes in namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
+// NOTE:  Unlike all other classes in namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public enum PS_DC { Amps, Volts }
@@ -19,8 +19,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
 
     public static class SCPI99 {
-        // NOTE: SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows common functionality.
-        // NOTE: Using this SCPI99 class is sub-optimal when a compatible .Net VISA instrument driver is available:
+        // NOTE:  SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows common functionality.
+        // NOTE:  Using this SCPI99 class is sub-optimal when a compatible .Net VISA instrument driver is available:
         //  - The SCPI99 standard is a *small* subset of any modern SCPI VISA instrument's functionality:
         //	- In order to easily access full modern instrument capabilities, an instrument specific driver is optimal.
         //	- SCPI99 supports Command & Query statements, so any valid SCPI statements can be executed, but not as conveniently as with instrument specific drivers.
