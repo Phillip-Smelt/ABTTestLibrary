@@ -73,6 +73,7 @@ namespace ABT.TestSpace.TestExec {
         public static readonly String SerialNumberRegEx = (from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("SerialNumberRegEx").Value).First();
         private readonly SerialNumberDialog _serialNumberDialog;
         private readonly RegistryKey _serialNumberKey;
+        private const String _serialNumberMostRecent = "MostRecent";
         private Boolean _cancelled = false;
 
         protected TestExecutive(Icon icon) {
@@ -82,7 +83,7 @@ namespace ABT.TestSpace.TestExec {
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
 
             _serialNumberKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
-            ConfigUUT.SerialNumber = _serialNumberKey.GetValue("MostRecent", String.Empty).ToString();
+            ConfigUUT.SerialNumber = _serialNumberKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
 
             UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.
             UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
@@ -311,7 +312,7 @@ namespace ABT.TestSpace.TestExec {
                 serialNumber = Regex.IsMatch(serialNumber, SerialNumberRegEx) ? serialNumber : String.Empty;
             }
             if (String.Equals(serialNumber, String.Empty)) return;
-            _serialNumberKey.SetValue("MostRecent", serialNumber);
+            _serialNumberKey.SetValue(_serialNumberMostRecent, serialNumber);
             ConfigUUT.SerialNumber = serialNumber;
 
             FormModeReset();
