@@ -96,6 +96,7 @@ namespace ABT.TestSpace.TestExec {
         public virtual void Initialize() {
             SCPI99.Reset(SVIs);
             UE24.Set(C.S.NC);
+            Debug.Assert(Initialized());
         }
 
         public virtual Boolean Initialized() { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
