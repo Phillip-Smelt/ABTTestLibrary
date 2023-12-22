@@ -157,9 +157,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\EmergencyStop.png" />
-    <Content Include="TestExecutive.config.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="TestExecutive.config.xml" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
