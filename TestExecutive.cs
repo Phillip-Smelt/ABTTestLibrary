@@ -24,6 +24,9 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using System.Configuration;
+using Windows.UI.Xaml.Documents;
 
 /// <para>
 /// TODO:  Eventually; refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -59,7 +62,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 ///  - Temporarily disabling Zero Trust by "pausing" it resolves above error.
 ///    - Zero Trust's "pause" eventually, times out, and Zero Trust eventually, re-enables itself silently, without notifying you.
 ///  - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
-///  - FYI, synchronizing with IsoMicro's repository doesn't error out, as it doesn't utilize a Git server.
+///  - FYI, synchronizing with TestExecutor's repository doesn't error out, as it doesn't utilize a Git server.
 ///  </para>
 
 namespace ABT.TestSpace.TestExec {
@@ -245,15 +248,17 @@ namespace ABT.TestSpace.TestExec {
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
-        private void OpenApp(String CompanyID, String AppID, String arguments="") {
-            String app = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Apps").Elements(CompanyID) select xe.Element(AppID).Value).ElementAt(0);
+        private void OpenApp(String CompanyID, String AppID, String Arguments="", String AppOverride="") {
+            String app;
+            if (String.IsNullOrEmpty(AppOverride)) app = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Apps").Elements(CompanyID) select xe.Element(AppID).Value).ElementAt(0);
+            else app = AppOverride;
             
             if (File.Exists($"{app}")) {
                 ProcessStartInfo psi = new ProcessStartInfo {
                     FileName = app,
                     WindowStyle = ProcessWindowStyle.Normal,
                     WorkingDirectory = "",
-                    Arguments = arguments
+                    Arguments = Arguments
                 };
                 Process.Start(psi);
                 // Strings with embedded spaces require enclosing double-quotes (").
@@ -404,7 +409,7 @@ namespace ABT.TestSpace.TestExec {
             sb.AppendLine($"  - Note that only corded Barcode Scanners are discovered; cordless BlueTooth & Wireless scanners are ignored.");
             sb.AppendLine($"  - Modify TestExecutive.config.xml to use a discovered Barcode Scanner.");
             sb.AppendLine($"  - Scanners must be programmed into USB-HID mode to function properly:");
-            sb.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment%20Manuals/Raytheon%20Functional%20Test%20for%20D4522137%20&%20D4522142%20isoMicro/Honeywell%20Voyager%201200g/Honeywell%20Voyager%201200G%20User's%20Guide%20ReadMe.pdf");
+            sb.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment%20Manuals/TestExecutive/Honeywell%20Voyager%201200g/Honeywell%20Voyager%201200G%20User's%20Guide%20ReadMe.pdf");
             sb.AppendLine($"    - Or:  https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/ppr/en-us/public/products/barcode-scanners/general-purpose-handheld/1200g/documents/sps-ppr-vg1200-ug.pdf{Environment.NewLine}");
             foreach (DeviceInformation di in dic) {
                 sb.AppendLine($"Name: '{di.Name}'.");
@@ -432,8 +437,11 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
         private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Relays")); }
         private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) {
-            DialogResult dr = MessageBox.Show($"Same as for {Assembly.GetEntryAssembly().GetName().Name}.exe.config, {Assembly.GetExecutingAssembly().GetName().Name}.config.xml can be temporarily changed until next MS Build overwrites it.", $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-            if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GetFile("AppConfig"));
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Unlike {Assembly.GetEntryAssembly().GetName().Name}.exe.config, {Assembly.GetExecutingAssembly().GetName().Name}.config.xml is a global configuration file that applies to all TestExecutor apps on its host PC.{Environment.NewLine}");
+            sb.AppendLine("Changing it thus changes behavior for all TestExecutors, so proceed with caution.");
+            DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GetFile("TestExecutiveConfigXML"));
         }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}.{Environment.NewLine}{Environment.NewLine}" +
@@ -454,7 +462,7 @@ namespace ABT.TestSpace.TestExec {
             sb.AppendLine($"- Be sure to backport any permanently desired {UUT}.exe.config changes to App.config.{Environment.NewLine}");
             sb.AppendLine("- Also be sure to undo any temporary undesired {UUT}.exe.config changes after experimention is completed.");
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-            if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GetFile("AppConfig"));
+            if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", $"{UUT}.exe.config");
         }
         private void TSMI_UUT_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {

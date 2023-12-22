@@ -85,30 +85,30 @@
   </Apps>
 
   // TODO:  Soon, remove all instances of isomicro from TestExecutive files.
-  // TODO:  Soon, ensure TestExecutive.config.xml doesn't get copied into each TestExecutor's bin folder, because then it's a local app config, not a global/system config.
-  // TODO:  Soon, explore overriding TestExecutive.config.xml various elements with local App.config keys.
-  // TODO:  Soon, correlate SCPI_VISA_Instrument IDs from TestExecutive.config.xml in App.config, eliminating/altering TestExecutor's SVIA class.
+
   <Files>
-    <!-- Adopting Doug Gwyn's philosophy here; "Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things." -->
+    <!-- // TODO:  Move AppConfig into TestExecutive
+				 Adopting Doug Gwyn's philosophy here; "Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things." -->
     <AppConfig>isoMicro.exe.config</AppConfig>
-    <!-- Visual Studio's MS Build copies the isoMicro's "App.config" file into the isoMicro's executable folder as file "isoMicro.exe.config".
-				 - Under normal circumstances, directly editing "isoMicro.exe.config" is highly inadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.
-           - Directly editing "isoMicro.exe.config" allows temporary runtime execution changes, but they'll be overwritten the next time MS Build is executed.
-           - Changes to "isoMicro.exe.config" also won't be incorporated into the source program's "App.config" file, and are permanently lost the next time MS Build is executed.
-           - For the niche case when it's useful to temporarily experiment with isoMicro.exe.config's behavior, and a C# compiler and/or 
-             isoMicro source code are unavailable on the isoMicro tester's PC, directly editing isoMicro.exe.config may prove useful.
-           - Be sure to backport any permanently desired isoMicro.exe.config changes to file App.config, then re-compile/re-deploy the resulting executable.
-           - Also be sure to undo any undesired temporary isoMicro.exe.config changes after experimention is completed.
+    <!-- Visual Studio's MS Build copies TestExecutor's "App.config" file into its executable folder as file "TestExecutor.exe.config".
+				 - Under normal circumstances, directly editing "TestExecutor.exe.config" is highly inadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.
+           - Directly editing "TestExecutor.exe.config" allows temporary runtime execution changes, but they'll be overwritten the next time MS Build is executed.
+           - Changes to "TestExecutor.exe.config" also won't be incorporated into the source program's "App.config" file, and are permanently lost the next time MS Build is executed.
+           - For the niche case when it's useful to temporarily experiment with TestExecutor.exe.config's behavior, and a C# compiler and/or 
+             TestExecutor source code are unavailable on the TestExecutor tester's PC, directly editing TestExecutor.exe.config may prove useful.
+           - Be sure to backport any permanently desired TestExecutor.exe.config changes to file App.config, then re-compile/re-deploy the resulting executable.
+           - Also be sure to undo any undesired temporary TestExecutor.exe.config changes after experimention is completed.
     -->
     <TestExecutiveConfigXML>TestExecutive.config.xml</TestExecutiveConfigXML>
-    <!-- Same as for isoMicro.exe.config, TestExecutive.config.xml can be temporarily changed until next MS Build overwrites it.-->
+    <!-- Unlike TestExecutor.config, TestExecutive.config.xml is a global configuration file that applies to all TestExecutor apps on its host PC. 
+         Changing it thus changes behavior for all TestExecutors, so proceed with cauthion. -->
   </Files>
 
   <Folders>
-    <BarcodeScanner>P:\Test\Engineers\Equipment Manuals\Raytheon Functional Test for D4522137 &amp; D4522142 isoMicro\Honeywell Voyager 1200g</BarcodeScanner>	<!-- Honeywell Voyager USB 1200g corded Barcode Scanner -->
-    <Instruments>P:\Test\Engineers\Equipment Manuals\Raytheon Functional Test for D4522137 &amp; D4522142 isoMicro\Keysight</Instruments>												<!-- Keysight SCPI VISA -->
+    <BarcodeScanner>P:\Test\Engineers\Equipment Manuals\TestExecutive\Honeywell Voyager 1200g</BarcodeScanner>	<!-- Honeywell Voyager USB 1200g corded Barcode Scanner -->
+    <Instruments>P:\Test\Engineers\Equipment Manuals\TestExecutive\Keysight</Instruments>												<!-- Keysight SCPI VISA -->
     <TestExecutorLinks>P:\Test\Engineers\TestExecutorLinks</TestExecutorLinks>																																									<!-- Windows Shortcuts to other TestExecutor executables. -->
-    <Relays>P:\Test\Engineers\Equipment Manuals\Raytheon Functional Test for D4522137 &amp; D4522142 isoMicro\Measurement Computing</Relays>										<!-- MCC USB-ERB24, ULI & InstaCal -->
+    <Relays>P:\Test\Engineers\Equipment Manuals\TestExecutive\Measurement Computing</Relays>										<!-- MCC USB-ERB24, ULI & InstaCal -->
   </Folders>
   
   <Administrators>
@@ -177,13 +177,13 @@
   <SerialNumberRegExDefault>^01BB2-[0-9]{5}$</SerialNumberRegExDefault>
   <!-- SerialNumberRegExDefault is the default global Regular Expression an ABT Serial Number is validated against in TestExecutive.
                 
-         NOTE:  SerialNumberRegExDefault can be locally overridden by a TestExecutor's App.config's UUT_SerialNumberRegExCustom key/value pair.
+         NOTE:  SerialNumberRegExDefault can be locally overridden by a TestExecutor App.config's UUT_SerialNumberRegExCustom key/value pair.
          - As Customers sometimes require Serial Number formats that differ from ABT's (or formats that differ even from one Customer UUT to another)
            SerialNumberRegExDefault is customizable to any/every UUT tested.
          - When not overridden by an App.config's UUT_SerialNumberRegExCustom, SerialNumberRegExDefault is applied instead.
          
          NOTE:  ABT's official Serial Number format is "01BB2-#####", where each "#" is an is an integer in the set {0..9}.
-         - Obviously, this allows for only 100,000 unique Serial Numbers overall, but those 100,000 are specifically associated to their UUT.
+         - This allows for only 100,000 unique Serial Numbers overall, but those 100,000 are specifically associated to their UUT.
          - Thus each UUT can have only 100,000 unique Serial Numbers.
          - Obviously, if ABT builds more than 100,000 of any specific UUT, they're in trouble.
          
