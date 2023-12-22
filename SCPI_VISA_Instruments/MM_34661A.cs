@@ -83,7 +83,7 @@ public enum PROPERTY { AmperageAC, AmperageDC, Capacitance, Continuity, Frequenc
         }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            if (TerminalsGet(SVI) == TERMINAL.Front) _ = MessageBox.Show("Please depress Keysight 34661A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            if (TerminalsGet(SVI) == TERMINAL.Front) _ = MessageBox.Show("Please depress Keysight 34661A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Information);
             DelaySet(SVI, MMD.DEFault);
             DelayAutoSet(SVI, true);
             SCPI99.Initialize(SVI);

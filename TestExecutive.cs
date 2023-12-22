@@ -36,8 +36,8 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 ///       TIDP.SAA actually appears to be compiled to .Net FrameWork 4.5, but that's still not necessarily compatible with .Net 7.0.
 ///  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
 /// TODO:  Eventually; update to WinUI 3 or WPF instead of WinForms when possible.
-/// TODO:  Soon; ensure Borisch Domain Group "Test - Engineers" has read & write permissions on all TestExecutor & isoMicro folder/files.
-/// TODO:  Soon; ensure Borisch Domain Groups ≠ "Test - Engineers" have only read permissions on all TestExecutor & isoMicro folder/files.
+/// TODO:  Soon; ensure Borisch Domain Group "Test - Engineers" has read & write permissions on all TestExecutor & TestExecutor folder/files.
+/// TODO:  Soon; ensure Borisch Domain Groups ≠ "Test - Engineers" have only read permissions on all TestExecutor & TestExecutor folder/files.
 /// NOTE:  Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
 /// With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 ///
@@ -49,9 +49,9 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 /// NOTE:  ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below error when sychronizing with
 ///       TestExecutive's GitHub repository at https://github.com/Amphenol-Borisch-Technologies/TestExecutive:
 ///             Opening repositories:
-///             P:\Test\Engineers\repos\IsoMicro
+///             P:\Test\Engineers\repos\TestExecutor
 ///             Opening repositories:
-///             P:\Test\Engineers\repos\IsoMicro
+///             P:\Test\Engineers\repos\TestExecutor
 ///             C:\Users\phils\source\repos\TestExecutive
 ///             Git failed with a fatal error.
 ///             Git failed with a fatal error.
@@ -69,24 +69,46 @@ namespace ABT.TestSpace.TestExec {
         public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by button_click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
-        public static readonly String EMailAdministrator = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Administrator") select xe.Element("EMail").Value).First();
-        public static readonly String SerialNumberRegEx = (from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("SerialNumberRegEx").Value).First();
-        private readonly SerialNumberDialog _serialNumberDialog;
-        private readonly RegistryKey _serialNumberKey;
+        public static readonly String EMailAdministratorTo = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Administrators") select xe.Element("EMail").Value).ElementAt(0);
+        public static readonly String EMailAdministratorCC = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Administrators") select xe.Element("EMail").Value).ElementAt(1);
+        private readonly String _serialNumberRegEx = null;
+        private readonly SerialNumberDialog _serialNumberDialog = null;
+        private readonly RegistryKey _serialNumberRegistryKey = null;
         private const String _serialNumberMostRecent = "MostRecent";
         private Boolean _cancelled = false;
 
         protected TestExecutive(Icon icon) {
             InitializeComponent();
             Icon = icon;
-            _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog() : null;
+
+            if (String.Equals(ConfigUUT.SerialNumberRegExCustom, "NotApplicable")) _serialNumberRegEx = (from xe in XElement.Load("TestExecutive.config.xml").Elements() select xe.Element("SerialNumberRegExDefault").Value).ElementAt(0);
+            else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
+            if (RegexInvalid(_serialNumberRegEx)) {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine($"Invalid Serial Number Regular Expression '{_serialNumberRegEx}':");
+                sb.AppendLine("   Check TestExecutive.config.xml/SerialNumberRegExDefault or App.Config/UUT_SerialNumberRegExCustom for valid Regular Expression syntax.");
+                sb.AppendLine("   Thank you & have a nice day!");
+                _ = MessageBox.Show(sb.ToString(), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new ArgumentException(sb.ToString());
+            }
+            _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog(_serialNumberRegEx) : null;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
 
-            _serialNumberKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
-            ConfigUUT.SerialNumber = _serialNumberKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
+            _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
+            ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
 
-            UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.
-            UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" semi-simultaneously sounds awesome...
+            UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
+            UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
+        }
+
+        public static Boolean RegexInvalid(String RegularExpression) {
+            if (String.IsNullOrWhiteSpace(RegularExpression)) return true;
+            try {
+                Regex.Match("", RegularExpression);
+            } catch (ArgumentException) {
+                return true;
+            }
+            return false;
         }
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
@@ -96,7 +118,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public void ErrorMessage(Exception Ex) {
-            ErrorMessage($"Will attempt to E-Mail details to Administrator {EMailAdministrator}.{Environment.NewLine}{Environment.NewLine}Please select appropriate Outlook profile if dialog appears.");
+            ErrorMessage($"Will attempt to E-Mail details to {EMailAdministratorTo} & CC {EMailAdministratorCC}.{Environment.NewLine}{Environment.NewLine}Please select your Outlook profile if dialog appears.");
             SendAdministratorMailMessage("Exception caught!", Ex, ConfigUUT.EMailTestEngineer);
         }
 
@@ -120,8 +142,9 @@ namespace ABT.TestSpace.TestExec {
         public static void SendAdministratorMailMessage(String Subject, String Body, String CC="") {
             Outlook.MailItem mailItem = GetMailItem();
             mailItem.Subject = Subject;
-            mailItem.To = EMailAdministrator;
-            if (!String.Equals(CC, EMailAdministrator) && !String.Equals(CC, "")) mailItem.CC = CC;
+            mailItem.To = EMailAdministratorTo;
+            Outlook.Recipient recipient = mailItem.Recipients.Add(EMailAdministratorCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+            recipient = mailItem.Recipients.Add(CC);                                        recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             mailItem.Body = Body;
             mailItem.Send();
@@ -186,8 +209,9 @@ namespace ABT.TestSpace.TestExec {
         private void SendMailMessageWithAttachment(String subject) {
             Outlook.MailItem mailItem = GetMailItem();
             mailItem.Subject = subject;
-            mailItem.To = EMailAdministrator;
-            if (!String.Equals(EMailAdministrator, ConfigUUT.EMailTestEngineer)) mailItem.CC = ConfigUUT.EMailTestEngineer;
+            mailItem.To = EMailAdministratorTo;
+            Outlook.Recipient recipient = mailItem.Recipients.Add(EMailAdministratorCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+            recipient = mailItem.Recipients.Add(ConfigUUT.EMailTestEngineer);               recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             mailItem.Body =
                 $"Please detail desired Bug Report or Improvement Request:{Environment.NewLine}" +
@@ -222,7 +246,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void OpenApp(String CompanyID, String AppID, String arguments="") {
-            String app = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Apps").Elements(CompanyID) select xe.Element(AppID).Value).First();
+            String app = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Apps").Elements(CompanyID) select xe.Element(AppID).Value).ElementAt(0);
             
             if (File.Exists($"{app}")) {
                 ProcessStartInfo psi = new ProcessStartInfo {
@@ -237,9 +261,9 @@ namespace ABT.TestSpace.TestExec {
             } else InvalidPathError(app);
         }
 
-        private String GetFile(String FileID) { return (from xe in XElement.Load("TestExecutive.config.xml").Elements("Files") select xe.Element(FileID).Value).First(); }
+        private String GetFile(String FileID) { return (from xe in XElement.Load("TestExecutive.config.xml").Elements("Files") select xe.Element(FileID).Value).ElementAt(0); }
 
-        private String GetFolder(String FolderID) { return (from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element(FolderID).Value).First(); }
+        private String GetFolder(String FolderID) { return (from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element(FolderID).Value).ElementAt(0); }
 
         private void OpenFolder(String FolderPath) {
             if (Directory.Exists(FolderPath)) {
@@ -255,7 +279,7 @@ namespace ABT.TestSpace.TestExec {
             } else InvalidPathError(FolderPath);
         }
 
-        private void InvalidPathError(String InvalidPath) { MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Yikes!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
         private void PreApplicationExit() {
             if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
@@ -299,6 +323,7 @@ namespace ABT.TestSpace.TestExec {
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
             FormModeReset();
             FormModeWait();
+            ButtonStart_Clicked(sender, e);
         }
 
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
@@ -309,10 +334,10 @@ namespace ABT.TestSpace.TestExec {
                 _serialNumberDialog.Hide();
             } else {
                 serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: ConfigUUT.SerialNumber).Trim().ToUpper();
-                serialNumber = Regex.IsMatch(serialNumber, SerialNumberRegEx) ? serialNumber : String.Empty;
+                serialNumber = Regex.IsMatch(serialNumber, _serialNumberRegEx) ? serialNumber : String.Empty;
             }
             if (String.Equals(serialNumber, String.Empty)) return;
-            _serialNumberKey.SetValue(_serialNumberMostRecent, serialNumber);
+            _serialNumberRegistryKey.SetValue(_serialNumberMostRecent, serialNumber);
             ConfigUUT.SerialNumber = serialNumber;
 
             FormModeReset();
@@ -400,14 +425,14 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_System_DiagnosticsSCPI_VISA_Instruments_Click(Object sender, EventArgs e) {
             foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) SCPI99.SelfTest(kvp.Value);
-            MessageBox.Show("If you didn't receive an InvalidOperationException, SCPI VISA Instruments passed their self-tests.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            _ = MessageBox.Show("If you didn't receive an InvalidOperationException, SCPI VISA Instruments passed their self-tests.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
         private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Relays")); }
         private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) {
-            DialogResult dr = MessageBox.Show("Same as for isoMicro.exe.config, TestExecutive.config.xml can be temporarily changed until next MS Build overwrites it.", $"Caution", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+            DialogResult dr = MessageBox.Show($"Same as for {Assembly.GetEntryAssembly().GetName().Name}.exe.config, {Assembly.GetExecutingAssembly().GetName().Name}.config.xml can be temporarily changed until next MS Build overwrites it.", $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GetFile("AppConfig"));
         }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
@@ -418,21 +443,22 @@ namespace ABT.TestSpace.TestExec {
 
         private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) {
             StringBuilder sb = new StringBuilder();
+            String UUT = Assembly.GetEntryAssembly().GetName().Name;
             sb.AppendLine($"Adapting Doug Gwyn's philosophy here: 'Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things.'{Environment.NewLine}");
-            sb.AppendLine($"Visual Studio's MS Build copies isoMicro's 'app.config' file into the isoMicro's executable folder as file 'isoMicro.exe.config'.{Environment.NewLine}");
-            sb.AppendLine($"Under normal circumstances, directly editing 'isoMicro.exe.config' is highly unadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.{Environment.NewLine}");
-            sb.AppendLine($"- Directly editing 'isoMicro.exe.config' allows temporary runtime execution changes, but they're overwritten when MS Build is subsequently executed.{Environment.NewLine}");
-            sb.AppendLine($"- Changes to 'isoMicro.exe.config' aren't incorporated into the source 'app.config' file, therefore permanently lost the next time MS Build is executed.{Environment.NewLine}");
-            sb.AppendLine($"- For the niche case when it's useful to temporarily experiment with isoMicro.exe.config's behavior, and a C# compiler and/or");
-            sb.AppendLine($"- isoMicro source code are unavailable on the isoMicro tester's PC, directly editing isoMicro.exe.config may prove useful.{Environment.NewLine}");
-            sb.AppendLine($"- Be sure to backport any permanently desired isoMicro.exe.config changes to app.config.{Environment.NewLine}");
-            sb.AppendLine("- Also be sure to undo any temporary undesired isoMicro.exe.config changes after experimention is completed.");
-            DialogResult dr = MessageBox.Show(sb.ToString(), $"Caution", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+            sb.AppendLine($"Visual Studio's MS Build copies {UUT}'s 'app.config' file into the {UUT}'s executable folder as file '{UUT}.exe.config'.{Environment.NewLine}");
+            sb.AppendLine($"Under normal circumstances, directly editing '{UUT}.exe.config' is highly inadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.{Environment.NewLine}");
+            sb.AppendLine($"- Directly editing '{UUT}.exe.config' allows temporary runtime execution changes, but they're overwritten when MS Build is subsequently executed.{Environment.NewLine}");
+            sb.AppendLine($"- Changes to '{UUT}.exe.config' aren't incorporated into the source 'app.config' file, therefore permanently lost the next time MS Build is executed.{Environment.NewLine}");
+            sb.AppendLine($"- For the niche case when it's useful to temporarily experiment with {UUT}.exe.config's behavior, and a C# compiler and/or");
+            sb.AppendLine($"- {UUT} source code are unavailable on the {UUT} tester's PC, directly editing {UUT}.exe.config may prove useful.{Environment.NewLine}");
+            sb.AppendLine($"- Be sure to backport any permanently desired {UUT}.exe.config changes to app.config.{Environment.NewLine}");
+            sb.AppendLine("- Also be sure to undo any temporary undesired {UUT}.exe.config changes after experimention is completed.");
+            DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GetFile("AppConfig"));
         }
         private void TSMI_UUT_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
-                ofd.InitialDirectory = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element("TestExecutorLinks").Value).First();
+                ofd.InitialDirectory = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element("TestExecutorLinks").Value).ElementAt(0);
                 ofd.Filter = "Windows Shortcuts|*.lnk";
                 ofd.DereferenceLinks = true;
                 ofd.RestoreDirectory = true;

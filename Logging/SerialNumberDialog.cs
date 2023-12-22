@@ -26,8 +26,10 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         private BarcodeScanner _scanner = null;
         private ClaimedBarcodeScanner _claimedScanner = null;
+        private readonly String _serialNumberRegEx;
 
-        public SerialNumberDialog() {
+        public SerialNumberDialog(String SerialNumberRegEx) {
+            _serialNumberRegEx = SerialNumberRegEx;
             InitializeComponent();
             
             GetBarcodeScanner();
@@ -39,7 +41,7 @@ namespace ABT.TestSpace.TestExec.Logging {
         public String Get() { return BarCodeText.Text; }
 
         private async void GetBarcodeScanner() {
-            String scannerID = (from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("BarCodeScannerID").Value).First();
+            String scannerID = (from xe in XElement.Load("TestExecutive.config.xml").Elements("SerialNumberDialog") select xe.Element("BarCodeScannerID").Value).ElementAt(0);
             DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(scannerID);
             _scanner = await BarcodeScanner.FromIdAsync(DI.Id);
             if (_scanner == null) throw new InvalidOperationException($"Barcode scanner Device ID:{Environment.NewLine}{Environment.NewLine}'{scannerID}'{Environment.NewLine}{Environment.NewLine}not found.");
@@ -54,7 +56,7 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         private void ClaimedScanner_ReleaseDeviceRequested(Object sender, ClaimedBarcodeScanner e) { e.RetainDevice(); } // Mine, don't touch!  Prevent other apps claiming scanner.
 
-        private void ClaimedScanner_ErrorOccurred(ClaimedBarcodeScanner sender, BarcodeScannerErrorOccurredEventArgs args) { _ = MessageBox.Show("ErrorOccurred!", "ErrorOccurred!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        private void ClaimedScanner_ErrorOccurred(ClaimedBarcodeScanner sender, BarcodeScannerErrorOccurredEventArgs args) { _ = MessageBox.Show(args.ErrorData.ToString(), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
         private void ClaimedScanner_DataReceived(ClaimedBarcodeScanner sender, BarcodeScannerDataReceivedEventArgs args) { Invoke(new DataReceived(DelegateMethod), args); }
 
@@ -71,7 +73,7 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         private void FormUpdate(String text) {
             BarCodeText.Text = text;
-            if (Regex.IsMatch(text, TestExecutive.SerialNumberRegEx)) {
+            if (Regex.IsMatch(text, _serialNumberRegEx)) {
                 OK.Enabled = true;
                 OK.BackColor = System.Drawing.Color.Green;
                 OK.Focus();

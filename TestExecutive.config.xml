@@ -83,12 +83,16 @@
       <SMBus_I2C_SAA_Tool>C:\Program Files (x86)\Texas Instruments\Fusion Digital Power Designer\bin\Fusion Tool Launcher.exe</SMBus_I2C_SAA_Tool>
     </TexasInstruments>
   </Apps>
-  
+
+  // TODO:  Soon, remove all instances of isomicro from TestExecutive files.
+  // TODO:  Soon, ensure TestExecutive.config.xml doesn't get copied into each TestExecutor's bin folder, because then it's a local app config, not a global/system config.
+  // TODO:  Soon, explore overriding TestExecutive.config.xml various elements with local app.config keys.
+  // TODO:  Soon, correlate SCPI_VISA_Instrument IDs from TestExecutive.config.xml in app.config, eliminating/altering TestExecutor's SVIA class.
   <Files>
     <!-- Adopting Doug Gwyn's philosophy here; "Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things." -->
     <AppConfig>isoMicro.exe.config</AppConfig>
     <!-- Visual Studio's MS Build copies the isoMicro's "app.config" file into the isoMicro's executable folder as file "isoMicro.exe.config".
-				 - Under normal circumstances, directly editing "isoMicro.exe.config" is highly unadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.
+				 - Under normal circumstances, directly editing "isoMicro.exe.config" is highly inadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.
            - Directly editing "isoMicro.exe.config" allows temporary runtime execution changes, but they'll be overwritten the next time MS Build is executed.
            - Changes to "isoMicro.exe.config" also won't be incorporated into the source program's "app.config" file, and are permanently lost the next time MS Build is executed.
            - For the niche case when it's useful to temporarily experiment with isoMicro.exe.config's behavior, and a C# compiler and/or 
@@ -107,9 +111,10 @@
     <Relays>P:\Test\Engineers\Equipment Manuals\Raytheon Functional Test for D4522137 &amp; D4522142 isoMicro\Measurement Computing</Relays>										<!-- MCC USB-ERB24, ULI & InstaCal -->
   </Folders>
   
-  <Administrator>
-    <EMail>Phillip.Smelt@Borisch.Com</EMail>
-  </Administrator>
+  <Administrators>
+    <EMail>Phillip.Smelt@Borisch.Com</EMail>  <!-- Element 0 = TestExecutive's EMailAdministratorTo.  -->
+    <EMail>Phillip.Smelt@Borisch.Com</EMail>  <!-- Element 1 = TestExecutive's EMailAdministratorCC.  Poor fellow's doing double duty! -->
+  </Administrators>
   
 	<SCPI_VISA_Instrument>
 		<ID>PS1</ID>
@@ -149,29 +154,41 @@
 
 	<SerialNumberDialog>
 			<BarCodeScannerID>\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner</BarCodeScannerID> <!-- Honeywell Voyager USB 1200g -->
-    <!-- BarCodeScannerID is the identifier used to find & claim the Barcode Scanner in class SerialNumberDialog.
-					- A simple means to determine it is findable exists in class SerialNumberDialog's Debug.Print() statements, in case it must be replaced.
-        When a TestExecutor's App.Config LOGGER_SerialNumberDialogEnabled = true:
-					- Class SerialNumberDialog is the Barcode Scanning method for prompting test operators for UUT Serial Numbers.
-					- SerialNumberDialog exclusively enforces Serial Number entry via Barcode Scanning of ABT's official Code39 encoded Serial Number.
-          - This enforces correct Barcode Scanning of ABT Serial Numbers, unlike hand-typing them, with it's substantially higher error rates..
-				When a TestExecutor's App.Config LOGGER_SerialNumberDialogEnabled = false:
-					- An Interaction.InputBox prompts test operator to enter ABT Serial Numbers.
-          - This permits both Barcode Scanning *and* manual keyboard entry of Serial Numbers (hand typing), with its concommitant high rate of typographic errors.
-        NOTE:  Barcode Scanner must be a corded USB scanner, explicitly supported by Microsoft's Windows.Devices.PointOfService namespace.
+    <!-- BarCodeScannerID is the identifier used to find & claim the Barcode Scanner used in class SerialNumberDialog.
+         When a TestExecutor's App.Config LOGGER_SerialNumberDialogEnabled = true:
+				 - Class SerialNumberDialog is the Barcode Scanning method for prompting test operators for UUT Serial Numbers.
+				 - SerialNumberDialog exclusively enforces Serial Number entry via Barcode Scanning of ABT's official Code39 encoded Serial Number.
+           - This enforces correct Barcode Scanning of ABT Serial Numbers, unlike hand-typing them, with it's substantially higher error rates..
+				 When a TestExecutor's App.Config LOGGER_SerialNumberDialogEnabled = false:
+				 - An Interaction.InputBox prompts test operator to enter ABT Serial Numbers.
+           - This permits both Barcode Scanning *and* manual keyboard entry of Serial Numbers (hand typing), with its concommitant high rate of typographic errors.
+           
+         NOTE:  Barcode Scanner must be a corded USB scanner, and must also be explicitly supported by Microsoft's Windows.Devices.PointOfService namespace.
          - List of supported scanners at https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.
-				NOTE:  Barcode Scanner must be programmed into USB HID mode to work correctly with TestExecutive's SerialNumberDialog class to read ABT Serial #s.
-              - For Voyager 1200g, scan PAP131 label from "Honeywell Voyager 1200G User's Guide ReadMe.pdf" to program 1200g into USB HID mode.
-              - Both "ReadMe" & "User's Guides" documents reside in Logging folder for convenience.
-        NOTE:  The 1200g must also be programmed to read the Barcode Symbology of ABT's Serial #s, which at the time of this writing is Code39.
+				 NOTE:  Barcode Scanner must be programmed into USB HID mode to work correctly with TestExecutive's SerialNumberDialog class to read ABT Serial Numbers.
+                - For a Voyager 1200g, scan PAP131 label from "Honeywell Voyager 1200G User's Guide ReadMe.pdf" to program into USB HID mode.
+                - Both "ReadMe" & "User's Guides" documents reside in Logging folder for convenience.
+         NOTE:  Barcode Scanner must also be programmed to read the Code39 Barcode Symbology of ABT's Serial Numbers.
 		-->
-    <SerialNumberRegEx>^01BB2-[0-9]{5}$</SerialNumberRegEx>
-    <!-- SerialNumberRegEx is the Regular Expression an ABT Serial Number is validated against in class SerialNumberDialog when a TestExecutor's App.Config's LOGGER_SerialNumberDialogEnabled = true.
-         ^01BB2-[0-9]{5}$ enforces Serial Numbers that match pattern "01BB2-#####" where # is an integer in {0..9}.
-         - 01BB2-01234 & 01BB2-56789 are valid.
-         - 01234 is invalid; need 01BB2- prefix.
-         - 01BB2-1234 is invalid; need 5 digits after 01BB2-.
-         - 01BB2-O1234 is invalid, because "O1234" ≠ "01234" as "O" ≠ "0".
-    -->
   </SerialNumberDialog>
+
+  <SerialNumberRegExDefault>^01BB2-[0-9]{5}$</SerialNumberRegExDefault>
+  <!-- SerialNumberRegExDefault is the default global Regular Expression an ABT Serial Number is validated against in TestExecutive.
+                
+         NOTE:  SerialNumberRegExDefault can be locally overridden by a TestExecutor's App.Config's UUT_SerialNumberRegExCustom key/value pair.
+         - As Customers sometimes require Serial Number formats that differ from ABT's (or formats that differ even from one Customer UUT to another)
+           SerialNumberRegExDefault is customizable to any/every UUT tested.
+         - When not overridden by an App.Config's UUT_SerialNumberRegExCustom, SerialNumberRegExDefault is applied instead.
+         
+         NOTE:  ABT's official Serial Number format is "01BB2-#####", where each "#" is an is an integer in the set {0..9}.
+         - Obviously, this allows for only 100,000 unique Serial Numbers overall, but those 100,000 are specifically associated to their UUT.
+         - Thus each UUT can have only 100,000 unique Serial Numbers.
+         - Obviously, if ABT builds more than 100,000 of any specific UUT, they're in trouble.
+         
+         NOTE:  Regular Expression ^01BB2-[0-9]{5}$ enforces Serial Numbers that match ABT's Serial Number format of "01BB2-#####".
+         - 01BB2-01234 & 01BB2-56789 are thus valid ABT Serial Numbers.
+         - 01234 is invalid, as it lacks the "01BB2-" prefix.
+         - 01BB2-1234 is invalid, as it lacks 5 digits after the "01BB2-" prefix.
+         - 01BB2-O1234 is invalid, as "O1234" ≠ "01234" as "O" ≠ "0".
+    -->
 </Configuration>
