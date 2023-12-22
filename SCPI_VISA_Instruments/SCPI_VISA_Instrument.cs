@@ -68,7 +68,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static Dictionary<Alias, SCPI_VISA_Instrument> Get() {
             IEnumerable<SCPI_VISA_Instrument> svis =
-                from svi in XElement.Load("TestExecutive.config.xml").Elements("SCPI_VISA_Instrument")
+                from svi in XElement.Load("TestExecutive.config.xml").Elements("SCPI_VISA_Instrument").Elements("SVI")
                 select new SCPI_VISA_Instrument(new Alias(svi.Element("ID").Value), svi.Element("Description").Value, svi.Element("Address").Value);
             Dictionary<Alias, SCPI_VISA_Instrument> SVIs = new Dictionary<Alias, SCPI_VISA_Instrument>();
             foreach (SCPI_VISA_Instrument svi in svis) SVIs.Add(new Alias(svi.ID.ToString()), svi);

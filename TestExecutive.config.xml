@@ -86,18 +86,18 @@
 
   // TODO:  Soon, remove all instances of isomicro from TestExecutive files.
   // TODO:  Soon, ensure TestExecutive.config.xml doesn't get copied into each TestExecutor's bin folder, because then it's a local app config, not a global/system config.
-  // TODO:  Soon, explore overriding TestExecutive.config.xml various elements with local app.config keys.
-  // TODO:  Soon, correlate SCPI_VISA_Instrument IDs from TestExecutive.config.xml in app.config, eliminating/altering TestExecutor's SVIA class.
+  // TODO:  Soon, explore overriding TestExecutive.config.xml various elements with local App.config keys.
+  // TODO:  Soon, correlate SCPI_VISA_Instrument IDs from TestExecutive.config.xml in App.config, eliminating/altering TestExecutor's SVIA class.
   <Files>
     <!-- Adopting Doug Gwyn's philosophy here; "Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things." -->
     <AppConfig>isoMicro.exe.config</AppConfig>
-    <!-- Visual Studio's MS Build copies the isoMicro's "app.config" file into the isoMicro's executable folder as file "isoMicro.exe.config".
+    <!-- Visual Studio's MS Build copies the isoMicro's "App.config" file into the isoMicro's executable folder as file "isoMicro.exe.config".
 				 - Under normal circumstances, directly editing "isoMicro.exe.config" is highly inadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.
            - Directly editing "isoMicro.exe.config" allows temporary runtime execution changes, but they'll be overwritten the next time MS Build is executed.
-           - Changes to "isoMicro.exe.config" also won't be incorporated into the source program's "app.config" file, and are permanently lost the next time MS Build is executed.
+           - Changes to "isoMicro.exe.config" also won't be incorporated into the source program's "App.config" file, and are permanently lost the next time MS Build is executed.
            - For the niche case when it's useful to temporarily experiment with isoMicro.exe.config's behavior, and a C# compiler and/or 
              isoMicro source code are unavailable on the isoMicro tester's PC, directly editing isoMicro.exe.config may prove useful.
-           - Be sure to backport any permanently desired isoMicro.exe.config changes to file app.config, then re-compile/re-deploy the resulting executable.
+           - Be sure to backport any permanently desired isoMicro.exe.config changes to file App.config, then re-compile/re-deploy the resulting executable.
            - Also be sure to undo any undesired temporary isoMicro.exe.config changes after experimention is completed.
     -->
     <TestExecutiveConfigXML>TestExecutive.config.xml</TestExecutiveConfigXML>
@@ -116,50 +116,52 @@
     <EMail>Phillip.Smelt@Borisch.Com</EMail>  <!-- Element 1 = TestExecutive's EMailAdministratorCC.  Poor fellow's doing double duty! -->
   </Administrators>
   
-	<SCPI_VISA_Instrument>
-		<ID>PS1</ID>
-		<Description>Keysight E36103B Single-output Power Supply</Description>
-		<Address>USB0::0x2A8D::0x1602::MY61001983::0::INSTR</Address>
-	</SCPI_VISA_Instrument>
-	<SCPI_VISA_Instrument>
-		<ID>PS2</ID>
-		<Description>Keysight E36103B Single-output Power Supply</Description>
-		<Address>USB0::0x2A8D::0x1602::MY61001958::0::INSTR</Address>
-	</SCPI_VISA_Instrument>
-	<SCPI_VISA_Instrument>
-		<ID>PS3</ID>
-		<Description>Keysight E36105B Single-output Power Supply</Description>
-		<Address>USB0::0x2A8D::0x1802::MY61001696::0::INSTR</Address>
-	</SCPI_VISA_Instrument>
-	<SCPI_VISA_Instrument>
-		<ID>PS4ε5</ID>
-		<Description>Keysight E36234A Dual-output Power Supply</Description>
-		<Address>USB0::0x2A8D::0x3402::MY61002598::0::INSTR</Address>		
-	</SCPI_VISA_Instrument>
-	<SCPI_VISA_Instrument>
-		<ID>EL1</ID>
-		<Description>Keysight EL34143A Single-channel Electronic Load</Description>
-		<Address>USB0::0x2A8D::0x3802::MY61001295::0::INSTR</Address>
-	</SCPI_VISA_Instrument>
-	<SCPI_VISA_Instrument>
-		<ID>WG1</ID>
-		<Description>Keysight 33509B Single-output Waveform Generator</Description>
-		<Address>USB0::0x0957::0x2507::MY59003604::0::INSTR</Address>
-	</SCPI_VISA_Instrument>
-	<SCPI_VISA_Instrument>
-		<ID>MM1</ID>
-		<Description>Keysight 34461A Multi-Meter</Description>
-		<Address>USB0::0x2A8D::0x1301::MY60049978::0::INSTR</Address>
-	</SCPI_VISA_Instrument>
-
+	<SCPI_VISA_Instruments>  
+		<SVI>
+			<ID>PS1</ID>
+			<Description>Keysight E36103B Single-output Power Supply</Description>
+			<Address>USB0::0x2A8D::0x1602::MY61001983::0::INSTR</Address>
+		</SVI>
+		<SVI>
+			<ID>PS2</ID>
+			<Description>Keysight E36103B Single-output Power Supply</Description>
+			<Address>USB0::0x2A8D::0x1602::MY61001958::0::INSTR</Address>
+		</SVI>
+		<SVI>
+			<ID>PS3</ID>
+			<Description>Keysight E36105B Single-output Power Supply</Description>
+			<Address>USB0::0x2A8D::0x1802::MY61001696::0::INSTR</Address>
+		</SVI>
+		<SVI>
+			<ID>PS4ε5</ID>
+			<Description>Keysight E36234A Dual-output Power Supply</Description>
+			<Address>USB0::0x2A8D::0x3402::MY61002598::0::INSTR</Address>		
+		</SVI>
+		<SVI>
+			<ID>EL1</ID>
+			<Description>Keysight EL34143A Single-channel Electronic Load</Description>
+			<Address>USB0::0x2A8D::0x3802::MY61001295::0::INSTR</Address>
+		</SVI>
+		<SVI>
+			<ID>WG1</ID>
+			<Description>Keysight 33509B Single-output Waveform Generator</Description>
+			<Address>USB0::0x0957::0x2507::MY59003604::0::INSTR</Address>
+		</SVI>
+		<SVI>
+			<ID>MM1</ID>
+			<Description>Keysight 34461A Multi-Meter</Description>
+			<Address>USB0::0x2A8D::0x1301::MY60049978::0::INSTR</Address>
+		</SVI>
+	</SCPI_VISA_Instruments>
+  
 	<SerialNumberDialog>
 			<BarCodeScannerID>\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner</BarCodeScannerID> <!-- Honeywell Voyager USB 1200g -->
     <!-- BarCodeScannerID is the identifier used to find & claim the Barcode Scanner used in class SerialNumberDialog.
-         When a TestExecutor's App.Config LOGGER_SerialNumberDialogEnabled = true:
+         When a TestExecutor's App.config LOGGER_SerialNumberDialogEnabled = true:
 				 - Class SerialNumberDialog is the Barcode Scanning method for prompting test operators for UUT Serial Numbers.
 				 - SerialNumberDialog exclusively enforces Serial Number entry via Barcode Scanning of ABT's official Code39 encoded Serial Number.
            - This enforces correct Barcode Scanning of ABT Serial Numbers, unlike hand-typing them, with it's substantially higher error rates..
-				 When a TestExecutor's App.Config LOGGER_SerialNumberDialogEnabled = false:
+				 When a TestExecutor's App.config LOGGER_SerialNumberDialogEnabled = false:
 				 - An Interaction.InputBox prompts test operator to enter ABT Serial Numbers.
            - This permits both Barcode Scanning *and* manual keyboard entry of Serial Numbers (hand typing), with its concommitant high rate of typographic errors.
            
@@ -175,10 +177,10 @@
   <SerialNumberRegExDefault>^01BB2-[0-9]{5}$</SerialNumberRegExDefault>
   <!-- SerialNumberRegExDefault is the default global Regular Expression an ABT Serial Number is validated against in TestExecutive.
                 
-         NOTE:  SerialNumberRegExDefault can be locally overridden by a TestExecutor's App.Config's UUT_SerialNumberRegExCustom key/value pair.
+         NOTE:  SerialNumberRegExDefault can be locally overridden by a TestExecutor's App.config's UUT_SerialNumberRegExCustom key/value pair.
          - As Customers sometimes require Serial Number formats that differ from ABT's (or formats that differ even from one Customer UUT to another)
            SerialNumberRegExDefault is customizable to any/every UUT tested.
-         - When not overridden by an App.Config's UUT_SerialNumberRegExCustom, SerialNumberRegExDefault is applied instead.
+         - When not overridden by an App.config's UUT_SerialNumberRegExCustom, SerialNumberRegExDefault is applied instead.
          
          NOTE:  ABT's official Serial Number format is "01BB2-#####", where each "#" is an is an integer in the set {0..9}.
          - Obviously, this allows for only 100,000 unique Serial Numbers overall, but those 100,000 are specifically associated to their UUT.

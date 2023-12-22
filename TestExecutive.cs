@@ -86,7 +86,7 @@ namespace ABT.TestSpace.TestExec {
             if (RegexInvalid(_serialNumberRegEx)) {
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine($"Invalid Serial Number Regular Expression '{_serialNumberRegEx}':");
-                sb.AppendLine("   Check TestExecutive.config.xml/SerialNumberRegExDefault or App.Config/UUT_SerialNumberRegExCustom for valid Regular Expression syntax.");
+                sb.AppendLine("   Check TestExecutive.config.xml/SerialNumberRegExDefault or App.config/UUT_SerialNumberRegExCustom for valid Regular Expression syntax.");
                 sb.AppendLine("   Thank you & have a nice day!");
                 _ = MessageBox.Show(sb.ToString(), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw new ArgumentException(sb.ToString());
@@ -174,15 +174,15 @@ namespace ABT.TestSpace.TestExec {
         ///          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
         ///            or simply because futher execution is pointless.
         ///          - Simply throw a CancellationException if the specific condition(s) occcur.
-        ///      4)  App.Config's CancelNotPassed:
-        ///          - App.Config's TestMeasurement element has a Boolean "CancelNotPassed" field:
+        ///      4)  App.config's CancelNotPassed:
+        ///          - App.config's TestMeasurement element has a Boolean "CancelNotPassed" field:
         ///          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EventCodes.PASS,
         ///            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
         ///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
         ///
         /// NOTE:  The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
         ///       thrown CancellationExceptions.
-        /// NOTE:  The Operator Reactive & App.Config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
+        /// NOTE:  The Operator Reactive & App.config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
         ///       inside the TestExecutive.MeasurementsRun() loop.
         /// </para>
         /// </summary>
@@ -445,13 +445,13 @@ namespace ABT.TestSpace.TestExec {
             StringBuilder sb = new StringBuilder();
             String UUT = Assembly.GetEntryAssembly().GetName().Name;
             sb.AppendLine($"Adapting Doug Gwyn's philosophy here: 'Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things.'{Environment.NewLine}");
-            sb.AppendLine($"Visual Studio's MS Build copies {UUT}'s 'app.config' file into the {UUT}'s executable folder as file '{UUT}.exe.config'.{Environment.NewLine}");
+            sb.AppendLine($"Visual Studio's MS Build copies {UUT}'s 'App.config' file into the {UUT}'s executable folder as file '{UUT}.exe.config'.{Environment.NewLine}");
             sb.AppendLine($"Under normal circumstances, directly editing '{UUT}.exe.config' is highly inadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.{Environment.NewLine}");
             sb.AppendLine($"- Directly editing '{UUT}.exe.config' allows temporary runtime execution changes, but they're overwritten when MS Build is subsequently executed.{Environment.NewLine}");
-            sb.AppendLine($"- Changes to '{UUT}.exe.config' aren't incorporated into the source 'app.config' file, therefore permanently lost the next time MS Build is executed.{Environment.NewLine}");
+            sb.AppendLine($"- Changes to '{UUT}.exe.config' aren't incorporated into the source 'App.config' file, therefore permanently lost the next time MS Build is executed.{Environment.NewLine}");
             sb.AppendLine($"- For the niche case when it's useful to temporarily experiment with {UUT}.exe.config's behavior, and a C# compiler and/or");
             sb.AppendLine($"- {UUT} source code are unavailable on the {UUT} tester's PC, directly editing {UUT}.exe.config may prove useful.{Environment.NewLine}");
-            sb.AppendLine($"- Be sure to backport any permanently desired {UUT}.exe.config changes to app.config.{Environment.NewLine}");
+            sb.AppendLine($"- Be sure to backport any permanently desired {UUT}.exe.config changes to App.config.{Environment.NewLine}");
             sb.AppendLine("- Also be sure to undo any temporary undesired {UUT}.exe.config changes after experimention is completed.");
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GetFile("AppConfig"));
@@ -583,7 +583,7 @@ namespace ABT.TestSpace.TestExec {
             if (MeasurementResultsCount(measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
             // 4th priority evaluation:
             // - If any measurement result is UNSET, and none were ERROR or CANCEL, then Measurement(s) didn't complete.
-            // - Likely occurred because a Measurement failed that had its App.Config TestMeasurement CancelOnFail flag set to true.
+            // - Likely occurred because a Measurement failed that had its App.config TestMeasurement CancelOnFail flag set to true.
             if (MeasurementResultsCount(measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
             // 5th priority evaluation:
             // - If any measurement result is FAIL, and none were ERROR, CANCEL or UNSET, result is FAIL.

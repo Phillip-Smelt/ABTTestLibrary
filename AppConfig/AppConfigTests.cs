@@ -10,8 +10,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
     public abstract class MeasurementAbstract {
         public const String ClassName = nameof(MeasurementAbstract);
-        public const Char SA = '|'; // Arguments separator character.  Must match Arguments separator character used in TestExecutor's App.Config.
-        public const Char SK = '='; // Key/Values separator character.  Must match Key/Values separator character used in TestExecutor's App.Config.
+        public const Char SA = '|'; // Arguments separator character.  Must match Arguments separator character used in TestExecutor's App.config.
+        public const Char SK = '='; // Key/Values separator character.  Must match Key/Values separator character used in TestExecutor's App.config.
 
         private protected MeasurementAbstract() { }
 
