@@ -96,7 +96,7 @@ namespace ABT.TestSpace.TestExec {
             _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
             ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
 
-#if TEST_STATION
+#if !NO_HARDWARE
             if(ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
             UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
             UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
@@ -125,7 +125,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public virtual void Initialize() {
-#if TEST_STATION
+#if !NO_HARDWARE
             SCPI99.Reset(SVIs);
             UE24.Set(C.S.NC);
             Debug.Assert(Initialized());
@@ -133,7 +133,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public virtual Boolean Initialized() {
-#if TEST_STATION
+#if !NO_HARDWARE
             return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC);
 #else
             return false;
@@ -307,7 +307,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonCancelReset(Boolean enabled) {
-#if TEST_STATION
+#if !NO_HARDWARE
             if (enabled) {
                 ButtonCancel.UseVisualStyleBackColor = false;
                 ButtonCancel.BackColor = Color.Yellow;
@@ -362,7 +362,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonStartReset(Boolean enabled) {
-#if TEST_STATION
+#if !NO_HARDWARE
             if (enabled) {
                 ButtonStart.UseVisualStyleBackColor = false;
                 ButtonStart.BackColor = Color.Green;

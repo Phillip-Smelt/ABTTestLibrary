@@ -35,14 +35,14 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     case EL_34143A.MODEL:
                         Instrument = new AgEL30000(Address);
                         LoadOrStimulus = EL_34143A.LoadOrStimulus;
-#if TEST_STATION
+#if !NO_HARDWARE
                             EL_34143A.Initialize(this);
 #endif
                         break;
                     case MM_34661A.MODEL:
                         Instrument = new Ag3466x(Address);
                         LoadOrStimulus = MM_34661A.LoadOrStimulus;
-#if TEST_STATION
+#if !NO_HARDWARE
                         MM_34661A.Initialize(this);
 #endif
                         break;
@@ -50,21 +50,21 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     case PS_E36105B.MODEL:
                         Instrument = new AgE3610XB(Address);
                         LoadOrStimulus = PS_E3610xB.LoadOrStimulus;
-#if TEST_STATION
+#if !NO_HARDWARE
                         PS_E3610xB.Initialize(this);
 #endif
                         break;
                     case PS_E36234A.MODEL:
                         Instrument = new AgE36200(Address);
                         LoadOrStimulus = PS_E36234A.LoadOrStimulus;
-#if TEST_STATION
+#if !NO_HARDWARE
                         PS_E36234A.Initialize(this);
 #endif
                         break;
                     case WG_33509B.MODEL:
                         Instrument = new Ag33500B_33600A(Address);
                         LoadOrStimulus = WG_33509B.LoadOrStimulus;
-#if TEST_STATION
+#if !NO_HARDWARE
                         WG_33509B.Initialize(this);
 #endif
                         break;
