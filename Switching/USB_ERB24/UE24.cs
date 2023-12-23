@@ -12,7 +12,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         // Potential dynamic definition methods for USB_ERB24s:
         //  - Read them from MCC InstaCal's cb.cfg file.
         //  - Dynamically discover them programmatically: https://www.mccdaq.com/pdfs/manuals/Mcculw_WebHelp/ULStart.htm.
-        //  - Specify MCC USB-ERB24s in TestExecutive.config.xml.
+        //  - Specify MCC USB-ERB24s in TestExecutive.GlobalConfigurationFile.
         // NOTE:  MCC's InstaCal USB-ERB24 indexing begins at 0, guessing because USB device indexing is likely also zero based.
         // - So UE.B0's numerical value is 0, which is used when constructing a new MccBoard UE.B0 object:
         // - Instantiation 'new MccBoard((Int32)UE.B0)' is equivalent to 'new MccBoard(0)'.

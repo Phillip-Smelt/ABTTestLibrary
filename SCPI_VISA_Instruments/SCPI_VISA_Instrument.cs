@@ -35,28 +35,38 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     case EL_34143A.MODEL:
                         Instrument = new AgEL30000(Address);
                         LoadOrStimulus = EL_34143A.LoadOrStimulus;
-                        EL_34143A.Initialize(this);
+#if TEST_STATION
+                            EL_34143A.Initialize(this);
+#endif
                         break;
                     case MM_34661A.MODEL:
                         Instrument = new Ag3466x(Address);
                         LoadOrStimulus = MM_34661A.LoadOrStimulus;
+#if TEST_STATION
                         MM_34661A.Initialize(this);
+#endif
                         break;
                     case PS_E36103B.MODEL:
                     case PS_E36105B.MODEL:
                         Instrument = new AgE3610XB(Address);
                         LoadOrStimulus = PS_E3610xB.LoadOrStimulus;
+#if TEST_STATION
                         PS_E3610xB.Initialize(this);
+#endif
                         break;
                     case PS_E36234A.MODEL:
                         Instrument = new AgE36200(Address);
                         LoadOrStimulus = PS_E36234A.LoadOrStimulus;
+#if TEST_STATION
                         PS_E36234A.Initialize(this);
+#endif
                         break;
                     case WG_33509B.MODEL:
                         Instrument = new Ag33500B_33600A(Address);
                         LoadOrStimulus = WG_33509B.LoadOrStimulus;
+#if TEST_STATION
                         WG_33509B.Initialize(this);
+#endif
                         break;
                     default:
                         throw new NotImplementedException($"Unimplemented SCPI VISA Instrument '{Identity}'.");
@@ -68,7 +78,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static Dictionary<Alias, SCPI_VISA_Instrument> Get() {
             IEnumerable<SCPI_VISA_Instrument> svis =
-                from svi in XElement.Load("TestExecutive.config.xml").Elements("SCPI_VISA_Instrument").Elements("SVI")
+                from svi in XElement.Load(TestExecutive.GlobalConfigurationFile).Elements("SCPI_VISA_Instrument").Elements("SVI")
                 select new SCPI_VISA_Instrument(new Alias(svi.Element("ID").Value), svi.Element("Description").Value, svi.Element("Address").Value);
             Dictionary<Alias, SCPI_VISA_Instrument> SVIs = new Dictionary<Alias, SCPI_VISA_Instrument>();
             foreach (SCPI_VISA_Instrument svi in svis) SVIs.Add(new Alias(svi.ID.ToString()), svi);

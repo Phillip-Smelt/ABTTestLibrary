@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!--
-	This TestExecutive.config.xml file allows configuring TestExecutive settings easily:
+	This TestExecutive.GlobalConfigurationFile file allows configuring TestExecutive settings easily:
 	SCPI VISA instruments:
 	- For calibration or replacement, swap identical SCPI VISA Instruments with others, then update Addresses.
 	- For additions/deletions, add/remove SCPI_VISA_Instruments.  Update TestExecutive if needed.
@@ -19,14 +19,14 @@
 			  }
 
 			- Include only required/utilized SCPI VISA Instruments:
-				- That is, if this TestExecutive.config.xml contains elements for 10 power supplies, but a TestExecutor program
+				- That is, if this TestExecutive.GlobalConfigurationFile contains elements for 10 power supplies, but a TestExecutor program
 				  only requires & utilizes 2, simply don't alias the unused 8 in class 'SVIA'.
 			- This documents the minimum necessary SCPI VISA Instrument configuration for the TestExecutor's program.
-			- Allows a TestExecutor program to be most easily ported to different Test Systems having different TestExecutive.config.xml configurations.
+			- Allows a TestExecutor program to be most easily ported to different Test Systems having different TestExecutive.GlobalConfigurationFile configurations.
 				- If Test System #1 with it's specific SCPI VISA Instruments dies suddenly, may need to run its TestExecutor programs on Test System #2
 					with different SCPI VISA Instruments.
 				- If all TestExecutor.cs files list only their necessary SCPI VISA Instruments, quite easy to determine which are 
-					compatible subsets of the Test Systems' TestExecutive.config.xml configurations.
+					compatible subsets of the Test Systems' TestExecutive.GlobalConfigurationFile configurations.
 			- This approach is similar to the Keysight i3070's Board config files:
 				- i3070 Board config files specify only the subset of i3070 cards used by their test programs.
 				- This makes porting a Keysight i3070 In-Circuit Test program to a differently configured i3070 as easy as possible, though not necessarily easy.
@@ -84,30 +84,10 @@
     </TexasInstruments>
   </Apps>
 
-  // TODO:  Soon, remove all instances of isomicro from TestExecutive files.
-
-  <Files>
-    <!-- // TODO:  Move AppConfig into TestExecutive
-				 Adopting Doug Gwyn's philosophy here; "Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things." -->
-    <AppConfig>isoMicro.exe.config</AppConfig>
-    <!-- Visual Studio's MS Build copies TestExecutor's "App.config" file into its executable folder as file "TestExecutor.exe.config".
-				 - Under normal circumstances, directly editing "TestExecutor.exe.config" is highly inadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.
-           - Directly editing "TestExecutor.exe.config" allows temporary runtime execution changes, but they'll be overwritten the next time MS Build is executed.
-           - Changes to "TestExecutor.exe.config" also won't be incorporated into the source program's "App.config" file, and are permanently lost the next time MS Build is executed.
-           - For the niche case when it's useful to temporarily experiment with TestExecutor.exe.config's behavior, and a C# compiler and/or 
-             TestExecutor source code are unavailable on the TestExecutor tester's PC, directly editing TestExecutor.exe.config may prove useful.
-           - Be sure to backport any permanently desired TestExecutor.exe.config changes to file App.config, then re-compile/re-deploy the resulting executable.
-           - Also be sure to undo any undesired temporary TestExecutor.exe.config changes after experimention is completed.
-    -->
-    <TestExecutiveConfigXML>TestExecutive.config.xml</TestExecutiveConfigXML>
-    <!-- Unlike TestExecutor.config, TestExecutive.config.xml is a global configuration file that applies to all TestExecutor apps on its host PC. 
-         Changing it thus changes behavior for all TestExecutors, so proceed with cauthion. -->
-  </Files>
-
   <Folders>
     <BarcodeScanner>P:\Test\Engineers\Equipment Manuals\TestExecutive\Honeywell Voyager 1200g</BarcodeScanner>	<!-- Honeywell Voyager USB 1200g corded Barcode Scanner -->
     <Instruments>P:\Test\Engineers\Equipment Manuals\TestExecutive\Keysight</Instruments>												<!-- Keysight SCPI VISA -->
-    <TestExecutorLinks>P:\Test\Engineers\TestExecutorLinks</TestExecutorLinks>																																									<!-- Windows Shortcuts to other TestExecutor executables. -->
+    <TestExecutorLinks>P:\Test\Engineers\TestExecutorLinks</TestExecutorLinks>																	<!-- Windows Shortcuts to other TestExecutor executables. -->
     <Relays>P:\Test\Engineers\Equipment Manuals\TestExecutive\Measurement Computing</Relays>										<!-- MCC USB-ERB24, ULI & InstaCal -->
   </Folders>
   

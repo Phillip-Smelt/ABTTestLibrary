@@ -24,9 +24,6 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using System.Configuration;
-using Windows.UI.Xaml.Documents;
 
 /// <para>
 /// TODO:  Eventually; refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -67,13 +64,14 @@ using Windows.UI.Xaml.Documents;
 
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
+        public const String GlobalConfigurationFile = @"C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get();
         public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by button_click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
-        public static readonly String EMailAdministratorTo = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Administrators") select xe.Element("EMail").Value).ElementAt(0);
-        public static readonly String EMailAdministratorCC = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Administrators") select xe.Element("EMail").Value).ElementAt(1);
+        public static readonly String EMailAdministratorTo = (from xe in XElement.Load(GlobalConfigurationFile).Elements("Administrators") select xe.Element("EMail").Value).ElementAt(0);
+        public static readonly String EMailAdministratorCC = (from xe in XElement.Load(GlobalConfigurationFile).Elements("Administrators") select xe.Element("EMail").Value).ElementAt(1);
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
         private readonly RegistryKey _serialNumberRegistryKey = null;
@@ -83,25 +81,26 @@ namespace ABT.TestSpace.TestExec {
         protected TestExecutive(Icon icon) {
             InitializeComponent();
             Icon = icon;
+            // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
 
-            if (String.Equals(ConfigUUT.SerialNumberRegExCustom, "NotApplicable")) _serialNumberRegEx = (from xe in XElement.Load("TestExecutive.config.xml").Elements() select xe.Element("SerialNumberRegExDefault").Value).ElementAt(0);
+            if (String.Equals(ConfigUUT.SerialNumberRegExCustom, "NotApplicable")) _serialNumberRegEx = (from xe in XElement.Load(GlobalConfigurationFile).Elements() select xe.Element("SerialNumberRegExDefault").Value).ElementAt(0);
             else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
             if (RegexInvalid(_serialNumberRegEx)) {
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine($"Invalid Serial Number Regular Expression '{_serialNumberRegEx}':");
-                sb.AppendLine("   Check TestExecutive.config.xml/SerialNumberRegExDefault or App.config/UUT_SerialNumberRegExCustom for valid Regular Expression syntax.");
-                sb.AppendLine("   Thank you & have a nice day!");
-                _ = MessageBox.Show(sb.ToString(), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                sb.AppendLine($"   Check {GlobalConfigurationFile}/SerialNumberRegExDefault or App.config/UUT_SerialNumberRegExCustom for valid Regular Expression syntax.");
+                sb.AppendLine($"   Thank you & have a nice day {UserPrincipal.Current.DisplayName}!");
                 throw new ArgumentException(sb.ToString());
             }
-            _serialNumberDialog = ConfigLogger.SerialNumberDialogEnabled ? new SerialNumberDialog(_serialNumberRegEx) : null;
-            // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
 
             _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
             ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
 
+#if TEST_STATION
+            if(ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
             UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
             UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
+#endif
         }
 
         public static Boolean RegexInvalid(String RegularExpression) {
@@ -126,12 +125,20 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public virtual void Initialize() {
+#if TEST_STATION
             SCPI99.Reset(SVIs);
             UE24.Set(C.S.NC);
             Debug.Assert(Initialized());
+#endif
         }
 
-        public virtual Boolean Initialized() { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
+        public virtual Boolean Initialized() {
+#if TEST_STATION
+            return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC);
+#else
+            return false;
+#endif
+        }
 
         public static void SendAdministratorMailMessage(String Subject, Exception Ex, String CC="") {
             StringBuilder sb = new StringBuilder();
@@ -248,10 +255,8 @@ namespace ABT.TestSpace.TestExec {
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
-        private void OpenApp(String CompanyID, String AppID, String Arguments="", String AppOverride="") {
-            String app;
-            if (String.IsNullOrEmpty(AppOverride)) app = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Apps").Elements(CompanyID) select xe.Element(AppID).Value).ElementAt(0);
-            else app = AppOverride;
+        private void OpenApp(String CompanyID, String AppID, String Arguments="") {
+            String app = (from xe in XElement.Load(GlobalConfigurationFile).Elements("Apps").Elements(CompanyID) select xe.Element(AppID).Value).ElementAt(0);
             
             if (File.Exists($"{app}")) {
                 ProcessStartInfo psi = new ProcessStartInfo {
@@ -266,9 +271,9 @@ namespace ABT.TestSpace.TestExec {
             } else InvalidPathError(app);
         }
 
-        private String GetFile(String FileID) { return (from xe in XElement.Load("TestExecutive.config.xml").Elements("Files") select xe.Element(FileID).Value).ElementAt(0); }
+        private String GetFile(String FileID) { return (from xe in XElement.Load(GlobalConfigurationFile).Elements("Files") select xe.Element(FileID).Value).ElementAt(0); }
 
-        private String GetFolder(String FolderID) { return (from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element(FolderID).Value).ElementAt(0); }
+        private String GetFolder(String FolderID) { return (from xe in XElement.Load(GlobalConfigurationFile).Elements("Folders") select xe.Element(FolderID).Value).ElementAt(0); }
 
         private void OpenFolder(String FolderPath) {
             if (Directory.Exists(FolderPath)) {
@@ -302,6 +307,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonCancelReset(Boolean enabled) {
+#if TEST_STATION
             if (enabled) {
                 ButtonCancel.UseVisualStyleBackColor = false;
                 ButtonCancel.BackColor = Color.Yellow;
@@ -316,6 +322,9 @@ namespace ABT.TestSpace.TestExec {
             _cancelled = false;
             ButtonCancel.Text = "Cancel";
             ButtonCancel.Enabled = enabled;
+#else
+            ButtonCancel.Enabled = false;
+#endif
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
@@ -328,7 +337,6 @@ namespace ABT.TestSpace.TestExec {
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
             FormModeReset();
             FormModeWait();
-            ButtonStart_Clicked(sender, e);
         }
 
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
@@ -354,6 +362,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonStartReset(Boolean enabled) {
+#if TEST_STATION
             if (enabled) {
                 ButtonStart.UseVisualStyleBackColor = false;
                 ButtonStart.BackColor = Color.Green;
@@ -362,8 +371,11 @@ namespace ABT.TestSpace.TestExec {
                 ButtonStart.UseVisualStyleBackColor = true;
             }
             ButtonStart.Enabled = enabled;
+#else
+            ButtonStart.Enabled = false;
+#endif
         }
-        #endregion Command Buttons
+#endregion Command Buttons
 
         #region Tool Strip Menu Items
         private void TSMI_File_Save_Click(Object sender, EventArgs e) {
@@ -407,7 +419,7 @@ namespace ABT.TestSpace.TestExec {
             StringBuilder sb = new StringBuilder($"Discovering Microsoft supported, corded Barcode Scanner(s):{Environment.NewLine}");
             sb.AppendLine($"  - See https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.");
             sb.AppendLine($"  - Note that only corded Barcode Scanners are discovered; cordless BlueTooth & Wireless scanners are ignored.");
-            sb.AppendLine($"  - Modify TestExecutive.config.xml to use a discovered Barcode Scanner.");
+            sb.AppendLine($"  - Modify GlobalConfigurationFile to use a discovered Barcode Scanner.");
             sb.AppendLine($"  - Scanners must be programmed into USB-HID mode to function properly:");
             sb.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment%20Manuals/TestExecutive/Honeywell%20Voyager%201200g/Honeywell%20Voyager%201200G%20User's%20Guide%20ReadMe.pdf");
             sb.AppendLine($"    - Or:  https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/ppr/en-us/public/products/barcode-scanners/general-purpose-handheld/1200g/documents/sps-ppr-vg1200-ug.pdf{Environment.NewLine}");
@@ -438,7 +450,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Relays")); }
         private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Unlike {Assembly.GetEntryAssembly().GetName().Name}.exe.config, {Assembly.GetExecutingAssembly().GetName().Name}.config.xml is a global configuration file that applies to all TestExecutor apps on its host PC.{Environment.NewLine}");
+            sb.AppendLine($"Unlike {Assembly.GetEntryAssembly().GetName().Name}.exe.config, {GlobalConfigurationFile} is a global configuration file that applies to all TestExecutor apps on its host PC.{Environment.NewLine}");
             sb.AppendLine("Changing it thus changes behavior for all TestExecutors, so proceed with caution.");
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GetFile("TestExecutiveConfigXML"));
@@ -466,7 +478,7 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_UUT_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
-                ofd.InitialDirectory = (from xe in XElement.Load("TestExecutive.config.xml").Elements("Folders") select xe.Element("TestExecutorLinks").Value).ElementAt(0);
+                ofd.InitialDirectory = (from xe in XElement.Load(GlobalConfigurationFile).Elements("Folders") select xe.Element("TestExecutorLinks").Value).ElementAt(0);
                 ofd.Filter = "Windows Shortcuts|*.lnk";
                 ofd.DereferenceLinks = true;
                 ofd.RestoreDirectory = true;
@@ -490,7 +502,7 @@ namespace ABT.TestSpace.TestExec {
             "About TestExecutor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         #endregion Tool Strip Menu Items
-        #endregion Form
+#endregion Form
 
         #region Measurements
         private void MeasurementsPreRun() {
