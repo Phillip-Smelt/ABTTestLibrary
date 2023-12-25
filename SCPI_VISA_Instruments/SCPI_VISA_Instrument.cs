@@ -36,7 +36,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                         Instrument = new AgEL30000(Address);
                         LoadOrStimulus = EL_34143A.LoadOrStimulus;
 #if !NO_HARDWARE
-                            EL_34143A.Initialize(this);
+                        EL_34143A.Initialize(this);
 #endif
                         break;
                     case MM_34661A.MODEL:
