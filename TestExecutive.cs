@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -65,11 +66,14 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
         public const String GlobalConfigurationFile = @"C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml";
+        public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get();
         public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by button_click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
+        public String MeasurementIDPresent { get; private set; } = String.Empty;
+        public Measurement MeasurementPresent { get; private set; } = null;
         public static readonly String EMailAdministratorTo = (from xe in XElement.Load(GlobalConfigurationFile).Elements("Administrators") select xe.Element("EMail").Value).ElementAt(0);
         public static readonly String EMailAdministratorCC = (from xe in XElement.Load(GlobalConfigurationFile).Elements("Administrators") select xe.Element("EMail").Value).ElementAt(1);
         private readonly String _serialNumberRegEx = null;
@@ -375,7 +379,7 @@ namespace ABT.TestSpace.TestExec {
             ButtonStart.Enabled = false;
 #endif
         }
-#endregion Command Buttons
+        #endregion Command Buttons
 
         #region Tool Strip Menu Items
         private void TSMI_File_Save_Click(Object sender, EventArgs e) {
@@ -502,7 +506,7 @@ namespace ABT.TestSpace.TestExec {
             "About TestExecutor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         #endregion Tool Strip Menu Items
-#endregion Form
+        #endregion Form
 
         #region Measurements
         private void MeasurementsPreRun() {
@@ -520,6 +524,8 @@ namespace ABT.TestSpace.TestExec {
         private async Task MeasurementsRun() {
             foreach (String groupID in ConfigTest.GroupIDsSequence) {
                 foreach (String measurementID in ConfigTest.GroupIDsToMeasurementIDs[groupID]) {
+                    MeasurementIDPresent = measurementID;
+                    MeasurementPresent = ConfigTest.Measurements[MeasurementIDPresent];
                     try {
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
@@ -618,5 +624,76 @@ namespace ABT.TestSpace.TestExec {
 
         private Int32 MeasurementResultsCount(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Result, eventCode) select measurement).Count(); }
         #endregion Measurements
+
+        #region Introspective methods.
+        public Boolean AreMethodNamesPriorNext(String prior, String next) { return String.Equals(GetID_MeasurementPrior(), prior) && String.Equals(GetID_MeasurementNext(), next); }
+
+        public Boolean IsGroup(String GroupID) { return String.Equals(ConfigTest.Measurements[MeasurementIDPresent].GroupID, GroupID); }
+                 
+        public Boolean IsGroup(String GroupID, String Description, String MeasurementIDs, Boolean Selectable, Boolean CancelNotPassed) {
+            return 
+                String.Equals(ConfigTest.Measurements[MeasurementIDPresent].GroupID, GroupID) && 
+                String.Equals(ConfigTest.Groups[GetID_Group()].Description, Description) && 
+                String.Equals(ConfigTest.Groups[GetID_Group()].TestMeasurementIDs, MeasurementIDs) && 
+                ConfigTest.Groups[GetID_Group()].Selectable == Selectable && 
+                ConfigTest.Groups[GetID_Group()].CancelNotPassed == CancelNotPassed;
+        }
+
+        public Boolean IsMeasurement(String Description, String IDPrior, String IDNext, String ClassName, Boolean CancelNotPassed, String Arguments) {
+            return
+                IsMeasurement(Description, ClassName, CancelNotPassed, Arguments) &&
+                String.Equals(GetID_MeasurementPrior(), IDPrior) &&
+                String.Equals(GetID_MeasurementNext(), IDNext);
+        }
+
+        public Boolean IsMeasurement(String Description, String ClassName, Boolean CancelNotPassed, String Arguments) {
+            return 
+                String.Equals(MeasurementPresent.Description, Description) && 
+                String.Equals(MeasurementPresent.ClassName, ClassName) && 
+                MeasurementPresent.CancelNotPassed == CancelNotPassed && 
+                String.Equals((String)MeasurementPresent.ClassObject.GetType().GetMethod("ArgumentsGet").Invoke(MeasurementPresent.ClassObject, null), Arguments); 
+        }
+
+        public Boolean IsOperation(String OperationID) { return String.Equals(ConfigTest.TestElementID, OperationID); }
+        
+        public Boolean IsOperation(String OperationID, String Description, String Revision, String GroupsIDs) {
+                return
+                String.Equals(ConfigTest.TestElementID, OperationID) &&
+                String.Equals(ConfigTest.TestElementDescription, Description) &&
+                String.Equals(ConfigTest.TestElementRevision, Revision) &&
+                String.Equals(String.Join(MeasurementAbstract.SA.ToString(), ConfigTest.GroupIDsSequence.ToArray()), GroupsIDs);
+        }
+
+        private String GetID_Group() { return ConfigTest.Measurements[MeasurementIDPresent].GroupID; }
+        
+        private String GetID_MeasurementNext() {
+            if (GetIDs_MeasurementSequence() == ConfigTest.TestMeasurementIDsSequence.Count - 1) return NONE;
+            return ConfigTest.TestMeasurementIDsSequence[GetIDs_MeasurementSequence() + 1];
+        }
+
+        private String GetID_MeasurementPrior() {
+            if (GetIDs_MeasurementSequence() == 0) return NONE;
+            return ConfigTest.TestMeasurementIDsSequence[GetIDs_MeasurementSequence() - 1];
+        }
+
+        private Int32 GetIDs_MeasurementSequence() { return ConfigTest.TestMeasurementIDsSequence.FindIndex(x => x.Equals(MeasurementIDPresent)); }
+
+        public String GetMeasurementNumericArguments(String measurementID) {
+            MeasurementNumeric mn = (MeasurementNumeric)Measurement.Get(measurementID).ClassObject;
+            return (String)mn.GetType().GetMethod("ArgumentsGet").Invoke(mn, null); 
+        }
+        #endregion Introspective methods.
+
+        #region Logging methods.
+        public void LogCaller([CallerFilePath] String callerFilePath = "", [CallerMemberName] String callerMemberName = "", [CallerLineNumber] Int32 callerLineNumber = 0) {
+            LogMessage("Caller File", $"'{callerFilePath}'");
+            LogMessage("Caller Member", $"'{callerMemberName}'");
+            LogMessage("Caller Line #", $"'{callerLineNumber}'");
+        }
+
+        public void LogMessage(String Label, String Message) { MeasurementPresent.Message += $"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}{Environment.NewLine}"; }
+
+        public void LogMessages(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) LogMessage(Label, Message); }
+        #endregion Logging methods.
     }
 }
