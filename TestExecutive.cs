@@ -195,9 +195,9 @@ namespace ABT.TestSpace.TestExec {
         ///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
         ///
         /// NOTE:  The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
-        ///       thrown CancellationExceptions.
+        ///        thrown CancellationExceptions.
         /// NOTE:  The Operator Reactive & App.config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
-        ///       inside the TestExecutive.MeasurementsRun() loop.
+        ///        inside the TestExecutive.MeasurementsRun() loop.
         /// </para>
         /// </summary>
 
