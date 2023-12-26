@@ -248,7 +248,11 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void FormModeRun() {
+#if !NO_HARDWARE
             ButtonCancelReset(enabled: true);
+#else
+            ButtonCancelReset(enabled: false);
+#endif
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
             ButtonEmergencyStop.Enabled = true; // Always enabled.
@@ -256,7 +260,11 @@ namespace ABT.TestSpace.TestExec {
 
         private void FormModeWait() {
             ButtonSelectTests.Enabled = true;
+#if !NO_HARDWARE
             ButtonStartReset(enabled: (ConfigTest != null));
+#else
+            ButtonCancelReset(enabled: false);
+#endif
             ButtonCancelReset(enabled: false);
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
@@ -313,7 +321,6 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonCancelReset(Boolean enabled) {
-#if !NO_HARDWARE
             if (enabled) {
                 ButtonCancel.UseVisualStyleBackColor = false;
                 ButtonCancel.BackColor = Color.Yellow;
@@ -328,9 +335,6 @@ namespace ABT.TestSpace.TestExec {
             _cancelled = false;
             ButtonCancel.Text = "Cancel";
             ButtonCancel.Enabled = enabled;
-#else
-            ButtonCancel.Enabled = false;
-#endif
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
@@ -368,7 +372,6 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonStartReset(Boolean enabled) {
-#if !NO_HARDWARE
             if (enabled) {
                 ButtonStart.UseVisualStyleBackColor = false;
                 ButtonStart.BackColor = Color.Green;
@@ -377,9 +380,6 @@ namespace ABT.TestSpace.TestExec {
                 ButtonStart.UseVisualStyleBackColor = true;
             }
             ButtonStart.Enabled = enabled;
-#else
-            ButtonStart.Enabled = false;
-#endif
         }
         #endregion Command Buttons
 
@@ -508,7 +508,7 @@ namespace ABT.TestSpace.TestExec {
             "About TestExecutor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         #endregion Tool Strip Menu Items
-        #endregion Form
+#endregion Form
 
         #region Measurements
         private void MeasurementsPreRun() {
