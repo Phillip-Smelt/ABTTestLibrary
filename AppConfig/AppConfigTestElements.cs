@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ABT.TestSpace.TestExec.AppConfig {
@@ -158,7 +159,19 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             TestMeasurementsSection testMeasurementsSection = (TestMeasurementsSection)ConfigurationManager.GetSection(TestMeasurementsSection.ClassName);
             TestMeasurements testMeasurements = testMeasurementsSection.TestMeasurements;
             Dictionary<String, Measurement> dictionary = new Dictionary<String, Measurement>();
-            foreach (TestMeasurement tm in testMeasurements) { dictionary.Add(tm.ID, new Measurement(tm.ID, tm.Revision, tm.Description, tm.ClassName, tm.CancelNotPassed, tm.Arguments)); }
+            foreach (TestMeasurement tm in testMeasurements) try {
+                dictionary.Add(tm.ID, new Measurement(tm.ID, tm.Revision, tm.Description, tm.ClassName, tm.CancelNotPassed, tm.Arguments));
+            } catch {
+                StringBuilder sb = new StringBuilder().AppendLine();
+                    sb.AppendLine($"App.config TestMeasurement syntax error:");
+                    sb.AppendLine($"   ID              : {tm.ID}");
+                    sb.AppendLine($"   Revision        : {tm.Revision}");
+                    sb.AppendLine($"   Description     : {tm.Description}");
+                    sb.AppendLine($"   ClassName       : {tm.ClassName}");
+                    sb.AppendLine($"   CancelNotPassed : {tm.CancelNotPassed}");
+                    sb.AppendLine($"   Arguments       : {tm.Arguments}");
+                throw new ArgumentException(sb.ToString());
+            }
             return dictionary;
         }
 

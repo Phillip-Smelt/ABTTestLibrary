@@ -122,12 +122,12 @@ namespace ABT.TestSpace.TestExec {
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
 
         public void ErrorMessage(String Error) {
-            _ = MessageBox.Show(ActiveForm, $"Unexpected error.{Environment.NewLine}{Environment.NewLine}{Error}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _ = MessageBox.Show(ActiveForm, $"Unexpected error.{Environment.NewLine}{Environment.NewLine}{Error}{Environment.NewLine}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public void ErrorMessage(Exception Ex) {
-            ErrorMessage($"Will attempt to E-Mail details to {AdministratorEMailTo} & CC {AdministratorEMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Outlook profile if dialog appears.");
-            SendAdministratorMailMessage("Exception caught!", Ex, ConfigUUT.EMailTestEngineer);
+            ErrorMessage($"{Ex.Message}Will attempt to E-Mail details to {AdministratorEMailTo} & CC {AdministratorEMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Outlook profile if dialog appears.");
+            SendAdministratorMailMessage("Exception caught!", Ex);
         }
 
         public virtual void Initialize() {
@@ -160,7 +160,7 @@ namespace ABT.TestSpace.TestExec {
             mailItem.Subject = Subject;
             mailItem.To = AdministratorEMailTo;
             Outlook.Recipient recipient = mailItem.Recipients.Add(AdministratorEMailCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
-            recipient = mailItem.Recipients.Add(CC);                                        recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+            if (!String.Equals(CC, String.Empty)) { recipient = mailItem.Recipients.Add(CC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC; }
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             mailItem.Body = Body;
             mailItem.Send();
