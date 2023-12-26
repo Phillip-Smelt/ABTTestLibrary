@@ -92,8 +92,8 @@
   </Folders>
   
   <Administrators>
-    <EMail>Phillip.Smelt@Borisch.Com</EMail>  <!-- Element 0 = TestExecutive's EMailAdministratorTo.  -->
-    <EMail>Phillip.Smelt@Borisch.Com</EMail>  <!-- Element 1 = TestExecutive's EMailAdministratorCC.  Poor fellow's doing double duty! -->
+    <EMailTo>Phillip.Smelt@Borisch.Com</EMailTo>
+    <EMailCC>Phillip.Smelt@Borisch.Com</EMailCC>
   </Administrators>
   
 	<SCPI_VISA_Instruments>  

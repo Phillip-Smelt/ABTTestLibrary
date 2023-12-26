@@ -68,14 +68,14 @@ namespace ABT.TestSpace.TestExec {
         public const String GlobalConfigurationFile = @"C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml";
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
-        public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = SCPI_VISA_Instrument.Get();
+        public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
         public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
-        public AppConfigTest ConfigTest { get; private set; } // Requires form; instantiated by button_click event method.
+        public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by button_click event method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
-        public static readonly String EMailAdministratorTo = (from xe in XElement.Load(GlobalConfigurationFile).Elements("Administrators") select xe.Element("EMail").Value).ElementAt(0);
-        public static readonly String EMailAdministratorCC = (from xe in XElement.Load(GlobalConfigurationFile).Elements("Administrators") select xe.Element("EMail").Value).ElementAt(1);
+        public static readonly String AdministratorEMailTo = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailTo").Value;
+        public static readonly String AdministratorEMailCC = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailCC").Value;
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
         private readonly RegistryKey _serialNumberRegistryKey = null;
@@ -87,8 +87,9 @@ namespace ABT.TestSpace.TestExec {
             Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
 
-            if (String.Equals(ConfigUUT.SerialNumberRegExCustom, "NotApplicable")) _serialNumberRegEx = (from xe in XElement.Load(GlobalConfigurationFile).Elements() select xe.Element("SerialNumberRegExDefault").Value).ElementAt(0);
+            if (String.Equals(ConfigUUT.SerialNumberRegExCustom, "NotApplicable")) _serialNumberRegEx = XElement.Load(GlobalConfigurationFile).Element("SerialNumberRegExDefault").Value;
             else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
+
             if (RegexInvalid(_serialNumberRegEx)) {
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine($"Invalid Serial Number Regular Expression '{_serialNumberRegEx}':");
@@ -101,6 +102,7 @@ namespace ABT.TestSpace.TestExec {
             ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
 
 #if !NO_HARDWARE
+            SVIs = SCPI_VISA_Instrument.Get();
             if(ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
             UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
             UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
@@ -124,7 +126,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public void ErrorMessage(Exception Ex) {
-            ErrorMessage($"Will attempt to E-Mail details to {EMailAdministratorTo} & CC {EMailAdministratorCC}.{Environment.NewLine}{Environment.NewLine}Please select your Outlook profile if dialog appears.");
+            ErrorMessage($"Will attempt to E-Mail details to {AdministratorEMailTo} & CC {AdministratorEMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Outlook profile if dialog appears.");
             SendAdministratorMailMessage("Exception caught!", Ex, ConfigUUT.EMailTestEngineer);
         }
 
@@ -156,8 +158,8 @@ namespace ABT.TestSpace.TestExec {
         public static void SendAdministratorMailMessage(String Subject, String Body, String CC="") {
             Outlook.MailItem mailItem = GetMailItem();
             mailItem.Subject = Subject;
-            mailItem.To = EMailAdministratorTo;
-            Outlook.Recipient recipient = mailItem.Recipients.Add(EMailAdministratorCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+            mailItem.To = AdministratorEMailTo;
+            Outlook.Recipient recipient = mailItem.Recipients.Add(AdministratorEMailCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
             recipient = mailItem.Recipients.Add(CC);                                        recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             mailItem.Body = Body;
@@ -171,7 +173,7 @@ namespace ABT.TestSpace.TestExec {
         ///      1)  Operator Proactive:
         ///          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
         ///            cancel currently executing Measurement.
-        ///          - Requires TestExecutor implementation by the Test Developer, but is initiated by Operator, so is categorized as such.
+        ///          - Requires TestExecutor implementation by the Test Developer, but is initiated by Operator, so categorized as such.
         ///          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
         ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
         ///          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
@@ -223,8 +225,8 @@ namespace ABT.TestSpace.TestExec {
         private void SendMailMessageWithAttachment(String subject) {
             Outlook.MailItem mailItem = GetMailItem();
             mailItem.Subject = subject;
-            mailItem.To = EMailAdministratorTo;
-            Outlook.Recipient recipient = mailItem.Recipients.Add(EMailAdministratorCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+            mailItem.To = AdministratorEMailTo;
+            Outlook.Recipient recipient = mailItem.Recipients.Add(AdministratorEMailCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
             recipient = mailItem.Recipients.Add(ConfigUUT.EMailTestEngineer);               recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             mailItem.Body =
