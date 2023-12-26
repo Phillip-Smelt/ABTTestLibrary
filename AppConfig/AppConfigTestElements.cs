@@ -161,15 +161,17 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             Dictionary<String, Measurement> dictionary = new Dictionary<String, Measurement>();
             foreach (TestMeasurement tm in testMeasurements) try {
                 dictionary.Add(tm.ID, new Measurement(tm.ID, tm.Revision, tm.Description, tm.ClassName, tm.CancelNotPassed, tm.Arguments));
-            } catch {
+            } catch (Exception e){
                 StringBuilder sb = new StringBuilder().AppendLine();
-                    sb.AppendLine($"App.config TestMeasurement syntax error:");
+                    sb.AppendLine($"App.config issue with TestMeasurement:");
                     sb.AppendLine($"   ID              : {tm.ID}");
                     sb.AppendLine($"   Revision        : {tm.Revision}");
                     sb.AppendLine($"   Description     : {tm.Description}");
                     sb.AppendLine($"   ClassName       : {tm.ClassName}");
                     sb.AppendLine($"   CancelNotPassed : {tm.CancelNotPassed}");
-                    sb.AppendLine($"   Arguments       : {tm.Arguments}");
+                    sb.AppendLine($"   Arguments       : {tm.Arguments}{Environment.NewLine}");
+                    sb.AppendLine($"Initiating Exception StackTrace:");
+                    sb.AppendLine($"{e.StackTrace}");
                 throw new ArgumentException(sb.ToString());
             }
             return dictionary;

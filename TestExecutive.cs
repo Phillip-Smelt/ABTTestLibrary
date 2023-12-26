@@ -259,12 +259,12 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void FormModeWait() {
-            ButtonSelectTests.Enabled = true;
 #if !NO_HARDWARE
             ButtonStartReset(enabled: (ConfigTest != null));
 #else
-            ButtonCancelReset(enabled: false);
+            ButtonStartReset(enabled: false);
 #endif
+            ButtonSelectTests.Enabled = true;
             ButtonCancelReset(enabled: false);
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
