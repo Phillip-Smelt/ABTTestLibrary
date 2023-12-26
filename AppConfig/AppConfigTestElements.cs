@@ -170,8 +170,10 @@ namespace ABT.TestSpace.TestExec.AppConfig {
                     sb.AppendLine($"   ClassName       : {tm.ClassName}");
                     sb.AppendLine($"   CancelNotPassed : {tm.CancelNotPassed}");
                     sb.AppendLine($"   Arguments       : {tm.Arguments}{Environment.NewLine}");
+                    sb.AppendLine($"Initiating Exception Message:");
+                    sb.AppendLine($"{e.Message}{Environment.NewLine}");
                     sb.AppendLine($"Initiating Exception StackTrace:");
-                    sb.AppendLine($"{e.StackTrace}");
+                    sb.AppendLine($"{e.StackTrace}{Environment.NewLine}");
                 throw new ArgumentException(sb.ToString());
             }
             return dictionary;
