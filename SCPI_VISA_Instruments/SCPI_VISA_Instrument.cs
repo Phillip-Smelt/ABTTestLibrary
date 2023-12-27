@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
-using Agilent.CommandExpert.ScpiNet.Ag3466x_2_08;
+using Agilent.CommandExpert.ScpiNet.Ag3446x_2_08;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
@@ -37,10 +37,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                         LoadOrStimulus = EL_34143A.LoadOrStimulus;
                         EL_34143A.Initialize(this);
                         break;
-                    case MM_34661A.MODEL:
-                        Instrument = new Ag3466x(Address);
-                        LoadOrStimulus = MM_34661A.LoadOrStimulus;
-                        MM_34661A.Initialize(this);
+                    case MM_34461A.MODEL:
+                        Instrument = new Ag3446x(Address);
+                        LoadOrStimulus = MM_34461A.LoadOrStimulus;
+                        MM_34461A.Initialize(this);
                         break;
                     case PS_E36103B.MODEL:
                     case PS_E36105B.MODEL:
