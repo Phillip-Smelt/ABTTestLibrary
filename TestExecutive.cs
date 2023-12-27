@@ -124,11 +124,11 @@ namespace ABT.TestSpace.TestExec {
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
 
         public void ErrorMessage(String Error) {
-            _ = MessageBox.Show(ActiveForm, $"Unexpected error:{Environment.NewLine}'{Error}'", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _ = MessageBox.Show(ActiveForm, $"Unexpected error:{Environment.NewLine}{Error}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public void ErrorMessage(Exception Ex) {
-            ErrorMessage($"{Ex.Message}{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details to {AdministratorEMailTo} & CC {AdministratorEMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Outlook profile if dialog appears.");
+            ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {AdministratorEMailTo} & CC {AdministratorEMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Outlook profile if dialog appears.");
             SendAdministratorMailMessage("Exception caught!", Ex);
         }
 
