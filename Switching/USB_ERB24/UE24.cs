@@ -178,12 +178,12 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public static void Set(UE ue, R r, C.S s) {
             ErrorInfo errorInfo = _only.USB_ERB24s[ue].DBitOut(DigitalPortType.FirstPortA, (Int32)r, s is C.S.NC ? DigitalLogicState.Low : DigitalLogicState.High);
             if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) ProcessErrorInfo(_only.USB_ERB24s[ue], errorInfo);
-            // Debug.Assert(Is(ue, r, s));
+            Debug.Assert(Is(ue, r, s));
         }
 
         public static void Set(UE ue, HashSet<R> rs, C.S s) {
             Set(ue, rs.ToDictionary(r => r, r => s));
-            // Debug.Assert(Are(ue, rs.ToDictionary(r => r, r => s)));
+            Debug.Assert(Are(ue, rs.ToDictionary(r => r, r => s)));
         }
 
         public static void Set(UE ue, Dictionary<R, C.S> RεS) { foreach (KeyValuePair<R, C.S> kvp in RεS) Set(ue, kvp.Key, kvp.Value); }
@@ -192,7 +192,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
             foreach (R r in Enum.GetValues(typeof(R))) RεS.Add(r, s);
             Set(ue, RεS);
-            // Debug.Assert(Are(ue, RεS));
+            Debug.Assert(Are(ue, RεS));
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public static void Set(HashSet<UE> ues, HashSet<R> rs, C.S s) {
             foreach (UE ue in ues) {
                 Set(ue, rs, s);
-                // Debug.Assert(Are(ue, rs, s));
+                Debug.Assert(Are(ue, rs, s));
             }
         }
 
@@ -220,7 +220,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         /// </summary>
         public static void Set(C.S s) {
             foreach (UE ue in Enum.GetValues(typeof(UE))) Set(ue, s);
-            // Debug.Assert(Are(s));
+            Debug.Assert(Are(s));
         }
         #endregion Set
 
