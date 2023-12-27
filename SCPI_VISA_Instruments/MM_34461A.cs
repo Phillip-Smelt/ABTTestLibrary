@@ -39,7 +39,7 @@ public enum PROPERTY { AmperageAC, AmperageDC, Capacitance, Continuity, Frequenc
         }
 
         public static Double Get(SCPI_VISA_Instrument SVI, PROPERTY property) {
-            // SCPI FORMAT:DATA(ASCii/REAL) command unavailable on KS 34661A.
+            // SCPI FORMAT:DATA(ASCii/REAL) command unavailable on KS 34461A.
             switch (property) {
                 case PROPERTY.AmperageAC:
                     ((Ag3446x)SVI.Instrument).SCPI.MEASure.CURRent.AC.QueryAsciiReal(AUTO, DEFault, out Double acCurrent);
@@ -83,7 +83,7 @@ public enum PROPERTY { AmperageAC, AmperageDC, Capacitance, Continuity, Frequenc
         }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            if (TerminalsGet(SVI) == TERMINAL.Front) _ = MessageBox.Show("Please depress Keysight 34661A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (TerminalsGet(SVI) == TERMINAL.Front) _ = MessageBox.Show("Please depress Keysight 34461A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Information);
             DelaySet(SVI, MMD.DEFault);
             DelayAutoSet(SVI, true);
             SCPI99.Initialize(SVI);

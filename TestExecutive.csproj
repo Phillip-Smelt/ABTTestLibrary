@@ -101,7 +101,7 @@
     <Compile Include="SCPI_VISA_Instruments\PS_E36234A.cs" />
     <Compile Include="SCPI_VISA_Instruments\EL_34143A.cs" />
     <Compile Include="SCPI_VISA_Instruments\WG_33509B.cs" />
-    <Compile Include="SCPI_VISA_Instruments\MM_34661A.cs" />
+    <Compile Include="SCPI_VISA_Instruments\MM_34461A.cs" />
     <Compile Include="Logging\RTFSink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
