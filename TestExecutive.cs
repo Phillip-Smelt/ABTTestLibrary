@@ -136,12 +136,11 @@ namespace ABT.TestSpace.TestExec {
             if (UtilizeInstrumentation) {
                 SCPI99.Reset(SVIs);
                 UE24.Set(C.S.NC);
-                Debug.Assert(Initialized());
             }
         }
 
         public virtual Boolean Initialized() {
-            if (UtilizeInstrumentation) return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC);
+            if (UtilizeInstrumentation) { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
             return false;
         }
 
@@ -161,7 +160,7 @@ namespace ABT.TestSpace.TestExec {
             Outlook.Recipient recipient = mailItem.Recipients.Add(AdministratorEMailCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
             if (!String.Equals(CC, String.Empty)) { recipient = mailItem.Recipients.Add(CC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC; }
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
-            mailItem.Body = Body;
+            mailItem.HTMLBody = "<p style='font-family:lucida console;font-size:8'>Font size</p>" + Body;
             mailItem.Send();
         }
 
@@ -465,9 +464,9 @@ namespace ABT.TestSpace.TestExec {
             sb.AppendLine($"- Directly editing '{UUT}.exe.config' allows temporary runtime execution changes, but they're overwritten when MS Build is subsequently executed.{Environment.NewLine}");
             sb.AppendLine($"- Changes to '{UUT}.exe.config' aren't incorporated into the source 'App.config' file, therefore permanently lost the next time MS Build is executed.{Environment.NewLine}");
             sb.AppendLine($"- For the niche case when it's useful to temporarily experiment with {UUT}.exe.config's behavior, and a C# compiler and/or");
-            sb.AppendLine($" {UUT} source code are unavailable on the {UUT} tester's PC, directly editing {UUT}.exe.config may prove useful.{Environment.NewLine}");
-            sb.AppendLine($"- Be sure to backport any permanently desired {UUT}.exe.config changes to App.config.{Environment.NewLine}");
-            sb.AppendLine($"- Also be sure to undo any temporary undesired {UUT}.exe.config changes after experimention is completed.");
+            sb.AppendLine($" {UUT} source code are unavailable on the {UUT} tester's PC, directly editing '{UUT}.exe.config' may prove useful.{Environment.NewLine}");
+            sb.AppendLine($"- Be sure to backport any permanently desired '{UUT}.exe.config' changes to 'App.config'.{Environment.NewLine}");
+            sb.AppendLine($"- Also be sure to undo any temporary undesired '{UUT}.exe.config' changes after experimention is completed.");
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", $"{UUT}.exe.config");
         }
