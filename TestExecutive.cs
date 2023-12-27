@@ -25,6 +25,7 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
+using Windows.UI.Xaml;
 
 /// <para>
 /// TODO:  Eventually; refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -160,7 +161,8 @@ namespace ABT.TestSpace.TestExec {
             Outlook.Recipient recipient = mailItem.Recipients.Add(AdministratorEMailCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
             if (!String.Equals(CC, String.Empty)) { recipient = mailItem.Recipients.Add(CC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC; }
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
-            mailItem.HTMLBody = "<p style='font-family:lucida console;font-size:8'>Font size</p>" + Body;
+            mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
+            mailItem.Body = Body;
             mailItem.Send();
         }
 
