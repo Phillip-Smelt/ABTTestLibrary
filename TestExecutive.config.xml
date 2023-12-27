@@ -82,7 +82,7 @@
         NOTE:  Barcode Scanner must also be programmed to read the Code39 Barcode Symbology of ABT's Serial Numbers.
 	-->
 
-  <UtilizeInstrumentation>False</UtilizeInstrumentation>
+  <UtilizeInstrumentation>True</UtilizeInstrumentation>
   <!-- NOTE:  Must use bool.TrueString & bool.FalseString, which are True & False respectively.
 			   - https://learn.microsoft.com/en-us/dotnet/api/system.boolean.parse?view=netframework-4.8
 				 
