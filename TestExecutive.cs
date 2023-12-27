@@ -276,8 +276,6 @@ namespace ABT.TestSpace.TestExec {
             } else InvalidPathError(app);
         }
 
-        private String GetFile(String FileID) { return XElement.Load(GlobalConfigurationFile).Element("Files").Element(FileID).Value; }
-
         private String GetFolder(String FolderID) { return XElement.Load(GlobalConfigurationFile).Element("Folders").Element(FolderID).Value; }
 
         private void OpenFolder(String FolderPath) {
@@ -450,7 +448,7 @@ namespace ABT.TestSpace.TestExec {
             sb.AppendLine($"Unlike {Assembly.GetEntryAssembly().GetName().Name}.exe.config, {GlobalConfigurationFile} is a global configuration file that applies to all TestExecutor apps on its host PC.{Environment.NewLine}");
             sb.AppendLine("Changing it thus changes behavior for all TestExecutors, so proceed with caution.");
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-            if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GetFile("TestExecutiveConfigXML"));
+            if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GlobalConfigurationFile);
         }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}.{Environment.NewLine}{Environment.NewLine}" +
