@@ -93,8 +93,11 @@
            - That is, production testing of UUTs.
 
          Instrumentation includes, but isn't limited to:
-         - Test Stations, including their SCPI VISA Instruments & USB-ERB24 Relays.
-         - Test Fixturing.
+         - Test Stations:
+					 - All SVI elements in element SCPI_VISA_Instruments.
+           - Bar Code Scanner defined in element BarCodeScannerID.
+           - USB-ERB24 Relays.
+         - Test Fixtures.
          - Programming or Emulator adapters like the Texas Instruments USB-TO-GPIO SAA or Microchip PICkit4 USB adapters.
 		-->
   
