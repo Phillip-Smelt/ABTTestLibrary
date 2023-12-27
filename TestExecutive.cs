@@ -76,6 +76,7 @@ namespace ABT.TestSpace.TestExec {
         public Measurement MeasurementPresent { get; private set; } = null;
         public static readonly String AdministratorEMailTo = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailTo").Value;
         public static readonly String AdministratorEMailCC = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailCC").Value;
+        public readonly Boolean IgnoreInstrumentation;
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
         private readonly RegistryKey _serialNumberRegistryKey = null;
@@ -101,12 +102,13 @@ namespace ABT.TestSpace.TestExec {
             _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
             ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
 
-#if !NO_HARDWARE
-            SVIs = SCPI_VISA_Instrument.Get();
-            if(ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
-            UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
-            UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
-#endif
+            IgnoreInstrumentation = Boolean.Parse(XElement.Load(GlobalConfigurationFile).Element("SerialNumberRegExDefault").Value) && ConfigUUT.IgnoreInstrumentation;
+            if (!IgnoreInstrumentation) {
+                SVIs = SCPI_VISA_Instrument.Get();
+                if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
+                UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
+                UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
+            }
         }
 
         public static Boolean RegexInvalid(String RegularExpression) {
@@ -131,19 +133,16 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public virtual void Initialize() {
-#if !NO_HARDWARE
-            SCPI99.Reset(SVIs);
-            UE24.Set(C.S.NC);
-            Debug.Assert(Initialized());
-#endif
+            if (!IgnoreInstrumentation) {
+                SCPI99.Reset(SVIs);
+                UE24.Set(C.S.NC);
+                Debug.Assert(Initialized());
+            }
         }
 
         public virtual Boolean Initialized() {
-#if !NO_HARDWARE
-            return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC);
-#else
+            if (!IgnoreInstrumentation) return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC);
             return false;
-#endif
         }
 
         public static void SendAdministratorMailMessage(String Subject, Exception Ex, String CC="") {
@@ -248,29 +247,23 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void FormModeRun() {
-#if !NO_HARDWARE
-            ButtonCancelReset(enabled: true);
-#else
-            ButtonCancelReset(enabled: false);
-#endif
+            ButtonCancelReset(enabled: !IgnoreInstrumentation);
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
         private void FormModeWait() {
-#if !NO_HARDWARE
-            ButtonStartReset(enabled: (ConfigTest != null));
-#else
-            ButtonStartReset(enabled: false);
-#endif
+            if (!IgnoreInstrumentation) ButtonStartReset(enabled: (ConfigTest != null));
+            else ButtonStartReset(enabled: false);
+
             ButtonSelectTests.Enabled = true;
             ButtonCancelReset(enabled: false);
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
         private void OpenApp(String CompanyID, String AppID, String Arguments="") {
-            String app = (from xe in XElement.Load(GlobalConfigurationFile).Elements("Apps").Elements(CompanyID) select xe.Element(AppID).Value).ElementAt(0);
+            String app = XElement.Load(GlobalConfigurationFile).Element("Apps").Element(CompanyID).Element(AppID).Value;
             
             if (File.Exists($"{app}")) {
                 ProcessStartInfo psi = new ProcessStartInfo {
@@ -285,9 +278,9 @@ namespace ABT.TestSpace.TestExec {
             } else InvalidPathError(app);
         }
 
-        private String GetFile(String FileID) { return (from xe in XElement.Load(GlobalConfigurationFile).Elements("Files") select xe.Element(FileID).Value).ElementAt(0); }
+        private String GetFile(String FileID) { return XElement.Load(GlobalConfigurationFile).Element("Files").Element(FileID).Value; }
 
-        private String GetFolder(String FolderID) { return (from xe in XElement.Load(GlobalConfigurationFile).Elements("Folders") select xe.Element(FolderID).Value).ElementAt(0); }
+        private String GetFolder(String FolderID) { return XElement.Load(GlobalConfigurationFile).Element("Folders").Element(FolderID).Value; }
 
         private void OpenFolder(String FolderPath) {
             if (Directory.Exists(FolderPath)) {
@@ -484,7 +477,7 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_UUT_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
-                ofd.InitialDirectory = (from xe in XElement.Load(GlobalConfigurationFile).Elements("Folders") select xe.Element("TestExecutorLinks").Value).ElementAt(0);
+                ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestExecutorLinks").Value;
                 ofd.Filter = "Windows Shortcuts|*.lnk";
                 ofd.DereferenceLinks = true;
                 ofd.RestoreDirectory = true;

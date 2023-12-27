@@ -41,7 +41,7 @@ namespace ABT.TestSpace.TestExec.Logging {
         public String Get() { return BarCodeText.Text; }
 
         private async void GetBarcodeScanner() {
-            String scannerID = (from xe in XElement.Load(TestExecutive.GlobalConfigurationFile).Elements("SerialNumberDialog") select xe.Element("BarCodeScannerID").Value).ElementAt(0);
+            String scannerID = XElement.Load(TestExecutive.GlobalConfigurationFile).Element("BarCodeScannerID").Value;
             DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(scannerID);
             _scanner = await BarcodeScanner.FromIdAsync(DI.Id);
             if (_scanner == null) throw new InvalidOperationException($"Barcode scanner Device ID:{Environment.NewLine}{Environment.NewLine}'{scannerID}'{Environment.NewLine}{Environment.NewLine}not found.");

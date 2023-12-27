@@ -13,6 +13,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String ManualsFolder = ConfigurationManager.AppSettings["UUT_ManualsFolder"].Trim();
         public readonly String EMailTestEngineer = ConfigurationManager.AppSettings["UUT_TestEngineerEmail"].Trim();
         public readonly String SerialNumberRegExCustom = ConfigurationManager.AppSettings["UUT_SerialNumberRegExCustom"].Trim();
+        public readonly Boolean IgnoreInstrumentation = Boolean.Parse(ConfigurationManager.AppSettings["UUT_IgnoreInstrumentation"].Trim());
         public String SerialNumber { get; set; } = String.Empty; // Input during testing.
         public String EventCode { get; set; } = EventCodes.UNSET; // Determined post-test.
 
