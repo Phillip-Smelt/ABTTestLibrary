@@ -465,7 +465,7 @@ namespace ABT.TestSpace.TestExec {
             sb.AppendLine($"- Directly editing '{UUT}.exe.config' allows temporary runtime execution changes, but they're overwritten when MS Build is subsequently executed.{Environment.NewLine}");
             sb.AppendLine($"- Changes to '{UUT}.exe.config' aren't incorporated into the source 'App.config' file, therefore permanently lost the next time MS Build is executed.{Environment.NewLine}");
             sb.AppendLine($"- For the niche case when it's useful to temporarily experiment with {UUT}.exe.config's behavior, and a C# compiler and/or");
-            sb.AppendLine($"  {UUT} source code are unavailable on the {UUT} tester's PC, directly editing {UUT}.exe.config may prove useful.{Environment.NewLine}");
+            sb.AppendLine($" {UUT} source code are unavailable on the {UUT} tester's PC, directly editing {UUT}.exe.config may prove useful.{Environment.NewLine}");
             sb.AppendLine($"- Be sure to backport any permanently desired {UUT}.exe.config changes to App.config.{Environment.NewLine}");
             sb.AppendLine($"- Also be sure to undo any temporary undesired {UUT}.exe.config changes after experimention is completed.");
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
