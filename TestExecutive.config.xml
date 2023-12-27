@@ -81,11 +81,22 @@
               - Both "ReadMe" & "User's Guides" documents reside in Logging folder for convenience.
         NOTE:  Barcode Scanner must also be programmed to read the Code39 Barcode Symbology of ABT's Serial Numbers.
 	-->
-  
-  <IgnoreInstrumentation>False</IgnoreInstrumentation>
-  <!-- Must use bool.TrueString & bool.FalseString, which are True & False respectively.
-			 https://learn.microsoft.com/en-us/dotnet/api/system.boolean.parse?view=netframework-4.8
-  -->
+
+  <UtilizeInstrumentation>False</UtilizeInstrumentation>
+  <!-- NOTE:  Must use bool.TrueString & bool.FalseString, which are True & False respectively.
+			   - https://learn.microsoft.com/en-us/dotnet/api/system.boolean.parse?view=netframework-4.8
+				 
+         NOTE:  Must have Instrumentation in order to utilize it:
+         - Set UUT_UtilizeInstrumentation = False if haven't or needn't utilize Instrumentation.
+					 - This is occasionally useful when developing/testing TestExecutive/TestExecutor.
+				 - Set UUT_UtilizeInstrumentation = True if have requisite Instrumentation & intend to use it.
+           - That is, production testing of UUTs.
+
+         Instrumentation includes, but isn't limited to:
+         - Test Stations, including their SCPI VISA Instruments & USB-ERB24 Relays.
+         - Test Fixturing.
+         - Programming or Emulator adapters like the Texas Instruments USB-TO-GPIO SAA or Microchip PICkit4 USB adapters.
+		-->
   
   <SerialNumberRegExDefault>^01BB2-[0-9]{5}$</SerialNumberRegExDefault>
   <!-- SerialNumberRegExDefault is the default global Regular Expression an ABT Serial Number is validated against in TestExecutive.
