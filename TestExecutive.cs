@@ -77,7 +77,7 @@ namespace ABT.TestSpace.TestExec {
         public Measurement MeasurementPresent { get; private set; } = null;
         public static readonly String AdministratorEMailTo = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailTo").Value;
         public static readonly String AdministratorEMailCC = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailCC").Value;
-        public readonly Boolean UtilizeInstrumentation;
+        public readonly Boolean UsingInstruments;
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
         private readonly RegistryKey _serialNumberRegistryKey = null;
@@ -103,8 +103,8 @@ namespace ABT.TestSpace.TestExec {
             _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
             ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
 
-            UtilizeInstrumentation = Boolean.Parse(XElement.Load(GlobalConfigurationFile).Element("UtilizeInstrumentation").Value) && ConfigUUT.UtilizeInstrumentation;
-            if (UtilizeInstrumentation) {
+            UsingInstruments = Boolean.Parse(XElement.Load(GlobalConfigurationFile).Element("UsingInstruments").Value) && ConfigUUT.UsingInstruments;
+            if (UsingInstruments) {
                 SVIs = SCPI_VISA_Instrument.Get();
                 if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
                 UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
@@ -134,14 +134,14 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public virtual void Initialize() {
-            if (UtilizeInstrumentation) {
+            if (UsingInstruments) {
                 SCPI99.Reset(SVIs);
                 UE24.Set(C.S.NC);
             }
         }
 
         public virtual Boolean Initialized() {
-            if (UtilizeInstrumentation) { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
+            if (UsingInstruments) { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
             return false;
         }
 
@@ -248,7 +248,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void FormModeRun() {
-            ButtonCancelReset(enabled: UtilizeInstrumentation);
+            ButtonCancelReset(enabled: UsingInstruments);
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
             ButtonEmergencyStop.Enabled = true; // Always enabled.
@@ -257,7 +257,7 @@ namespace ABT.TestSpace.TestExec {
         private void FormModeWait() {
             ButtonCancelReset(enabled: false);
             ButtonSelectTests.Enabled = true;
-            ButtonStartReset(enabled: UtilizeInstrumentation && (ConfigTest != null));
+            ButtonStartReset(enabled: UsingInstruments && (ConfigTest != null));
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
