@@ -25,7 +25,6 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
-using Windows.UI.Xaml;
 
 /// <para>
 /// TODO:  Eventually; refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
@@ -454,7 +453,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}.{Environment.NewLine}{Environment.NewLine}" +
                 $"© 2022, Amphenol Borisch Technologies.",
-            "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) {
@@ -495,7 +494,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}.{Environment.NewLine}{Environment.NewLine}" +
                 $"© 2022, Amphenol Borisch Technologies.",
-            "About TestExecutor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                "About TestExecutor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         #endregion Tool Strip Menu Items
 #endregion Form
