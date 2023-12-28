@@ -459,18 +459,18 @@ namespace ABT.TestSpace.TestExec {
 
         private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) {
             StringBuilder sb = new StringBuilder();
-            String UUT = Assembly.GetEntryAssembly().GetName().Name;
+            String EA = Assembly.GetEntryAssembly().GetName().Name;
             sb.AppendLine($"Adapting Doug Gwyn's philosophy here: 'Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things.'{Environment.NewLine}");
-            sb.AppendLine($"Visual Studio's MS Build copies {UUT}'s 'App.config' file into the {UUT}'s executable folder as file '{UUT}.exe.config'.{Environment.NewLine}");
-            sb.AppendLine($"Under normal circumstances, directly editing '{UUT}.exe.config' is highly inadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.{Environment.NewLine}");
-            sb.AppendLine($"- Directly editing '{UUT}.exe.config' allows temporary runtime execution changes, but they're overwritten when MS Build is subsequently executed.{Environment.NewLine}");
-            sb.AppendLine($"- Changes to '{UUT}.exe.config' aren't incorporated into the source 'App.config' file, therefore permanently lost the next time MS Build is executed.{Environment.NewLine}");
-            sb.AppendLine($"- For the niche case when it's useful to temporarily experiment with {UUT}.exe.config's behavior, and a C# compiler and/or");
-            sb.AppendLine($" {UUT} source code are unavailable on the {UUT} tester's PC, directly editing '{UUT}.exe.config' may prove useful.{Environment.NewLine}");
-            sb.AppendLine($"- Be sure to backport any permanently desired '{UUT}.exe.config' changes to 'App.config'.{Environment.NewLine}");
-            sb.AppendLine($"- Also be sure to undo any temporary undesired '{UUT}.exe.config' changes after experimention is completed.");
+            sb.AppendLine($"Visual Studio's MS Build copies {EA}'s 'App.config' file into the {EA}'s executable folder as file '{EA}.exe.config'.{Environment.NewLine}");
+            sb.AppendLine($"Under normal circumstances, directly editing '{EA}.exe.config' is highly inadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.{Environment.NewLine}");
+            sb.AppendLine($"- Directly editing '{EA}.exe.config' allows temporary runtime execution changes, but they're overwritten when MS Build is subsequently executed.{Environment.NewLine}");
+            sb.AppendLine($"- Changes to '{EA}.exe.config' aren't incorporated into the source 'App.config' file, therefore permanently lost the next time MS Build is executed.{Environment.NewLine}");
+            sb.AppendLine($"- For the niche case when it's useful to temporarily experiment with {EA}.exe.config's behavior, and a C# compiler and/or");
+            sb.AppendLine($" {EA} source code are unavailable on the {EA} tester's PC, directly editing '{EA}.exe.config' may prove useful.{Environment.NewLine}");
+            sb.AppendLine($"- Be sure to backport any permanently desired '{EA}.exe.config' changes to 'App.config'.{Environment.NewLine}");
+            sb.AppendLine($"- Also be sure to undo any temporary undesired '{EA}.exe.config' changes after experimention is completed.");
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-            if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", $"{UUT}.exe.config");
+            if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", $"{EA}.exe.config");
         }
         private void TSMI_UUT_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
