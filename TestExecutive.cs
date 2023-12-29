@@ -41,42 +41,39 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 //          - https://visualstudio.microsoft.com/license-terms/vs2022-ga-community/
 // NOTE:  - VS Studio Community Edition is more preferable for GUI C# development than VS Code.
 //          - If not developing GUI code (WinForms/WPF/UWP/WinUI 3), then VS Code is entirely sufficient & potentially preferable.
+// TODO:  Eventually; refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
+// NOTE:  For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
+//        - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
+//        - Invoking public methods with named arguments is a superb, self-documenting coding technique, improved by PascalCasing.
+// TODO:  Eventually; add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
+// TODO:  Eventually; update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.3 when possible.
+// NOTE:  Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library supposedly compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & WinUI 3.
+//        TIDP.SAA actually appears to be compiled to .Net FrameWork 4.5, but that's still not necessarily compatible with .Net 7.0.
+//        - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
+// TODO:  Eventually; update to WinUI 3 or WPF instead of WinForms when possible.
+// NOTE:  Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
+// With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
+
 /// <para>
-/// TODO:  Eventually; refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
-/// NOTE:  For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
-///  - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
-///  - Invoking public methods with named arguments is a superb, self-documenting coding technique, improved by PascalCasing.
-/// TODO:  Eventually; add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
-/// TODO:  Eventually; update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.3 when possible.
-/// NOTE:  Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library supposedly compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & WinUI 3.
-///        TIDP.SAA actually appears to be compiled to .Net FrameWork 4.5, but that's still not necessarily compatible with .Net 7.0.
-///  - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
-/// TODO:  Eventually; update to WinUI 3 or WPF instead of WinForms when possible.
-/// TODO:  Soon; ensure Borisch Domain Group "Test - Engineers" has read & write permissions on all TestExecututive & TestExecutor folder/files.
-/// TODO:  Soon; ensure Borisch Domain Groups ≠ "Test - Engineers" have only read permissions on all TestExecututive & TestExecutor folder/files.
-/// NOTE:  Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
-/// With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
-///
 ///  References:
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
 ///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
 ///  </para>
-///  <para>
-/// NOTE:  ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below error when sychronizing with
-///       TestExecutive's GitHub repository at https://github.com/Amphenol-Borisch-Technologies/TestExecutive:
-///             Opening repositories:
-///             P:\Test\Engineers\repos\TestExecutor
-///             Opening repositories:
-///             P:\Test\Engineers\repos\TestExecutor
-///             C:\Users\phils\source\repos\TestExecutive
-///             Git failed with a fatal error.
-///             Git failed with a fatal error.
-///             unable to access 'https://github.com/Amphenol-Borisch-Technologies/TestLibrary/': schannel: CertGetCertificateChain trust error CERT_TRUST_IS_PARTIAL_CHAIN
-///  - Temporarily disabling Zero Trust by "pausing" it resolves above error.
-///    - Zero Trust's "pause" eventually, times out, and Zero Trust eventually, re-enables itself silently, without notifying you.
-///  - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
-///  - FYI, synchronizing with TestExecutor's repository doesn't error out, as it doesn't utilize a Git server.
-///  </para>
+
+// NOTE:  ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below error when sychronizing with
+//        TestExecutive's GitHub repository at https://github.com/Amphenol-Borisch-Technologies/TestExecutive:
+//             Opening repositories:
+//             P:\Test\Engineers\repos\TestExecutor
+//             Opening repositories:
+//             P:\Test\Engineers\repos\TestExecutor
+//             C:\Users\phils\source\repos\TestExecutive
+//             Git failed with a fatal error.
+//             Git failed with a fatal error.
+//             unable to access 'https://github.com/Amphenol-Borisch-Technologies/TestLibrary/': schannel: CertGetCertificateChain trust error CERT_TRUST_IS_PARTIAL_CHAIN
+//        - Temporarily disabling Zero Trust by "pausing" it resolves above error.
+//        - Zero Trust's "pause" eventually, times out, and Zero Trust eventually, re-enables itself silently, without notifying you.
+//        - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
+//        - FYI, synchronizing with TestExecutor's repository doesn't error out, as it doesn't utilize a Git server.
 
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
@@ -179,7 +176,20 @@ namespace ABT.TestSpace.TestExec {
             mailItem.Body = Body;
             mailItem.Send();
         }
-
+        /// <summary>
+        /// NOTE:  Test Developer is responsible for ensuring Measurements can be both safely & correctly called in sequence defined in App.config:
+        /// <para>
+        ///        - That is, if Measurements execute sequentially as (M1, M2, M3, M4, M5), Test Developer is responsible for ensuring all equipment is
+        ///          configured safely & correctly between each Measurement step.
+        ///          - If:
+        ///            - M1 is unpowered Shorts & Opens measurements.
+        ///            - M2 is powered voltage measurements.
+        ///            - M3 begins with unpowered operator cable connections/disconnections for In-System Programming.
+        ///          - Then Test Developer must ensure necessary equipment state transitions are implemented so test operator isn't
+        ///            plugging/unplugging a powered UUT in T03.
+        /// </para>
+        /// </summary>
+        /// 
         /// <summary>
         /// NOTE:  Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
         /// <para>
