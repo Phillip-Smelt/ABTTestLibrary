@@ -507,7 +507,6 @@ namespace ABT.TestSpace.TestExec {
                     PreApplicationExit();
                     ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
                     Process.Start(psi);
-                    Thread.Sleep(millisecondsTimeout: 1000);
                     System.Windows.Forms.Application.Exit();
                 }
             }
