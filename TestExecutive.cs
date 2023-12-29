@@ -77,7 +77,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
-        public const String GlobalConfigurationFile = @"C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml";
+        public const String GlobalConfigurationFile = @"C:\Program Files\Borisch\TestExecutive\TestExecutive.config.xml";
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
