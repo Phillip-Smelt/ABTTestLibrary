@@ -26,6 +26,21 @@ using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
+// NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestExecutor based closed source/proprietary projects:
+//        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestExecutor.
+//          - That is, it's excellent for non-GUI (WinForms/WPF/UWP/WinUI 3) C# development.
+//          - VS Code is free for both private & commercial use:
+//            - https://code.visualstudio.com/docs/supporting/FAQ
+//            - https://code.visualstudio.com/license
+// NOTE:  Recommend using Microsoft's Visual Studio Community Edition to develop/debug open sourced TestExecutive:
+//        - https://github.com/Amphenol-Borisch-Technologies/TestExecutive/blob/master/LICENSE.txt
+//        - "An unlimited number of users within an organization can use Visual Studio Community for the following scenarios:
+//           in a classroom learning environment, for academic research, or for contributing to open source projects."
+//        - TestExecutor based projects are very likely closed source/proprietary, which are disqualified from using VS Studio Community Edition.
+//          - https://visualstudio.microsoft.com/vs/community/
+//          - https://visualstudio.microsoft.com/license-terms/vs2022-ga-community/
+// NOTE:  - VS Studio Community Edition is more preferable for GUI C# development than VS Code.
+//          - If not developing GUI code (WinForms/WPF/UWP/WinUI 3), then VS Code is entirely sufficient & potentially preferable.
 /// <para>
 /// TODO:  Eventually; refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 /// NOTE:  For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
