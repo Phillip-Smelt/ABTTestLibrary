@@ -13,6 +13,7 @@ Global
 		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
+		Description = TestExecutive
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{314614CB-6E17-4B74-A9F9-CE4699F78C9B}.Debug|Any CPU.ActiveCfg = Debug|x64
