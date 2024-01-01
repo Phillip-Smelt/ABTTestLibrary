@@ -141,6 +141,10 @@
     <MeasurementComputing>
       <InstaCal>C:\Program Files (x86)\Measurement Computing\DAQ\inscal32.exe</InstaCal>
     </MeasurementComputing>
+    <Microchip>
+      <MPLAB_IPE></MPLAB_IPE>
+      <MPLAB_X_IDE></MPLAB_X_IDE>
+    </Microchip>
     <Microsoft>
       <SQLServerManagementStudio></SQLServerManagementStudio>
       <VisualStudio>C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe</VisualStudio>

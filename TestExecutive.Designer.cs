@@ -44,6 +44,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_KeysightConnectionExpert = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_MeasurementComputing = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_MeasurementComputingInstaCal = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_Microchip = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_Microsoft = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_MicrosoftVisualStudio = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,6 +82,8 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_UUT_About = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_MicrohipMPLAB_IPE = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_MicrohipMPLAB_X_IDE = new System.Windows.Forms.ToolStripMenuItem();
             this.MS.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -223,6 +226,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_Apps_Keysight,
             this.TSMI_Apps_MeasurementComputing,
+            this.TSMI_Apps_Microchip,
             this.TSMI_Apps_Microsoft,
             this.TSMI_Apps_TexasInstruments});
             this.TSMI_Apps.Name = "TSMI_Apps";
@@ -279,6 +283,15 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MeasurementComputingInstaCal.ToolTipText = "Configure & test MCC Instruments, like USB-ERB24 relays.";
             this.TSMI_Apps_MeasurementComputingInstaCal.Click += new System.EventHandler(this.TSMI_Apps_MeasurementComputingInstaCal_Click);
             // 
+            // TSMI_Apps_Microchip
+            // 
+            this.TSMI_Apps_Microchip.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TSMI_Apps_MicrohipMPLAB_IPE,
+            this.TSMI_Apps_MicrohipMPLAB_X_IDE});
+            this.TSMI_Apps_Microchip.Name = "TSMI_Apps_Microchip";
+            this.TSMI_Apps_Microchip.Size = new System.Drawing.Size(211, 22);
+            this.TSMI_Apps_Microchip.Text = "&Microchip";
+            // 
             // TSMI_Apps_Microsoft
             // 
             this.TSMI_Apps_Microsoft.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -288,7 +301,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MicrosoftXML_Notepad});
             this.TSMI_Apps_Microsoft.Name = "TSMI_Apps_Microsoft";
             this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(211, 22);
-            this.TSMI_Apps_Microsoft.Text = "&Microsoft";
+            this.TSMI_Apps_Microsoft.Text = "Micro&soft";
             // 
             // TSMI_Apps_MicrosoftSQLServerManagementStudio
             // 
@@ -351,7 +364,7 @@ namespace ABT.TestSpace.TestExec {
             this.TMSI_Feedback_ComplimentsPraiseεPlaudits,
             this.TMSI_Feedback_ComplimentsMoney});
             this.TMSI_Feedback_Compliments.Name = "TMSI_Feedback_Compliments";
-            this.TMSI_Feedback_Compliments.Size = new System.Drawing.Size(146, 22);
+            this.TMSI_Feedback_Compliments.Size = new System.Drawing.Size(180, 22);
             this.TMSI_Feedback_Compliments.Text = "&Compliments";
             // 
             // TMSI_Feedback_ComplimentsPraiseεPlaudits
@@ -376,7 +389,7 @@ namespace ABT.TestSpace.TestExec {
             this.TMSI_Feedback_CritiquesBugReport,
             this.TMSI_Feedback_CritiquesImprovementRequest});
             this.TMSI_Feedback_Critiques.Name = "TMSI_Feedback_Critiques";
-            this.TMSI_Feedback_Critiques.Size = new System.Drawing.Size(146, 22);
+            this.TMSI_Feedback_Critiques.Size = new System.Drawing.Size(180, 22);
             this.TMSI_Feedback_Critiques.Text = "Criti&ques";
             // 
             // TMSI_Feedback_CritiquesBugReport
@@ -588,6 +601,20 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_About.Text = "&About...";
             this.TSMI_UUT_About.Click += new System.EventHandler(this.TSMI_UUT_About_Click);
             // 
+            // TSMI_Apps_MicrohipMPLAB_IPE
+            // 
+            this.TSMI_Apps_MicrohipMPLAB_IPE.Name = "TSMI_Apps_MicrohipMPLAB_IPE";
+            this.TSMI_Apps_MicrohipMPLAB_IPE.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_Apps_MicrohipMPLAB_IPE.Text = "MPLAB &IPE";
+            this.TSMI_Apps_MicrohipMPLAB_IPE.Click += new System.EventHandler(this.TSMI_Apps_MicrochipMPLAB_IPE_Click);
+            // 
+            // TSMI_Apps_MicrohipMPLAB_X_IDE
+            // 
+            this.TSMI_Apps_MicrohipMPLAB_X_IDE.Name = "TSMI_Apps_MicrohipMPLAB_X_IDE";
+            this.TSMI_Apps_MicrohipMPLAB_X_IDE.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_Apps_MicrohipMPLAB_X_IDE.Text = "MPLAB &X IDE";
+            this.TSMI_Apps_MicrohipMPLAB_X_IDE.Click += new System.EventHandler(this.TSMI_Apps_MicrochipMPLAB_X_IDE_Click);
+            // 
             // TestExecutive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -671,5 +698,8 @@ namespace ABT.TestSpace.TestExec {
         private ToolStripMenuItem TSMI_Apps_TexasInstruments;
         private ToolStripMenuItem TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool;
         private ToolStripMenuItem TSMI_Apps_MicrosoftVisualStudioCode;
+        private ToolStripMenuItem TSMI_Apps_Microchip;
+        private ToolStripMenuItem TSMI_Apps_MicrohipMPLAB_IPE;
+        private ToolStripMenuItem TSMI_Apps_MicrohipMPLAB_X_IDE;
     }
 }
