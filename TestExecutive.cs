@@ -52,14 +52,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 //        - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
 // TODO:  Eventually; update to WinUI 3 or WPF instead of WinForms when possible.
 // NOTE:  Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
-// With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
-
-/// <para>
-///  References:
-///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
-///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
-///  </para>
-
+// NOTE:  With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 // NOTE:  ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below error when sychronizing with
 //        TestExecutive's GitHub repository at https://github.com/Amphenol-Borisch-Technologies/TestExecutive:
 //             Opening repositories:
@@ -75,9 +68,66 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 //        - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
 //        - FYI, synchronizing with TestExecutor's repository doesn't error out, as it doesn't utilize a Git server.
 
+/// <para>
+///  References:
+///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
+///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
+///  </para>
+/// <summary>
+/// NOTE:  Test Developer is responsible for ensuring Measurements can be both safely & correctly called in sequence defined in App.config:
+/// <para>
+///        - That is, if Measurements execute sequentially as (M1, M2, M3, M4, M5), Test Developer is responsible for ensuring all equipment is
+///          configured safely & correctly between each Measurement step.
+///          - If:
+///            - M1 is unpowered Shorts & Opens measurements.
+///            - M2 is powered voltage measurements.
+///            - M3 begins with unpowered operator cable connections/disconnections for In-System Programming.
+///          - Then Test Developer must ensure necessary equipment state transitions are implemented so test operator isn't
+///            plugging/unplugging a powered UUT in T03.
+/// </para>
+/// </summary>
+/// 
+/// <summary>
+/// NOTE:  Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
+/// <para>
+/// A) Spontaneous Operator Initiated Cancellations:
+///      1)  Operator Proactive:
+///          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
+///            cancel currently executing Measurement.
+///          - Requires TestExecutor implementation by the Test Developer, but is initiated by Operator, so categorized as such.
+///          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
+///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
+///          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
+///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
+///      2)  Operator Reactive:
+///          - TestExecutive's already implemented, always available & default reactive "Cancel before next Test" technique,
+///            which simply sets _cancelled Boolean to true, checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
+///          - If _cancelled is true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation
+///            prior to the next Measurement's execution.
+///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
+/// B) PrePlanned Developer Programmed Cancellations:
+///      3)  TestExecutor/Test Developer initiated Cancellations:
+///          - Any TestExecutor's Measurement can initiate a Cancellation programmatically by simply throwing a CancellationException:
+///          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
+///            or simply because futher execution is pointless.
+///          - Simply throw a CancellationException if the specific condition(s) occcur.
+///      4)  App.config's CancelNotPassed:
+///          - App.config's TestMeasurement element has a Boolean "CancelNotPassed" field:
+///          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EventCodes.PASS,
+///            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
+///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
+///
+/// NOTE:  The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
+///        thrown CancellationExceptions.
+/// NOTE:  The Operator Reactive & App.config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
+///        inside the TestExecutive.MeasurementsRun() loop.
+/// </para>
+/// </summary>
+
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
         public const String GlobalConfigurationFile = @"C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml";
+        // TODO:  Soon; change to @"C:\Program Files\TestExecutive\TestExecutive.config.xml";
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
@@ -86,7 +136,7 @@ namespace ABT.TestSpace.TestExec {
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
-        public readonly Boolean UsingInstruments;
+        public readonly Boolean Simulate;
         private static readonly String _administratorEMailTo = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailTo").Value;
         private static readonly String _aministratorEMailCC = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailCC").Value;
         private readonly String _serialNumberRegEx = null;
@@ -116,8 +166,8 @@ namespace ABT.TestSpace.TestExec {
             _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
             ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
 
-            UsingInstruments = Boolean.Parse(XElement.Load(GlobalConfigurationFile).Element("UsingInstruments").Value) && ConfigUUT.UsingInstruments;
-            if (UsingInstruments) {
+            Simulate = Boolean.Parse(XElement.Load(GlobalConfigurationFile).Element("Simulate").Value) || ConfigUUT.Simulate;
+            if (!Simulate) {
                 SVIs = SCPI_VISA_Instrument.Get();
                 if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
                 UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
@@ -147,14 +197,14 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public virtual void Initialize() {
-            if (UsingInstruments) {
+            if (!Simulate) {
                 SCPI99.Reset(SVIs);
                 UE24.Set(C.S.NC);
             }
         }
 
         public virtual Boolean Initialized() {
-            if (UsingInstruments) { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
+            if (!Simulate) { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
             return false;
         }
 
@@ -179,57 +229,7 @@ namespace ABT.TestSpace.TestExec {
             mailItem.Body = Body;
             mailItem.Send();
         }
-        /// <summary>
-        /// NOTE:  Test Developer is responsible for ensuring Measurements can be both safely & correctly called in sequence defined in App.config:
-        /// <para>
-        ///        - That is, if Measurements execute sequentially as (M1, M2, M3, M4, M5), Test Developer is responsible for ensuring all equipment is
-        ///          configured safely & correctly between each Measurement step.
-        ///          - If:
-        ///            - M1 is unpowered Shorts & Opens measurements.
-        ///            - M2 is powered voltage measurements.
-        ///            - M3 begins with unpowered operator cable connections/disconnections for In-System Programming.
-        ///          - Then Test Developer must ensure necessary equipment state transitions are implemented so test operator isn't
-        ///            plugging/unplugging a powered UUT in T03.
-        /// </para>
-        /// </summary>
-        /// 
-        /// <summary>
-        /// NOTE:  Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
-        /// <para>
-        /// A) Spontaneous Operator Initiated Cancellations:
-        ///      1)  Operator Proactive:
-        ///          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
-        ///            cancel currently executing Measurement.
-        ///          - Requires TestExecutor implementation by the Test Developer, but is initiated by Operator, so categorized as such.
-        ///          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
-        ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
-        ///          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
-        ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
-        ///      2)  Operator Reactive:
-        ///          - TestExecutive's already implemented, always available & default reactive "Cancel before next Test" technique,
-        ///            which simply sets _cancelled Boolean to true, checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
-        ///          - If _cancelled is true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation
-        ///            prior to the next Measurement's execution.
-        ///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
-        /// B) PrePlanned Developer Programmed Cancellations:
-        ///      3)  TestExecutor/Test Developer initiated Cancellations:
-        ///          - Any TestExecutor's Measurement can initiate a Cancellation programmatically by simply throwing a CancellationException:
-        ///          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
-        ///            or simply because futher execution is pointless.
-        ///          - Simply throw a CancellationException if the specific condition(s) occcur.
-        ///      4)  App.config's CancelNotPassed:
-        ///          - App.config's TestMeasurement element has a Boolean "CancelNotPassed" field:
-        ///          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EventCodes.PASS,
-        ///            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
-        ///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
-        ///
-        /// NOTE:  The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
-        ///        thrown CancellationExceptions.
-        /// NOTE:  The Operator Reactive & App.config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
-        ///        inside the TestExecutive.MeasurementsRun() loop.
-        /// </para>
-        /// </summary>
-
+ 
         #region Form
         private static Outlook.MailItem GetMailItem() {
             Outlook.Application outlook;
@@ -275,7 +275,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void FormModeRun() {
-            ButtonCancelReset(enabled: UsingInstruments);
+            ButtonCancelReset(enabled: !Simulate);
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
             ButtonEmergencyStop.Enabled = true; // Always enabled.
@@ -284,7 +284,7 @@ namespace ABT.TestSpace.TestExec {
         private void FormModeWait() {
             ButtonCancelReset(enabled: false);
             ButtonSelectTests.Enabled = true;
-            ButtonStartReset(enabled: UsingInstruments && (ConfigTest != null));
+            ButtonStartReset(enabled: ConfigTest != null);
             ButtonEmergencyStop.Enabled = true; // Always enabled.
         }
 
@@ -548,7 +548,7 @@ namespace ABT.TestSpace.TestExec {
                     MeasurementIDPresent = measurementID;
                     MeasurementPresent = ConfigTest.Measurements[MeasurementIDPresent];
                     try {
-                        ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
+                        if (!Simulate) ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
                         Initialize();
