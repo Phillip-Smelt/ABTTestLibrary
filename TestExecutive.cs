@@ -287,9 +287,11 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void OpenApp(String CompanyID, String AppID, String Arguments="") {
-            String app = XElement.Load(GlobalConfigurationFile).Element("Apps").Element(CompanyID).Element(AppID).Value;
-            
-            if (File.Exists($"{app}")) {
+            String app = $"{XElement.Load(GlobalConfigurationFile).Element("Apps").Element(CompanyID).Element(AppID).Value}";
+            // Strings with embedded spaces require enclosing double-quotes (").
+            // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
+
+            if (File.Exists(app)) {
                 ProcessStartInfo psi = new ProcessStartInfo {
                     FileName = app,
                     WindowStyle = ProcessWindowStyle.Normal,
@@ -297,8 +299,6 @@ namespace ABT.TestSpace.TestExec {
                     Arguments = Arguments
                 };
                 Process.Start(psi);
-                // Strings with embedded spaces require enclosing double-quotes (").
-                // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
             } else InvalidPathError(app);
         }
 
