@@ -150,8 +150,6 @@ namespace ABT.TestSpace.TestExec {
             Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
 
-            Debug.Write($"Current Folder: {Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}");
-
             if (String.Equals(ConfigUUT.SerialNumberRegExCustom, "NotApplicable")) _serialNumberRegEx = XElement.Load(GlobalConfigurationFile).Element("SerialNumberRegExDefault").Value;
             else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
 
