@@ -77,7 +77,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
-        public static readonly String GlobalConfigurationFile = @"C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml"; // Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        public const String GlobalConfigurationFile = @"C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml";
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
@@ -86,9 +86,9 @@ namespace ABT.TestSpace.TestExec {
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
-        public static readonly String AdministratorEMailTo = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailTo").Value;
-        public static readonly String AdministratorEMailCC = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailCC").Value;
         public readonly Boolean UsingInstruments;
+        private static readonly String _administratorEMailTo = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailTo").Value;
+        private static readonly String _aministratorEMailCC = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailCC").Value;
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
         private readonly RegistryKey _serialNumberRegistryKey = null;
@@ -99,6 +99,8 @@ namespace ABT.TestSpace.TestExec {
             InitializeComponent();
             Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
+
+            Debug.Write($"Current Folder: {Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}");
 
             if (String.Equals(ConfigUUT.SerialNumberRegExCustom, "NotApplicable")) _serialNumberRegEx = XElement.Load(GlobalConfigurationFile).Element("SerialNumberRegExDefault").Value;
             else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
@@ -140,7 +142,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public static void ErrorMessage(Exception Ex) {
-            ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {AdministratorEMailTo} & CC {AdministratorEMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Outlook profile if dialog appears.");
+            ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {_administratorEMailTo} & CC {_aministratorEMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Outlook profile if dialog appears.");
             SendAdministratorMailMessage("Exception caught!", Ex);
         }
 
@@ -169,8 +171,8 @@ namespace ABT.TestSpace.TestExec {
         public static void SendAdministratorMailMessage(String Subject, String Body, String CC="") {
             Outlook.MailItem mailItem = GetMailItem();
             mailItem.Subject = Subject;
-            mailItem.To = AdministratorEMailTo;
-            Outlook.Recipient recipient = mailItem.Recipients.Add(AdministratorEMailCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+            mailItem.To = _administratorEMailTo;
+            Outlook.Recipient recipient = mailItem.Recipients.Add(_aministratorEMailCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
             if (!String.Equals(CC, String.Empty)) { recipient = mailItem.Recipients.Add(CC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC; }
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
@@ -250,8 +252,8 @@ namespace ABT.TestSpace.TestExec {
         private void SendMailMessageWithAttachment(String subject) {
             Outlook.MailItem mailItem = GetMailItem();
             mailItem.Subject = subject;
-            mailItem.To = AdministratorEMailTo;
-            Outlook.Recipient recipient = mailItem.Recipients.Add(AdministratorEMailCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+            mailItem.To = _administratorEMailTo;
+            Outlook.Recipient recipient = mailItem.Recipients.Add(_aministratorEMailCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
             recipient = mailItem.Recipients.Add(ConfigUUT.EMailTestEngineer);               recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
             mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             mailItem.Body =
