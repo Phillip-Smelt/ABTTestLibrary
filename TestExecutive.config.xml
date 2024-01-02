@@ -86,12 +86,12 @@
   <!-- NOTE:  Must use bool.TrueString & bool.FalseString, which are True & False respectively.
 			   - https://learn.microsoft.com/en-us/dotnet/api/system.boolean.parse?view=netframework-4.8
 				 
-       NOTE:  Must have Instrumentation in order to utilize it:
+       NOTE:  When Simulate = False, will utilize Instrumentation:
 			 - Set UUT_Simulate = False if have requisite Instrumentation & intend to use it.
          - That is, production testing of UUTs.  This is the normal, default state.
-			 - Set UUT_Simulate = True if haven't or needn't utilize Instrumentation.
-			 	   - This is occasionally useful when developing/testing TestExecutive/TestExecutor, especially on a desktop PC workstation, as versus a production test station.
-          - Can verify the below Apps & Folders element paths are all correct.
+			 - Set UUT_Simulate = True if haven't or needn't utilize Instrumentation:
+			 	 - This is occasionally useful when developing/testing TestExecutive/TestExecutor, especially on a desktop PC workstation, as versus a production test station.
+         - Can verify the below Apps & Folders element paths are all correct.
            - More significantly, can also verify TestExecutor's App.config TestOperations/TestGroups/TestMeasurement entries are correct.
              - A fair amount of validation occurs after selecting TestOperations/TestGroups with TestExecutive's "Select Tests" button.
              - This validation of correct TestOperations/TestGroups/TestMeasurement entries can be completed without Instrumentation.
