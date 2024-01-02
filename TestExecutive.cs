@@ -77,7 +77,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
-        public static readonly String GlobalConfigurationFile = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        public static readonly String GlobalConfigurationFile = @"C:\Users\phils\source\repos\TestExecutive\TestExecutive.config.xml"; // Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
@@ -135,11 +135,11 @@ namespace ABT.TestSpace.TestExec {
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
 
-        public void ErrorMessage(String Error) {
+        public static void ErrorMessage(String Error) {
             _ = MessageBox.Show(ActiveForm, $"Unexpected error:{Environment.NewLine}{Error}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        public void ErrorMessage(Exception Ex) {
+        public static void ErrorMessage(Exception Ex) {
             ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {AdministratorEMailTo} & CC {AdministratorEMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Outlook profile if dialog appears.");
             SendAdministratorMailMessage("Exception caught!", Ex);
         }
