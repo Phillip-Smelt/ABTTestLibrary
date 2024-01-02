@@ -294,7 +294,7 @@ namespace ABT.TestSpace.TestExec {
                     FileName = $"\"{app}\"",
                     WindowStyle = ProcessWindowStyle.Normal,
                     WorkingDirectory = "",
-                    Arguments = Arguments
+                    Arguments = $"\"{Arguments}\""
                     // Paths with embedded spaces require enclosing double-quotes (").
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
                 };
@@ -420,7 +420,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "CommandExpert"); }
         private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "ConnectionExpert"); }
         private void TSMI_Apps_MeasurementComputingInstaCal_Click(Object sender, EventArgs e) { OpenApp("MeasurementComputing", "InstaCal"); }
-        // TODO:  Soon, add Microchip's MPLAB X IDE & MPLAB IPE.
+
         private void TSMI_Apps_MicrochipMPLAB_IPE_Click(Object sender, EventArgs e) { OpenApp("Microchip", "MPLAB_IPE"); }
         private void TSMI_Apps_MicrochipMPLAB_X_IDE_Click(Object sender, EventArgs e) { OpenApp("Microchip", "MPLAB_X_IDE"); }
         private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "SQLServerManagementStudio"); }
