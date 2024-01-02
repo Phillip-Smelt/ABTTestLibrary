@@ -158,10 +158,11 @@ namespace ABT.TestSpace.TestExec {
 
         public static void SendAdministratorMailMessage(String Subject, Exception Ex, String CC="") {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Machine Name          : {Environment.MachineName}");
-            sb.AppendLine($"User Principal        : {UserPrincipal.Current.DisplayName}");
-            sb.AppendLine($"Exception Message     : {Ex.Message}{Environment.NewLine}");
-            sb.AppendLine($"Exception Stack Trace : {Ex.StackTrace}");
+            sb.AppendLine($"MachineName           : {Environment.MachineName}");
+            sb.AppendLine($"UserPrincipal         : {UserPrincipal.Current.DisplayName}");
+            sb.AppendLine($"Exception.Message     : {Ex.Message}{Environment.NewLine}");
+            sb.AppendLine($"Exception.StackTrace  : {Ex.StackTrace}");
+            sb.AppendLine($"Exception.ToString    : {Ex.ToString()}");
             SendAdministratorMailMessage(Subject, Body: sb.ToString(), CC);
         }
 

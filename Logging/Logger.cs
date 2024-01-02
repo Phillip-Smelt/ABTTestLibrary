@@ -79,8 +79,8 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"TestOperation:");
             Log.Information($"\tSTART             : {DateTime.Now}");
             Log.Information($"\t{MESSAGE_STOP}");
-            Log.Information($"\tOperator          : {UserPrincipal.Current.DisplayName}"); // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
-            Log.Information($"\tMachine Name      : {Environment.MachineName}");
+            Log.Information($"\tUserPrincipal     : {UserPrincipal.Current.DisplayName}"); // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
+            Log.Information($"\tMachineName       : {Environment.MachineName}");
             Log.Information($"\tTestExecutive     : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Information($"\tTestExecutor      : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}");
             Log.Information($"\tSpecification     : {testExecutive.ConfigUUT.TestSpecification}");
