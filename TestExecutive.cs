@@ -289,17 +289,17 @@ namespace ABT.TestSpace.TestExec {
         private void OpenApp(String CompanyID, String AppID, String Arguments="") {
             String app = XElement.Load(GlobalConfigurationFile).Element("Apps").Element(CompanyID).Element(AppID).Value;
 
-            if (File.Exists($"{app}")) {
-            // Strings with embedded spaces require enclosing double-quotes (").
-            // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
+            if (File.Exists(app)) {
                 ProcessStartInfo psi = new ProcessStartInfo {
-                    FileName = $"{app}",
+                    FileName = $"\"{app}\"",
                     WindowStyle = ProcessWindowStyle.Normal,
                     WorkingDirectory = "",
                     Arguments = Arguments
+                    // Paths with embedded spaces require enclosing double-quotes (").
+                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
                 };
                 Process.Start(psi);
-            } else InvalidPathError($"{app}");
+            } else InvalidPathError(app);
         }
 
         private String GetFolder(String FolderID) { return XElement.Load(GlobalConfigurationFile).Element("Folders").Element(FolderID).Value; }
@@ -310,11 +310,11 @@ namespace ABT.TestSpace.TestExec {
                     FileName = "explorer.exe",
                     WindowStyle = ProcessWindowStyle.Normal,
                     Arguments = $"\"{FolderPath}\""
+                    // Paths with embedded spaces require enclosing double-quotes (").
+                    // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - thus using ProcessStartInfo class.
+                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
                 };
                 Process.Start(psi);
-                // Paths with embedded spaces require enclosing double-quotes (").
-                // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - thus using ProcessStartInfo class.
-                // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
             } else InvalidPathError(FolderPath);
         }
 
