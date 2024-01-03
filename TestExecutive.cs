@@ -126,8 +126,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
-        public const String GlobalConfigurationFile = @"C:\Program Files\TestExecutive\TestExecutive.config.xml";
-        // NOTE:  Update this path if installed into another folder.
+        public const String GlobalConfigurationFile = @"C:\Program Files\TestExecutive\TestExecutive.config.xml"; // NOTE:  Update this path if installed into another folder.
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
@@ -173,18 +172,7 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        public static Boolean RegexInvalid(String RegularExpression) {
-            if (String.IsNullOrWhiteSpace(RegularExpression)) return true;
-            try {
-                Regex.Match("", RegularExpression);
-            } catch (ArgumentException) {
-                return true;
-            }
-            return false;
-        }
-
-        public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
-
+        #region Form Miscellaneous
         public static void ErrorMessage(String Error) {
             _ = MessageBox.Show(ActiveForm, $"Unexpected error:{Environment.NewLine}{Error}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -192,6 +180,48 @@ namespace ABT.TestSpace.TestExec {
         public static void ErrorMessage(Exception Ex) {
             ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {_administratorEMailTo} & CC {_aministratorEMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Outlook profile if dialog appears.");
             SendAdministratorMailMessage("Exception caught!", Ex);
+        }
+
+        private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
+
+        private void FormModeReset() {
+            TextResult.Text = String.Empty;
+            TextResult.BackColor = Color.White;
+            rtfResults.Text = String.Empty;
+        }
+
+        private void FormModeRun() {
+            ButtonCancelReset(enabled: !Simulate);
+            ButtonSelectTests.Enabled = false;
+            ButtonStartReset(enabled: false);
+            ButtonEmergencyStop.Enabled = true; // Always enabled.
+        }
+
+        private void FormModeWait() {
+            ButtonCancelReset(enabled: false);
+            ButtonSelectTests.Enabled = true;
+            ButtonStartReset(enabled: ConfigTest != null);
+            ButtonEmergencyStop.Enabled = true; // Always enabled.
+        }
+
+        private String GetFolder(String FolderID) { return XElement.Load(GlobalConfigurationFile).Element("Folders").Element(FolderID).Value; }
+
+        private static Outlook.MailItem GetMailItem() {
+            Outlook.Application outlook;
+            try {
+                if (Process.GetProcessesByName("OUTLOOK").Length > 0) {
+                    outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
+                } else {
+                    outlook = new Outlook.Application();
+                    Outlook.NameSpace nameSpace = outlook.GetNamespace("MAPI");
+                    nameSpace.Logon("", "", true, true);
+                    nameSpace = null;
+                }
+                return outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            } catch {
+                _ = MessageBox.Show(ActiveForm, "Could not open Outlook.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         public virtual void Initialize() {
@@ -203,6 +233,55 @@ namespace ABT.TestSpace.TestExec {
 
         public virtual Boolean Initialized() {
             if (!Simulate) { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
+            return false;
+        }
+
+        private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+
+        public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
+
+        private void OpenApp(String CompanyID, String AppID, String Arguments="") {
+            String app = XElement.Load(GlobalConfigurationFile).Element("Apps").Element(CompanyID).Element(AppID).Value;
+
+            if (File.Exists(app)) {
+                ProcessStartInfo psi = new ProcessStartInfo {
+                    FileName = $"\"{app}\"",
+                    WindowStyle = ProcessWindowStyle.Normal,
+                    WorkingDirectory = "",
+                    Arguments = $"\"{Arguments}\""
+                    // Paths with embedded spaces require enclosing double-quotes (").
+                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
+                };
+                Process.Start(psi);
+            } else InvalidPathError(app);
+        }
+
+        private void OpenFolder(String FolderPath) {
+            if (Directory.Exists(FolderPath)) {
+                ProcessStartInfo psi = new ProcessStartInfo {
+                    FileName = "explorer.exe",
+                    WindowStyle = ProcessWindowStyle.Normal,
+                    Arguments = $"\"{FolderPath}\""
+                    // Paths with embedded spaces require enclosing double-quotes (").
+                    // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - thus using ProcessStartInfo class.
+                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
+                };
+                Process.Start(psi);
+            } else InvalidPathError(FolderPath);
+        }
+
+        private void PreApplicationExit() {
+            if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
+            Initialize();
+        }
+
+        public static Boolean RegexInvalid(String RegularExpression) {
+            if (String.IsNullOrWhiteSpace(RegularExpression)) return true;
+            try {
+                Regex.Match("", RegularExpression);
+            } catch (ArgumentException) {
+                return true;
+            }
             return false;
         }
 
@@ -228,25 +307,6 @@ namespace ABT.TestSpace.TestExec {
             mailItem.Send();
         }
  
-        #region Form
-        private static Outlook.MailItem GetMailItem() {
-            Outlook.Application outlook;
-            try {
-                if (Process.GetProcessesByName("OUTLOOK").Length > 0) {
-                    outlook = Marshal.GetActiveObject("Outlook.Application") as Outlook.Application;
-                } else {
-                    outlook = new Outlook.Application();
-                    Outlook.NameSpace nameSpace = outlook.GetNamespace("MAPI");
-                    nameSpace.Logon("", "", true, true);
-                    nameSpace = null;
-                }
-                return outlook.CreateItem(Outlook.OlItemType.olMailItem);
-            } catch {
-                _ = MessageBox.Show(ActiveForm, "Could not open Outlook.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw;
-            }
-        }
-
         private void SendMailMessageWithAttachment(String subject) {
             Outlook.MailItem mailItem = GetMailItem();
             mailItem.Subject = subject;
@@ -263,69 +323,9 @@ namespace ABT.TestSpace.TestExec {
             _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
             mailItem.Display();
         }
-
-        private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
-
-        private void FormModeReset() {
-            TextResult.Text = String.Empty;
-            TextResult.BackColor = Color.White;
-            rtfResults.Text = String.Empty;
-        }
-
-        private void FormModeRun() {
-            ButtonCancelReset(enabled: !Simulate);
-            ButtonSelectTests.Enabled = false;
-            ButtonStartReset(enabled: false);
-            ButtonEmergencyStop.Enabled = true; // Always enabled.
-        }
-
-        private void FormModeWait() {
-            ButtonCancelReset(enabled: false);
-            ButtonSelectTests.Enabled = true;
-            ButtonStartReset(enabled: ConfigTest != null);
-            ButtonEmergencyStop.Enabled = true; // Always enabled.
-        }
-
-        private void OpenApp(String CompanyID, String AppID, String Arguments="") {
-            String app = XElement.Load(GlobalConfigurationFile).Element("Apps").Element(CompanyID).Element(AppID).Value;
-
-            if (File.Exists(app)) {
-                ProcessStartInfo psi = new ProcessStartInfo {
-                    FileName = $"\"{app}\"",
-                    WindowStyle = ProcessWindowStyle.Normal,
-                    WorkingDirectory = "",
-                    Arguments = $"\"{Arguments}\""
-                    // Paths with embedded spaces require enclosing double-quotes (").
-                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-                };
-                Process.Start(psi);
-            } else InvalidPathError(app);
-        }
-
-        private String GetFolder(String FolderID) { return XElement.Load(GlobalConfigurationFile).Element("Folders").Element(FolderID).Value; }
-
-        private void OpenFolder(String FolderPath) {
-            if (Directory.Exists(FolderPath)) {
-                ProcessStartInfo psi = new ProcessStartInfo {
-                    FileName = "explorer.exe",
-                    WindowStyle = ProcessWindowStyle.Normal,
-                    Arguments = $"\"{FolderPath}\""
-                    // Paths with embedded spaces require enclosing double-quotes (").
-                    // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - thus using ProcessStartInfo class.
-                    // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
-                };
-                Process.Start(psi);
-            } else InvalidPathError(FolderPath);
-        }
-
-        private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-
-        private void PreApplicationExit() {
-            if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
-            Initialize();
-        }
+        #endregion Form Miscellaneous
         
-        #region Command Buttons
+        #region Form Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             CancelTokenSource.Cancel();
             _cancelled = true;
@@ -396,9 +396,9 @@ namespace ABT.TestSpace.TestExec {
             }
             ButtonStart.Enabled = enabled;
         }
-        #endregion Command Buttons
+        #endregion Form Command Buttons
 
-        #region Tool Strip Menu Items
+        #region Form Tool Strip Menu Items
         private void TSMI_File_Save_Click(Object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog {
                 Title = "Save Test Results",
@@ -524,8 +524,7 @@ namespace ABT.TestSpace.TestExec {
                 $"© 2022, Amphenol Borisch Technologies.",
                 "About TestExecutor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        #endregion Tool Strip Menu Items
-#endregion Form
+        #endregion Form Tool Strip Menu Items
 
         #region Measurements
         private void MeasurementsPreRun() {
