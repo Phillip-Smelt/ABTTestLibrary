@@ -39,7 +39,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         }
 
         private void Validate() {
-            if (C.Alias == String.Empty) throw new ArgumentException($"Relay terminal Common '{C.Alias}' cannot be String.Empty.");
+            if (String.Equals(C.Alias, String.Empty)) throw new ArgumentException($"Relay terminal Common '{C.Alias}' cannot be String.Empty.");
             if (C == NO) throw new ArgumentException($"Relay terminals Common '{C}' & Normally Open '{NO}' cannot be identical.");
             if (C == NC) throw new ArgumentException($"Relay terminals Common '{C}' & Normally Closed '{NC}' cannot be identical.");
             if (NC == NO) throw new ArgumentException($"Relay terminals Normally Closed '{NC}' & Normally Open '{NO}' cannot be identical.");
