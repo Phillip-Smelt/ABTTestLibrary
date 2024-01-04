@@ -545,7 +545,7 @@ namespace ABT.TestSpace.TestExec {
                     MeasurementIDPresent = measurementID;
                     MeasurementPresent = ConfigTest.Measurements[MeasurementIDPresent];
                     try {
-                        if (!Simulate) ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
+                        ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
                         Initialize();
