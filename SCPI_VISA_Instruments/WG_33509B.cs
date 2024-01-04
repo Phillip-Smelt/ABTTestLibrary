@@ -1,5 +1,5 @@
-﻿using System;
-using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
+﻿using Agilent.CommandExpert.ScpiNet.Ag33500B_33600A_2_09;
+using System;
 
 // All Agilent.CommandExpert.ScpiNet drivers are procured by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
@@ -17,7 +17,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static void FunctionSquare(SCPI_VISA_Instrument SVI, Double DutyCyclePercent, Double Hz) {
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FUNCtion.SQUare.DCYCle.Command(null, DutyCyclePercent, "PCT");
-            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FUNCtion.SQUare.PERiod.Command(null, 1/Hz);
+            ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FUNCtion.SQUare.PERiod.Command(null, 1 / Hz);
         }
 
         public static Boolean IsWG_33509(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(Ag33500B_33600A)); }

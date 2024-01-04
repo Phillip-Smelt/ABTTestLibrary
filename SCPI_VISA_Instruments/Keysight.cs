@@ -19,7 +19,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class Keysight {
         public const String AUTO = "AUTO";
         public const String ASCII = "ASCii";
-        
+
         public static readonly Dictionary<CHANNEL, String> Channels = new Dictionary<CHANNEL, String> {
             { CHANNEL.C1, "(@1)" },
             { CHANNEL.C2, "(@2)" }

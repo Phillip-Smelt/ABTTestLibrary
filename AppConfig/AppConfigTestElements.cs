@@ -107,7 +107,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
     public class Group {
         public readonly String ID;
-        public readonly String Revision;    
+        public readonly String Revision;
         public readonly String Description;
         public readonly Boolean Selectable;
         public readonly Boolean CancelNotPassed;
@@ -160,9 +160,9 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             TestMeasurements testMeasurements = testMeasurementsSection.TestMeasurements;
             Dictionary<String, Measurement> dictionary = new Dictionary<String, Measurement>();
             foreach (TestMeasurement tm in testMeasurements) try {
-                dictionary.Add(tm.ID, new Measurement(tm.ID, tm.Revision, tm.Description, tm.ClassName, tm.CancelNotPassed, tm.Arguments));
-            } catch (Exception e){
-                StringBuilder sb = new StringBuilder().AppendLine();
+                    dictionary.Add(tm.ID, new Measurement(tm.ID, tm.Revision, tm.Description, tm.ClassName, tm.CancelNotPassed, tm.Arguments));
+                } catch (Exception e) {
+                    StringBuilder sb = new StringBuilder().AppendLine();
                     sb.AppendLine($"App.config issue with TestMeasurement:");
                     sb.AppendLine($"   ID              : {tm.ID}");
                     sb.AppendLine($"   Revision        : {tm.Revision}");
@@ -172,8 +172,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
                     sb.AppendLine($"   Arguments       : {tm.Arguments}{Environment.NewLine}");
                     sb.AppendLine($"Exception Message(s):");
                     sb.AppendLine($"{e}{Environment.NewLine}");
-                throw new ArgumentException(sb.ToString());
-            }
+                    throw new ArgumentException(sb.ToString());
+                }
             return dictionary;
         }
 

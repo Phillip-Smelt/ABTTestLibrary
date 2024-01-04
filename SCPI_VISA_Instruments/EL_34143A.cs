@@ -1,5 +1,5 @@
-﻿using System;
-using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
+﻿using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
+using System;
 using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 // All Agilent.CommandExpert.ScpiNet drivers are procured by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
@@ -10,14 +10,14 @@ using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 // https://www.keysight.com/us/en/search.html/command+expert
 //
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
-    public enum LOAD_MODE { CURR=0, POW=1, RES=2, VOLT=3 }
-    public enum LOAD_MEASURE { CURR=0, POW=1, VOLT=3 }
+    public enum LOAD_MODE { CURR = 0, POW = 1, RES = 2, VOLT = 3 }
+    public enum LOAD_MEASURE { CURR = 0, POW = 1, VOLT = 3 }
 
     public static class EL_34143A {
         public const String MODEL = "EL34143A";
 
         public const Boolean LoadOrStimulus = true;
- 
+
         public static Boolean IsEL_34143A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgEL30000)); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
@@ -30,7 +30,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static LOAD_MODE Get(SCPI_VISA_Instrument SVI) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Query(null, out String LoadMode);
-            return (LOAD_MODE)Enum.Parse(typeof(LOAD_MODE), LoadMode); 
+            return (LOAD_MODE)Enum.Parse(typeof(LOAD_MODE), LoadMode);
         }
 
         public static Double Get(SCPI_VISA_Instrument SVI, LOAD_MEASURE LoadMeasure, SENSE_MODE KelvinSense) {
@@ -149,7 +149,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 case LOAD_MODE.POW:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.SLEW.POSitive.IMMediate.Query(null, null, out slewRateRising);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.SLEW.NEGative.IMMediate.Query(null, null, out slewRateFalling);
-                    break;                
+                    break;
                 case LOAD_MODE.RES:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.SLEW.POSitive.IMMediate.Query(null, null, out slewRateRising);
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.RESistance.SLEW.NEGative.IMMediate.Query(null, null, out slewRateFalling);
@@ -161,7 +161,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                 default:
                     throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
             }
-                return (slewRateRising[0], slewRateFalling[0]);
+            return (slewRateRising[0], slewRateFalling[0]);
         }
 
         public static void SlewRatesSet(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, LOAD_MODE LoadMode) {
@@ -201,8 +201,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static SENSE_MODE VoltageSenseModeGet(SCPI_VISA_Instrument SVI) {
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Query(null, out String SenseMode);
-            return (SENSE_MODE)Enum.Parse(typeof(SENSE_MODE), SenseMode); 
-        }        
+            return (SENSE_MODE)Enum.Parse(typeof(SENSE_MODE), SenseMode);
+        }
 
         public static Boolean VoltageSenseModeIs(SCPI_VISA_Instrument SVI, SENSE_MODE SenseMode) { return SenseMode == VoltageSenseModeGet(SVI); }
 

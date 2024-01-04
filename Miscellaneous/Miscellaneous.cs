@@ -13,7 +13,7 @@ namespace ABT.TestSpace.TestExec {
     public class TimerMilliSeconds {
         private readonly Int32 _milliSeconds;
         private readonly DateTime _start;
-        public TimerMilliSeconds(Int32 MilliSeconds) { _milliSeconds = MilliSeconds;  _start = DateTime.Now; }
+        public TimerMilliSeconds(Int32 MilliSeconds) { _milliSeconds = MilliSeconds; _start = DateTime.Now; }
 
         public DateTime GetStart() { return _start; }
         public Int32 GetMilliSecondsTotal() { return _milliSeconds; }
@@ -26,7 +26,7 @@ namespace ABT.TestSpace.TestExec {
     public class TimerSeconds {
         private readonly Double _seconds;
         private readonly DateTime _start;
-        public TimerSeconds(Double Seconds) { _seconds = Seconds;  _start = DateTime.Now; }
+        public TimerSeconds(Double Seconds) { _seconds = Seconds; _start = DateTime.Now; }
 
         public DateTime GetStart() { return _start; }
         public Double GetSecondsTotal() { return _seconds; }
@@ -55,5 +55,5 @@ namespace ABT.TestSpace.TestExec {
         }
     }
 
-    public static class Ext{ public static Boolean In<T>(this T value, params T[] values) where T : struct { return values.Contains(value); } }
+    public static class Ext { public static Boolean In<T>(this T value, params T[] values) where T : struct { return values.Contains(value); } }
 }

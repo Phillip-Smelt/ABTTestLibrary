@@ -27,7 +27,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         }
 
         private void FormRefresh() {
-            if (radioButtonTestOperations.Checked) foreach (KeyValuePair<String, Operation> kvp in Operations) ListSelections.Items.Add(new ListViewItem(new String[] { kvp.Key, kvp.Value.Description}));
+            if (radioButtonTestOperations.Checked) foreach (KeyValuePair<String, Operation> kvp in Operations) ListSelections.Items.Add(new ListViewItem(new String[] { kvp.Key, kvp.Value.Description }));
             else foreach (KeyValuePair<String, Group> kvp in Groups) if (kvp.Value.Selectable) ListSelections.Items.Add(new ListViewItem(new String[] { kvp.Key, kvp.Value.Description }));
             ListSelections.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
             ListSelections.Columns[1].Width = -2;

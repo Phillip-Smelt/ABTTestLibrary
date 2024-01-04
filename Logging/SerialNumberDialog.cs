@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -31,7 +30,7 @@ namespace ABT.TestSpace.TestExec.Logging {
         public SerialNumberDialog(String SerialNumberRegEx) {
             _serialNumberRegEx = SerialNumberRegEx;
             InitializeComponent();
-            
+
             GetBarcodeScanner();
             FormUpdate(String.Empty);
         }

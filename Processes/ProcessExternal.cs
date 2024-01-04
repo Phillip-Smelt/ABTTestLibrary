@@ -1,16 +1,16 @@
-﻿using System;
+﻿using ABT.TestSpace.TestExec.AppConfig;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ABT.TestSpace.TestExec.AppConfig;
 
 namespace ABT.TestSpace.TestExec.Processes {
     public enum PROCESS_METHOD { ExitCode, Redirect }
-    
+
     public static class ProcessExternal {
-        public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect, Boolean AutoContinue = false) { 
+        public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect, Boolean AutoContinue = false) {
             PreConnect?.Invoke();
             String message = $"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
                              $"Connect '{Description}' to UUT '{Connector}'.{Environment.NewLine}{Environment.NewLine}" +

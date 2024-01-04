@@ -19,6 +19,6 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         private AppConfigUUT() { }
 
-        public static AppConfigUUT Get() { return new AppConfigUUT();  }
+        public static AppConfigUUT Get() { return new AppConfigUUT(); }
     }
 }
