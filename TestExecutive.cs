@@ -126,8 +126,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
-        public static readonly String GlobalConfigurationFile = AssemblyDirectoryGet() + @"\TestExecutive.config.xml";
-        // TODO:  Soon; remove public const String GlobalConfigurationFile = @"C:\Program Files\TestExecutive\TestExecutive.config.xml"; // NOTE:  Update this path if installed into another folder.
+        public const String GlobalConfigurationFile = @"C:\Program Files\TestExecutive\TestExecutive.config.xml"; // NOTE:  Update this path if installed into another folder.
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
@@ -174,14 +173,6 @@ namespace ABT.TestSpace.TestExec {
         }
 
         #region Form Miscellaneous
-        private static String AssemblyDirectoryGet() {
-        // NOTE:  Assembly.GetExecutingAssembly().CodeBase deprecated in .NET, available in .NET Framework.
-        // https://learn.microsoft.com/en-us/dotnet/api/system.reflection.assembly.codebase?view=net-8.0
-            UriBuilder ub = new UriBuilder(Assembly.GetExecutingAssembly().CodeBase);
-            String path = Uri.UnescapeDataString(ub.Path);
-            return Path.GetDirectoryName(path);
-        }
-
         public static void ErrorMessage(String Error) {
             _ = MessageBox.Show(ActiveForm, $"Unexpected error:{Environment.NewLine}{Error}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
