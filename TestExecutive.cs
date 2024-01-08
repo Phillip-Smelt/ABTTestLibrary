@@ -289,9 +289,7 @@ namespace ABT.TestSpace.TestExec {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"MachineName           : {Environment.MachineName}");
             sb.AppendLine($"UserPrincipal         : {UserPrincipal.Current.DisplayName}");
-            sb.AppendLine($"Exception.Message     : {Ex.Message}{Environment.NewLine}");
-            sb.AppendLine($"Exception.StackTrace  : {Ex.StackTrace}{Environment.NewLine}");
-            sb.AppendLine($"Exception.ToString()  : {Ex}");
+            sb.AppendLine($"Exception.ToString()  : {Ex}"); 
             SendAdministratorMailMessage(Subject, Body: sb.ToString(), CC);
         }
 
