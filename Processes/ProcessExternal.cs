@@ -31,10 +31,7 @@ namespace ABT.TestSpace.TestExec.Processes {
             PostDisconnect?.Invoke();
         }
 
-        public static String ExitCode(MeasurementProcess MP) {
-            String exitCode = ProcessExitCode(MP.ProcessArguments, MP.ProcessExecutable, MP.ProcessFolder);
-            return exitCode;
-        }
+        public static String ExitCode(MeasurementProcess MP) { return ProcessExitCode(MP.ProcessArguments, MP.ProcessExecutable, MP.ProcessFolder); }
 
         private static Form FormInterconnectGet() {
             Form form = new Form() { Size = new Size(0, 0) };
@@ -89,9 +86,6 @@ namespace ABT.TestSpace.TestExec.Processes {
             else return (standardError, standardOutput, exitCode);
         }
 
-        public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(MeasurementProcess MP) {
-            (String StandardError, String StandardOutput, Int32 ExitCode) = ProcessRedirect(MP.ProcessArguments, MP.ProcessExecutable, MP.ProcessFolder, MP.ProcessExpected);
-            return (StandardError, StandardOutput, ExitCode);
-        }
+        public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(MeasurementProcess MP) { return ProcessRedirect(MP.ProcessArguments, MP.ProcessExecutable, MP.ProcessFolder, MP.ProcessExpected); }
     }
 }
