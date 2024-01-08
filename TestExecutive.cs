@@ -130,8 +130,8 @@ namespace ABT.TestSpace.TestExec {
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
-        public AppConfigUUT ConfigUUT { get; private set; } = AppConfigUUT.Get();
-        public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by button_click event method.
+        public readonly AppConfigUUT ConfigUUT = AppConfigUUT.Get();
+        public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
