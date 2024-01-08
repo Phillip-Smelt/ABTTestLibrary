@@ -191,7 +191,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void FormModeRun() {
-            ButtonCancelReset(enabled: !Simulate);
+            ButtonCancelReset(enabled: true);
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
             ButtonEmergencyStop.Enabled = true; // Always enabled.
