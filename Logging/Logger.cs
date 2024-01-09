@@ -107,7 +107,6 @@ namespace ABT.TestSpace.TestExec.Logging {
             message.AppendLine(MessageFormat("Description", measurement.Description));
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
-                    MeasurementCustom mc = (MeasurementCustom)measurement.ClassObject;
                     message.AppendLine(measurement.Value);
                     break;
                 case MeasurementNumeric.ClassName:
