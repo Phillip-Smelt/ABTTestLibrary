@@ -108,7 +108,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
                     MeasurementCustom mc = (MeasurementCustom)measurement.ClassObject;
-                    message.AppendLine(MessageFormat("Actual", measurement.Value));
+                    message.AppendLine(measurement.Value);
                     break;
                 case MeasurementNumeric.ClassName:
                     MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;
@@ -138,7 +138,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Result));
         }
 
-        private static String MessageFormat(String label, String message) { return $"  {label}".PadRight(SPACES_21.Length) + $" : {message}"; }
+        public static String MessageFormat(String label, String message) { return $"  {label}".PadRight(SPACES_21.Length) + $" : {message}"; }
 
         public static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
