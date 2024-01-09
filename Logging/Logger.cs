@@ -111,12 +111,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                     break;
                 case MeasurementNumeric.ClassName:
                     MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;
-                    message.AppendLine(MessageFormat("High Limit", $"{mn.High:G}"));
-                    message.AppendLine(MessageFormat("Measured", $"{Double.Parse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture):G}"));
-                    message.AppendLine(MessageFormat("Low Limit", $"{mn.Low:G}"));
-                    String si_units = $"{Enum.GetName(typeof(SI_UNITS), mn.SI_Units)}";
-                    if (mn.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) si_units += $" {Enum.GetName(typeof(SI_UNITS_MODIFIER), mn.SI_Units_Modifier)}";
-                    message.AppendLine(MessageFormat("SI Units", si_units));
+                    message.AppendLine(NumericFormat(mn, Double.Parse(measurement.Value)));
                     break;
                 case MeasurementProcess.ClassName:
                     MeasurementProcess mp = (MeasurementProcess)measurement.ClassObject;
@@ -138,6 +133,17 @@ namespace ABT.TestSpace.TestExec.Logging {
         }
 
         public static String MessageFormat(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
+
+        public static String NumericFormat(MeasurementNumeric MN, Double Measured) {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(MessageFormat("High Limit", $"{MN.High:G}"));
+            sb.AppendLine(MessageFormat("Measured", $"{Measured:G}"));
+            sb.AppendLine(MessageFormat("Low Limit", $"{MN.Low:G}"));
+            String si_units = $"{Enum.GetName(typeof(SI_UNITS), MN.SI_Units)}";
+            if (MN.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) si_units += $" {Enum.GetName(typeof(SI_UNITS_MODIFIER), MN.SI_Units_Modifier)}";
+            sb.AppendLine(MessageFormat("SI Units", si_units));
+            return sb.ToString();
+        }
 
         public static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
