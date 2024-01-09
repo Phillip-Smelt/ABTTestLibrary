@@ -31,6 +31,11 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             return argDictionary;
         }
 
+        public static String ArgumentsJoin(Dictionary<String, String> Arguments) {
+            IEnumerable<String> keys = Arguments.Select(a => String.Format($"{a.Key}{Char.ToString(SK)}{a.Value}"));
+            return String.Join(Char.ToString(SA), keys);;
+        }
+
         internal abstract void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict);
     }
 
