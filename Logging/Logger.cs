@@ -138,7 +138,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Result));
         }
 
-        public static String MessageFormat(String label, String message) { return $"  {label}".PadRight(SPACES_21.Length) + $" : {message}"; }
+        public static String MessageFormat(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
 
         public static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
