@@ -37,12 +37,12 @@ namespace ABT.TestSpace.TestExec.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
                 Log.Information($"Note: following measurement results invalid for UUT production testing, only troubleshooting.");
-                Log.Information(MessageFormat($"UUT Serial Number", $"{testExecutive.ConfigUUT.SerialNumber}"));
-                Log.Information(MessageFormat($"UUT Number", $"{testExecutive.ConfigUUT.Number}"));
-                Log.Information(MessageFormat($"UUT Revision", $"{testExecutive.ConfigUUT.Revision}"));
-                Log.Information(MessageFormat($"TestGroup ID", $"{testExecutive.ConfigTest.TestElementID}"));
-                Log.Information(MessageFormat($"Description", $"{testExecutive.ConfigTest.TestElementDescription}"));
-                Log.Information(MessageFormat($"START", $"{DateTime.Now}\n"));
+                Log.Information(FormatMessage($"UUT Serial Number", $"{testExecutive.ConfigUUT.SerialNumber}"));
+                Log.Information(FormatMessage($"UUT Number", $"{testExecutive.ConfigUUT.Number}"));
+                Log.Information(FormatMessage($"UUT Revision", $"{testExecutive.ConfigUUT.Revision}"));
+                Log.Information(FormatMessage($"TestGroup ID", $"{testExecutive.ConfigTest.TestElementID}"));
+                Log.Information(FormatMessage($"Description", $"{testExecutive.ConfigTest.TestElementDescription}"));
+                Log.Information(FormatMessage($"START", $"{DateTime.Now}\n"));
                 return;
                 // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurement results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
@@ -98,50 +98,59 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         public static void LogTest(Boolean isOperation, Measurement measurement, ref RichTextBox rtfResults) {
             StringBuilder message = new StringBuilder();
-            message.AppendLine(MessageFormat("TestMeasurement ID", measurement.ID));
+            message.AppendLine(FormatMessage("TestMeasurement ID", measurement.ID));
 #if VERBOSE
-            message.AppendLine(MessageFormat("Revision", measurement.Revision));
-            message.AppendLine(MessageFormat("Measurement Type", measurement.ClassName));
-            message.AppendLine(MessageFormat("Cancel Not Passed", measurement.CancelNotPassed.ToString()));
+            message.AppendLine(FormatMessage("Revision", measurement.Revision));
+            message.AppendLine(FormatMessage("Measurement Type", measurement.ClassName));
+            message.AppendLine(FormatMessage("Cancel Not Passed", measurement.CancelNotPassed.ToString()));
 #endif
-            message.AppendLine(MessageFormat("Description", measurement.Description));
+            message.AppendLine(FormatMessage("Description", measurement.Description));
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
                     message.AppendLine(measurement.Value);
                     break;
                 case MeasurementNumeric.ClassName:
-                    MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;
-                    message.AppendLine(NumericFormat(mn, Double.Parse(measurement.Value)));
+                    message.AppendLine(FormatNumeric((MeasurementNumeric)measurement.ClassObject, Double.Parse(measurement.Value)));
                     break;
                 case MeasurementProcess.ClassName:
-                    MeasurementProcess mp = (MeasurementProcess)measurement.ClassObject;
-                    message.AppendLine(MessageFormat("Expected", mp.ProcessExpected));
-                    message.AppendLine(MessageFormat("Actual", measurement.Value));
+                    message.AppendLine(FormatProcess((MeasurementProcess)measurement.ClassObject, measurement.Value));
                     break;
                 case MeasurementTextual.ClassName:
-                    MeasurementTextual mt = (MeasurementTextual)measurement.ClassObject;
-                    message.AppendLine(MessageFormat("Expected", mt.Text));
-                    message.AppendLine(MessageFormat("Actual", measurement.Value));
+                    message.AppendLine(FormatTextual((MeasurementTextual)measurement.ClassObject, measurement.Value));
                     break;
                 default:
                     throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
             }
-            message.AppendLine(MessageFormat("Result", measurement.Result));
+            message.AppendLine(FormatMessage("Result", measurement.Result));
             if (!String.Equals(measurement.Message, String.Empty)) message.Append(measurement.Message);
             Log.Information(message.ToString());
             if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Result));
         }
 
-        public static String MessageFormat(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
+        public static String FormatMessage(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
 
-        public static String NumericFormat(MeasurementNumeric MN, Double Measured) {
+        public static String FormatNumeric(MeasurementNumeric MN, Double Value) {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(MessageFormat("High Limit", $"{MN.High:G}"));
-            sb.AppendLine(MessageFormat("Measured", $"{Measured:G}"));
-            sb.AppendLine(MessageFormat("Low Limit", $"{MN.Low:G}"));
+            sb.AppendLine(FormatMessage("High Limit", $"{MN.High:G}"));
+            sb.AppendLine(FormatMessage("Measured", $"{Value:G}"));
+            sb.AppendLine(FormatMessage("Low Limit", $"{MN.Low:G}"));
             String si_units = $"{Enum.GetName(typeof(SI_UNITS), MN.SI_Units)}";
             if (MN.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) si_units += $" {Enum.GetName(typeof(SI_UNITS_MODIFIER), MN.SI_Units_Modifier)}";
-            sb.AppendLine(MessageFormat("SI Units", si_units));
+            sb.Append(FormatMessage("SI Units", si_units));
+            return sb.ToString();
+        }
+
+        public static String FormatProcess(MeasurementProcess MP, String Value) {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(FormatMessage("Expected", MP.ProcessExpected));
+            sb.Append(FormatMessage("Actual", Value));
+            return sb.ToString();
+        }
+
+        public static String FormatTextual(MeasurementTextual MT, String Value) {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(FormatMessage("Expected", MT.Text));
+            sb.Append(FormatMessage("Actual", Value));
             return sb.ToString();
         }
 
