@@ -88,6 +88,12 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             }
         }
 
+        public static MeasurementNumeric GetFirst(String MeasurementCustomArgs) {
+            Dictionary<String, String> args = ArgumentsSplit(MeasurementCustomArgs);
+            Dictionary<String, String> argsNumericFirst = args.Where(kvp => Keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return new MeasurementNumeric("MN", ArgumentsJoin(argsNumericFirst));
+        }
+
         public override String ArgumentsGet() { return $"{_HIGH}{SK}{High}{SA}{_LOW}{SK}{Low}{SA}{_SI_UNITS}{SK}{SI_Units}{SA}{_SI_UNITS_MODIFIER}{SK}{SI_Units_Modifier}"; }
 
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
@@ -124,6 +130,12 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             ProcessExpected = argsDict[_PROCESS_EXPECTED];
         }
 
+        public static MeasurementProcess GetFirst(String MeasurementCustomArgs) {
+            Dictionary<String, String> args = ArgumentsSplit(MeasurementCustomArgs);
+            Dictionary<String, String> argsProcessFirst = args.Where(kvp => Keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return new MeasurementProcess("MP", ArgumentsJoin(argsProcessFirst));
+        }
+
         public override String ArgumentsGet() {
             return $"{_PROCESS_FOLDER}{SK}{ProcessFolder}{SA}{_PROCESS_EXECUTABLE}{SK}{ProcessExecutable}{SA}{_PROCESS_ARGUMENTS}{SK}{ProcessArguments}{SA}{_PROCESS_EXPECTED}{SK}{ProcessExpected}";
         }
@@ -154,6 +166,12 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
             ArgumentsValidate(ID, Arguments, argsDict);
             Text = argsDict[_TEXT];
+        }
+
+        public static MeasurementTextual GetFirst(String MeasurementCustomArgs) {
+            Dictionary<String, String> args = ArgumentsSplit(MeasurementCustomArgs);
+            Dictionary<String, String> argsTextualFirst = args.Where(kvp => Keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return new MeasurementTextual("MT", ArgumentsJoin(argsTextualFirst));
         }
 
         public override String ArgumentsGet() {
