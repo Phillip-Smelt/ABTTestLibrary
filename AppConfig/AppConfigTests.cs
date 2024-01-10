@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Outlook;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -33,7 +34,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         public static String ArgumentsJoin(Dictionary<String, String> Arguments) {
             IEnumerable<String> keys = Arguments.Select(a => String.Format($"{a.Key}{Char.ToString(SK)}{a.Value}"));
-            return String.Join(Char.ToString(SA), keys);;
+            return String.Join(Char.ToString(SA), keys);
         }
 
         internal abstract void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict);
@@ -69,6 +70,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly Double High;                                                                  private const String _HIGH = nameof(High);
         public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;                                   private const String _SI_UNITS = nameof(SI_Units);
         public readonly SI_UNITS_MODIFIER SI_Units_Modifier = SI_UNITS_MODIFIER.NotApplicable;        private const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
+        public readonly List<String> KeysNumeric = new List<String> { _HIGH, _LOW, _SI_UNITS, _SI_UNITS_MODIFIER };
 
         public MeasurementNumeric(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
@@ -111,6 +113,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String ProcessExecutable;       private const String _PROCESS_EXECUTABLE = nameof(ProcessExecutable);
         public readonly String ProcessArguments;        private const String _PROCESS_ARGUMENTS = nameof(ProcessArguments);
         public readonly String ProcessExpected;         private const String _PROCESS_EXPECTED = nameof(ProcessExpected);
+        public readonly List<String> KeysProcess = new List<String> { _PROCESS_FOLDER, _PROCESS_EXECUTABLE, _PROCESS_ARGUMENTS, _PROCESS_EXPECTED };
 
         public MeasurementProcess(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
@@ -145,6 +148,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
     public class MeasurementTextual : MeasurementAbstract {
         public new const String ClassName = nameof(MeasurementTextual);
         public readonly String Text;                                private const String _TEXT = nameof(Text);
+        public readonly List<String> KeysTextual = new List<String> { _TEXT };
 
         public MeasurementTextual(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
