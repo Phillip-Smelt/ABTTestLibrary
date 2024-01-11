@@ -64,7 +64,6 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 //             Git failed with a fatal error.
 //             unable to access 'https://github.com/Amphenol-Borisch-Technologies/TestLibrary/': schannel: CertGetCertificateChain trust error CERT_TRUST_IS_PARTIAL_CHAIN
 //        - Temporarily disabling Zero Trust by "pausing" it resolves above error.
-//        - Zero Trust's "pause" eventually, times out, and Zero Trust eventually, re-enables itself silently, without notifying you.
 //        - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
 //        - FYI, synchronizing with TestExecutor's repository doesn't error out, as it doesn't utilize a Git server.
 
