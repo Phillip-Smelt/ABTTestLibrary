@@ -56,7 +56,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count == 0) throw new ArgumentException($"{ClassName} ID '{id}' requires 1 or more case-sensitive arguments:{Environment.NewLine}" +
                 $"   Example: '{NOT_APPLICABLE}'{Environment.NewLine}" +
-                $"   Or     : 'Key1{SK}Value1'{Environment.NewLine}" +
+                $"   Or     : 'Key{SK}Value'{Environment.NewLine}" +
                 $"   Or     : 'Key1{SK}Value1{SA}{Environment.NewLine}" +
                 $"             Key2{SK}Value2{SA}{Environment.NewLine}" +
                 $"             Key3{SK}Value3'{Environment.NewLine}" +
@@ -70,7 +70,6 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly Double High;                                                                  private const String _HIGH = nameof(High);
         public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;                                   private const String _SI_UNITS = nameof(SI_Units);
         public readonly SI_UNITS_MODIFIER SI_Units_Modifier = SI_UNITS_MODIFIER.NotApplicable;        private const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
-        public readonly static List<String> Keys = new List<String> { _HIGH, _LOW, _SI_UNITS, _SI_UNITS_MODIFIER };
 
         public MeasurementNumeric(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
@@ -88,10 +87,11 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             }
         }
 
-        public static MeasurementNumeric GetFirst(String MeasurementCustomArgs) {
+        public static MeasurementNumeric Get(String MeasurementCustomArgs) {
             Dictionary<String, String> args = ArgumentsSplit(MeasurementCustomArgs);
-            Dictionary<String, String> argsNumericFirst = args.Where(kvp => Keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            return new MeasurementNumeric("MN", ArgumentsJoin(argsNumericFirst));
+            List<String> Keys = new List<String> { _HIGH, _LOW, _SI_UNITS, _SI_UNITS_MODIFIER };
+            Dictionary<String, String> argsNumeric = args.Where(kvp => Keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return new MeasurementNumeric("MN", ArgumentsJoin(argsNumeric));
         }
 
         public override String ArgumentsGet() { return $"{_HIGH}{SK}{High}{SA}{_LOW}{SK}{Low}{SA}{_SI_UNITS}{SK}{SI_Units}{SA}{_SI_UNITS_MODIFIER}{SK}{SI_Units_Modifier}"; }
@@ -119,7 +119,6 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String ProcessExecutable;       private const String _PROCESS_EXECUTABLE = nameof(ProcessExecutable);
         public readonly String ProcessArguments;        private const String _PROCESS_ARGUMENTS = nameof(ProcessArguments);
         public readonly String ProcessExpected;         private const String _PROCESS_EXPECTED = nameof(ProcessExpected);
-        public readonly static List<String> Keys = new List<String> { _PROCESS_FOLDER, _PROCESS_EXECUTABLE, _PROCESS_ARGUMENTS, _PROCESS_EXPECTED };
 
         public MeasurementProcess(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
@@ -130,10 +129,11 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             ProcessExpected = argsDict[_PROCESS_EXPECTED];
         }
 
-        public static MeasurementProcess GetFirst(String MeasurementCustomArgs) {
+        public static MeasurementProcess Get(String MeasurementCustomArgs) {
             Dictionary<String, String> args = ArgumentsSplit(MeasurementCustomArgs);
-            Dictionary<String, String> argsProcessFirst = args.Where(kvp => Keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            return new MeasurementProcess("MP", ArgumentsJoin(argsProcessFirst));
+            List<String> Keys = new List<String> { _PROCESS_FOLDER, _PROCESS_EXECUTABLE, _PROCESS_ARGUMENTS, _PROCESS_EXPECTED };
+            Dictionary<String, String> argsProcess = args.Where(kvp => Keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return new MeasurementProcess("MP", ArgumentsJoin(argsProcess));
         }
 
         public override String ArgumentsGet() {
@@ -160,7 +160,6 @@ namespace ABT.TestSpace.TestExec.AppConfig {
     public class MeasurementTextual : MeasurementAbstract {
         public new const String ClassName = nameof(MeasurementTextual);
         public readonly String Text;                                private const String _TEXT = nameof(Text);
-        public readonly static List<String> Keys = new List<String> { _TEXT };
 
         public MeasurementTextual(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
@@ -168,10 +167,11 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             Text = argsDict[_TEXT];
         }
 
-        public static MeasurementTextual GetFirst(String MeasurementCustomArgs) {
+        public static MeasurementTextual Get(String MeasurementCustomArgs) {
             Dictionary<String, String> args = ArgumentsSplit(MeasurementCustomArgs);
-            Dictionary<String, String> argsTextualFirst = args.Where(kvp => Keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            return new MeasurementTextual("MT", ArgumentsJoin(argsTextualFirst));
+            List<String> Keys = new List<String> { _TEXT };
+            Dictionary<String, String> argsTextual = args.Where(kvp => Keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return new MeasurementTextual("MT", ArgumentsJoin(argsTextual));
         }
 
         public override String ArgumentsGet() {
