@@ -46,9 +46,9 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 //        - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
 //        - Invoking public methods with named arguments is a superb, self-documenting coding technique, improved by PascalCasing.
 // TODO:  Eventually; add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
-// TODO:  Eventually; update to .Net 7.0 & C# 11.0 instead of .Net FrameWork 4.8 & C# 7.3 when possible.
-// NOTE:  Used .Net FrameWork 4.8 instead of .Net 7.0 because required Texas instruments TIDP.SAA Fusion Library supposedly compiled to .Net FrameWork 2.0, incompatible with .Net 7.0, C# 11.0 & WinUI 3.
-//        TIDP.SAA actually appears to be compiled to .Net FrameWork 4.5, but that's still not necessarily compatible with .Net 7.0.
+// TODO:  Eventually; update to .Net 8.0 & C# 12.0 instead of .Net FrameWork 4.8 & C# 7.3 when possible.
+// NOTE:  Used .Net FrameWork 4.8 instead of .Net 8.0 because required Texas instruments' TIDP.SAA Fusion API targets
+//        .Net FrameWork 4.5, incompatible with .Net 8.0, C# 12.0 & WinUI 3.
 //        - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
 // TODO:  Eventually; update to WinUI 3 or WPF instead of WinForms when possible.
 // NOTE:  Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
