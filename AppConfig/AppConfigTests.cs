@@ -89,8 +89,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         public static MeasurementNumeric Get(String MeasurementCustomArgs) {
             Dictionary<String, String> args = ArgumentsSplit(MeasurementCustomArgs);
-            List<String> Keys = new List<String> { _HIGH, _LOW, _SI_UNITS, _SI_UNITS_MODIFIER };
-            Dictionary<String, String> argsNumeric = args.Where(kvp => Keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            List<String> keys = new List<String> { _HIGH, _LOW, _SI_UNITS, _SI_UNITS_MODIFIER };
+            Dictionary<String, String> argsNumeric = args.Where(kvp => keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             return new MeasurementNumeric("MN", ArgumentsJoin(argsNumeric));
         }
 
@@ -131,8 +131,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         public static MeasurementProcess Get(String MeasurementCustomArgs) {
             Dictionary<String, String> args = ArgumentsSplit(MeasurementCustomArgs);
-            List<String> Keys = new List<String> { _PROCESS_FOLDER, _PROCESS_EXECUTABLE, _PROCESS_ARGUMENTS, _PROCESS_EXPECTED };
-            Dictionary<String, String> argsProcess = args.Where(kvp => Keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            List<String> keys = new List<String> { _PROCESS_FOLDER, _PROCESS_EXECUTABLE, _PROCESS_ARGUMENTS, _PROCESS_EXPECTED };
+            Dictionary<String, String> argsProcess = args.Where(kvp => keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             return new MeasurementProcess("MP", ArgumentsJoin(argsProcess));
         }
 
@@ -169,8 +169,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         public static MeasurementTextual Get(String MeasurementCustomArgs) {
             Dictionary<String, String> args = ArgumentsSplit(MeasurementCustomArgs);
-            List<String> Keys = new List<String> { _TEXT };
-            Dictionary<String, String> argsTextual = args.Where(kvp => Keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            List<String> keys = new List<String> { _TEXT };
+            Dictionary<String, String> argsTextual = args.Where(kvp => keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             return new MeasurementTextual("MT", ArgumentsJoin(argsTextual));
         }
 
