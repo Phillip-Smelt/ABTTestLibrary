@@ -53,12 +53,14 @@ namespace ABT.TestSpace.TestExec.Logging {
             sb.Append(FormatMessage("Actual", Value));
             return sb.ToString();
         }
+        #endregion Public Methods
 
-        public static void LogError(String logMessage) { Log.Error(logMessage); }
+        #region Internal Methods
+        internal static void LogError(String logMessage) { Log.Error(logMessage); }
 
-        public static void LogMessage(String Message) { Log.Information(Message); }
+        internal static void LogMessage(String Message) { Log.Information(Message); }
 
-        public static void LogTest(Boolean isOperation, Measurement measurement, ref RichTextBox rtfResults) {
+        internal static void LogTest(Boolean isOperation, Measurement measurement, ref RichTextBox rtfResults) {
             StringBuilder message = new StringBuilder();
             message.AppendLine(FormatMessage("TestMeasurement ID", measurement.ID));
 #if VERBOSE
@@ -89,7 +91,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Result));
         }
 
-        public static void Start(TestExecutive testExecutive, ref RichTextBox rtfResults) {
+        internal static void Start(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) {
                 // When TestGroups are executed, measurement data is never saved as Rich Text.
                 // RichTextBox only. 
@@ -157,7 +159,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"TestMeasurements:\n{sb}");
         }
 
-        public static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
+        internal static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
@@ -170,11 +172,9 @@ namespace ABT.TestSpace.TestExec.Logging {
                 if (testExecutive.ConfigLogger.TestEventsEnabled) TestEvents(testExecutive.ConfigUUT);
             }
         }
-        #endregion Public Methods
+        #endregion Internal Methods
 
-        #region Non-Public Methods
-        internal static String GetFilePath(TestExecutive testExecutive) { return $"{testExecutive.ConfigLogger.FilePath}{testExecutive.ConfigTest.TestElementID}\\"; }
-
+        #region Private Methods
         private static void FileStop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             String fileName = $"{testExecutive.ConfigUUT.Number}_{testExecutive.ConfigUUT.SerialNumber}_{testExecutive.ConfigTest.TestElementID}";
             String[] files = Directory.GetFiles(GetFilePath(testExecutive), $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
@@ -200,6 +200,8 @@ namespace ABT.TestSpace.TestExec.Logging {
             fileName += $"_{++maxNumber}_{testExecutive.ConfigUUT.EventCode}.rtf";
             rtfResults.SaveFile($"{GetFilePath(testExecutive)}{fileName}");
         }
+        
+        private static String GetFilePath(TestExecutive testExecutive) { return $"{testExecutive.ConfigLogger.FilePath}{testExecutive.ConfigTest.TestElementID}\\"; }
 
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
             Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
@@ -252,6 +254,6 @@ namespace ABT.TestSpace.TestExec.Logging {
             }
             // TODO:  Eventually; invoke TestEvents with $"{uut.Number} {uut.SerialNumber} {uut.eventCode}";
         }
-        #endregion Non-Public
+        #endregion Private
     }
 }
