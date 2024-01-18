@@ -26,6 +26,69 @@ namespace ABT.TestSpace.TestExec.Logging {
         private const String MESSAGE_STOP = "STOP              : ";
         private const String MESSAGE_UUT_RESULT = "Result            : ";
 
+        #region Public Methods
+        public static String FormatMessage(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
+
+        public static String FormatNumeric(MeasurementNumeric MN, Double Value) {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(FormatMessage("High Limit", $"{MN.High:G}"));
+            sb.AppendLine(FormatMessage("Measured", $"{Value:G}"));
+            sb.AppendLine(FormatMessage("Low Limit", $"{MN.Low:G}"));
+            String si_units = $"{Enum.GetName(typeof(SI_UNITS), MN.SI_Units)}";
+            if (MN.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) si_units += $" {Enum.GetName(typeof(SI_UNITS_MODIFIER), MN.SI_Units_Modifier)}";
+            sb.Append(FormatMessage("SI Units", si_units));
+            return sb.ToString();
+        }
+
+        public static String FormatProcess(MeasurementProcess MP, String Value) {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(FormatMessage("Expected", MP.ProcessExpected));
+            sb.Append(FormatMessage("Actual", Value));
+            return sb.ToString();
+        }
+
+        public static String FormatTextual(MeasurementTextual MT, String Value) {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(FormatMessage("Expected", MT.Text));
+            sb.Append(FormatMessage("Actual", Value));
+            return sb.ToString();
+        }
+
+        public static void LogError(String logMessage) { Log.Error(logMessage); }
+
+        public static void LogMessage(String Message) { Log.Information(Message); }
+
+        public static void LogTest(Boolean isOperation, Measurement measurement, ref RichTextBox rtfResults) {
+            StringBuilder message = new StringBuilder();
+            message.AppendLine(FormatMessage("TestMeasurement ID", measurement.ID));
+#if VERBOSE
+            message.AppendLine(FormatMessage("Revision", measurement.Revision));
+            message.AppendLine(FormatMessage("Measurement Type", measurement.ClassName));
+            message.AppendLine(FormatMessage("Cancel Not Passed", measurement.CancelNotPassed.ToString()));
+#endif
+            message.AppendLine(FormatMessage("Description", measurement.Description));
+            switch (measurement.ClassName) {
+                case MeasurementCustom.ClassName:
+                    message.AppendLine(measurement.Value);
+                    break;
+                case MeasurementNumeric.ClassName:
+                    message.AppendLine(FormatNumeric((MeasurementNumeric)measurement.ClassObject, Double.Parse(measurement.Value)));
+                    break;
+                case MeasurementProcess.ClassName:
+                    message.AppendLine(FormatProcess((MeasurementProcess)measurement.ClassObject, measurement.Value));
+                    break;
+                case MeasurementTextual.ClassName:
+                    message.AppendLine(FormatTextual((MeasurementTextual)measurement.ClassObject, measurement.Value));
+                    break;
+                default:
+                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
+            }
+            message.AppendLine(FormatMessage("Result", measurement.Result));
+            if (!String.Equals(measurement.Message, String.Empty)) message.Append(measurement.Message);
+            Log.Information(message.ToString());
+            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Result));
+        }
+
         public static void Start(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) {
                 // When TestGroups are executed, measurement data is never saved as Rich Text.
@@ -94,64 +157,6 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"TestMeasurements:\n{sb}");
         }
 
-        public static void LogTest(Boolean isOperation, Measurement measurement, ref RichTextBox rtfResults) {
-            StringBuilder message = new StringBuilder();
-            message.AppendLine(FormatMessage("TestMeasurement ID", measurement.ID));
-#if VERBOSE
-            message.AppendLine(FormatMessage("Revision", measurement.Revision));
-            message.AppendLine(FormatMessage("Measurement Type", measurement.ClassName));
-            message.AppendLine(FormatMessage("Cancel Not Passed", measurement.CancelNotPassed.ToString()));
-#endif
-            message.AppendLine(FormatMessage("Description", measurement.Description));
-            switch (measurement.ClassName) {
-                case MeasurementCustom.ClassName:
-                    message.AppendLine(measurement.Value);
-                    break;
-                case MeasurementNumeric.ClassName:
-                    message.AppendLine(FormatNumeric((MeasurementNumeric)measurement.ClassObject, Double.Parse(measurement.Value)));
-                    break;
-                case MeasurementProcess.ClassName:
-                    message.AppendLine(FormatProcess((MeasurementProcess)measurement.ClassObject, measurement.Value));
-                    break;
-                case MeasurementTextual.ClassName:
-                    message.AppendLine(FormatTextual((MeasurementTextual)measurement.ClassObject, measurement.Value));
-                    break;
-                default:
-                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
-            }
-            message.AppendLine(FormatMessage("Result", measurement.Result));
-            if (!String.Equals(measurement.Message, String.Empty)) message.Append(measurement.Message);
-            Log.Information(message.ToString());
-            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Result));
-        }
-
-        public static String FormatMessage(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
-
-        public static String FormatNumeric(MeasurementNumeric MN, Double Value) {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(FormatMessage("High Limit", $"{MN.High:G}"));
-            sb.AppendLine(FormatMessage("Measured", $"{Value:G}"));
-            sb.AppendLine(FormatMessage("Low Limit", $"{MN.Low:G}"));
-            String si_units = $"{Enum.GetName(typeof(SI_UNITS), MN.SI_Units)}";
-            if (MN.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) si_units += $" {Enum.GetName(typeof(SI_UNITS_MODIFIER), MN.SI_Units_Modifier)}";
-            sb.Append(FormatMessage("SI Units", si_units));
-            return sb.ToString();
-        }
-
-        public static String FormatProcess(MeasurementProcess MP, String Value) {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(FormatMessage("Expected", MP.ProcessExpected));
-            sb.Append(FormatMessage("Actual", Value));
-            return sb.ToString();
-        }
-
-        public static String FormatTextual(MeasurementTextual MT, String Value) {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(FormatMessage("Expected", MT.Text));
-            sb.Append(FormatMessage("Actual", Value));
-            return sb.ToString();
-        }
-
         public static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
@@ -165,29 +170,9 @@ namespace ABT.TestSpace.TestExec.Logging {
                 if (testExecutive.ConfigLogger.TestEventsEnabled) TestEvents(testExecutive.ConfigUUT);
             }
         }
+        #endregion Public Methods
 
-        public static void LogError(String logMessage, Boolean ShowMessage) { Log.Error(logMessage); }
-
-        private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
-            Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
-            if (selectionStart == -1) Log.Error($"Rich Text '{originalText}' not found after character '{startFind}', cannot replace with '{replacementText}'.");
-            else {
-                richTextBox.SelectionStart = selectionStart;
-                richTextBox.SelectionLength = originalText.Length;
-                richTextBox.SelectedText = replacementText;
-            }
-        }
-
-        private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
-            Int32 selectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
-            if (selectionStart == -1) Log.Error($"Rich Text '{findText}' not found after character '{startFind}', cannot highlight with '{backColor.Name}'.");
-            else {
-                richTextBox.SelectionStart = selectionStart;
-                richTextBox.SelectionLength = findText.Length;
-                richTextBox.SelectionBackColor = backColor;
-            }
-        }
-
+        #region Non-Public Methods
         internal static String GetFilePath(TestExecutive testExecutive) { return $"{testExecutive.ConfigLogger.FilePath}{testExecutive.ConfigTest.TestElementID}\\"; }
 
         private static void FileStop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
@@ -214,6 +199,26 @@ namespace ABT.TestSpace.TestExec.Logging {
             }
             fileName += $"_{++maxNumber}_{testExecutive.ConfigUUT.EventCode}.rtf";
             rtfResults.SaveFile($"{GetFilePath(testExecutive)}{fileName}");
+        }
+
+        private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
+            Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+            if (selectionStart == -1) Log.Error($"Rich Text '{originalText}' not found after character '{startFind}', cannot replace with '{replacementText}'.");
+            else {
+                richTextBox.SelectionStart = selectionStart;
+                richTextBox.SelectionLength = originalText.Length;
+                richTextBox.SelectedText = replacementText;
+            }
+        }
+
+        private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
+            Int32 selectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+            if (selectionStart == -1) Log.Error($"Rich Text '{findText}' not found after character '{startFind}', cannot highlight with '{backColor.Name}'.");
+            else {
+                richTextBox.SelectionStart = selectionStart;
+                richTextBox.SelectionLength = findText.Length;
+                richTextBox.SelectionBackColor = backColor;
+            }
         }
 
         private static void SQLStart(TestExecutive testExecutive) {
@@ -247,5 +252,6 @@ namespace ABT.TestSpace.TestExec.Logging {
             }
             // TODO:  Eventually; invoke TestEvents with $"{uut.Number} {uut.SerialNumber} {uut.eventCode}";
         }
+        #endregion Non-Public
     }
 }
