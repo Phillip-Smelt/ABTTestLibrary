@@ -709,10 +709,6 @@ namespace ABT.TestSpace.TestExec {
         public void MessageAppend(String Label, String Message) { MeasurementPresent.Message += $"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}{Environment.NewLine}"; }
 
         public void MessagesAppend(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppend(Label, Message); }
-
-        public void MessageInsert(String Label, String Message) { Logger.LogMessage(Logger.FormatMessage(Label, Message)); }
-
-        public void MessageInsert(String Message) { Logger.LogMessage(Message); }
         #endregion Logging methods.
     }
 }
