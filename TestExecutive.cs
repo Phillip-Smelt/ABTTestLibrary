@@ -361,7 +361,6 @@ namespace ABT.TestSpace.TestExec {
             FormModeWait();
         }
 
-        // TODO:  Soon, change async void to async something so can catch Exceptions.
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
             String serialNumber;
             if (ConfigLogger.SerialNumberDialogEnabled) {
@@ -432,7 +431,6 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report from {UserPrincipal.Current.DisplayName} for {ConfigUUT.Number}, {ConfigUUT.Description}."); }
         private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request from {UserPrincipal.Current.DisplayName} for {ConfigUUT.Number}, {ConfigUUT.Description}."); }
 
-        // TODO:  Soon, change async void to async something so can catch Exceptions.
         private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
             DialogResult dr = MessageBox.Show($"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
                 $"Please Cancel & File/Save results if needed, then re-run Discovery.", "Alert", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
