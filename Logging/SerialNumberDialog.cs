@@ -39,6 +39,7 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         public String Get() { return BarCodeText.Text; }
 
+        // TODO:  Soon, change async void to async something so can catch Exceptions.
         private async void GetBarcodeScanner() {
             String scannerID = XElement.Load(TestExecutive.GlobalConfigurationFile).Element("BarCodeScannerID").Value;
             DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(scannerID);
