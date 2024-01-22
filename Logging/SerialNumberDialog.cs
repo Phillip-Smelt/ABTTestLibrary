@@ -43,9 +43,9 @@ namespace ABT.TestSpace.TestExec.Logging {
             String scannerID = XElement.Load(TestExecutive.GlobalConfigurationFile).Element("BarCodeScannerID").Value;
             DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(scannerID);
             _scanner = await BarcodeScanner.FromIdAsync(DI.Id);
-            if (_scanner == null) throw new InvalidOperationException($"Barcode scanner Device ID:{Environment.NewLine}{Environment.NewLine}'{scannerID}'{Environment.NewLine}{Environment.NewLine}not found.");
+            if (_scanner == null) throw new InvalidOperationException($"{Environment.NewLine}Cannot find Barcode scanner Device ID:{Environment.NewLine}'{scannerID}'{Environment.NewLine}");
             _claimedScanner = await _scanner.ClaimScannerAsync(); // Claim exclusively.
-            if (_claimedScanner == null) throw new InvalidOperationException("Barcode scanner cannot be claimed.");
+            if (_claimedScanner == null) throw new InvalidOperationException($"{Environment.NewLine}Barcode scanner cannot be claimed.{Environment.NewLine}");
             _claimedScanner.DataReceived += ClaimedScanner_DataReceived;
             _claimedScanner.ErrorOccurred += ClaimedScanner_ErrorOccurred;
             _claimedScanner.ReleaseDeviceRequested += ClaimedScanner_ReleaseDeviceRequested;
