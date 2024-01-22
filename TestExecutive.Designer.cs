@@ -85,7 +85,9 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_UUT_About = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MS.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // ButtonStart
@@ -618,10 +620,17 @@ namespace ABT.TestSpace.TestExec {
             // 
             // statusStrip
             // 
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 615);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(1045, 22);
             this.statusStrip.TabIndex = 10;
+            // 
+            // toolStripStatusLabel
+            // 
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(0, 17);
             // 
             // TestExecutive
             // 
@@ -645,6 +654,8 @@ namespace ABT.TestSpace.TestExec {
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.MS.ResumeLayout(false);
             this.MS.PerformLayout();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -711,5 +722,6 @@ namespace ABT.TestSpace.TestExec {
         private ToolStripMenuItem TSMI_Apps_MicrohipMPLAB_IPE;
         private ToolStripMenuItem TSMI_Apps_MicrohipMPLAB_X_IDE;
         private StatusStrip statusStrip;
+        private ToolStripStatusLabel toolStripStatusLabel;
     }
 }
