@@ -714,9 +714,9 @@ namespace ABT.TestSpace.TestExec {
 
         public void MessagesAppend(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppend(Label, Message); }
 
-        public void MessgeInsert(String Label, String Message) { BeginInvoke((Action)(() => Logger.LogMessage(Logger.FormatMessage(Label, Message+Environment.NewLine)))); }
+        public void MessgeInsert(String Label, String Message) { BeginInvoke((Action)(() => Logger.LogMessage(Logger.FormatMessage(Label, Message)))); }
 
-        public void MessageInsert(String Message, Boolean AppendNewLine = true) { BeginInvoke((Action)(() => Logger.LogMessage(Message + (AppendNewLine ? Environment.NewLine : String.Empty)))); }
+        public void MessageInsert(String Message) { BeginInvoke((Action)(() => Logger.LogMessage(Message))); }
         #endregion Logging methods.
 
         #region Status Strip
