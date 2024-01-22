@@ -713,12 +713,14 @@ namespace ABT.TestSpace.TestExec {
         public void MessageAppend(String Label, String Message) { MeasurementPresent.Message += $"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}{Environment.NewLine}"; }
 
         public void MessagesAppend(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppend(Label, Message); }
+
+        // TODO:  Soon, add MessageInsert() & MessagesInsert() to write to the Log's rtfResults prior to returning.  Use BeginInvoke() technique.
         #endregion Logging methods.
 
         #region Status Strip
-        public void StatusClear() { statusStrip.Text = String.Empty; }
+        public void StatusClear() { StatusWrite(String.Empty); }
 
-        public void StatusWrite(String Message) { statusStrip.Text = Message; }
+        public void StatusWrite(String Message) { BeginInvoke((Action)(() => statusStrip.Text = Message)); }
         #endregion Status Strip
     }
 }
