@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace ABT.TestSpace.TestExec.AppConfig {
     public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
@@ -244,19 +245,13 @@ namespace ABT.TestSpace.TestExec.AppConfig {
     }
 
     public class Totals {
-        public UInt32 Cancelled;
-        public UInt32 Errored;
-        public UInt32 Failed;
-        public UInt32 Passed;
-        public UInt32 Unset;
+        public UInt32 Cancelled = 0;
+        public UInt32 Errored = 0;
+        public UInt32 Failed = 0;
+        public UInt32 Passed = 0;
+        public UInt32 Unset = 0;
 
-        public Totals() {
-            Cancelled = 0;
-            Errored = 0;
-            Failed = 0;
-            Passed = 0;
-            Unset = 0;
-        }
+        public Totals() { }
 
         public void Update(String EventCode) { 
             switch(EventCode) {
@@ -286,5 +281,18 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public Double PercentPassed() { return Convert.ToDouble(Passed) / Convert.ToDouble(Tested()); }
         public Double PercentUnset() { return Convert.ToDouble(Unset) / Convert.ToDouble(Tested()); }
         public UInt32 Tested() { return Cancelled + Errored + Failed + Passed + Unset; }
+
+        public String Status() {
+            const String s = "     ";
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"{s}Tested: {Tested()}");
+            sb.Append($"{s}Cancelled: {Cancelled}");
+            sb.Append($"{s}Errored: {Errored}");
+            sb.Append($"{s}Failed: {Failed}");
+            sb.Append($"{s}Passed: {Passed}");
+            sb.Append($"{s}Unset: {Unset}");
+            sb.Append($"{s}Passed: {PercentPassed():P1}");
+            return sb.ToString();
+        }
     }
 }
