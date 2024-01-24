@@ -198,6 +198,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly Dictionary<String, Measurement> Measurements = new Dictionary<String, Measurement>();
         public readonly Int32 FormattingLengthGroupID = 0;
         public readonly Int32 FormattingLengthMeasurementID = 0;
+        public Totals Totals { get; set; } = new Totals();
 
         private AppConfigTest() {
             Dictionary<String, Operation> allOperations = Operation.Get();
@@ -240,5 +241,50 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         }
 
         public static AppConfigTest Get() { return new AppConfigTest(); }
+    }
+
+    public class Totals {
+        public UInt32 Cancelled;
+        public UInt32 Errored;
+        public UInt32 Failed;
+        public UInt32 Passed;
+        public UInt32 Unset;
+
+        public Totals() {
+            Cancelled = 0;
+            Errored = 0;
+            Failed = 0;
+            Passed = 0;
+            Unset = 0;
+        }
+
+        public void Update(String EventCode) { 
+            switch(EventCode) {
+                case EventCodes.CANCEL:
+                    Cancelled++;
+                    break;
+                case EventCodes.ERROR:
+                    Errored++;
+                    break;
+                case EventCodes.FAIL:
+                    Failed++;
+                    break;
+                case EventCodes.PASS:
+                    Passed++;
+                    break;
+                case EventCodes.UNSET:
+                    Unset++;
+                    break;
+                default:
+                    throw new NotImplementedException($"EventCode '{EventCode}' not implemented.");
+            }
+        }
+
+        public Double PercentCancelled() { return Convert.ToDouble(Cancelled) / Convert.ToDouble(Tested()); }
+        public Double PercentErrored() { return Convert.ToDouble(Errored) / Convert.ToDouble(Tested()); }
+        public Double PercentFailed() { return Convert.ToDouble(Failed) / Convert.ToDouble(Tested()); }
+        public Double PercentPassed() { return Convert.ToDouble(Passed) / Convert.ToDouble(Tested()); }
+        public Double PercentUnset() { return Convert.ToDouble(Unset) / Convert.ToDouble(Tested()); }
+        public UInt32 Tested() { return Cancelled + Errored + Failed + Passed + Unset; }
     }
 }
