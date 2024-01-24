@@ -543,8 +543,8 @@ namespace ABT.TestSpace.TestExec {
                 foreach (String measurementID in ConfigTest.GroupIDsToMeasurementIDs[groupID]) {
                     MeasurementIDPresent = measurementID;
                     MeasurementPresent = ConfigTest.Measurements[MeasurementIDPresent];
-                    StatusWrite($"Cancelled: {ConfigTest.Totals.Cancelled}  Errored: {ConfigTest.Totals.Errored}  Failed: {ConfigTest.Totals.Failed}  Passed: {ConfigTest.Totals.Passed}  Unset: {ConfigTest.Totals.Unset}  Passed: {ConfigTest.Totals.PercentPassed():P1}");
-                    try {
+                   try {
+                        EventTotals();
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
@@ -578,9 +578,14 @@ namespace ABT.TestSpace.TestExec {
             Initialize();
             ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
             ConfigTest.Totals.Update(ConfigUUT.EventCode);
+            EventTotals();
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
             Logger.Stop(this, ref rtfResults);
+        }
+
+        private void EventTotals() {
+            StatusWrite($"Tested: {ConfigTest.Totals.Tested()}   Cancelled: {ConfigTest.Totals.Cancelled}   Errored: {ConfigTest.Totals.Errored}   Failed: {ConfigTest.Totals.Failed}   Passed: {ConfigTest.Totals.Passed}   Unset: {ConfigTest.Totals.Unset}   Passed: {ConfigTest.Totals.PercentPassed():P1}");
         }
 
         private Boolean MeasurementCancelNotPassed(String measurementID) { return !String.Equals(ConfigTest.Measurements[measurementID].Result, EventCodes.PASS) && ConfigTest.Measurements[measurementID].CancelNotPassed; }
