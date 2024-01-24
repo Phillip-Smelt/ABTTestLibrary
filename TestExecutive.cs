@@ -142,7 +142,6 @@ namespace ABT.TestSpace.TestExec {
         private readonly SerialNumberDialog _serialNumberDialog = null;
         private readonly RegistryKey _serialNumberRegistryKey = null;
         private const String _serialNumberMostRecent = "MostRecent";
-        private const String _eventsStatusSeparator = "     ";
         private Boolean _cancelled = false;
 
         protected TestExecutive(Icon icon) {
@@ -545,7 +544,7 @@ namespace ABT.TestSpace.TestExec {
                     MeasurementIDPresent = measurementID;
                     MeasurementPresent = ConfigTest.Measurements[MeasurementIDPresent];
                    try {
-                        StatusWrite(ConfigTest.Events.Status(Separator: _eventsStatusSeparator));
+                        StatusWrite(ConfigTest.Events.Status());
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
@@ -581,7 +580,7 @@ namespace ABT.TestSpace.TestExec {
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
             ConfigTest.Events.Update(ConfigUUT.EventCode);
-            StatusWrite(ConfigTest.Events.Status(Separator: _eventsStatusSeparator));
+            StatusWrite(ConfigTest.Events.Status());
             Logger.Stop(this, ref rtfResults);
         }
 
