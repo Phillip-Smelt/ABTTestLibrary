@@ -199,7 +199,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly Dictionary<String, Measurement> Measurements = new Dictionary<String, Measurement>();
         public readonly Int32 FormattingLengthGroupID = 0;
         public readonly Int32 FormattingLengthMeasurementID = 0;
-        public Totals Totals { get; set; } = new Totals();
+        public Events Events { get; set; } = new Events();
 
         private AppConfigTest() {
             Dictionary<String, Operation> allOperations = Operation.Get();
@@ -244,14 +244,14 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public static AppConfigTest Get() { return new AppConfigTest(); }
     }
 
-    public class Totals {
+    public class Events {
         public UInt32 Cancelled = 0;
         public UInt32 Errored = 0;
         public UInt32 Failed = 0;
         public UInt32 Passed = 0;
         public UInt32 Unset = 0;
 
-        public Totals() { }
+        public Events() { }
 
         public void Update(String EventCode) { 
             switch(EventCode) {
