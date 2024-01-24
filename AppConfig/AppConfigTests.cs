@@ -282,16 +282,15 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public Double PercentUnset() { return Convert.ToDouble(Unset) / Convert.ToDouble(Tested()); }
         public UInt32 Tested() { return Cancelled + Errored + Failed + Passed + Unset; }
 
-        public String Status() {
-            const String s = "     ";
+        public String Status(String Separator) {
             StringBuilder sb = new StringBuilder();
-            sb.Append($"{s}Tested: {Tested()}");
-            sb.Append($"{s}Cancelled: {Cancelled}");
-            sb.Append($"{s}Errored: {Errored}");
-            sb.Append($"{s}Failed: {Failed}");
-            sb.Append($"{s}Passed: {Passed}");
-            sb.Append($"{s}Unset: {Unset}");
-            sb.Append($"{s}Passed: {PercentPassed():P1}");
+            sb.Append($"{Separator}Tested: {Tested()}");
+            sb.Append($"{Separator}Cancelled: {Cancelled}");
+            sb.Append($"{Separator}Errored: {Errored}");
+            sb.Append($"{Separator}Failed: {Failed}");
+            sb.Append($"{Separator}Passed: {Passed}");
+            sb.Append($"{Separator}Unset: {Unset}");
+            sb.Append($"{Separator}Passed: {PercentPassed():P1}");
             return sb.ToString();
         }
     }

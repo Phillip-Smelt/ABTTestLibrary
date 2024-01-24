@@ -544,7 +544,7 @@ namespace ABT.TestSpace.TestExec {
                     MeasurementIDPresent = measurementID;
                     MeasurementPresent = ConfigTest.Measurements[MeasurementIDPresent];
                    try {
-                        StatusWrite(ConfigTest.Totals.Status());
+                        StatusWrite(ConfigTest.Totals.Status(Separator: "     "));
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
@@ -577,10 +577,10 @@ namespace ABT.TestSpace.TestExec {
         private void MeasurementsPostRun() {
             Initialize();
             ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
-            ConfigTest.Totals.Update(ConfigUUT.EventCode);
-            StatusWrite(ConfigTest.Totals.Status());
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
+            ConfigTest.Totals.Update(ConfigUUT.EventCode);
+            StatusWrite(ConfigTest.Totals.Status(Separator: "     "));
             Logger.Stop(this, ref rtfResults);
         }
 
