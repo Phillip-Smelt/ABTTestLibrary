@@ -283,7 +283,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public UInt32 Tested() { return Cancelled + Errored + Failed + Passed + Unset; }
 
         public String Status() {
-            const String separator = "     ";
+            const String separator = "       ";
             StringBuilder sb = new StringBuilder();
             sb.Append($"{separator}Tested: {Tested()}");
             sb.Append($"{separator}Cancelled: {Cancelled}");
@@ -291,7 +291,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             sb.Append($"{separator}Failed: {Failed}");
             sb.Append($"{separator}Passed: {Passed}");
             sb.Append($"{separator}Unset: {Unset}");
-            sb.Append($"{separator}Passed: {PercentPassed():P1}");
+            sb.Append($"{separator}Passed: {PercentPassed():P}");
             return sb.ToString();
         }
     }
