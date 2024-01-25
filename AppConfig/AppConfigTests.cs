@@ -249,7 +249,6 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public UInt32 Errored = 0;
         public UInt32 Failed = 0;
         public UInt32 Passed = 0;
-        public UInt32 Unset = 0;
 
         public Events() { }
 
@@ -268,8 +267,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
                     Passed++;
                     break;
                 case EventCodes.UNSET:
-                    Unset++;
-                    break;
+                    throw new ArgumentException($"EventCode '{EventCode}' illegal argument for {System.Reflection.MethodBase.GetCurrentMethod().Name}.");
                 default:
                     throw new NotImplementedException($"EventCode '{EventCode}' not implemented.");
             }
@@ -279,8 +277,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public Double PercentErrored() { return Convert.ToDouble(Errored) / Convert.ToDouble(Tested()); }
         public Double PercentFailed() { return Convert.ToDouble(Failed) / Convert.ToDouble(Tested()); }
         public Double PercentPassed() { return Convert.ToDouble(Passed) / Convert.ToDouble(Tested()); }
-        public Double PercentUnset() { return Convert.ToDouble(Unset) / Convert.ToDouble(Tested()); }
-        public UInt32 Tested() { return Cancelled + Errored + Failed + Passed + Unset; }
+        public UInt32 Tested() { return Cancelled + Errored + Failed + Passed; }
 
         public String Status() {
             const String separator = "       ";
@@ -290,8 +287,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             sb.Append($"{separator}Errored: {Errored}");
             sb.Append($"{separator}Failed: {Failed}");
             sb.Append($"{separator}Passed: {Passed}");
-            sb.Append($"{separator}Unset: {Unset}");
-            sb.Append($"{separator}Passed: {PercentPassed():P}");
+            sb.Append($"{separator}Passed: {PercentPassed():P1}");
             return sb.ToString();
         }
     }
