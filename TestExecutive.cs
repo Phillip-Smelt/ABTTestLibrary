@@ -127,6 +127,7 @@ using Windows.ApplicationModel.VoiceCommands;
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
         public const String GlobalConfigurationFile = @"C:\Program Files\TestExecutive\TestExecutive.config.xml"; // NOTE:  Update this path if installed into another folder.
+        public const String TestExecutor = "TestExecutor";
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
