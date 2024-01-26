@@ -126,7 +126,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
         public const String GlobalConfigurationFile = @"C:\Program Files\TestExecutive\TestExecutive.config.xml"; // NOTE:  Update this path if installed into another folder.
-        public const String TestExecutor = "TestExecutor";
+        public const String GlobalTextExecutor = @"Global\TestExecutor";
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
@@ -509,6 +509,8 @@ namespace ABT.TestSpace.TestExec {
                 if (ofd.ShowDialog() == DialogResult.OK) {
                     PreApplicationExit();
                     ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
+                    // TODO:  Soon, resolve conflict with TestExecutor's GlobalMutex preventing launch of new TextExecutor.
+                    // Will need to release globalTestExecutor prior to instantiating another TestExecutor.
                     Process.Start(psi);
                     System.Windows.Forms.Application.Exit();
                 }
