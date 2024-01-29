@@ -274,6 +274,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void PreApplicationExit() {
             GlobalTestExecutorMutex.ReleaseMutex();
+            GlobalTestExecutorMutex.Dispose();
             if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
             Initialize();
         }
