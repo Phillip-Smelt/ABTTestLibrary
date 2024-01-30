@@ -401,6 +401,21 @@ namespace ABT.TestSpace.TestExec {
         #endregion Form Command Buttons
 
         #region Form Tool Strip Menu Items
+        private void TSMI_File_Change_Click(Object sender, EventArgs e) {
+            using (OpenFileDialog ofd = new OpenFileDialog()) {
+                ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestExecutors").Value;
+                ofd.Filter = "TestExecutor Programs|*.exe";
+                ofd.DereferenceLinks = true;
+                ofd.RestoreDirectory = true;
+
+                if (ofd.ShowDialog() == DialogResult.OK) {
+                    PreApplicationExit();
+                    ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
+                    Process.Start(psi);
+                    System.Windows.Forms.Application.Exit();
+                }
+            }
+        }
         private void TSMI_File_Save_Click(Object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog {
                 Title = "Save Test Results",
@@ -501,23 +516,6 @@ namespace ABT.TestSpace.TestExec {
             sb.AppendLine($"- Also be sure to undo any temporary undesired '{EA}.exe.config' changes after experimention is completed.");
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", $"{EA}.exe.config");
-        }
-        private void TSMI_UUT_Change_Click(Object sender, EventArgs e) {
-            using (OpenFileDialog ofd = new OpenFileDialog()) {
-                ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestExecutorLinks").Value;
-                ofd.Filter = "Windows Shortcuts|*.lnk";
-                ofd.DereferenceLinks = true;
-                ofd.RestoreDirectory = true;
-
-                if (ofd.ShowDialog() == DialogResult.OK) {
-                    PreApplicationExit();
-                    ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
-                    // TODO:  Soon, resolve conflict with TestExecutor's GlobalMutex preventing launch of new TextExecutor.
-                    // Will need to release globalTestExecutor prior to instantiating another TestExecutor.
-                    Process.Start(psi);
-                    System.Windows.Forms.Application.Exit();
-                }
-            }
         }
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.DocumentationFolder); }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }

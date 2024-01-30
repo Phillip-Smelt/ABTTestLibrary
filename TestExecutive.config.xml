@@ -160,7 +160,7 @@
   <Folders>
     <BarcodeScanner>P:\Test\Engineers\Equipment Manuals\TestExecutive\Honeywell Voyager 1200g</BarcodeScanner>	<!-- Honeywell Voyager USB 1200g corded Barcode Scanner -->
     <Instruments>P:\Test\Engineers\Equipment Manuals\TestExecutive\Keysight</Instruments>												<!-- Keysight SCPI VISA -->
-    <TestExecutorLinks>P:\Test\Engineers\TestExecutorLinks</TestExecutorLinks>																	<!-- Windows Shortcuts to other TestExecutor executables. -->
+    <TestExecutors>C:\Program Files\ABT</TestExecutors>																													<!-- TestExecutor executables. -->
     <Relays>P:\Test\Engineers\Equipment Manuals\TestExecutive\Measurement Computing</Relays>										<!-- MCC USB-ERB24, ULI & InstaCal -->
   </Folders>
  
