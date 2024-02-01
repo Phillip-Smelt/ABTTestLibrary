@@ -508,6 +508,7 @@ namespace ABT.TestSpace.TestExec {
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GlobalConfigurationFile);
         }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
+            // TODO:  Soon, decode the cryptic versions Build #s into their more meaningful date/time stamps, as they’re encoded from timestamps.
             _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}.{Environment.NewLine}{Environment.NewLine}" +
                 $"© 2022, Amphenol Borisch Technologies.",
                 "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -532,6 +533,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
+            // TODO:  Soon, decode the cryptic versions Build #s into their more meaningful date/time stamps, as they’re encoded from timestamps.
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}.{Environment.NewLine}{Environment.NewLine}" +
                 $"© 2022, Amphenol Borisch Technologies.",
