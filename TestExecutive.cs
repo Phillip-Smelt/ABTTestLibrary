@@ -222,7 +222,7 @@ namespace ABT.TestSpace.TestExec {
                 return outlook.CreateItem(Outlook.OlItemType.olMailItem);
             } catch {
                 _ = MessageBox.Show(ActiveForm, "Could not open Outlook.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw;
+                return null;
             }
         }
 
@@ -299,31 +299,35 @@ namespace ABT.TestSpace.TestExec {
 
         public static void SendAdministratorMailMessage(String Subject, String Body, String CC="") {
             Outlook.MailItem mailItem = GetMailItem();
-            mailItem.Subject = Subject;
-            mailItem.To = _administratorEMailTo;
-            Outlook.Recipient recipient = mailItem.Recipients.Add(_aministratorEMailCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
-            if (!String.Equals(CC, String.Empty)) { recipient = mailItem.Recipients.Add(CC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC; }
-            mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
-            mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
-            mailItem.Body = Body;
-            mailItem.Send();
+            if (mailItem != null) {
+                mailItem.Subject = Subject;
+                mailItem.To = _administratorEMailTo;
+                Outlook.Recipient recipient = mailItem.Recipients.Add(_aministratorEMailCC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+                if (!String.Equals(CC, String.Empty)) { recipient = mailItem.Recipients.Add(CC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC; }
+                mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
+                mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
+                mailItem.Body = Body;
+                mailItem.Send();
+            }
         }
  
         private void SendMailMessageWithAttachment(String subject) {
             Outlook.MailItem mailItem = GetMailItem();
-            mailItem.Subject = subject;
-            mailItem.To = _administratorEMailTo;
-            Outlook.Recipient recipient = mailItem.Recipients.Add(_aministratorEMailCC);    recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
-            recipient = mailItem.Recipients.Add(ConfigUUT.EMailTestEngineer);               recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
-            mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
-            mailItem.Body =
-                $"Please detail desired Bug Report or Improvement Request:{Environment.NewLine}" +
-                $" - Please attach relevant files, and/or embed relevant screen-captures.{Environment.NewLine}" +
-                $" - Be specific!  Be verbose!  Unleash your inner author!  It's your time to shine!{Environment.NewLine}";
-            String rtfTempFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
-            rtfResults.SaveFile(rtfTempFile);
-            _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
-            mailItem.Display();
+            if (mailItem != null) {
+                mailItem.Subject = subject;
+                mailItem.To = _administratorEMailTo;
+                Outlook.Recipient recipient = mailItem.Recipients.Add(_aministratorEMailCC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+                recipient = mailItem.Recipients.Add(ConfigUUT.EMailTestEngineer); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+                mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
+                mailItem.Body =
+                    $"Please detail desired Bug Report or Improvement Request:{Environment.NewLine}" +
+                    $" - Please attach relevant files, and/or embed relevant screen-captures.{Environment.NewLine}" +
+                    $" - Be specific!  Be verbose!  Unleash your inner author!  It's your time to shine!{Environment.NewLine}";
+                String rtfTempFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
+                rtfResults.SaveFile(rtfTempFile);
+                _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
+                mailItem.Display();
+            }
         }
         #endregion Form Miscellaneous
         
