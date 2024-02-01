@@ -129,7 +129,7 @@
     -->
 
   <EMail>
-    <Enabled>True</Enabled>
+    <Enabled>False</Enabled>
     <To>Phillip.Smelt@Borisch.Com</To>
     <CC>Phillip.Smelt@Borisch.Com</CC>
   </EMail>
