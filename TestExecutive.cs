@@ -221,8 +221,9 @@ namespace ABT.TestSpace.TestExec {
                 }
                 return outlook.CreateItem(Outlook.OlItemType.olMailItem);
             } catch {
-                _ = MessageBox.Show(ActiveForm, "Could not open Outlook.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
+                _ = MessageBox.Show(ActiveForm, "Could not open Microsoft Outlook.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Logger.LogError("Could not open Microsoft Outlook.");
+                throw new NotImplementedException("Outlook not good...");
             }
         }
 
@@ -298,8 +299,8 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public static void SendAdministratorMailMessage(String Subject, String Body, String CC="") {
-            Outlook.MailItem mailItem = GetMailItem();
-            if (mailItem != null) {
+            try {
+                Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = Subject;
                 mailItem.To = _administratorEMailTo;
                 Outlook.Recipient recipient = mailItem.Recipients.Add(_aministratorEMailCC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
@@ -308,12 +309,14 @@ namespace ABT.TestSpace.TestExec {
                 mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
                 mailItem.Body = Body;
                 mailItem.Send();
+            } catch {
+                Logger.LogError(Subject);
             }
         }
  
         private void SendMailMessageWithAttachment(String subject) {
-            Outlook.MailItem mailItem = GetMailItem();
-            if (mailItem != null) {
+            try {
+                Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = subject;
                 mailItem.To = _administratorEMailTo;
                 Outlook.Recipient recipient = mailItem.Recipients.Add(_aministratorEMailCC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
@@ -327,6 +330,8 @@ namespace ABT.TestSpace.TestExec {
                 rtfResults.SaveFile(rtfTempFile);
                 _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
                 mailItem.Display();
+            } catch {
+                Logger.LogError(subject);
             }
         }
         #endregion Form Miscellaneous
