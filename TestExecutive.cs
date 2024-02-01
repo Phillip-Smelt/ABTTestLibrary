@@ -179,7 +179,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public static void ErrorMessage(Exception Ex) {
-            ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {_administratorEMailTo} & CC {_aministratorEMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Outlook profile if dialog appears.");
+            ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {_administratorEMailTo} & CC {_aministratorEMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
             SendAdministratorMailMessage("Exception caught!", Ex);
         }
 
@@ -221,8 +221,8 @@ namespace ABT.TestSpace.TestExec {
                 }
                 return outlook.CreateItem(Outlook.OlItemType.olMailItem);
             } catch {
-                _ = MessageBox.Show(ActiveForm, "Could not open Microsoft Outlook.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Logger.LogError("Could not open Microsoft Outlook.");
+                _ = MessageBox.Show(ActiveForm, "Could not open Microsoft 365 Outlook.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Logger.LogError("Could not open Microsoft 365 Outlook.");
                 throw new NotImplementedException("Outlook not good...");
             }
         }
