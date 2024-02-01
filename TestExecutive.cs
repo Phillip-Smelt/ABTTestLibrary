@@ -137,8 +137,9 @@ namespace ABT.TestSpace.TestExec {
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
         public readonly Boolean Simulate;
-        private static readonly String _administratorEMailTo = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailTo").Value;
-        private static readonly String _aministratorEMailCC = XElement.Load(GlobalConfigurationFile).Element("Administrators").Element("EMailCC").Value;
+        private static readonly String _eMailTo = XElement.Load(GlobalConfigurationFile).Element("EMail").Element("To").Value;
+        private static readonly String _eMailCC = XElement.Load(GlobalConfigurationFile).Element("EMail").Element("CC").Value;
+        private static readonly Boolean _eMailEnabled = Boolean.Parse(XElement.Load(GlobalConfigurationFile).Element("EMail").Element("Enabled").Value);
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
         private readonly RegistryKey _serialNumberRegistryKey = null;
@@ -179,8 +180,10 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public static void ErrorMessage(Exception Ex) {
-            ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {_administratorEMailTo} & CC {_aministratorEMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
-            SendAdministratorMailMessage("Exception caught!", Ex);
+            if (_eMailEnabled) {
+                ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {_eMailTo} & CC {_eMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
+                SendAdministratorMailMessage("Exception caught!", Ex);
+            }
         }
 
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
@@ -302,8 +305,8 @@ namespace ABT.TestSpace.TestExec {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = Subject;
-                mailItem.To = _administratorEMailTo;
-                Outlook.Recipient recipient = mailItem.Recipients.Add(_aministratorEMailCC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+                mailItem.To = _eMailTo;
+                Outlook.Recipient recipient = mailItem.Recipients.Add(_eMailCC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
                 if (!String.Equals(CC, String.Empty)) { recipient = mailItem.Recipients.Add(CC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC; }
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
@@ -318,8 +321,8 @@ namespace ABT.TestSpace.TestExec {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = subject;
-                mailItem.To = _administratorEMailTo;
-                Outlook.Recipient recipient = mailItem.Recipients.Add(_aministratorEMailCC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+                mailItem.To = _eMailTo;
+                Outlook.Recipient recipient = mailItem.Recipients.Add(_eMailCC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
                 recipient = mailItem.Recipients.Add(ConfigUUT.EMailTestEngineer); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.Body =

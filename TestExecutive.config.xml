@@ -128,10 +128,11 @@
          - 01BB2-O1234 is invalid, as "O1234" ≠ "01234" as "O" ≠ "0".
     -->
 
-  <Administrators>
-    <EMailTo>Phillip.Smelt@Borisch.Com</EMailTo>
-    <EMailCC>Phillip.Smelt@Borisch.Com</EMailCC>
-  </Administrators>
+  <EMail>
+    <Enabled>True</Enabled>
+    <To>Phillip.Smelt@Borisch.Com</To>
+    <CC>Phillip.Smelt@Borisch.Com</CC>
+  </EMail>
 
   <Apps>
 		<Keysight>
