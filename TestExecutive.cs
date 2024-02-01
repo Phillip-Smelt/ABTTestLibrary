@@ -139,7 +139,6 @@ namespace ABT.TestSpace.TestExec {
         public readonly Boolean Simulate;
         private static readonly String _eMailTo = XElement.Load(GlobalConfigurationFile).Element("EMail").Element("To").Value;
         private static readonly String _eMailCC = XElement.Load(GlobalConfigurationFile).Element("EMail").Element("CC").Value;
-        private static readonly Boolean _errorMailingEnabled = Boolean.Parse(XElement.Load(GlobalConfigurationFile).Element("EMail").Element("ErrorMailingEnabled").Value);
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
         private readonly RegistryKey _serialNumberRegistryKey = null;
@@ -180,7 +179,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public static void ErrorMessage(Exception Ex) {
-            if (_errorMailingEnabled) {
+            if (Boolean.Parse(XElement.Load(GlobalConfigurationFile).Element("EMail").Element("ErrorMailingEnabled").Value)) {
                 ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {_eMailTo} & CC {_eMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
                 SendAdministratorMailMessage("Exception caught!", Ex);
             }
