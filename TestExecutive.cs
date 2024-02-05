@@ -25,6 +25,7 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
+using System.Configuration;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestExecutor based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestExecutor.
@@ -131,18 +132,16 @@ namespace ABT.TestSpace.TestExec {
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
-        public readonly AppConfigUUT ConfigUUT = AppConfigUUT.Get();
+        public static readonly AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
         public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
-        public readonly Boolean Simulate;
-        private static readonly String _eMailTo = XElement.Load(GlobalConfigurationFile).Element("EMail").Element("To").Value;
-        private static readonly String _eMailCC = XElement.Load(GlobalConfigurationFile).Element("EMail").Element("CC").Value;
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
         private readonly RegistryKey _serialNumberRegistryKey = null;
         private const String _serialNumberMostRecent = "MostRecent";
+        private const String NOT_APPLICABLE = "NotApplicable";
         private Boolean _cancelled = false;
 
         protected TestExecutive(Icon icon) {
@@ -150,7 +149,7 @@ namespace ABT.TestSpace.TestExec {
             Icon = icon;
             // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
 
-            if (String.Equals(ConfigUUT.SerialNumberRegExCustom, "NotApplicable")) _serialNumberRegEx = XElement.Load(GlobalConfigurationFile).Element("SerialNumberRegExDefault").Value;
+            if (String.Equals(ConfigUUT.SerialNumberRegExCustom, NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(GlobalConfigurationFile).Element("SerialNumberRegExDefault").Value;
             else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
 
             if (RegexInvalid(_serialNumberRegEx)) {
@@ -164,8 +163,7 @@ namespace ABT.TestSpace.TestExec {
             _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
             ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
 
-            Simulate = Boolean.Parse(XElement.Load(GlobalConfigurationFile).Element("Simulate").Value) || ConfigUUT.Simulate;
-            if (!Simulate) {
+            if (!ConfigUUT.Simulate) {
                 SVIs = SCPI_VISA_Instrument.Get();
                 if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
                 UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
@@ -179,8 +177,8 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public static void ErrorMessage(Exception Ex) {
-            if (Boolean.Parse(XElement.Load(GlobalConfigurationFile).Element("EMail").Element("ErrorMailingEnabled").Value)) {
-                ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {_eMailTo} & CC {_eMailCC}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
+            if (!String.Equals(ConfigUUT.EMailTestEngineer, NOT_APPLICABLE)) {
+                ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {ConfigUUT.EMailTestEngineer}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
                 SendAdministratorMailMessage("Exception caught!", Ex);
             }
         }
@@ -230,14 +228,14 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public virtual void Initialize() {
-            if (!Simulate) {
+            if (!ConfigUUT.Simulate) {
                 SCPI99.Reset(SVIs);
                 UE24.Set(C.S.NC);
             }
         }
 
         public virtual Boolean Initialized() {
-            if (!Simulate) { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
+            if (!ConfigUUT.Simulate) { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
             return false;
         }
 
@@ -292,21 +290,19 @@ namespace ABT.TestSpace.TestExec {
             return false;
         }
 
-        public static void SendAdministratorMailMessage(String Subject, Exception Ex, String CC="") {
+        public static void SendAdministratorMailMessage(String Subject, Exception Ex) {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"MachineName           : {Environment.MachineName}");
             sb.AppendLine($"UserPrincipal         : {UserPrincipal.Current.DisplayName}");
             sb.AppendLine($"Exception.ToString()  : {Ex}"); 
-            SendAdministratorMailMessage(Subject, Body: sb.ToString(), CC);
+            SendAdministratorMailMessage(Subject, Body: sb.ToString());
         }
 
-        public static void SendAdministratorMailMessage(String Subject, String Body, String CC="") {
+        public static void SendAdministratorMailMessage(String Subject, String Body) {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = Subject;
-                mailItem.To = _eMailTo;
-                Outlook.Recipient recipient = mailItem.Recipients.Add(_eMailCC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
-                if (!String.Equals(CC, String.Empty)) { recipient = mailItem.Recipients.Add(CC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC; }
+                mailItem.To = String.Equals(NOT_APPLICABLE, ConfigUUT.EMailTestEngineer) ? String.Empty : ConfigUUT.EMailTestEngineer;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
                 mailItem.Body = Body;
@@ -320,9 +316,7 @@ namespace ABT.TestSpace.TestExec {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = subject;
-                mailItem.To = _eMailTo;
-                Outlook.Recipient recipient = mailItem.Recipients.Add(_eMailCC); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
-                recipient = mailItem.Recipients.Add(ConfigUUT.EMailTestEngineer); recipient.Type = (Int32)Outlook.OlMailRecipientType.olCC;
+                mailItem.To = String.Equals(NOT_APPLICABLE, ConfigUUT.EMailTestEngineer) ? String.Empty : ConfigUUT.EMailTestEngineer;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.Body =
                     $"Please detail desired Bug Report or Improvement Request:{Environment.NewLine}" +

@@ -100,9 +100,9 @@ namespace ABT.TestSpace.TestExec.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
                 Log.Information($"Note: following measurement results invalid for UUT production testing, only troubleshooting.");
-                Log.Information(FormatMessage($"UUT Serial Number", $"{testExecutive.ConfigUUT.SerialNumber}"));
-                Log.Information(FormatMessage($"UUT Number", $"{testExecutive.ConfigUUT.Number}"));
-                Log.Information(FormatMessage($"UUT Revision", $"{testExecutive.ConfigUUT.Revision}"));
+                Log.Information(FormatMessage($"UUT Serial Number", $"{TestExecutive.ConfigUUT.SerialNumber}"));
+                Log.Information(FormatMessage($"UUT Number", $"{TestExecutive.ConfigUUT.Number}"));
+                Log.Information(FormatMessage($"UUT Revision", $"{TestExecutive.ConfigUUT.Revision}"));
                 Log.Information(FormatMessage($"TestGroup ID", $"{testExecutive.ConfigTest.TestElementID}"));
                 Log.Information(FormatMessage($"Description", $"{testExecutive.ConfigTest.TestElementDescription}"));
                 Log.Information(FormatMessage($"START", $"{DateTime.Now}\n"));
@@ -132,12 +132,12 @@ namespace ABT.TestSpace.TestExec.Logging {
             }
             Log.Information($"UUT:");
             Log.Information($"\t{MESSAGE_UUT_RESULT}");
-            Log.Information($"\tSerial Number     : {testExecutive.ConfigUUT.SerialNumber}");
-            Log.Information($"\tNumber            : {testExecutive.ConfigUUT.Number}");
-            Log.Information($"\tRevision          : {testExecutive.ConfigUUT.Revision}");
-            Log.Information($"\tDescription       : {testExecutive.ConfigUUT.Description}");
-            Log.Information($"\tType              : {testExecutive.ConfigUUT.Type}");
-            Log.Information($"\tCustomer          : {testExecutive.ConfigUUT.Customer}\n");
+            Log.Information($"\tSerial Number     : {TestExecutive.ConfigUUT.SerialNumber}");
+            Log.Information($"\tNumber            : {TestExecutive.ConfigUUT.Number}");
+            Log.Information($"\tRevision          : {TestExecutive.ConfigUUT.Revision}");
+            Log.Information($"\tDescription       : {TestExecutive.ConfigUUT.Description}");
+            Log.Information($"\tType              : {TestExecutive.ConfigUUT.Type}");
+            Log.Information($"\tCustomer          : {TestExecutive.ConfigUUT.Customer}\n");
 
             Log.Information($"TestOperation:");
             Log.Information($"\tSTART             : {DateTime.Now}");
@@ -146,7 +146,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"\tMachineName       : {Environment.MachineName}");
             Log.Information($"\tTestExecutive     : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Information($"\tTestExecutor      : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}");
-            Log.Information($"\tSpecification     : {testExecutive.ConfigUUT.TestSpecification}");
+            Log.Information($"\tSpecification     : {TestExecutive.ConfigUUT.TestSpecification}");
             Log.Information($"\tID                : {testExecutive.ConfigTest.TestElementID}");
             Log.Information($"\tRevision          : {testExecutive.ConfigTest.TestElementRevision}");
             Log.Information($"\tDescription       : {testExecutive.ConfigTest.TestElementDescription}\n");
@@ -163,20 +163,20 @@ namespace ABT.TestSpace.TestExec.Logging {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
-                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_RESULT, MESSAGE_UUT_RESULT + testExecutive.ConfigUUT.EventCode);
-                SetBackColor(ref rtfResults, 0, testExecutive.ConfigUUT.EventCode, EventCodes.GetColor(testExecutive.ConfigUUT.EventCode));
+                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_RESULT, MESSAGE_UUT_RESULT + TestExecutive.ConfigUUT.EventCode);
+                SetBackColor(ref rtfResults, 0, TestExecutive.ConfigUUT.EventCode, EventCodes.GetColor(TestExecutive.ConfigUUT.EventCode));
                 ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);               
                 Log.CloseAndFlush();
                 if (testExecutive.ConfigLogger.FileEnabled) FileStop(testExecutive, ref rtfResults);
                 if (testExecutive.ConfigLogger.SQLEnabled) SQLStop(testExecutive);
-                if (testExecutive.ConfigLogger.TestEventsEnabled) TestEvents(testExecutive.ConfigUUT);
+                if (testExecutive.ConfigLogger.TestEventsEnabled) TestEvents(TestExecutive.ConfigUUT);
             }
         }
         #endregion Internal Methods
 
         #region Private Methods
         private static void FileStop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
-            String fileName = $"{testExecutive.ConfigUUT.Number}_{testExecutive.ConfigUUT.SerialNumber}_{testExecutive.ConfigTest.TestElementID}";
+            String fileName = $"{TestExecutive.ConfigUUT.Number}_{TestExecutive.ConfigUUT.SerialNumber}_{testExecutive.ConfigTest.TestElementID}";
             String[] files = Directory.GetFiles(GetFilePath(testExecutive), $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
             // Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in App.config.
             // Otherwise, files is the set of all files like config.configUUT.Number_Config.configUUT.SerialNumber_configTest.TestElementID_*.rtf.
@@ -197,7 +197,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 //   foreach (FieldInfo  : '3'
                 //   maxNumber           : '3'
             }
-            fileName += $"_{++maxNumber}_{testExecutive.ConfigUUT.EventCode}.rtf";
+            fileName += $"_{++maxNumber}_{TestExecutive.ConfigUUT.EventCode}.rtf";
             rtfResults.SaveFile($"{GetFilePath(testExecutive)}{fileName}");
         }
         

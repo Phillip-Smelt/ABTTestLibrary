@@ -81,32 +81,6 @@
               - Both "ReadMe" & "User's Guides" documents reside in Logging folder for convenience.
         NOTE:  Barcode Scanner must also be programmed to read the Code39 Barcode Symbology of ABT's Serial Numbers.
 	-->
-
-  <Simulate>False</Simulate>
-  <!-- NOTE:  Must use bool.TrueString & bool.FalseString, which are True & False respectively.
-			   - https://learn.microsoft.com/en-us/dotnet/api/system.boolean.parse?view=netframework-4.8
-				 
-       NOTE:  When Simulate = False, will utilize Instrumentation:
-			 - Set UUT_Simulate = False if have requisite Instrumentation & intend to use it.
-         - That is, production testing of UUTs.  This is the normal, default state.
-			 - Set UUT_Simulate = True if haven't or needn't utilize Instrumentation:
-			 	 - This is useful when developing/testing TestExecutive/TestExecutor, especially on a desktop PC workstation, as versus a production test station.
-         - Can verify the below Apps & Folders element paths are all correct.
-           - More significantly, can also verify TestExecutor's App.config TestOperations/TestGroups/TestMeasurement entries are correct.
-             - A fair amount of validation occurs after selecting TestOperations/TestGroups with TestExecutive's "Select Tests" button.
-             - This validation of correct TestOperations/TestGroups/TestMeasurement entries can be completed without Instrumentation.
-             - Think of it like a compiler checking your code; it won't find logic errors, but will find syntax errors.
-           - Lastly, you can code & debug your TestOperations/TestMeasurement methods, including all Debug.Asserts.  Simply exclude or comment method invocations to SCPI VISA Instruments.
-             
-       Instrumentation includes, but isn't limited to:
-       - Test Stations:
-			 	- All SVI elements in element SCPI_VISA_Instruments.
-         - Bar Code Scanner defined in element BarCodeScannerID.
-         - USB-ERB24 Relays.
-       - Test Fixtures.
-       - Programming or Emulator adapters like the Texas Instruments USB-TO-GPIO SAA, Microchip PICkit4, Intel® FPGA Download Cable II, Xilinx Platform Cable USB II, etc.
-       - Basically any hardware that interfaces with production test of UUTs.
-		-->
   
   <SerialNumberRegExDefault>^01BB2-[0-9]{5}$</SerialNumberRegExDefault>
   <!-- SerialNumberRegExDefault is the default global Regular Expression an ABT Serial Number is validated against in TestExecutive.
@@ -127,12 +101,6 @@
          - 01BB2-1234 is invalid, as it lacks 5 digits after the "01BB2-" prefix.
          - 01BB2-O1234 is invalid, as "O1234" ≠ "01234" as "O" ≠ "0".
     -->
-
-  <EMail>
-    <ErrorMailingEnabled>False</ErrorMailingEnabled>
-    <To>Phillip.Smelt@Borisch.Com</To>
-    <CC>Phillip.Smelt@Borisch.Com</CC>
-  </EMail>
 
   <Apps>
 		<Keysight>
