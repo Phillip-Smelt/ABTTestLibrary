@@ -34,6 +34,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonEmergencyStop = new System.Windows.Forms.Button();
             this.MS = new System.Windows.Forms.MenuStrip();
             this.TSMI_File = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_File_Change = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_File_Save = new System.Windows.Forms.ToolStripMenuItem();
             this.TMSI_FileSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_File_Exit = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,7 +86,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_About = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.TSMI_File_Change = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_UUT_ResetStatistics = new System.Windows.Forms.ToolStripMenuItem();
             this.MS.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -95,7 +96,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonStart.BackColor = System.Drawing.Color.Green;
             this.ButtonStart.Location = new System.Drawing.Point(203, 672);
-            this.ButtonStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonStart.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonStart.Name = "ButtonStart";
             this.ButtonStart.Size = new System.Drawing.Size(117, 64);
             this.ButtonStart.TabIndex = 1;
@@ -108,7 +109,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonCancel.BackColor = System.Drawing.Color.Yellow;
             this.ButtonCancel.Location = new System.Drawing.Point(375, 672);
-            this.ButtonCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonCancel.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(117, 64);
             this.ButtonCancel.TabIndex = 2;
@@ -120,7 +121,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.TextResult.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.TextResult.Location = new System.Drawing.Point(659, 698);
-            this.TextResult.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.TextResult.Margin = new System.Windows.Forms.Padding(4);
             this.TextResult.Name = "TextResult";
             this.TextResult.ReadOnly = true;
             this.TextResult.Size = new System.Drawing.Size(79, 22);
@@ -147,7 +148,7 @@ namespace ABT.TestSpace.TestExec {
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rtfResults.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtfResults.Location = new System.Drawing.Point(31, 26);
-            this.rtfResults.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rtfResults.Margin = new System.Windows.Forms.Padding(4);
             this.rtfResults.Name = "rtfResults";
             this.rtfResults.ReadOnly = true;
             this.rtfResults.Size = new System.Drawing.Size(1333, 614);
@@ -160,7 +161,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonSelectTests.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonSelectTests.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonSelectTests.Location = new System.Drawing.Point(31, 673);
-            this.ButtonSelectTests.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonSelectTests.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonSelectTests.Name = "ButtonSelectTests";
             this.ButtonSelectTests.Size = new System.Drawing.Size(117, 58);
             this.ButtonSelectTests.TabIndex = 0;
@@ -173,7 +174,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonEmergencyStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonEmergencyStop.Image = global::ABT.TestSpace.Properties.Resources.EmergencyStop;
             this.ButtonEmergencyStop.Location = new System.Drawing.Point(1259, 649);
-            this.ButtonEmergencyStop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonEmergencyStop.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";
             this.ButtonEmergencyStop.Size = new System.Drawing.Size(107, 98);
             this.ButtonEmergencyStop.TabIndex = 5;
@@ -208,13 +209,20 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File.Size = new System.Drawing.Size(46, 24);
             this.TSMI_File.Text = "&File";
             // 
+            // TSMI_File_Change
+            // 
+            this.TSMI_File_Change.Name = "TSMI_File_Change";
+            this.TSMI_File_Change.Size = new System.Drawing.Size(173, 26);
+            this.TSMI_File_Change.Text = "&Change";
+            this.TSMI_File_Change.Click += new System.EventHandler(this.TSMI_File_Change_Click);
+            // 
             // TSMI_File_Save
             // 
             this.TSMI_File_Save.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_File_Save.Image")));
             this.TSMI_File_Save.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.TSMI_File_Save.Name = "TSMI_File_Save";
             this.TSMI_File_Save.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.TSMI_File_Save.Size = new System.Drawing.Size(228, 30);
+            this.TSMI_File_Save.Size = new System.Drawing.Size(173, 26);
             this.TSMI_File_Save.Text = "&Save";
             this.TSMI_File_Save.ToolTipText = "Save UUT results.";
             this.TSMI_File_Save.Click += new System.EventHandler(this.TSMI_File_Save_Click);
@@ -222,12 +230,12 @@ namespace ABT.TestSpace.TestExec {
             // TMSI_FileSeparator1
             // 
             this.TMSI_FileSeparator1.Name = "TMSI_FileSeparator1";
-            this.TMSI_FileSeparator1.Size = new System.Drawing.Size(225, 6);
+            this.TMSI_FileSeparator1.Size = new System.Drawing.Size(170, 6);
             // 
             // TSMI_File_Exit
             // 
             this.TSMI_File_Exit.Name = "TSMI_File_Exit";
-            this.TSMI_File_Exit.Size = new System.Drawing.Size(228, 30);
+            this.TSMI_File_Exit.Size = new System.Drawing.Size(173, 26);
             this.TSMI_File_Exit.Text = "&Exit";
             this.TSMI_File_Exit.ToolTipText = "Close application.";
             this.TSMI_File_Exit.Click += new System.EventHandler(this.TSMI_File_Exit_Click);
@@ -540,6 +548,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_AppConfig,
             this.TSMI_UUT_eDocs,
             this.TSMI_UUT_Manuals,
+            this.TSMI_UUT_ResetStatistics,
             this.TSMI_UUT_TestData,
             this.TSMI_UUT_Separator1,
             this.TSMI_UUT_About});
@@ -574,7 +583,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_ManualsInstruments
             // 
             this.TSMI_UUT_ManualsInstruments.Name = "TSMI_UUT_ManualsInstruments";
-            this.TSMI_UUT_ManualsInstruments.Size = new System.Drawing.Size(168, 26);
+            this.TSMI_UUT_ManualsInstruments.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_ManualsInstruments.Text = "&Instruments";
             this.TSMI_UUT_ManualsInstruments.ToolTipText = "...really bored...";
             this.TSMI_UUT_ManualsInstruments.Click += new System.EventHandler(this.TSMI_UUT_ManualsInstruments_Click);
@@ -633,12 +642,12 @@ namespace ABT.TestSpace.TestExec {
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
             this.toolStripStatusLabel.Size = new System.Drawing.Size(0, 16);
             // 
-            // TSMI_File_Change
+            // TSMI_UUT_ResetStatistics
             // 
-            this.TSMI_File_Change.Name = "TSMI_File_Change";
-            this.TSMI_File_Change.Size = new System.Drawing.Size(228, 30);
-            this.TSMI_File_Change.Text = "&Change";
-            this.TSMI_File_Change.Click += new System.EventHandler(this.TSMI_File_Change_Click);
+            this.TSMI_UUT_ResetStatistics.Name = "TSMI_UUT_ResetStatistics";
+            this.TSMI_UUT_ResetStatistics.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_ResetStatistics.Text = "&Reset Statistics";
+            this.TSMI_UUT_ResetStatistics.Click += new System.EventHandler(this.TSMI_UUT_ResetStatistics_Click);
             // 
             // TestExecutive
             // 
@@ -731,5 +740,6 @@ namespace ABT.TestSpace.TestExec {
         private StatusStrip statusStrip;
         private ToolStripStatusLabel toolStripStatusLabel;
         private ToolStripMenuItem TSMI_File_Change;
+        private ToolStripMenuItem TSMI_UUT_ResetStatistics;
     }
 }
