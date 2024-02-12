@@ -632,12 +632,14 @@ namespace ABT.TestSpace.TestExec {
             // ToolStripSplitButtonReset
             // 
             this.ToolStripSplitButtonReset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ToolStripSplitButtonReset.DropDownButtonWidth = 0;
             this.ToolStripSplitButtonReset.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripSplitButtonReset.Image")));
             this.ToolStripSplitButtonReset.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ToolStripSplitButtonReset.Name = "ToolStripSplitButtonReset";
-            this.ToolStripSplitButtonReset.Size = new System.Drawing.Size(51, 20);
+            this.ToolStripSplitButtonReset.Size = new System.Drawing.Size(40, 20);
             this.ToolStripSplitButtonReset.Text = "Reset";
             this.ToolStripSplitButtonReset.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ToolStripSplitButtonReset.ToolTipText = "Reset Statistics";
             this.ToolStripSplitButtonReset.ButtonClick += new System.EventHandler(this.ToolStripSplitButtonReset_Click);
             // 
             // ToolStripStatusLabel
