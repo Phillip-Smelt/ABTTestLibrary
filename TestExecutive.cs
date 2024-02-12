@@ -526,10 +526,6 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.DocumentationFolder); }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
 
-        private void TSMI_UUT_ResetStatistics_Click(Object sender, EventArgs e) {
-            ConfigTest.Events = new Events();
-            StatusClear();
-        }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
             // TODO:  Soon, decode the cryptic versions Build #s into their more meaningful date/time stamps, as they’re encoded from timestamps.
@@ -737,6 +733,11 @@ namespace ABT.TestSpace.TestExec {
         public void StatusClear() { StatusWrite(String.Empty); }
 
         public void StatusWrite(String Message) { Invoke((Action)(() => toolStripStatusLabel.Text = Message)); }
+
+        private void toolStripSplitButtonReset_Click(Object sender, EventArgs e) {
+            ConfigTest.Events = new Events();
+            StatusWrite(ConfigTest.Events.Status());
+        }
         #endregion Status Strip methods.
     }
 }
