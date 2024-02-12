@@ -336,7 +336,7 @@ namespace ABT.TestSpace.TestExec {
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             CancelTokenSource.Cancel();
             _cancelled = true;
-            ButtonCancel.Text = "Cancelling..."; // Here's to British English spelling!
+            ButtonCancel.Text = "Cancelling...";
             ButtonCancel.Enabled = false;
             ButtonCancel.UseVisualStyleBackColor = false;
             ButtonCancel.BackColor = Color.Red;
