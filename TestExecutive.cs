@@ -189,7 +189,7 @@ namespace ABT.TestSpace.TestExec {
             TextResult.Text = String.Empty;
             TextResult.BackColor = Color.White;
             rtfResults.Text = String.Empty;
-            StatusClear();
+            StatusWrite(ConfigTest.Events.Status());
         }
 
         private void FormModeRun() {
@@ -732,9 +732,9 @@ namespace ABT.TestSpace.TestExec {
         #region Status Strip methods.
         public void StatusClear() { StatusWrite(String.Empty); }
 
-        public void StatusWrite(String Message) { Invoke((Action)(() => toolStripStatusLabel.Text = Message)); }
+        public void StatusWrite(String Message) { Invoke((Action)(() => ToolStripStatusLabel.Text = Message)); }
 
-        private void toolStripSplitButtonReset_Click(Object sender, EventArgs e) {
+        private void ToolStripSplitButtonReset_Click(Object sender, EventArgs e) {
             ConfigTest.Events = new Events();
             StatusWrite(ConfigTest.Events.Status());
         }

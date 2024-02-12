@@ -84,11 +84,11 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_UUT_About = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripSplitButtonReset = new System.Windows.Forms.ToolStripSplitButton();
+            this.StatusStrip = new System.Windows.Forms.StatusStrip();
+            this.ToolStripSplitButtonReset = new System.Windows.Forms.ToolStripSplitButton();
+            this.ToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MS.SuspendLayout();
-            this.statusStrip.SuspendLayout();
+            this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // ButtonStart
@@ -107,7 +107,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonCancel.BackColor = System.Drawing.Color.Yellow;
-            this.ButtonCancel.Location = new System.Drawing.Point(281, 546);
+            this.ButtonCancel.Location = new System.Drawing.Point(287, 544);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(88, 52);
             this.ButtonCancel.TabIndex = 2;
@@ -618,38 +618,39 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_About.Text = "&About...";
             this.TSMI_UUT_About.Click += new System.EventHandler(this.TSMI_UUT_About_Click);
             // 
-            // statusStrip
+            // StatusStrip
             // 
-            this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripSplitButtonReset,
-            this.toolStripStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 611);
-            this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1045, 26);
-            this.statusStrip.TabIndex = 10;
+            this.StatusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ToolStripSplitButtonReset,
+            this.ToolStripStatusLabel});
+            this.StatusStrip.Location = new System.Drawing.Point(0, 615);
+            this.StatusStrip.Name = "StatusStrip";
+            this.StatusStrip.Size = new System.Drawing.Size(1045, 22);
+            this.StatusStrip.TabIndex = 10;
             // 
-            // toolStripStatusLabel
+            // ToolStripSplitButtonReset
             // 
-            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(0, 21);
+            this.ToolStripSplitButtonReset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ToolStripSplitButtonReset.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripSplitButtonReset.Image")));
+            this.ToolStripSplitButtonReset.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ToolStripSplitButtonReset.Name = "ToolStripSplitButtonReset";
+            this.ToolStripSplitButtonReset.Size = new System.Drawing.Size(51, 20);
+            this.ToolStripSplitButtonReset.Text = "Reset";
+            this.ToolStripSplitButtonReset.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ToolStripSplitButtonReset.ButtonClick += new System.EventHandler(this.ToolStripSplitButtonReset_Click);
             // 
-            // toolStripSplitButtonReset
+            // ToolStripStatusLabel
             // 
-            this.toolStripSplitButtonReset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripSplitButtonReset.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButtonReset.Image")));
-            this.toolStripSplitButtonReset.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripSplitButtonReset.Name = "toolStripSplitButtonReset";
-            this.toolStripSplitButtonReset.Size = new System.Drawing.Size(36, 24);
-            this.toolStripSplitButtonReset.Text = "Reset";
-            this.toolStripSplitButtonReset.ButtonClick += new System.EventHandler(this.toolStripSplitButtonReset_Click);
+            this.ToolStripStatusLabel.Name = "ToolStripStatusLabel";
+            this.ToolStripStatusLabel.Size = new System.Drawing.Size(0, 17);
             // 
             // TestExecutive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1045, 637);
-            this.Controls.Add(this.statusStrip);
+            this.Controls.Add(this.StatusStrip);
             this.Controls.Add(this.ButtonEmergencyStop);
             this.Controls.Add(this.ButtonSelectTests);
             this.Controls.Add(this.rtfResults);
@@ -666,8 +667,8 @@ namespace ABT.TestSpace.TestExec {
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.MS.ResumeLayout(false);
             this.MS.PerformLayout();
-            this.statusStrip.ResumeLayout(false);
-            this.statusStrip.PerformLayout();
+            this.StatusStrip.ResumeLayout(false);
+            this.StatusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -732,9 +733,9 @@ namespace ABT.TestSpace.TestExec {
         private ToolStripMenuItem TSMI_Apps_Microchip;
         private ToolStripMenuItem TSMI_Apps_MicrohipMPLAB_IPE;
         private ToolStripMenuItem TSMI_Apps_MicrohipMPLAB_X_IDE;
-        private StatusStrip statusStrip;
-        private ToolStripStatusLabel toolStripStatusLabel;
+        private StatusStrip StatusStrip;
+        private ToolStripStatusLabel ToolStripStatusLabel;
         private ToolStripMenuItem TSMI_File_Change;
-        private ToolStripSplitButton toolStripSplitButtonReset;
+        private ToolStripSplitButton ToolStripSplitButtonReset;
     }
 }
