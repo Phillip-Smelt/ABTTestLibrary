@@ -242,6 +242,19 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         }
 
         public static AppConfigTest Get() { return new AppConfigTest(); }
+
+        public String Status() {
+            const String separator = "      ";
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"Elapsed: {Events.Elapsed()}");
+            sb.Append($"{separator}Tested: {Events.Tested()}");
+            sb.Append($"{separator}Cancelled: {Events.Cancelled}");
+            sb.Append($"{separator}Errored: {Events.Errored}");
+            sb.Append($"{separator}Failed: {Events.Failed}");
+            sb.Append($"{separator}Passed: {Events.Passed}");
+            sb.Append($"{separator}Passed: {Events.PercentPassed():P1}");
+            return sb.ToString();
+        }
     }
 
     public class Events {
@@ -249,6 +262,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public UInt32 Errored = 0;
         public UInt32 Failed = 0;
         public UInt32 Passed = 0;
+        private readonly DateTime TestSelected = DateTime.Now; 
 
         public Events() { }
 
@@ -273,22 +287,15 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             }
         }
 
+        public String Elapsed() {
+            TimeSpan elapsedTime = DateTime.Now - TestSelected;
+            String elapsedDays = elapsedTime.Hours != 0 ? elapsedTime.Hours.ToString() + ":" : String.Empty;
+            return $"{elapsedDays}{elapsedTime.Hours}:{elapsedTime.Minutes + Math.Round(((Single)elapsedTime.Seconds + 30) / 60)}";
+        }
         public Double PercentCancelled() { return Convert.ToDouble(Cancelled) / Convert.ToDouble(Tested()); }
         public Double PercentErrored() { return Convert.ToDouble(Errored) / Convert.ToDouble(Tested()); }
         public Double PercentFailed() { return Convert.ToDouble(Failed) / Convert.ToDouble(Tested()); }
         public Double PercentPassed() { return Convert.ToDouble(Passed) / Convert.ToDouble(Tested()); }
         public UInt32 Tested() { return Cancelled + Errored + Failed + Passed; }
-
-        public String Status() {
-            const String separator = "       ";
-            StringBuilder sb = new StringBuilder();
-            sb.Append($"{separator}Tested: {Tested()}");
-            sb.Append($"{separator}Cancelled: {Cancelled}");
-            sb.Append($"{separator}Errored: {Errored}");
-            sb.Append($"{separator}Failed: {Failed}");
-            sb.Append($"{separator}Passed: {Passed}");
-            sb.Append($"{separator}Passed: {PercentPassed():P1}");
-            return sb.ToString();
-        }
     }
 }

@@ -26,6 +26,7 @@ using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
 using System.Configuration;
+using System.Timers;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestExecutor based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestExecutor.
@@ -143,6 +144,7 @@ namespace ABT.TestSpace.TestExec {
         private const String _serialNumberMostRecent = "MostRecent";
         private const String NOT_APPLICABLE = "NotApplicable";
         private Boolean _cancelled = false;
+        private readonly System.Timers.Timer _statusUpdate = new System.Timers.Timer(10000);
 
         protected TestExecutive(Icon icon) {
             InitializeComponent();
@@ -169,6 +171,10 @@ namespace ABT.TestSpace.TestExec {
                 UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
                 UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
             }
+
+            _statusUpdate.Elapsed += StatusUpdate;
+            _statusUpdate.AutoReset = true;
+            _statusUpdate.Enabled = true;
         }
 
         #region Form Miscellaneous
@@ -189,7 +195,7 @@ namespace ABT.TestSpace.TestExec {
             TextResult.Text = String.Empty;
             TextResult.BackColor = Color.White;
             rtfResults.Text = String.Empty;
-            StatusWrite(ConfigTest.Events.Status());
+            StatusWrite(ConfigTest.Status());
         }
 
         private void FormModeRun() {
@@ -555,7 +561,7 @@ namespace ABT.TestSpace.TestExec {
                     MeasurementIDPresent = measurementID;
                     MeasurementPresent = ConfigTest.Measurements[MeasurementIDPresent];
                    try {
-                        StatusWrite(ConfigTest.Events.Status());
+                        StatusWrite(ConfigTest.Status());
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
@@ -591,7 +597,7 @@ namespace ABT.TestSpace.TestExec {
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
             ConfigTest.Events.Update(ConfigUUT.EventCode);
-            StatusWrite(ConfigTest.Events.Status());
+            StatusWrite(ConfigTest.Status());
             Logger.Stop(this, ref rtfResults);
         }
 
@@ -730,14 +736,20 @@ namespace ABT.TestSpace.TestExec {
         #endregion Logging methods.
 
         #region Status Strip methods.
-        public void StatusClear() { StatusWrite(String.Empty); }
+        private void StatusClear() { StatusWrite(String.Empty); }
 
-        public void StatusWrite(String Message) { Invoke((Action)(() => ToolStripStatusLabel.Text = Message)); }
+        private void StatusUpdate(Object source, ElapsedEventArgs e) { StatusWrite(ConfigTest.Status()); }
 
-        private void ToolStripSplitButtonReset_Click(Object sender, EventArgs e) {
+        private void StatusWrite(String Message) { Invoke((Action)(() => ToolStripStatusLabel.Text = Message)); }
+
+        private void ToolStripStatusReset_Click(Object sender, EventArgs e) {
             ConfigTest.Events = new Events();
-            StatusWrite(ConfigTest.Events.Status());
+            StatusWrite(ConfigTest.Status());
         }
+
+        public void DeveloperClear() { DeveloperWrite(String.Empty); }
+
+        public void DeveloperWrite(String Message) { Invoke((Action)(() => ToolStripDeveloperLabel.Text = Message)); }
         #endregion Status Strip methods.
     }
 }
