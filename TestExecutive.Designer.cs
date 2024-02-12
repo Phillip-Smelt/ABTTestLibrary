@@ -551,7 +551,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_AppConfig
             // 
             this.TSMI_UUT_AppConfig.Name = "TSMI_UUT_AppConfig";
-            this.TSMI_UUT_AppConfig.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_UUT_AppConfig.Size = new System.Drawing.Size(133, 22);
             this.TSMI_UUT_AppConfig.Text = "&App.config";
             this.TSMI_UUT_AppConfig.ToolTipText = "UUT\'s test configuration.";
             this.TSMI_UUT_AppConfig.Click += new System.EventHandler(this.TSMI_UUT_AppConfig_Click);
@@ -559,7 +559,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_eDocs
             // 
             this.TSMI_UUT_eDocs.Name = "TSMI_UUT_eDocs";
-            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(133, 22);
             this.TSMI_UUT_eDocs.Text = "&eDocs";
             this.TSMI_UUT_eDocs.ToolTipText = "UUT\'s P: drive eDocs folder.";
             this.TSMI_UUT_eDocs.Click += new System.EventHandler(this.TSMI_UUT_eDocs_Click);
@@ -569,7 +569,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_Manuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_UUT_ManualsInstruments});
             this.TSMI_UUT_Manuals.Name = "TSMI_UUT_Manuals";
-            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(133, 22);
             this.TSMI_UUT_Manuals.Text = "&Manuals";
             // 
             // TSMI_UUT_ManualsInstruments
@@ -586,7 +586,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_TestDataP_DriveTDR_Folder,
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying});
             this.TSMI_UUT_TestData.Name = "TSMI_UUT_TestData";
-            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(133, 22);
             this.TSMI_UUT_TestData.Text = "&Test Data";
             // 
             // TSMI_UUT_TestDataP_DriveTDR_Folder
@@ -609,12 +609,12 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_Separator1
             // 
             this.TSMI_UUT_Separator1.Name = "TSMI_UUT_Separator1";
-            this.TSMI_UUT_Separator1.Size = new System.Drawing.Size(177, 6);
+            this.TSMI_UUT_Separator1.Size = new System.Drawing.Size(130, 6);
             // 
             // TSMI_UUT_About
             // 
             this.TSMI_UUT_About.Name = "TSMI_UUT_About";
-            this.TSMI_UUT_About.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_UUT_About.Size = new System.Drawing.Size(133, 22);
             this.TSMI_UUT_About.Text = "&About...";
             this.TSMI_UUT_About.Click += new System.EventHandler(this.TSMI_UUT_About_Click);
             // 
@@ -622,8 +622,8 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel,
-            this.toolStripSplitButtonReset});
+            this.toolStripSplitButtonReset,
+            this.toolStripStatusLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 611);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(1045, 26);
@@ -641,7 +641,7 @@ namespace ABT.TestSpace.TestExec {
             this.toolStripSplitButtonReset.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitButtonReset.Name = "toolStripSplitButtonReset";
             this.toolStripSplitButtonReset.Size = new System.Drawing.Size(36, 24);
-            this.toolStripSplitButtonReset.Text = "toolStripSplitButton1";
+            this.toolStripSplitButtonReset.Text = "Reset";
             this.toolStripSplitButtonReset.ButtonClick += new System.EventHandler(this.toolStripSplitButtonReset_Click);
             // 
             // TestExecutive
