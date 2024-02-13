@@ -281,10 +281,9 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void PreApplicationExit() {
-            GlobalTestExecutorMutex.ReleaseMutex();
-            GlobalTestExecutorMutex.Dispose();
-            if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
             Initialize();
+            if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
+            GlobalTestExecutorMutex.ReleaseMutex();
         }
 
         public static Boolean RegexInvalid(String RegularExpression) {
