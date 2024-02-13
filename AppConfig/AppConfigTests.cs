@@ -289,7 +289,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         public String Elapsed() {
             TimeSpan elapsedTime = DateTime.Now - TestSelected;
-            return $"{(elapsedTime.Days != 0 ? elapsedTime.Days.ToString() + ":" : String.Empty)}{elapsedTime.Hours}:{elapsedTime.Minutes + Math.Round(Convert.ToSingle(elapsedTime.Seconds + 30) / 60):00}";
+            return $"{(elapsedTime.Days != 0 ? elapsedTime.Days.ToString() + ":" : String.Empty)}{elapsedTime.Hours}:{elapsedTime.Minutes + Math.Round(Convert.ToSingle(elapsedTime.Seconds) / 60):00}";
         }
         public Double PercentCancelled() { return Convert.ToDouble(Cancelled) / Convert.ToDouble(Tested()); }
         public Double PercentErrored() { return Convert.ToDouble(Errored) / Convert.ToDouble(Tested()); }
