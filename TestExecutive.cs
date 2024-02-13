@@ -187,8 +187,8 @@ namespace ABT.TestSpace.TestExec {
                 SendAdministratorMailMessage("Exception caught!", Ex);
             }
         }
-        
-        private void FormClosing(Object sender, FormClosingEventArgs e) { TSMI_File_Exit_Click(sender, e); }
+
+        private void Form_Closing(Object sender, FormClosingEventArgs e) { TSMI_File_Exit_Click(sender, e); }    
 
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
 

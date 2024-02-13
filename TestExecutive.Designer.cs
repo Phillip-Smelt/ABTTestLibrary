@@ -670,7 +670,7 @@ namespace ABT.TestSpace.TestExec {
             this.Name = "TestExecutive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Test Program";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_Closing);
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.MS.ResumeLayout(false);
             this.MS.PerformLayout();
