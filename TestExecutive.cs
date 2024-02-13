@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Xml.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
@@ -25,8 +26,6 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
-using System.Configuration;
-using System.Timers;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestExecutor based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestExecutor.
@@ -195,7 +194,7 @@ namespace ABT.TestSpace.TestExec {
             TextResult.Text = String.Empty;
             TextResult.BackColor = Color.White;
             rtfResults.Text = String.Empty;
-            StatusWrite(ConfigTest.Status());
+            StatusUpdate(null, null);
         }
 
         private void FormModeRun() {
@@ -531,7 +530,10 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.DocumentationFolder); }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
-
+        private void TSMI_UUT_ResetStatus_Click(Object sender, EventArgs e) {
+            ConfigTest.Events = new Events();
+            StatusUpdate(null, null);
+        }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
             // TODO:  Soon, decode the cryptic versions Build #s into their more meaningful date/time stamps, as they’re encoded from timestamps.
@@ -561,7 +563,7 @@ namespace ABT.TestSpace.TestExec {
                     MeasurementIDPresent = measurementID;
                     MeasurementPresent = ConfigTest.Measurements[MeasurementIDPresent];
                    try {
-                        StatusWrite(ConfigTest.Status());
+                        StatusUpdate(null, null);
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
@@ -597,7 +599,7 @@ namespace ABT.TestSpace.TestExec {
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
             ConfigTest.Events.Update(ConfigUUT.EventCode);
-            StatusWrite(ConfigTest.Status());
+            StatusUpdate(null, null);
             Logger.Stop(this, ref rtfResults);
         }
 
@@ -736,16 +738,7 @@ namespace ABT.TestSpace.TestExec {
         #endregion Logging methods.
 
         #region Status Strip methods.
-        private void StatusClear() { StatusWrite(String.Empty); }
-
-        private void StatusUpdate(Object source, ElapsedEventArgs e) { StatusWrite(ConfigTest.Status()); }
-
-        private void StatusWrite(String Message) { Invoke((Action)(() => ToolStripStatusLabel.Text = Message)); }
-
-        private void ToolStripStatusReset_Click(Object sender, EventArgs e) {
-            ConfigTest.Events = new Events();
-            StatusWrite(ConfigTest.Status());
-        }
+        private void StatusUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => ToolStripStatusLabel.Text = ConfigTest.Status())); }
 
         public void DeveloperClear() { DeveloperWrite(String.Empty); }
 
