@@ -146,8 +146,8 @@ namespace ABT.TestSpace.TestExec.Logging {
             // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             Log.Information($"\tMachineName       : {Environment.MachineName}");
             // TODO:  Soon, decode the cryptic versions Build #s into their more meaningful date/time stamps, as they’re encoded from timestamps.
-            Log.Information($"\tTestExecutive     : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}");
-            Log.Information($"\tTestExecutor      : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}");
+            Log.Information($"\tTestExecutive     : {Assembly.GetExecutingAssembly().GetName().Name}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
+            Log.Information($"\tTestExecutor      : {Assembly.GetEntryAssembly().GetName().Name}, {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
             Log.Information($"\tSpecification     : {TestExecutive.ConfigUUT.TestSpecification}");
             Log.Information($"\tID                : {testExecutive.ConfigTest.TestElementID}");
             Log.Information($"\tRevision          : {testExecutive.ConfigTest.TestElementRevision}");
@@ -159,6 +159,11 @@ namespace ABT.TestSpace.TestExec.Logging {
                 foreach (String measurementID in testExecutive.ConfigTest.GroupIDsToMeasurementIDs[groupID]) sb.Append(String.Format("\t\t{0,-" + testExecutive.ConfigTest.FormattingLengthMeasurementID + "} : {1}\n", measurementID, testExecutive.ConfigTest.Measurements[measurementID].Description));
             }
             Log.Information($"TestMeasurements:\n{sb}");
+        }
+
+        internal static String BuildDate(Version version) { 
+            DateTime Y2K = new DateTime(year: 2000, month: 1, day: 1, hour: 0, minute: 0, second: 0, kind: DateTimeKind.Local);
+            return $"{Y2K + new TimeSpan(days: version.Build, hours: 0, minutes: 0, seconds: 2 * version.Revision):g}";
         }
 
         internal static void Stop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
