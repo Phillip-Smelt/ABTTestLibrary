@@ -188,7 +188,7 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        private void Form_Closing(Object sender, FormClosingEventArgs e) { TSMI_File_Exit_Click(sender, e); }    
+        private void Form_Closing(Object sender, FormClosingEventArgs e) { PreApplicationExit(); }    
 
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
 
@@ -284,6 +284,7 @@ namespace ABT.TestSpace.TestExec {
             Initialize();
             if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
             GlobalTestExecutorMutex.ReleaseMutex();
+            GlobalTestExecutorMutex.Dispose();
         }
 
         public static Boolean RegexInvalid(String RegularExpression) {

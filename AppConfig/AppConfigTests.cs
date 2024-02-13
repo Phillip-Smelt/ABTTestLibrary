@@ -246,7 +246,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public String Status() {
             const String separator = "       ";
             StringBuilder sb = new StringBuilder();
-            sb.Append($"  Elapsed: {Events.Elapsed()}");
+            sb.Append($"   Elapsed: {Events.Elapsed()}");
             sb.Append($"{separator}Tested: {Events.Tested()}");
             sb.Append($"{separator}Cancelled: {Events.Cancelled}");
             sb.Append($"{separator}Errored: {Events.Errored}");
