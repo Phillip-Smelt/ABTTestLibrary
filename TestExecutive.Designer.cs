@@ -77,6 +77,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_AppConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_eDocs = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_UUT_ResetStatus = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_Manuals = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_ManualsInstruments = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_TestData = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,7 +88,6 @@ namespace ABT.TestSpace.TestExec {
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.ToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.ToolStripDeveloperLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.TSMI_UUT_ResetStatus = new System.Windows.Forms.ToolStripMenuItem();
             this.MS.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -566,6 +566,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_eDocs.ToolTipText = "UUT\'s P: drive eDocs folder.";
             this.TSMI_UUT_eDocs.Click += new System.EventHandler(this.TSMI_UUT_eDocs_Click);
             // 
+            // TSMI_UUT_ResetStatus
+            // 
+            this.TSMI_UUT_ResetStatus.Name = "TSMI_UUT_ResetStatus";
+            this.TSMI_UUT_ResetStatus.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_UUT_ResetStatus.Text = "&Reset Status";
+            this.TSMI_UUT_ResetStatus.Click += new System.EventHandler(this.TSMI_UUT_ResetStatus_Click);
+            // 
             // TSMI_UUT_Manuals
             // 
             this.TSMI_UUT_Manuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -577,7 +584,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_ManualsInstruments
             // 
             this.TSMI_UUT_ManualsInstruments.Name = "TSMI_UUT_ManualsInstruments";
-            this.TSMI_UUT_ManualsInstruments.Size = new System.Drawing.Size(180, 22);
+            this.TSMI_UUT_ManualsInstruments.Size = new System.Drawing.Size(137, 22);
             this.TSMI_UUT_ManualsInstruments.Text = "&Instruments";
             this.TSMI_UUT_ManualsInstruments.ToolTipText = "...really bored...";
             this.TSMI_UUT_ManualsInstruments.Click += new System.EventHandler(this.TSMI_UUT_ManualsInstruments_Click);
@@ -644,13 +651,6 @@ namespace ABT.TestSpace.TestExec {
             this.ToolStripDeveloperLabel.Spring = true;
             this.ToolStripDeveloperLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // TSMI_UUT_ResetStatus
-            // 
-            this.TSMI_UUT_ResetStatus.Name = "TSMI_UUT_ResetStatus";
-            this.TSMI_UUT_ResetStatus.Size = new System.Drawing.Size(180, 22);
-            this.TSMI_UUT_ResetStatus.Text = "&Reset Status";
-            this.TSMI_UUT_ResetStatus.Click += new System.EventHandler(this.TSMI_UUT_ResetStatus_Click);
-            // 
             // TestExecutive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -666,10 +666,11 @@ namespace ABT.TestSpace.TestExec {
             this.Controls.Add(this.ButtonStart);
             this.Controls.Add(this.MS);
             this.MainMenuStrip = this.MS;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "TestExecutive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Test Program";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClosing);
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.MS.ResumeLayout(false);
             this.MS.PerformLayout();
