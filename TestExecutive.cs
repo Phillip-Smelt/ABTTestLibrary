@@ -173,7 +173,6 @@ namespace ABT.TestSpace.TestExec {
 
             _statusUpdate.Elapsed += StatusUpdate;
             _statusUpdate.AutoReset = true;
-            _statusUpdate.Enabled = true;
         }
 
         #region Form Miscellaneous
@@ -373,6 +372,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
             ConfigTest = AppConfigTest.Get();
+            _statusUpdate.Enabled = true;  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
             FormModeReset();
             FormModeWait();
@@ -746,10 +746,7 @@ namespace ABT.TestSpace.TestExec {
         #endregion Logging methods.
 
         #region Status Strip methods.
-        private void StatusUpdate(Object source, ElapsedEventArgs e) {
-            try { Invoke((Action)(() => ToolStripStatusLabel.Text = ConfigTest.Status())); }
-            catch (NullReferenceException) { if (!Debugger.IsAttached) throw; } // NOTE:  When pausing before initial Test Selection when executing from Visual Studio, ToolStripStatusLabel.Text isn't accessible yet.
-        }
+        private void StatusUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => ToolStripStatusLabel.Text = ConfigTest.Status())); }
 
         public void DeveloperClear() { DeveloperWrite(String.Empty); }
 
