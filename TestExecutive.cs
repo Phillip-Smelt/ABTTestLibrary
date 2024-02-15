@@ -413,21 +413,33 @@ namespace ABT.TestSpace.TestExec {
         #endregion Form Command Buttons
 
         #region Form Tool Strip Menu Items
-        private void TSMI_File_Change_Click(Object sender, EventArgs e) {
-            using (OpenFileDialog ofd = new OpenFileDialog()) {
-                ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestExecutors").Value;
-                ofd.Filter = "TestExecutor Programs|*.exe";
-                ofd.DereferenceLinks = true;
-                ofd.RestoreDirectory = true;
+        // TODO:  Eventually; TSMI_File_Change_Click() & TSMI_File_Save_Click() were misdirected attempts to make
+        // TestExecutive behave like a stand-alone application, despite TestExecutive being a DLL library:
+        // - Unfortunately, the correct way to implement TestExecutive as an independent application capable of opening &
+        //   executing client UUT TestExecutor .exe/executables is to reverse their architecture:
+        //   - TestExecutive must be compiled into an independent .exe/executable instead of a .dll/library.
+        //   - TestExecutors must be compiled into .dll/libraries instead of independent .exe/executables.
+        // - This architecture refactoring doesn't appear overly difficult, but will likely prove time-consuming.
+        //   - Punting until time permits or need drives.
+        //private void TSMI_File_Change_Click(Object sender, EventArgs e) {
+        //    using (OpenFileDialog ofd = new OpenFileDialog()) {
+        //        ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestExecutors").Value;
+        //        ofd.Filter = "TestExecutor Programs|*.exe";
+        //        ofd.DereferenceLinks = true;
+        //        ofd.RestoreDirectory = true;
 
-                if (ofd.ShowDialog() == DialogResult.OK) {
-                    PreApplicationExit();
-                    ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
-                    Process.Start(psi);
-                    System.Windows.Forms.Application.Exit();
-                }
-            }
-        }
+        //        if (ofd.ShowDialog() == DialogResult.OK) {
+        //            PreApplicationExit();
+        //            ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
+        //            Process.Start(psi);
+        //            System.Windows.Forms.Application.Exit();
+        //        }
+        //    }
+        //}
+        //private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
+        //    PreApplicationExit();
+        //    System.Windows.Forms.Application.Exit();
+        //}
         private void TSMI_File_Save_Click(Object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog {
                 Title = "Save Test Results",
@@ -439,10 +451,6 @@ namespace ABT.TestSpace.TestExec {
                 OverwritePrompt = true
             };
             if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName);
-        }
-        private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
-            PreApplicationExit();
-            System.Windows.Forms.Application.Exit();
         }
 
         private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { OpenApp("Keysight", "BenchVue"); }
