@@ -190,7 +190,5 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static Boolean VoltageSenseModeIs(SCPI_VISA_Instrument SVI, SENSE_MODE SenseMode, CHANNEL Channel) { return SenseMode == VoltageSenseModeGet(SVI, Channel); }
 
         public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense, CHANNEL Channel) { ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), Channels[Channel]); }
-
-
     }
 }
