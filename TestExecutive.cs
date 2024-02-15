@@ -746,7 +746,10 @@ namespace ABT.TestSpace.TestExec {
         #endregion Logging methods.
 
         #region Status Strip methods.
-        private void StatusUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => ToolStripStatusLabel.Text = ConfigTest.Status())); }
+        private void StatusUpdate(Object source, ElapsedEventArgs e) {
+            try { Invoke((Action)(() => ToolStripStatusLabel.Text = ConfigTest.Status())); }
+            catch (NullReferenceException) { if (!Debugger.IsAttached) throw; } // NOTE:  When pausing before initial Test Selection when executing from Visual Studio, ToolStripStatusLabel.Text isn't accessible yet.
+        }
 
         public void DeveloperClear() { DeveloperWrite(String.Empty); }
 
