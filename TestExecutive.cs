@@ -196,6 +196,7 @@ namespace ABT.TestSpace.TestExec {
             TextResult.BackColor = Color.White;
             rtfResults.Text = String.Empty;
             StatusUpdate(null, null);
+            DeveloperStatusClear();
         }
 
         private void FormModeRun() {
@@ -203,6 +204,9 @@ namespace ABT.TestSpace.TestExec {
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
             ButtonEmergencyStop.Enabled = true; // Always enabled.
+            TSMI_System_Diagnostics.Enabled = false;
+            TSMI_System_BarcodeScannerDiscovery.Enabled = false;
+            TSMI_UUT_ResetStatus.Enabled = false;
         }
 
         private void FormModeWait() {
@@ -210,6 +214,9 @@ namespace ABT.TestSpace.TestExec {
             ButtonSelectTests.Enabled = true;
             ButtonStartReset(enabled: ConfigTest != null);
             ButtonEmergencyStop.Enabled = true; // Always enabled.
+            TSMI_System_Diagnostics.Enabled = true;
+            TSMI_System_BarcodeScannerDiscovery.Enabled = true;
+            TSMI_UUT_ResetStatus.Enabled = true;
         }
 
         private String GetFolder(String FolderID) { return XElement.Load(GlobalConfigurationFile).Element("Folders").Element(FolderID).Value; }
@@ -748,9 +755,9 @@ namespace ABT.TestSpace.TestExec {
         #region Status Strip methods.
         private void StatusUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => ToolStripStatusLabel.Text = ConfigTest.Status())); }
 
-        public void DeveloperClear() { DeveloperWrite(String.Empty); }
+        public void DeveloperStatusClear() { DeveloperStatusWrite(String.Empty); }
 
-        public void DeveloperWrite(String Message) { Invoke((Action)(() => ToolStripDeveloperLabel.Text = Message)); }
+        public void DeveloperStatusWrite(String Message) { Invoke((Action)(() => ToolStripDeveloperLabel.Text = Message)); }
         #endregion Status Strip methods.
     }
 }
