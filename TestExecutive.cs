@@ -143,7 +143,7 @@ namespace ABT.TestSpace.TestExec {
         private const String _serialNumberMostRecent = "MostRecent";
         private const String NOT_APPLICABLE = "NotApplicable";
         private Boolean _cancelled = false;
-        private readonly System.Timers.Timer _statusUpdate = new System.Timers.Timer(10000);
+        private readonly System.Timers.Timer _statusTestsUpdate = new System.Timers.Timer(10000);
 
         protected TestExecutive(Icon icon) {
             InitializeComponent();
@@ -171,8 +171,8 @@ namespace ABT.TestSpace.TestExec {
                 UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
             }
 
-            _statusUpdate.Elapsed += StatusUpdate;
-            _statusUpdate.AutoReset = true;
+            _statusTestsUpdate.Elapsed += StatusTestsUpdate;
+            _statusTestsUpdate.AutoReset = true;
         }
 
         #region Form Miscellaneous
@@ -195,8 +195,8 @@ namespace ABT.TestSpace.TestExec {
             TextResult.Text = String.Empty;
             TextResult.BackColor = Color.White;
             rtfResults.Text = String.Empty;
-            StatusUpdate(null, null);
-            DeveloperStatusClear();
+            StatusTestsUpdate(null, null);
+            StatusCustomWrite(String.Empty);
         }
 
         private void FormModeRun() {
@@ -379,7 +379,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
             ConfigTest = AppConfigTest.Get();
-            _statusUpdate.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
+            _statusTestsUpdate.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
             FormModeReset();
             FormModeWait();
@@ -548,7 +548,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_ResetStatus_Click(Object sender, EventArgs e) {
             ConfigTest.Events = new Events();
-            StatusUpdate(null, null);
+            StatusTestsUpdate(null, null);
         }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
@@ -578,7 +578,7 @@ namespace ABT.TestSpace.TestExec {
                     MeasurementIDPresent = measurementID;
                     MeasurementPresent = ConfigTest.Measurements[MeasurementIDPresent];
                    try {
-                        StatusUpdate(null, null);
+                        StatusTestsUpdate(null, null);
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].Result = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
@@ -614,7 +614,7 @@ namespace ABT.TestSpace.TestExec {
             TextResult.Text = ConfigUUT.EventCode;
             TextResult.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
             ConfigTest.Events.Update(ConfigUUT.EventCode);
-            StatusUpdate(null, null);
+            StatusTestsUpdate(null, null);
             Logger.Stop(this, ref rtfResults);
         }
 
@@ -753,11 +753,9 @@ namespace ABT.TestSpace.TestExec {
         #endregion Logging methods.
 
         #region Status Strip methods.
-        private void StatusUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => ToolStripStatusLabel.Text = ConfigTest.Status())); }
+        private void StatusTestsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTestsLabel.Text = ConfigTest.Status())); }
 
-        public void DeveloperStatusClear() { DeveloperStatusWrite(String.Empty); }
-
-        public void DeveloperStatusWrite(String Message) { Invoke((Action)(() => ToolStripDeveloperLabel.Text = Message)); }
+        public void StatusCustomWrite(String Message) { Invoke((Action)(() => StatusCustomLabel.Text = Message)); }
         #endregion Status Strip methods.
     }
 }

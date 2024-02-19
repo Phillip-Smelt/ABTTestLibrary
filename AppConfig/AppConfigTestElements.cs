@@ -142,7 +142,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly Boolean CancelNotPassed;
         public String GroupID { get; set; } = String.Empty; // Determined pre-test.
         public String Value { get; set; } = String.Empty; // Determined during test.
-        public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.
+        public String Result { get; set; } = EventCodes.UNSET; // Determined post-test.  // TODO:  Soon; rename Result to Event.
         public String Message { get; set; } = String.Empty; // Determined during test.
 
         private Measurement(String id, String revision, String description, String className, Boolean cancelNotPassed, String arguments) {
