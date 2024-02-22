@@ -9,11 +9,11 @@ using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.TestSpace.TestExec.AppConfig;
 
-// TODO:  Eventually; persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement results therein.
-// - Stop writing TestMeasurement results to RichTextBoxSink when testing full Operations; only write TestGroups results to RichTextBoxSink.
-// - Continue writing TestMeasurement results to RichTextBoxSink when only testing Groups.
+// TODO:  Eventually; persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement output therein.
+// - Stop writing TestMeasurement output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
+// - Continue writing TestMeasurement output to RichTextBoxSink when only testing Groups.
 // - Stop saving RichTextBoxSink as RTF files, except allow manual export for Troubleshooting.
-// - This will resolve the RichTextBox scroll issue, wherein TestGroups results are scrolled up & away as TestMeasurements are appended.
+// - This will resolve the RichTextBox scroll issue, wherein TestGroups output are scrolled up & away as TestMeasurements are appended.
 // - Only SQL Server Express persisted measurement data is legitimate; all RichTextBoxSink is Troubleshooting only.
 // - Create a Microsoft C# front-end exporting/reporting app for persisted SQL Server Express TestMeasurement full Operation measurement data.
 // - Export in CSV, report in PDF.
@@ -24,7 +24,7 @@ namespace ABT.TestSpace.TestExec.Logging {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_21 = "                     ";
         private const String MESSAGE_STOP = "STOP              : ";
-        private const String MESSAGE_UUT_RESULT = "Result            : ";
+        private const String MESSAGE_UUT_EVENT = "Event             : ";
 
         #region Public Methods
         public static String FormatMessage(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
@@ -85,10 +85,10 @@ namespace ABT.TestSpace.TestExec.Logging {
                 default:
                     throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
             }
-            message.AppendLine(FormatMessage("Result", measurement.Result));
+            message.AppendLine(FormatMessage("Event", measurement.Event));
             if (!String.Equals(measurement.Message, String.Empty)) message.Append(measurement.Message);
             Log.Information(message.ToString());
-            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Result));
+            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Event));
         }
 
         internal static void Start(TestExecutive testExecutive, ref RichTextBox rtfResults) {
@@ -107,7 +107,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 Log.Information(FormatMessage($"Description", $"{testExecutive.ConfigTest.TestElementDescription}"));
                 Log.Information(FormatMessage($"START", $"{DateTime.Now}\n"));
                 return;
-                // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurement results are invalid for pass verdict/$hip disposition, only troubleshooting failures.
+                // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurements are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
 
             if (testExecutive.ConfigLogger.FileEnabled && !testExecutive.ConfigLogger.SQLEnabled) {
@@ -131,7 +131,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                     .CreateLogger();
             }
             Log.Information($"UUT:");
-            Log.Information($"\t{MESSAGE_UUT_RESULT}");
+            Log.Information($"\t{MESSAGE_UUT_EVENT}");
             Log.Information($"\tSerial Number     : {TestExecutive.ConfigUUT.SerialNumber}");
             Log.Information($"\tNumber            : {TestExecutive.ConfigUUT.Number}");
             Log.Information($"\tRevision          : {TestExecutive.ConfigUUT.Revision}");
@@ -169,7 +169,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
-                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_RESULT, MESSAGE_UUT_RESULT + TestExecutive.ConfigUUT.EventCode);
+                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + TestExecutive.ConfigUUT.EventCode);
                 SetBackColor(ref rtfResults, 0, TestExecutive.ConfigUUT.EventCode, EventCodes.GetColor(TestExecutive.ConfigUUT.EventCode));
                 ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);               
                 Log.CloseAndFlush();
