@@ -27,8 +27,8 @@ namespace ABT.TestSpace.TestExec {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestExecutive));
             this.ButtonStart = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
-            this.TextEvent = new System.Windows.Forms.TextBox();
-            this.LabelEvent = new System.Windows.Forms.Label();
+            this.TextEventCode = new System.Windows.Forms.TextBox();
+            this.LabelEventCode = new System.Windows.Forms.Label();
             this.rtfResults = new System.Windows.Forms.RichTextBox();
             this.ButtonSelectTests = new System.Windows.Forms.Button();
             this.ButtonEmergencyStop = new System.Windows.Forms.Button();
@@ -83,9 +83,9 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_UUT_About = new System.Windows.Forms.ToolStripMenuItem();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
+            this.StatusTimeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusTestsLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusCustomLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.StatusTimeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MS.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -95,7 +95,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonStart.BackColor = System.Drawing.Color.Green;
             this.ButtonStart.Location = new System.Drawing.Point(203, 672);
-            this.ButtonStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonStart.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonStart.Name = "ButtonStart";
             this.ButtonStart.Size = new System.Drawing.Size(117, 64);
             this.ButtonStart.TabIndex = 1;
@@ -108,7 +108,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonCancel.BackColor = System.Drawing.Color.Yellow;
             this.ButtonCancel.Location = new System.Drawing.Point(383, 670);
-            this.ButtonCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonCancel.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(117, 64);
             this.ButtonCancel.TabIndex = 2;
@@ -116,29 +116,29 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonCancel.UseVisualStyleBackColor = false;
             this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Clicked);
             // 
-            // TextEvent
+            // TextEventCode
             // 
-            this.TextEvent.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.TextEvent.Location = new System.Drawing.Point(659, 698);
-            this.TextEvent.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.TextEvent.Name = "TextEvent";
-            this.TextEvent.ReadOnly = true;
-            this.TextEvent.Size = new System.Drawing.Size(79, 22);
-            this.TextEvent.TabIndex = 9;
-            this.TextEvent.TabStop = false;
-            this.TextEvent.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextEventCode.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.TextEventCode.Location = new System.Drawing.Point(659, 698);
+            this.TextEventCode.Margin = new System.Windows.Forms.Padding(4);
+            this.TextEventCode.Name = "TextEventCode";
+            this.TextEventCode.ReadOnly = true;
+            this.TextEventCode.Size = new System.Drawing.Size(79, 22);
+            this.TextEventCode.TabIndex = 9;
+            this.TextEventCode.TabStop = false;
+            this.TextEventCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // LabelEvent
+            // LabelEventCode
             // 
-            this.LabelEvent.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LabelEvent.AutoSize = true;
-            this.LabelEvent.Location = new System.Drawing.Point(676, 673);
-            this.LabelEvent.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.LabelEvent.Name = "LabelEvent";
-            this.LabelEvent.Size = new System.Drawing.Size(41, 16);
-            this.LabelEvent.TabIndex = 8;
-            this.LabelEvent.Text = "Event";
-            this.LabelEvent.UseWaitCursor = true;
+            this.LabelEventCode.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.LabelEventCode.AutoSize = true;
+            this.LabelEventCode.Location = new System.Drawing.Point(661, 673);
+            this.LabelEventCode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelEventCode.Name = "LabelEventCode";
+            this.LabelEventCode.Size = new System.Drawing.Size(77, 16);
+            this.LabelEventCode.TabIndex = 8;
+            this.LabelEventCode.Text = "Event Code";
+            this.LabelEventCode.UseWaitCursor = true;
             // 
             // rtfResults
             // 
@@ -147,7 +147,7 @@ namespace ABT.TestSpace.TestExec {
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rtfResults.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtfResults.Location = new System.Drawing.Point(31, 26);
-            this.rtfResults.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rtfResults.Margin = new System.Windows.Forms.Padding(4);
             this.rtfResults.Name = "rtfResults";
             this.rtfResults.ReadOnly = true;
             this.rtfResults.Size = new System.Drawing.Size(1333, 614);
@@ -160,7 +160,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonSelectTests.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonSelectTests.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ButtonSelectTests.Location = new System.Drawing.Point(31, 673);
-            this.ButtonSelectTests.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonSelectTests.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonSelectTests.Name = "ButtonSelectTests";
             this.ButtonSelectTests.Size = new System.Drawing.Size(117, 58);
             this.ButtonSelectTests.TabIndex = 0;
@@ -173,7 +173,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonEmergencyStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonEmergencyStop.Image = global::ABT.TestSpace.Properties.Resources.EmergencyStop;
             this.ButtonEmergencyStop.Location = new System.Drawing.Point(1259, 649);
-            this.ButtonEmergencyStop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ButtonEmergencyStop.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";
             this.ButtonEmergencyStop.Size = new System.Drawing.Size(107, 98);
             this.ButtonEmergencyStop.TabIndex = 5;
@@ -535,7 +535,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_AppConfig
             // 
             this.TSMI_UUT_AppConfig.Name = "TSMI_UUT_AppConfig";
-            this.TSMI_UUT_AppConfig.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_AppConfig.Size = new System.Drawing.Size(172, 26);
             this.TSMI_UUT_AppConfig.Text = "&App.config";
             this.TSMI_UUT_AppConfig.ToolTipText = "UUT\'s test configuration.";
             this.TSMI_UUT_AppConfig.Click += new System.EventHandler(this.TSMI_UUT_AppConfig_Click);
@@ -543,7 +543,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_eDocs
             // 
             this.TSMI_UUT_eDocs.Name = "TSMI_UUT_eDocs";
-            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(172, 26);
             this.TSMI_UUT_eDocs.Text = "&eDocs";
             this.TSMI_UUT_eDocs.ToolTipText = "UUT\'s P: drive eDocs folder.";
             this.TSMI_UUT_eDocs.Click += new System.EventHandler(this.TSMI_UUT_eDocs_Click);
@@ -551,7 +551,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_ResetStatus
             // 
             this.TSMI_UUT_ResetStatus.Name = "TSMI_UUT_ResetStatus";
-            this.TSMI_UUT_ResetStatus.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_ResetStatus.Size = new System.Drawing.Size(172, 26);
             this.TSMI_UUT_ResetStatus.Text = "&Reset Status";
             this.TSMI_UUT_ResetStatus.Click += new System.EventHandler(this.TSMI_UUT_ResetStatus_Click);
             // 
@@ -560,7 +560,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_Manuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_UUT_ManualsInstruments});
             this.TSMI_UUT_Manuals.Name = "TSMI_UUT_Manuals";
-            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(172, 26);
             this.TSMI_UUT_Manuals.Text = "&Manuals";
             // 
             // TSMI_UUT_ManualsInstruments
@@ -577,7 +577,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_TestDataP_DriveTDR_Folder,
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying});
             this.TSMI_UUT_TestData.Name = "TSMI_UUT_TestData";
-            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(172, 26);
             this.TSMI_UUT_TestData.Text = "&Test Data";
             // 
             // TSMI_UUT_TestDataP_DriveTDR_Folder
@@ -600,12 +600,12 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_Separator1
             // 
             this.TSMI_UUT_Separator1.Name = "TSMI_UUT_Separator1";
-            this.TSMI_UUT_Separator1.Size = new System.Drawing.Size(221, 6);
+            this.TSMI_UUT_Separator1.Size = new System.Drawing.Size(169, 6);
             // 
             // TSMI_UUT_About
             // 
             this.TSMI_UUT_About.Name = "TSMI_UUT_About";
-            this.TSMI_UUT_About.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_About.Size = new System.Drawing.Size(172, 26);
             this.TSMI_UUT_About.Text = "&About...";
             this.TSMI_UUT_About.Click += new System.EventHandler(this.TSMI_UUT_About_Click);
             // 
@@ -622,6 +622,13 @@ namespace ABT.TestSpace.TestExec {
             this.StatusStrip.Size = new System.Drawing.Size(1393, 26);
             this.StatusStrip.TabIndex = 10;
             // 
+            // StatusTimeLabel
+            // 
+            this.StatusTimeLabel.Name = "StatusTimeLabel";
+            this.StatusTimeLabel.Size = new System.Drawing.Size(118, 20);
+            this.StatusTimeLabel.Text = "StatusTimeLabel";
+            this.StatusTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // StatusTestsLabel
             // 
             this.StatusTestsLabel.Name = "StatusTestsLabel";
@@ -635,13 +642,6 @@ namespace ABT.TestSpace.TestExec {
             this.StatusCustomLabel.Spring = true;
             this.StatusCustomLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // StatusTimeLabel
-            // 
-            this.StatusTimeLabel.Name = "StatusTimeLabel";
-            this.StatusTimeLabel.Size = new System.Drawing.Size(118, 20);
-            this.StatusTimeLabel.Text = "StatusTimeLabel";
-            this.StatusTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // TestExecutive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -651,8 +651,8 @@ namespace ABT.TestSpace.TestExec {
             this.Controls.Add(this.ButtonEmergencyStop);
             this.Controls.Add(this.ButtonSelectTests);
             this.Controls.Add(this.rtfResults);
-            this.Controls.Add(this.LabelEvent);
-            this.Controls.Add(this.TextEvent);
+            this.Controls.Add(this.LabelEventCode);
+            this.Controls.Add(this.TextEventCode);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonStart);
             this.Controls.Add(this.MS);
@@ -675,8 +675,8 @@ namespace ABT.TestSpace.TestExec {
 
         private System.Windows.Forms.Button ButtonStart;
         private System.Windows.Forms.Button ButtonCancel;
-        private System.Windows.Forms.TextBox TextEvent;
-        private System.Windows.Forms.Label LabelEvent;
+        private System.Windows.Forms.TextBox TextEventCode;
+        private System.Windows.Forms.Label LabelEventCode;
         private System.Windows.Forms.RichTextBox rtfResults;
         private System.Windows.Forms.Button ButtonSelectTests;
         private Button ButtonEmergencyStop;

@@ -24,7 +24,7 @@ namespace ABT.TestSpace.TestExec.Logging {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_21 = "                     ";
         private const String MESSAGE_STOP = "STOP              : ";
-        private const String MESSAGE_UUT_EVENT = "Event             : ";
+        private const String MESSAGE_UUT_EVENTCODE = "Event Code        : ";
 
         #region Public Methods
         public static String FormatMessage(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
@@ -85,10 +85,10 @@ namespace ABT.TestSpace.TestExec.Logging {
                 default:
                     throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
             }
-            message.AppendLine(FormatMessage("Event", measurement.Event));
+            message.AppendLine(FormatMessage(MESSAGE_UUT_EVENTCODE.Trim(), measurement.EventCode));
             if (!String.Equals(measurement.Message, String.Empty)) message.Append(measurement.Message);
             Log.Information(message.ToString());
-            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.Event));
+            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.EventCode));
         }
 
         internal static void Start(TestExecutive testExecutive, ref RichTextBox rtfResults) {
@@ -131,7 +131,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                     .CreateLogger();
             }
             Log.Information($"UUT:");
-            Log.Information($"\t{MESSAGE_UUT_EVENT}");
+            Log.Information($"\t{MESSAGE_UUT_EVENTCODE}");
             Log.Information($"\tSerial Number     : {TestExecutive.ConfigUUT.SerialNumber}");
             Log.Information($"\tNumber            : {TestExecutive.ConfigUUT.Number}");
             Log.Information($"\tRevision          : {TestExecutive.ConfigUUT.Revision}");
@@ -169,7 +169,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
-                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + TestExecutive.ConfigUUT.EventCode);
+                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENTCODE, MESSAGE_UUT_EVENTCODE + TestExecutive.ConfigUUT.EventCode);
                 SetBackColor(ref rtfResults, 0, TestExecutive.ConfigUUT.EventCode, EventCodes.GetColor(TestExecutive.ConfigUUT.EventCode));
                 ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);               
                 Log.CloseAndFlush();

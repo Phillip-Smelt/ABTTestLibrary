@@ -192,8 +192,8 @@ namespace ABT.TestSpace.TestExec {
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
 
         private void FormModeReset() {
-            TextEvent.Text = String.Empty;
-            TextEvent.BackColor = Color.White;
+            TextEventCode.Text = String.Empty;
+            TextEventCode.BackColor = Color.White;
             rtfResults.Text = String.Empty;
             StatusTestsUpdate(null, null);
             StatusCustomWrite(String.Empty);
@@ -566,7 +566,7 @@ namespace ABT.TestSpace.TestExec {
             foreach (KeyValuePair<String, Measurement> kvp in ConfigTest.Measurements) {
                 if (String.Equals(kvp.Value.ClassName, MeasurementNumeric.ClassName)) kvp.Value.Value = Double.NaN.ToString();
                 else kvp.Value.Value = String.Empty;
-                kvp.Value.Event = EventCodes.UNSET;
+                kvp.Value.EventCode = EventCodes.UNSET;
                 kvp.Value.Message = String.Empty;
             }
             ConfigUUT.EventCode = EventCodes.UNSET;
@@ -581,15 +581,15 @@ namespace ABT.TestSpace.TestExec {
                    try {
                         StatusTestsUpdate(null, null);
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
-                        ConfigTest.Measurements[measurementID].Event = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
+                        ConfigTest.Measurements[measurementID].EventCode = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
                         Initialize();
                         if (e.ToString().Contains(CancellationException.ClassName)) {
-                            ConfigTest.Measurements[measurementID].Event = EventCodes.CANCEL;
+                            ConfigTest.Measurements[measurementID].EventCode = EventCodes.CANCEL;
                             while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
                             ConfigTest.Measurements[measurementID].Message += $"{Environment.NewLine}{CancellationException.ClassName}:{Environment.NewLine}{e.Message}";
                         } else {
-                            ConfigTest.Measurements[measurementID].Event = EventCodes.ERROR;
+                            ConfigTest.Measurements[measurementID].EventCode = EventCodes.ERROR;
                             ConfigTest.Measurements[measurementID].Message += $"{Environment.NewLine}{e}";
                             ErrorMessage(e);
                         }
@@ -598,7 +598,7 @@ namespace ABT.TestSpace.TestExec {
                         Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
                     }
                     if (_cancelled) {
-                        ConfigTest.Measurements[measurementID].Event = EventCodes.CANCEL;
+                        ConfigTest.Measurements[measurementID].EventCode = EventCodes.CANCEL;
                         return;
                     }
                     if (MeasurementCancelNotPassed(measurementID)) return;
@@ -612,14 +612,14 @@ namespace ABT.TestSpace.TestExec {
         private void MeasurementsPostRun() {
             Initialize();
             ConfigUUT.EventCode = MeasurementsEvaluate(ConfigTest.Measurements);
-            TextEvent.Text = ConfigUUT.EventCode;
-            TextEvent.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
+            TextEventCode.Text = ConfigUUT.EventCode;
+            TextEventCode.BackColor = EventCodes.GetColor(ConfigUUT.EventCode);
             ConfigTest.Events.Update(ConfigUUT.EventCode);
             StatusTestsUpdate(null, null);
             Logger.Stop(this, ref rtfResults);
         }
 
-        private Boolean MeasurementCancelNotPassed(String measurementID) { return !String.Equals(ConfigTest.Measurements[measurementID].Event, EventCodes.PASS) && ConfigTest.Measurements[measurementID].CancelNotPassed; }
+        private Boolean MeasurementCancelNotPassed(String measurementID) { return !String.Equals(ConfigTest.Measurements[measurementID].EventCode, EventCodes.PASS) && ConfigTest.Measurements[measurementID].CancelNotPassed; }
 
         private Boolean MeasurementsCancelNotPassed(String groupID) { return !String.Equals(MeasurementsEvaluate(MeasurementsGet(groupID)), EventCodes.PASS) && ConfigTest.Groups[groupID].CancelNotPassed; }
 
@@ -632,7 +632,7 @@ namespace ABT.TestSpace.TestExec {
         private String MeasurementEvaluate(Measurement measurement) {
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
-                    return measurement.Event; // Test Developer must set Event in TestExecutor, else it remains MeasurementsPreRun()'s initial EventCodes.UNSET.
+                    return measurement.EventCode; // Test Developer must set EventCode in TestExecutor, else it remains MeasurementsPreRun()'s initial EventCodes.UNSET.
                 case MeasurementNumeric.ClassName:
                     if (!Double.TryParse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{measurement.ID}' Measurement '{measurement.Value}' ≠ System.Double.");
                     MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;
@@ -652,32 +652,32 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private String MeasurementsEvaluate(Dictionary<String, Measurement> measurements) {
-            if (MeasurementEventsCount(measurements, EventCodes.PASS) == measurements.Count) return EventCodes.PASS;
+            if (MeasurementEventCodesCount(measurements, EventCodes.PASS) == measurements.Count) return EventCodes.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
-            // All measurement Events are PASS, so overall Event is PASS.
-            if (MeasurementEventsCount(measurements, EventCodes.ERROR) != 0) return EventCodes.ERROR;
+            // All measurement EventCodes are PASS, so overall EventCode is PASS.
+            if (MeasurementEventCodesCount(measurements, EventCodes.ERROR) != 0) return EventCodes.ERROR;
             // 2nd priority evaluation:
-            // - If any measurement Event is ERROR, overall Event is ERROR.
-            if (MeasurementEventsCount(measurements, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
+            // - If any measurement EventCode is ERROR, overall EventCode is ERROR.
+            if (MeasurementEventCodesCount(measurements, EventCodes.CANCEL) != 0) return EventCodes.CANCEL;
             // 3rd priority evaluation:
-            // - If any measurement Event is CANCEL, and none were ERROR, overall Event is CANCEL.
-            if (MeasurementEventsCount(measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
+            // - If any measurement EventCode is CANCEL, and none were ERROR, overall EventCode is CANCEL.
+            if (MeasurementEventCodesCount(measurements, EventCodes.UNSET) != 0) return EventCodes.CANCEL;
             // 4th priority evaluation:
-            // - If any measurement Event is UNSET, and none were ERROR or CANCEL, then Measurement(s) didn't complete.
+            // - If any measurement EventCode is UNSET, and none were ERROR or CANCEL, then Measurement(s) didn't complete.
             // - Likely occurred because a Measurement failed that had its App.config TestMeasurement CancelOnFail flag set to true.
-            if (MeasurementEventsCount(measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
+            if (MeasurementEventCodesCount(measurements, EventCodes.FAIL) != 0) return EventCodes.FAIL;
             // 5th priority evaluation:
-            // - If any measurement Event is FAIL, and none were ERROR, CANCEL or UNSET, Event is FAIL.
+            // - If any measurement EventCode is FAIL, and none were ERROR, CANCEL or UNSET, EventCode is FAIL.
 
-            String validEvents = String.Empty, invalidTests = String.Empty;
-            foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
-            foreach (KeyValuePair<String, Measurement> kvp in measurements) if (!validEvents.Contains(kvp.Value.Event)) invalidTests += $"ID: '{kvp.Key}' Event: '{kvp.Value.Event}'.{Environment.NewLine}";
-            Logger.LogError($"{Environment.NewLine}Invalid Measurement ID(s) to Event(s):{Environment.NewLine}{invalidTests}");
+            String validEventCodes = String.Empty, invalidTests = String.Empty;
+            foreach (FieldInfo fi in typeof(EventCodes).GetFields()) validEventCodes += ((String)fi.GetValue(null), String.Empty);
+            foreach (KeyValuePair<String, Measurement> kvp in measurements) if (!validEventCodes.Contains(kvp.Value.EventCode)) invalidTests += $"ID: '{kvp.Key}' EventCode: '{kvp.Value.EventCode}'.{Environment.NewLine}";
+            Logger.LogError($"{Environment.NewLine}Invalid Measurement ID(s) to EventCode(s):{Environment.NewLine}{invalidTests}");
             return EventCodes.ERROR;
-            // Above handles class EventCodes changing (adding/deleting/renaming EventCodes) without accomodating EvaluateResults() changes. 
+            // Above handles class EventCodes changing (adding/deleting/renaming EventCodes) without accomodating MeasurementsEvaluate() changes. 
         }
 
-        private Int32 MeasurementEventsCount(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.Event, eventCode) select measurement).Count(); }
+        private Int32 MeasurementEventCodesCount(Dictionary<String, Measurement> measurements, String eventCode) { return (from measurement in measurements where String.Equals(measurement.Value.EventCode, eventCode) select measurement).Count(); }
         #endregion Measurements
 
         #region Introspective methods.
