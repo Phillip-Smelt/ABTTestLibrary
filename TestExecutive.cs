@@ -195,6 +195,7 @@ namespace ABT.TestSpace.TestExec {
             TextEventCode.Text = String.Empty;
             TextEventCode.BackColor = Color.White;
             rtfResults.Text = String.Empty;
+            StatusTimeUpdate(null, null);
             StatusTestsUpdate(null, null);
             StatusCustomWrite(String.Empty);
         }

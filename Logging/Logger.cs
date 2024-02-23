@@ -24,7 +24,8 @@ namespace ABT.TestSpace.TestExec.Logging {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_21 = "                     ";
         private const String MESSAGE_STOP = "STOP              : ";
-        private const String MESSAGE_UUT_EVENTCODE = "Event Code        : ";
+        private const String MESSAGE_EVENTCODE = "Event Code";
+        private const String MESSAGE_UUT_EVENTCODE = MESSAGE_EVENTCODE + "        : ";
 
         #region Public Methods
         public static String FormatMessage(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
@@ -85,7 +86,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 default:
                     throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
             }
-            message.AppendLine(FormatMessage(MESSAGE_UUT_EVENTCODE.Trim(), measurement.EventCode));
+            message.AppendLine(FormatMessage(MESSAGE_EVENTCODE, measurement.EventCode));
             if (!String.Equals(measurement.Message, String.Empty)) message.Append(measurement.Message);
             Log.Information(message.ToString());
             if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.EventCode));

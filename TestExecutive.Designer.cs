@@ -123,7 +123,7 @@ namespace ABT.TestSpace.TestExec {
             this.TextEventCode.Margin = new System.Windows.Forms.Padding(4);
             this.TextEventCode.Name = "TextEventCode";
             this.TextEventCode.ReadOnly = true;
-            this.TextEventCode.Size = new System.Drawing.Size(79, 22);
+            this.TextEventCode.Size = new System.Drawing.Size(80, 22);
             this.TextEventCode.TabIndex = 9;
             this.TextEventCode.TabStop = false;
             this.TextEventCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -132,12 +132,13 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.LabelEventCode.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LabelEventCode.AutoSize = true;
-            this.LabelEventCode.Location = new System.Drawing.Point(661, 673);
+            this.LabelEventCode.Location = new System.Drawing.Point(662, 673);
             this.LabelEventCode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelEventCode.Name = "LabelEventCode";
             this.LabelEventCode.Size = new System.Drawing.Size(77, 16);
             this.LabelEventCode.TabIndex = 8;
             this.LabelEventCode.Text = "Event Code";
+            this.LabelEventCode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.LabelEventCode.UseWaitCursor = true;
             // 
             // rtfResults
@@ -193,7 +194,7 @@ namespace ABT.TestSpace.TestExec {
             this.MS.Location = new System.Drawing.Point(0, 0);
             this.MS.Name = "MS";
             this.MS.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.MS.Size = new System.Drawing.Size(1393, 28);
+            this.MS.Size = new System.Drawing.Size(1393, 30);
             this.MS.TabIndex = 6;
             this.MS.TabStop = true;
             // 
@@ -616,17 +617,16 @@ namespace ABT.TestSpace.TestExec {
             this.StatusTimeLabel,
             this.StatusTestsLabel,
             this.StatusCustomLabel});
-            this.StatusStrip.Location = new System.Drawing.Point(0, 758);
+            this.StatusStrip.Location = new System.Drawing.Point(0, 760);
             this.StatusStrip.Name = "StatusStrip";
             this.StatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-            this.StatusStrip.Size = new System.Drawing.Size(1393, 26);
+            this.StatusStrip.Size = new System.Drawing.Size(1393, 24);
             this.StatusStrip.TabIndex = 10;
             // 
             // StatusTimeLabel
             // 
             this.StatusTimeLabel.Name = "StatusTimeLabel";
-            this.StatusTimeLabel.Size = new System.Drawing.Size(118, 20);
-            this.StatusTimeLabel.Text = "StatusTimeLabel";
+            this.StatusTimeLabel.Size = new System.Drawing.Size(0, 18);
             this.StatusTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // StatusTestsLabel
