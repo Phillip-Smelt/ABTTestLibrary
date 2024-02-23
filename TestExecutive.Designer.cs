@@ -194,7 +194,7 @@ namespace ABT.TestSpace.TestExec {
             this.MS.Location = new System.Drawing.Point(0, 0);
             this.MS.Name = "MS";
             this.MS.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.MS.Size = new System.Drawing.Size(1393, 30);
+            this.MS.Size = new System.Drawing.Size(1393, 28);
             this.MS.TabIndex = 6;
             this.MS.TabStop = true;
             // 
@@ -632,13 +632,13 @@ namespace ABT.TestSpace.TestExec {
             // StatusTestsLabel
             // 
             this.StatusTestsLabel.Name = "StatusTestsLabel";
-            this.StatusTestsLabel.Size = new System.Drawing.Size(0, 20);
+            this.StatusTestsLabel.Size = new System.Drawing.Size(0, 18);
             this.StatusTestsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // StatusCustomLabel
             // 
             this.StatusCustomLabel.Name = "StatusCustomLabel";
-            this.StatusCustomLabel.Size = new System.Drawing.Size(1255, 20);
+            this.StatusCustomLabel.Size = new System.Drawing.Size(1334, 18);
             this.StatusCustomLabel.Spring = true;
             this.StatusCustomLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
