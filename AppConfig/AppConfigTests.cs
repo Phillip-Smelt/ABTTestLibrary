@@ -199,7 +199,6 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly Int32 FormattingLengthGroupID = 0;
         public readonly Int32 FormattingLengthMeasurementID = 0;
         public Events Events { get; set; } = new Events();
-
         private AppConfigTest() {
             Dictionary<String, Operation> allOperations = Operation.Get();
             Dictionary<String, Group> allGroups = Group.Get();
@@ -242,10 +241,9 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         public static AppConfigTest Get() { return new AppConfigTest(); }
 
-        public String Status() {
+        public String StatusTests() {
             const String separator = "       ";
             StringBuilder sb = new StringBuilder();
-            sb.Append($"   Elapsed: {Events.Elapsed()}");
             sb.Append($"{separator}Tested: {Events.Tested()}");
             sb.Append($"{separator}Cancelled: {Events.Cancelled}");
             sb.Append($"{separator}Errored: {Events.Errored}");
@@ -254,6 +252,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             sb.Append($"{separator}Passed: {Events.PercentPassed():P1}");
             return sb.ToString();
         }
+
+        public String StatusTime() { return $"   Elapsed: {Events.Elapsed()}"; }
     }
 
     public class Events {
@@ -288,7 +288,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         public String Elapsed() {
             TimeSpan elapsedTime = DateTime.Now - TestSelected;
-            return $"{(elapsedTime.Days != 0 ? elapsedTime.Days.ToString() + ":" : String.Empty)}{elapsedTime.Hours}:{elapsedTime.Minutes + Math.Round(Convert.ToSingle(elapsedTime.Seconds) / 60):00}";
+            return $"{(elapsedTime.Days != 0 ? elapsedTime.Days.ToString() + ":" : String.Empty)}{elapsedTime.Hours}:{elapsedTime.Minutes:00}";
         }
         public Double PercentCancelled() { return Convert.ToDouble(Cancelled) / Convert.ToDouble(Tested()); }
         public Double PercentErrored() { return Convert.ToDouble(Errored) / Convert.ToDouble(Tested()); }

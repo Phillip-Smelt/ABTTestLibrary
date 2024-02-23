@@ -143,7 +143,7 @@ namespace ABT.TestSpace.TestExec {
         private const String _serialNumberMostRecent = "MostRecent";
         private const String NOT_APPLICABLE = "NotApplicable";
         private Boolean _cancelled = false;
-        private readonly System.Timers.Timer _statusTestsUpdate = new System.Timers.Timer(10000);
+        private readonly System.Timers.Timer _statusTime = new System.Timers.Timer(10000);
 
         protected TestExecutive(Icon icon) {
             InitializeComponent();
@@ -171,8 +171,8 @@ namespace ABT.TestSpace.TestExec {
                 UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
             }
 
-            _statusTestsUpdate.Elapsed += StatusTestsUpdate;
-            _statusTestsUpdate.AutoReset = true;
+            _statusTime.Elapsed += StatusTimeUpdate;
+            _statusTime.AutoReset = true;
         }
 
         #region Form Miscellaneous
@@ -379,7 +379,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
             ConfigTest = AppConfigTest.Get();
-            _statusTestsUpdate.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
+            _statusTime.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
             FormModeReset();
             FormModeWait();
@@ -548,6 +548,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_ResetStatus_Click(Object sender, EventArgs e) {
             ConfigTest.Events = new Events();
+            StatusTimeUpdate(null, null);
             StatusTestsUpdate(null, null);
         }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
@@ -753,7 +754,9 @@ namespace ABT.TestSpace.TestExec {
         #endregion Logging methods.
 
         #region Status Strip methods.
-        private void StatusTestsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTestsLabel.Text = ConfigTest.Status())); }
+        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = ConfigTest.StatusTime())); }
+
+        private void StatusTestsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTestsLabel.Text = ConfigTest.StatusTests())); }
 
         public void StatusCustomWrite(String Message) { Invoke((Action)(() => StatusCustomLabel.Text = Message)); }
         #endregion Status Strip methods.
