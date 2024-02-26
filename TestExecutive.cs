@@ -192,8 +192,8 @@ namespace ABT.TestSpace.TestExec {
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
 
         private void FormModeReset() {
-            TextEvent.Text = String.Empty;
-            TextEvent.BackColor = Color.White;
+            TextTest.Text = String.Empty;
+            TextTest.BackColor = Color.White;
             rtfResults.Text = String.Empty;
             StatusTimeUpdate(null, null);
             StatusTestsUpdate(null, null);
@@ -613,8 +613,8 @@ namespace ABT.TestSpace.TestExec {
         private void MeasurementsPostRun() {
             Initialize();
             ConfigUUT.TestEvent = MeasurementsEvaluate(ConfigTest.Measurements);
-            TextEvent.Text = ConfigUUT.TestEvent;
-            TextEvent.BackColor = TestEvents.GetColor(ConfigUUT.TestEvent);
+            TextTest.Text = ConfigUUT.TestEvent;
+            TextTest.BackColor = TestEvents.GetColor(ConfigUUT.TestEvent);
             ConfigTest.Statistics.Update(ConfigUUT.TestEvent);
             StatusTestsUpdate(null, null);
             Logger.Stop(this, ref rtfResults);
@@ -633,7 +633,7 @@ namespace ABT.TestSpace.TestExec {
         private String MeasurementEvaluate(Measurement measurement) {
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
-                    return measurement.TestEvent; // Test Developer must set Event in TestExecutor, else it remains MeasurementsPreRun()'s initial TestEvents.UNSET.
+                    return measurement.TestEvent; // Test Developer must set TestEvent in TestExecutor, else it remains MeasurementsPreRun()'s initial TestEvents.UNSET.
                 case MeasurementNumeric.ClassName:
                     if (!Double.TryParse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{measurement.ID}' Measurement '{measurement.Value}' ≠ System.Double.");
                     MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;

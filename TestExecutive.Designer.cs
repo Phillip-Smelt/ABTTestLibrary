@@ -27,8 +27,8 @@ namespace ABT.TestSpace.TestExec {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestExecutive));
             this.ButtonStart = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
-            this.TextEvent = new System.Windows.Forms.TextBox();
-            this.LabelEvent = new System.Windows.Forms.Label();
+            this.TextTest = new System.Windows.Forms.TextBox();
+            this.LabelTestEvent = new System.Windows.Forms.Label();
             this.rtfResults = new System.Windows.Forms.RichTextBox();
             this.ButtonSelectTests = new System.Windows.Forms.Button();
             this.ButtonEmergencyStop = new System.Windows.Forms.Button();
@@ -116,30 +116,29 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonCancel.UseVisualStyleBackColor = false;
             this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Clicked);
             // 
-            // TextEvent
+            // TextTest
             // 
-            this.TextEvent.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.TextEvent.Location = new System.Drawing.Point(659, 698);
-            this.TextEvent.Margin = new System.Windows.Forms.Padding(4);
-            this.TextEvent.Name = "TextEvent";
-            this.TextEvent.ReadOnly = true;
-            this.TextEvent.Size = new System.Drawing.Size(80, 22);
-            this.TextEvent.TabIndex = 9;
-            this.TextEvent.TabStop = false;
-            this.TextEvent.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextTest.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.TextTest.Location = new System.Drawing.Point(657, 698);
+            this.TextTest.Margin = new System.Windows.Forms.Padding(4);
+            this.TextTest.Name = "TextTest";
+            this.TextTest.ReadOnly = true;
+            this.TextTest.Size = new System.Drawing.Size(80, 22);
+            this.TextTest.TabIndex = 9;
+            this.TextTest.TabStop = false;
+            this.TextTest.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // LabelEvent
+            // LabelTestEvent
             // 
-            this.LabelEvent.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LabelEvent.AutoSize = true;
-            this.LabelEvent.Location = new System.Drawing.Point(676, 672);
-            this.LabelEvent.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.LabelEvent.Name = "LabelEvent";
-            this.LabelEvent.Size = new System.Drawing.Size(41, 16);
-            this.LabelEvent.TabIndex = 8;
-            this.LabelEvent.Text = "Event";
-            this.LabelEvent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelEvent.UseWaitCursor = true;
+            this.LabelTestEvent.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.LabelTestEvent.Location = new System.Drawing.Point(657, 670);
+            this.LabelTestEvent.Margin = new System.Windows.Forms.Padding(4);
+            this.LabelTestEvent.Name = "LabelTestEvent";
+            this.LabelTestEvent.Size = new System.Drawing.Size(80, 16);
+            this.LabelTestEvent.TabIndex = 8;
+            this.LabelTestEvent.Text = "Test Event";
+            this.LabelTestEvent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelTestEvent.UseWaitCursor = true;
             // 
             // rtfResults
             // 
@@ -194,7 +193,7 @@ namespace ABT.TestSpace.TestExec {
             this.MS.Location = new System.Drawing.Point(0, 0);
             this.MS.Name = "MS";
             this.MS.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.MS.Size = new System.Drawing.Size(1393, 28);
+            this.MS.Size = new System.Drawing.Size(1393, 30);
             this.MS.TabIndex = 6;
             this.MS.TabStop = true;
             // 
@@ -203,7 +202,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_File_Save});
             this.TSMI_File.Name = "TSMI_File";
-            this.TSMI_File.Size = new System.Drawing.Size(46, 24);
+            this.TSMI_File.Size = new System.Drawing.Size(46, 26);
             this.TSMI_File.Text = "&File";
             // 
             // TSMI_File_Save
@@ -226,7 +225,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_Microsoft,
             this.TSMI_Apps_TexasInstruments});
             this.TSMI_Apps.Name = "TSMI_Apps";
-            this.TSMI_Apps.Size = new System.Drawing.Size(61, 24);
+            this.TSMI_Apps.Size = new System.Drawing.Size(61, 26);
             this.TSMI_Apps.Text = " &Apps";
             // 
             // TSMI_Apps_Keysight
@@ -365,7 +364,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Feedback_Compliments,
             this.TSMI_Feedback_Critiques});
             this.TSMI_Feedback.Name = "TSMI_Feedback";
-            this.TSMI_Feedback.Size = new System.Drawing.Size(86, 24);
+            this.TSMI_Feedback.Size = new System.Drawing.Size(86, 26);
             this.TSMI_Feedback.Text = "&Feedback";
             // 
             // TSMI_Feedback_Compliments
@@ -428,7 +427,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_System_Separator1,
             this.TSMI_System_About});
             this.TSMI_System.Name = "TSMI_System";
-            this.TSMI_System.Size = new System.Drawing.Size(70, 24);
+            this.TSMI_System.Size = new System.Drawing.Size(70, 26);
             this.TSMI_System.Text = "S&ystem";
             // 
             // TSMI_System_BarcodeScannerDiscovery
@@ -530,7 +529,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_Separator1,
             this.TSMI_UUT_About});
             this.TSMI_UUT.Name = "TSMI_UUT";
-            this.TSMI_UUT.Size = new System.Drawing.Size(51, 24);
+            this.TSMI_UUT.Size = new System.Drawing.Size(51, 26);
             this.TSMI_UUT.Text = "&UUT";
             // 
             // TSMI_UUT_AppConfig
@@ -651,8 +650,8 @@ namespace ABT.TestSpace.TestExec {
             this.Controls.Add(this.ButtonEmergencyStop);
             this.Controls.Add(this.ButtonSelectTests);
             this.Controls.Add(this.rtfResults);
-            this.Controls.Add(this.LabelEvent);
-            this.Controls.Add(this.TextEvent);
+            this.Controls.Add(this.LabelTestEvent);
+            this.Controls.Add(this.TextTest);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonStart);
             this.Controls.Add(this.MS);
@@ -660,7 +659,7 @@ namespace ABT.TestSpace.TestExec {
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "TestExecutive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Test Program";
+            this.Text = "TestExecutor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_Closing);
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.MS.ResumeLayout(false);
@@ -675,8 +674,8 @@ namespace ABT.TestSpace.TestExec {
 
         private System.Windows.Forms.Button ButtonStart;
         private System.Windows.Forms.Button ButtonCancel;
-        private System.Windows.Forms.TextBox TextEvent;
-        private System.Windows.Forms.Label LabelEvent;
+        private System.Windows.Forms.TextBox TextTest;
+        private System.Windows.Forms.Label LabelTestEvent;
         private System.Windows.Forms.RichTextBox rtfResults;
         private System.Windows.Forms.Button ButtonSelectTests;
         private Button ButtonEmergencyStop;
