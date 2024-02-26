@@ -261,7 +261,10 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public UInt32 Errored = 0;
         public UInt32 Failed = 0;
         public UInt32 Passed = 0;
-        private readonly DateTime TestSelected = DateTime.Now; 
+        private readonly DateTime TestSelected = DateTime.Now + new TimeSpan(0, 0, 29);
+        // Below Elapsed() method rounds to nearest minute.
+        // Adding 29 seconds to TestSelected causes the first Elapsed() round to occur after 59 seconds, not 30.
+        // All subsequent rounds occur 60 seconds thereafter.
 
         public Events() { }
 
@@ -288,7 +291,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         public String Elapsed() {
             TimeSpan elapsedTime = DateTime.Now - TestSelected;
-            return $"{(elapsedTime.Days != 0 ? elapsedTime.Days.ToString() + ":" : String.Empty)}{elapsedTime.Hours}:{elapsedTime.Minutes:00}";
+            return $"{(elapsedTime.Days != 0 ? elapsedTime.Days.ToString() + ":" : String.Empty)}{elapsedTime.Hours}:{(elapsedTime.Minutes + Math.Round(elapsedTime.Seconds / 60F)):00}";
         }
         public Double PercentCancelled() { return Convert.ToDouble(Cancelled) / Convert.ToDouble(Tested()); }
         public Double PercentErrored() { return Convert.ToDouble(Errored) / Convert.ToDouble(Tested()); }
