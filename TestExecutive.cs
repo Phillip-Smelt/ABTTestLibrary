@@ -655,7 +655,7 @@ namespace ABT.TestSpace.TestExec {
         private String MeasurementsEvaluate(Dictionary<String, Measurement> measurements) {
             if (MeasurementEventsCount(measurements, TestEvents.PASS) == measurements.Count) return TestEvents.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
-            // All measurement TestEvent are PASS, so overall TestEvent is PASS.
+            // All measurement TestEvents are PASS, so overall TestEvent is PASS.
             if (MeasurementEventsCount(measurements, TestEvents.ERROR) != 0) return TestEvents.ERROR;
             // 2nd priority evaluation:
             // - If any measurement TestEvent is ERROR, overall TestEvent is ERROR.
@@ -668,7 +668,7 @@ namespace ABT.TestSpace.TestExec {
             // - Likely occurred because a Measurement failed that had its App.config TestMeasurement CancelOnFail flag set to true.
             if (MeasurementEventsCount(measurements, TestEvents.FAIL) != 0) return TestEvents.FAIL;
             // 5th priority evaluation:
-            // - If any measurement Event is FAIL, and none were ERROR, CANCEL or UNSET, TestEvent is FAIL.
+            // - If any measurement TestEvent is FAIL, and none were ERROR, CANCEL or UNSET, TestEvent is FAIL.
 
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(TestEvents).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
