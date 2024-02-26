@@ -24,8 +24,8 @@ namespace ABT.TestSpace.TestExec.Logging {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_21 = "                     ";
         private const String MESSAGE_STOP = "STOP              : ";
-        private const String MESSAGE_EVENTCODE = "Event Code";
-        private const String MESSAGE_UUT_EVENTCODE = MESSAGE_EVENTCODE + "        : ";
+        private const String MESSAGE_TEST_EVENT = "Test Event";
+        private const String MESSAGE_UUT_EVENT = MESSAGE_TEST_EVENT + "        : ";
 
         #region Public Methods
         public static String FormatMessage(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
@@ -86,10 +86,10 @@ namespace ABT.TestSpace.TestExec.Logging {
                 default:
                     throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
             }
-            message.AppendLine(FormatMessage(MESSAGE_EVENTCODE, measurement.EventCode));
+            message.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, measurement.TestEvent));
             if (!String.Equals(measurement.Message, String.Empty)) message.Append(measurement.Message);
             Log.Information(message.ToString());
-            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, EventCodes.GetColor(measurement.EventCode));
+            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, TestEvents.GetColor(measurement.TestEvent));
         }
 
         internal static void Start(TestExecutive testExecutive, ref RichTextBox rtfResults) {
@@ -132,7 +132,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                     .CreateLogger();
             }
             Log.Information($"UUT:");
-            Log.Information($"\t{MESSAGE_UUT_EVENTCODE}");
+            Log.Information($"\t{MESSAGE_UUT_EVENT}");
             Log.Information($"\tSerial Number     : {TestExecutive.ConfigUUT.SerialNumber}");
             Log.Information($"\tNumber            : {TestExecutive.ConfigUUT.Number}");
             Log.Information($"\tRevision          : {TestExecutive.ConfigUUT.Revision}");
@@ -170,13 +170,13 @@ namespace ABT.TestSpace.TestExec.Logging {
             if (!testExecutive.ConfigTest.IsOperation) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
-                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENTCODE, MESSAGE_UUT_EVENTCODE + TestExecutive.ConfigUUT.EventCode);
-                SetBackColor(ref rtfResults, 0, TestExecutive.ConfigUUT.EventCode, EventCodes.GetColor(TestExecutive.ConfigUUT.EventCode));
+                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + TestExecutive.ConfigUUT.TestEvent);
+                SetBackColor(ref rtfResults, 0, TestExecutive.ConfigUUT.TestEvent, TestEvents.GetColor(TestExecutive.ConfigUUT.TestEvent));
                 ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);               
                 Log.CloseAndFlush();
                 if (testExecutive.ConfigLogger.FileEnabled) FileStop(testExecutive, ref rtfResults);
                 if (testExecutive.ConfigLogger.SQLEnabled) SQLStop(testExecutive);
-                if (testExecutive.ConfigLogger.TestEventsEnabled) TestEvents(TestExecutive.ConfigUUT);
+                if (testExecutive.ConfigLogger.TestEventsEnabled) LogTestEvents(TestExecutive.ConfigUUT);
             }
         }
         #endregion Internal Methods
@@ -193,7 +193,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 s = s.Replace($"{GetFilePath(testExecutive)}{fileName}", String.Empty);
                 s = s.Replace(".rtf", String.Empty);
                 s = s.Replace("_", String.Empty);
-                foreach (FieldInfo fi in typeof(EventCodes).GetFields()) s = s.Replace((String)fi.GetValue(null), String.Empty);
+                foreach (FieldInfo fi in typeof(TestEvents).GetFields()) s = s.Replace((String)fi.GetValue(null), String.Empty);
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
                 // Example for final (3rd) iteration of foreach (String f in files):
                 //   FileName            : 'UUTNumber_TestElementID_SerialNumber'
@@ -204,7 +204,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 //   foreach (FieldInfo  : '3'
                 //   maxNumber           : '3'
             }
-            fileName += $"_{++maxNumber}_{TestExecutive.ConfigUUT.EventCode}.rtf";
+            fileName += $"_{++maxNumber}_{TestExecutive.ConfigUUT.TestEvent}.rtf";
             rtfResults.SaveFile($"{GetFilePath(testExecutive)}{fileName}");
         }
         
@@ -238,26 +238,26 @@ namespace ABT.TestSpace.TestExec.Logging {
             // TODO:  Eventually; SQL Server Express: SQLStop.
         }
 
-        private static void TestEvents(AppConfigUUT uut) {
+        private static void LogTestEvents(AppConfigUUT uut) {
             String eventCode;
-            switch (uut.EventCode) {
-                case EventCodes.CANCEL:
+            switch (uut.TestEvent) {
+                case TestEvents.CANCEL:
                     eventCode = "A";
                     break;
-                case EventCodes.ERROR:
+                case TestEvents.ERROR:
                     eventCode = "E";
                     break;
-                case EventCodes.FAIL:
+                case TestEvents.FAIL:
                     eventCode = "F";
                     break;
-                case EventCodes.PASS:
+                case TestEvents.PASS:
                     eventCode = "P";
                     break;
-                case EventCodes.UNSET:
+                case TestEvents.UNSET:
                     eventCode = "U";
                     break;
                 default:
-                    throw new NotImplementedException($"Unrecognized EventCode '{uut.EventCode}'.");
+                    throw new NotImplementedException($"Unrecognized TestEvent '{uut.TestEvent}'.");
             }
             // TODO:  Eventually; invoke TestEvents with $"{uut.Number} {uut.SerialNumber} {uut.eventCode}";
         }

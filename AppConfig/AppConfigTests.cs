@@ -198,7 +198,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly Dictionary<String, Measurement> Measurements = new Dictionary<String, Measurement>();
         public readonly Int32 FormattingLengthGroupID = 0;
         public readonly Int32 FormattingLengthMeasurementID = 0;
-        public Events Events { get; set; } = new Events();
+        public Statistics Statistics { get; set; } = new Statistics();
         private AppConfigTest() {
             Dictionary<String, Operation> allOperations = Operation.Get();
             Dictionary<String, Group> allGroups = Group.Get();
@@ -244,45 +244,45 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public String StatusTests() {
             const String separator = "       ";
             StringBuilder sb = new StringBuilder();
-            sb.Append($"{separator}Tested: {Events.Tested()}");
-            sb.Append($"{separator}Cancelled: {Events.Cancelled}");
-            sb.Append($"{separator}Errored: {Events.Errored}");
-            sb.Append($"{separator}Failed: {Events.Failed}");
-            sb.Append($"{separator}Passed: {Events.Passed}");
-            sb.Append($"{separator}Passed: {Events.PercentPassed():P1}");
+            sb.Append($"{separator}Tested: {Statistics.Tested()}");
+            sb.Append($"{separator}Cancelled: {Statistics.Cancelled}");
+            sb.Append($"{separator}Errored: {Statistics.Errored}");
+            sb.Append($"{separator}Failed: {Statistics.Failed}");
+            sb.Append($"{separator}Passed: {Statistics.Passed}");
+            sb.Append($"{separator}Passed: {Statistics.PercentPassed():P1}");
             return sb.ToString();
         }
 
-        public String StatusTime() { return $"   Elapsed: {Events.Elapsed()}"; }
+        public String StatusTime() { return $"   Elapsed: {Statistics.Elapsed()}"; }
     }
 
-    public class Events {
+    public class Statistics {
         public UInt32 Cancelled = 0;
         public UInt32 Errored = 0;
         public UInt32 Failed = 0;
         public UInt32 Passed = 0;
         private readonly DateTime TestSelected = DateTime.Now;
 
-        public Events() { }
+        public Statistics() { }
 
-        public void Update(String EventCode) { 
-            switch(EventCode) {
-                case EventCodes.CANCEL:
+        public void Update(String TestEvent) { 
+            switch(TestEvent) {
+                case TestEvents.CANCEL:
                     Cancelled++;
                     break;
-                case EventCodes.ERROR:
+                case TestEvents.ERROR:
                     Errored++;
                     break;
-                case EventCodes.FAIL:
+                case TestEvents.FAIL:
                     Failed++;
                     break;
-                case EventCodes.PASS:
+                case TestEvents.PASS:
                     Passed++;
                     break;
-                case EventCodes.UNSET:
-                    throw new ArgumentException($"EventCode '{EventCode}' illegal argument for {System.Reflection.MethodBase.GetCurrentMethod().Name}.");
+                case TestEvents.UNSET:
+                    throw new ArgumentException($"TestEvent '{TestEvent}' illegal argument for {System.Reflection.MethodBase.GetCurrentMethod().Name}.");
                 default:
-                    throw new NotImplementedException($"EventCode '{EventCode}' not implemented.");
+                    throw new NotImplementedException($"TestEvent '{TestEvent}' not implemented.");
             }
         }
 

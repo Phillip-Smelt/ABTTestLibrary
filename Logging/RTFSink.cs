@@ -26,14 +26,14 @@ namespace ABT.TestSpace.TestExec.Logging {
             String logMessage = stringWriter.ToString();
             richTextBox.InvokeIfRequired(() => richTextBox.AppendText(logMessage));
 
-            Int32 selectionStart; String eventCode;
-            foreach (FieldInfo fi in typeof(EventCodes).GetFields()) {
-                eventCode = (String)fi.GetValue(null);
-                if (logMessage.Contains(eventCode)) {
-                    selectionStart = richTextBox.Find(eventCode, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+            Int32 selectionStart; String testEvent;
+            foreach (FieldInfo fi in typeof(TestEvents).GetFields()) {
+                testEvent = (String)fi.GetValue(null);
+                if (logMessage.Contains(testEvent)) {
+                    selectionStart = richTextBox.Find(testEvent, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
                     richTextBox.SelectionStart = selectionStart;
-                    richTextBox.SelectionLength = eventCode.Length;
-                    richTextBox.SelectionBackColor = EventCodes.GetColor(eventCode);
+                    richTextBox.SelectionLength = testEvent.Length;
+                    richTextBox.SelectionBackColor = TestEvents.GetColor(testEvent);
                 }
             }
         }

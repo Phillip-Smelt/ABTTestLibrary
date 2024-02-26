@@ -15,7 +15,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String SerialNumberRegExCustom = ConfigurationManager.AppSettings["UUT_SerialNumberRegExCustom"].Trim();
         public readonly Boolean Simulate = Boolean.Parse(ConfigurationManager.AppSettings["UUT_Simulate"].Trim());
         public String SerialNumber { get; set; } = String.Empty; // Input during testing.
-        public String EventCode { get; set; } = EventCodes.UNSET; // Determined post-test.
+        public String TestEvent { get; set; } = TestEvents.UNSET; // Determined post-test.
 
         private AppConfigUUT() { }
 

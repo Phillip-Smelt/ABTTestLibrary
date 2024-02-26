@@ -36,22 +36,22 @@ namespace ABT.TestSpace.TestExec {
         public Boolean NotExpired() { return !Expired(); }
     }
 
-    public static class EventCodes {
+    public static class TestEvents {
         public const String CANCEL = "CANCEL";
         public const String ERROR = "ERROR";
         public const String FAIL = "FAIL";
         public const String PASS = "PASS";
         public const String UNSET = "UNSET";
 
-        public static Color GetColor(String eventCode) {
+        public static Color GetColor(String Event) {
             Dictionary<String, Color> codesToColors = new Dictionary<String, Color>() {
-                { EventCodes.CANCEL, Color.Yellow },
-                { EventCodes.ERROR, Color.Aqua },
-                { EventCodes.FAIL, Color.Red },
-                { EventCodes.PASS, Color.Green },
-                { EventCodes.UNSET, Color.Gray }
+                { CANCEL, Color.Yellow },
+                { ERROR, Color.Aqua },
+                { FAIL, Color.Red },
+                { PASS, Color.Green },
+                { UNSET, Color.Gray }
             };
-            return codesToColors[eventCode];
+            return codesToColors[Event];
         }
     }
 

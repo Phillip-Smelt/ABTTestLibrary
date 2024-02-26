@@ -27,8 +27,8 @@ namespace ABT.TestSpace.TestExec {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestExecutive));
             this.ButtonStart = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
-            this.TextEventCode = new System.Windows.Forms.TextBox();
-            this.LabelEventCode = new System.Windows.Forms.Label();
+            this.TextEvent = new System.Windows.Forms.TextBox();
+            this.LabelEvent = new System.Windows.Forms.Label();
             this.rtfResults = new System.Windows.Forms.RichTextBox();
             this.ButtonSelectTests = new System.Windows.Forms.Button();
             this.ButtonEmergencyStop = new System.Windows.Forms.Button();
@@ -116,30 +116,30 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonCancel.UseVisualStyleBackColor = false;
             this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Clicked);
             // 
-            // TextEventCode
+            // TextEvent
             // 
-            this.TextEventCode.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.TextEventCode.Location = new System.Drawing.Point(659, 698);
-            this.TextEventCode.Margin = new System.Windows.Forms.Padding(4);
-            this.TextEventCode.Name = "TextEventCode";
-            this.TextEventCode.ReadOnly = true;
-            this.TextEventCode.Size = new System.Drawing.Size(80, 22);
-            this.TextEventCode.TabIndex = 9;
-            this.TextEventCode.TabStop = false;
-            this.TextEventCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextEvent.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.TextEvent.Location = new System.Drawing.Point(659, 698);
+            this.TextEvent.Margin = new System.Windows.Forms.Padding(4);
+            this.TextEvent.Name = "TextEvent";
+            this.TextEvent.ReadOnly = true;
+            this.TextEvent.Size = new System.Drawing.Size(80, 22);
+            this.TextEvent.TabIndex = 9;
+            this.TextEvent.TabStop = false;
+            this.TextEvent.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // LabelEventCode
+            // LabelEvent
             // 
-            this.LabelEventCode.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LabelEventCode.AutoSize = true;
-            this.LabelEventCode.Location = new System.Drawing.Point(662, 673);
-            this.LabelEventCode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.LabelEventCode.Name = "LabelEventCode";
-            this.LabelEventCode.Size = new System.Drawing.Size(77, 16);
-            this.LabelEventCode.TabIndex = 8;
-            this.LabelEventCode.Text = "Event Code";
-            this.LabelEventCode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelEventCode.UseWaitCursor = true;
+            this.LabelEvent.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.LabelEvent.AutoSize = true;
+            this.LabelEvent.Location = new System.Drawing.Point(676, 672);
+            this.LabelEvent.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelEvent.Name = "LabelEvent";
+            this.LabelEvent.Size = new System.Drawing.Size(41, 16);
+            this.LabelEvent.TabIndex = 8;
+            this.LabelEvent.Text = "Event";
+            this.LabelEvent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelEvent.UseWaitCursor = true;
             // 
             // rtfResults
             // 
@@ -617,28 +617,28 @@ namespace ABT.TestSpace.TestExec {
             this.StatusTimeLabel,
             this.StatusTestsLabel,
             this.StatusCustomLabel});
-            this.StatusStrip.Location = new System.Drawing.Point(0, 760);
+            this.StatusStrip.Location = new System.Drawing.Point(0, 762);
             this.StatusStrip.Name = "StatusStrip";
             this.StatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-            this.StatusStrip.Size = new System.Drawing.Size(1393, 24);
+            this.StatusStrip.Size = new System.Drawing.Size(1393, 22);
             this.StatusStrip.TabIndex = 10;
             // 
             // StatusTimeLabel
             // 
             this.StatusTimeLabel.Name = "StatusTimeLabel";
-            this.StatusTimeLabel.Size = new System.Drawing.Size(0, 18);
+            this.StatusTimeLabel.Size = new System.Drawing.Size(0, 16);
             this.StatusTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // StatusTestsLabel
             // 
             this.StatusTestsLabel.Name = "StatusTestsLabel";
-            this.StatusTestsLabel.Size = new System.Drawing.Size(0, 18);
+            this.StatusTestsLabel.Size = new System.Drawing.Size(0, 16);
             this.StatusTestsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // StatusCustomLabel
             // 
             this.StatusCustomLabel.Name = "StatusCustomLabel";
-            this.StatusCustomLabel.Size = new System.Drawing.Size(1334, 18);
+            this.StatusCustomLabel.Size = new System.Drawing.Size(1373, 16);
             this.StatusCustomLabel.Spring = true;
             this.StatusCustomLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -651,8 +651,8 @@ namespace ABT.TestSpace.TestExec {
             this.Controls.Add(this.ButtonEmergencyStop);
             this.Controls.Add(this.ButtonSelectTests);
             this.Controls.Add(this.rtfResults);
-            this.Controls.Add(this.LabelEventCode);
-            this.Controls.Add(this.TextEventCode);
+            this.Controls.Add(this.LabelEvent);
+            this.Controls.Add(this.TextEvent);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonStart);
             this.Controls.Add(this.MS);
@@ -675,8 +675,8 @@ namespace ABT.TestSpace.TestExec {
 
         private System.Windows.Forms.Button ButtonStart;
         private System.Windows.Forms.Button ButtonCancel;
-        private System.Windows.Forms.TextBox TextEventCode;
-        private System.Windows.Forms.Label LabelEventCode;
+        private System.Windows.Forms.TextBox TextEvent;
+        private System.Windows.Forms.Label LabelEvent;
         private System.Windows.Forms.RichTextBox rtfResults;
         private System.Windows.Forms.Button ButtonSelectTests;
         private Button ButtonEmergencyStop;
