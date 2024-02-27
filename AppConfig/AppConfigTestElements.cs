@@ -143,7 +143,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public String GroupID { get; set; } = String.Empty; // Determined pre-test.
         public String Value { get; set; } = String.Empty; // Determined during test.
         public String TestEvent { get; set; } = TestEvents.UNSET; // Determined post-test.
-        public String Message { get; set; } = String.Empty; // Determined during test.
+        public StringBuilder Message { get; set; } = new StringBuilder(); // Determined during test.
 
         private Measurement(String id, String revision, String description, String className, Boolean cancelNotPassed, String arguments) {
             ID = id;

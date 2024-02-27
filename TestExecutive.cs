@@ -568,7 +568,7 @@ namespace ABT.TestSpace.TestExec {
                 if (String.Equals(kvp.Value.ClassName, MeasurementNumeric.ClassName)) kvp.Value.Value = Double.NaN.ToString();
                 else kvp.Value.Value = String.Empty;
                 kvp.Value.TestEvent = TestEvents.UNSET;
-                kvp.Value.Message = String.Empty;
+                kvp.Value.Message.Clear();
             }
             ConfigUUT.TestEvent = TestEvents.UNSET;
             Initialize();
@@ -588,10 +588,10 @@ namespace ABT.TestSpace.TestExec {
                         if (e.ToString().Contains(CancellationException.ClassName)) {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
                             while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
-                            ConfigTest.Measurements[measurementID].Message += $"{Environment.NewLine}{CancellationException.ClassName}:{Environment.NewLine}{e.Message}";
+                            ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{CancellationException.ClassName}:{Environment.NewLine}{e.Message}");
                         } else {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.ERROR;
-                            ConfigTest.Measurements[measurementID].Message += $"{Environment.NewLine}{e}";
+                            ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{e}");
                             ErrorMessage(e);
                         }
                         return;
@@ -747,9 +747,9 @@ namespace ABT.TestSpace.TestExec {
             MessageAppend("Caller Line #", $"'{callerLineNumber}'");
         }
 
-        public void MessageAppend(String Message, Boolean AppendNewLine = true) { MeasurementPresent.Message += Message + (AppendNewLine ? Environment.NewLine : String.Empty); }
+        public void MessageAppend(String Message, Boolean AppendNewLine = true) { MeasurementPresent.Message.Append(Message + (AppendNewLine ? Environment.NewLine : String.Empty)); }
         
-        public void MessageAppend(String Label, String Message) { MeasurementPresent.Message += $"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}{Environment.NewLine}"; }
+        public void MessageAppend(String Label, String Message) { MeasurementPresent.Message.AppendLine($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
 
         public void MessagesAppend(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppend(Label, Message); }
         #endregion Logging methods.
