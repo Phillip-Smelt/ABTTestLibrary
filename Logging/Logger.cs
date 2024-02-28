@@ -1,5 +1,6 @@
 ﻿#undef VERBOSE
 using System;
+using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing;
 using System.IO;
