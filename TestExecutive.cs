@@ -742,16 +742,18 @@ namespace ABT.TestSpace.TestExec {
 
         #region Logging methods.
         public void LogCaller([CallerFilePath] String callerFilePath = "", [CallerMemberName] String callerMemberName = "", [CallerLineNumber] Int32 callerLineNumber = 0) {
-            MessageAppend("Caller File", $"'{callerFilePath}'");
-            MessageAppend("Caller Member", $"'{callerMemberName}'");
-            MessageAppend("Caller Line #", $"'{callerLineNumber}'");
+            MessageAppendLine("Caller File", $"'{callerFilePath}'");
+            MessageAppendLine("Caller Member", $"'{callerMemberName}'");
+            MessageAppendLine("Caller Line #", $"'{callerLineNumber}'");
         }
 
-        public void MessageAppend(String Message, Boolean AppendNewLine = true) { MeasurementPresent.Message.Append(Message + (AppendNewLine ? Environment.NewLine : String.Empty)); }
-        
-        public void MessageAppend(String Label, String Message) { MeasurementPresent.Message.AppendLine($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
+        public void MessageAppend(String Message) { MeasurementPresent.Message.Append(Message); }
 
-        public void MessagesAppend(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppend(Label, Message); }
+        public void MessageAppendLine(String Message) { MeasurementPresent.Message.AppendLine(Message); }
+        
+        public void MessageAppendLine(String Label, String Message) { MeasurementPresent.Message.AppendLine($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
+
+        public void MessagesAppendLines(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppendLine(Label, Message); }
         #endregion Logging methods.
 
         #region Status Strip methods.
