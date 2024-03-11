@@ -96,7 +96,8 @@ namespace ABT.TestSpace.TestExec.Processes {
 
         private static void DisableUserInput(IntPtr processHandle) {
             GetConsoleMode(processHandle, out UInt32 consoleMode);
-            consoleMode &= ~(UInt32)(0x0040 | 0x0010); // Clear the ENABLE_QUICK_EDIT_MODE & ENABLE_MOUSE_INPUT bits.
+            consoleMode |= 0x0080; // Set the ENABLE_EXTENDED_FLAGS bit.
+            consoleMode &= ~(UInt32)(0x0040 | 0x0010); // Clear the ENABLE_QUICK_EDIT_MODE & ENABLE_MOUSE_INPUT bits respectively.
             SetConsoleMode(processHandle, consoleMode);
         }
     }

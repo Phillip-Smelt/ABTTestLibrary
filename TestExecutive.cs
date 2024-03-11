@@ -68,18 +68,21 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 //        - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
 //        - FYI, synchronizing with TestExecutor's repository doesn't error out, as it doesn't utilize a Git server.
 
-/// <para>
+namespace ABT.TestSpace.TestExec {
+/// <remarks>
 ///  References:
-///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutive
-///  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
-///  </para>
+/// <item>
+///  <description><see href="https://github.com/Amphenol-Borisch-Technologies/TestExecutive">TestExecutive</see></description>
+///  <description><see href="https://github.com/Amphenol-Borisch-Technologies/TestExecutor">TestExecutor</see></description>
+///  </item>
+///  </remarks>
 /// <summary>
-/// NOTE:  Test Developer is responsible for ensuring Measurements can be both safely & correctly called in sequence defined in App.config:
+/// NOTE:  Test Developer is responsible for ensuring Measurements can be both safely &amp; correctly called in sequence defined in App.config:
 /// <para>
 ///        - That is, if Measurements execute sequentially as (M1, M2, M3, M4, M5), Test Developer is responsible for ensuring all equipment is
-///          configured safely & correctly between each Measurement step.
+///          configured safely &amp; correctly between each Measurement step.
 ///          - If:
-///            - M1 is unpowered Shorts & Opens measurements.
+///            - M1 is unpowered Shorts &amp; Opens measurements.
 ///            - M2 is powered voltage measurements.
 ///            - M3 begins with unpowered operator cable connections/disconnections for In-System Programming.
 ///          - Then Test Developer must ensure necessary equipment state transitions are implemented so test operator isn't
@@ -100,7 +103,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 ///          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
 ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
 ///      2)  Operator Reactive:
-///          - TestExecutive's already implemented, always available & default reactive "Cancel before next Test" technique,
+///          - TestExecutive's already implemented, always available &amp; default reactive "Cancel before next Test" technique,
 ///            which simply sets _cancelled Boolean to true, checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
 ///          - If _cancelled is true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation
 ///            prior to the next Measurement's execution.
@@ -117,14 +120,12 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 ///            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
 ///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
 ///
-/// NOTE:  The Operator Proactive & TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
+/// NOTE:  The Operator Proactive &amp; TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
 ///        thrown CancellationExceptions.
-/// NOTE:  The Operator Reactive & App.config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
+/// NOTE:  The Operator Reactive &amp; App.config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
 ///        inside the TestExecutive.MeasurementsRun() loop.
 /// </para>
 /// </summary>
-
-namespace ABT.TestSpace.TestExec {
     public abstract partial class TestExecutive : Form {
         public const String GlobalConfigurationFile = @"C:\Program Files\ABT\TestExecutive\TestExecutive.config.xml"; // NOTE:  Update this path if installed into another folder.
         public const String GlobalTestExecutor = @"Global\TestExecutor";

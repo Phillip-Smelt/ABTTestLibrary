@@ -1,55 +1,63 @@
 ﻿namespace ABT.TestSpace.TestExec.Switching {
+        /// <summary>Relay Forms A, B &amp; C.</summary>
     public static class RelayForms {
-        /// <summary>
-        /// Relay Forms A, B & C.
-        /// </summary>
+        /// <summary>Relay Form A.</summary>
         public static class A {
-            public enum S { NO, C }
-            /// <summary>
-            /// Form A States:
-            /// S.NO; Form A relay is de-energized and in normally opened state.
-            /// S.C;  Form A relay is energized and in abnormally closed state.
-            /// </summary>
+            /// <summary>Form A States.</summary>
+            public enum S {
+                /// <summary>S.NO; Form A relay is de-energized and in normally opened state.</summary>
+                NO,
+                /// <summary>S.C;  Form A relay is energized and in abnormally closed state.</summary>
+                C
+            }
 
-            public enum T { C, NO }
-            /// <summary>
-            /// Form A Terminals.
-            /// T.C; Form A relay Common Terminal.
-            /// T.NO; Form A relay Normally Open Terminal.
-            /// </summary>
+            /// <summary>Form A Terminals.</summary>
+            public enum T {
+                /// <summary>T.C; Form A relay Common Terminal.</summary>
+                C,
+                /// <summary>T.NO; Form A relay Normally Open Terminal.</summary>
+                NO
+            }
         }
 
+        /// <summary>Relay Form B.</summary>
         public static class B {
-            public enum S { NC, O }
-            /// <summary>
-            /// Form B States.
-            /// B.NC; Form B relay is de-energized and in normally closed state.
-            /// B.O;  Form B relay is energized and in abnormally opened state.
-            /// </summary>
+            /// <summary>Form B States.</summary>
+            public enum S {
+                /// <summary>B.NC; Form B relay is de-energized and in normally closed state.</summary>
+                NC,
+                /// <summary>B.O;  Form B relay is energized and in abnormally opened state.</summary>
+                O
+            }
 
-            public enum T { C, NC }
-            /// <summary>
-            /// Form B Terminals.
-            /// T.C; Form B relay Common Terminal.
-            /// T.NC; Form B relay Normaly Closed Terminal.
-            /// </summary>
+            /// <summary>Form B Terminals.</summary>
+            public enum T {
+                /// <summary>T.C; Form B relay Common Terminal.</summary>
+                C,
+                /// <summary>T.NC; Form B relay Normaly Closed Terminal.</summary>
+                NC
+            }
         }
 
+        /// <summary>Relay Form C.</summary>
         public static class C {
-            public enum S { NC, NO }
-            /// <summary>
-            /// Form C States.
-            /// S.NC; Form C relay is de-energized and in normally closed/normally open state, with common C terminal connected to NC terminal & disconnected from NO terminal.
-            /// S.NO; Form C relay is energized and in abnormally opened/abnormally closed state, with common C terminal disconnected from NC terminal & connected to NO terminal.
-            /// </summary>
+            /// <summary>Form C States.</summary>
+            public enum S {
+                /// <summary>S.NC; Form C relay is de-energized and in normally closed/normally open state, with common C terminal connected to NC terminal &amp; disconnected from NO terminal.</summary>
+                NC,
+                /// <summary>S.NO; Form C relay is energized and in abnormally opened/abnormally closed state, with common C terminal disconnected from NC terminal &amp; connected to NO terminal.</summary>
+                NO
+            }
 
-            public enum T { C, NC, NO }
-            /// <summary>
-            /// Form C Terminals.
-            /// T.C; Form C relay Common Terminal.
-            /// T.NO; Form C relay Normally Closed Terminal.
-            /// T.NO; Form C relay Normally Open Terminal.
-            /// </summary>
+            /// <summary>Form C Terminals.</summary>
+            public enum T {
+                /// <summary>T.C; Form C relay Common Terminal.</summary>
+                C,
+                /// <summary>T.NO; Form C relay Normally Closed Terminal.</summary>
+                NC,
+                /// <summary>T.NO; Form C relay Normally Open Terminal.</summary>
+                NO
+            }
         }
     }
 }
