@@ -70,10 +70,10 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
 namespace ABT.TestSpace.TestExec {
 /// <remarks>
-///  References:
+///  <b>References:</b>
 /// <item>
-///  <description><see href="https://github.com/Amphenol-Borisch-Technologies/TestExecutive">TestExecutive</see></description>
-///  <description><see href="https://github.com/Amphenol-Borisch-Technologies/TestExecutor">TestExecutor</see></description>
+///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestExecutive">TestExecutive</a></description>
+///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestExecutor">TestExecutor</a></description>
 ///  </item>
 ///  </remarks>
 /// <summary>
