@@ -95,12 +95,9 @@ namespace ABT.TestSpace.TestExec.Processes {
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(MeasurementProcess MP) { return ProcessRedirect(MP.ProcessArguments, MP.ProcessExecutable, MP.ProcessFolder, MP.ProcessExpected); }
 
         private static void DisableUserInput(IntPtr processHandle) {
-            const UInt32 ENABLE_EXTENDED_FLAGS = 0x0080;
             const UInt32 ENABLE_QUICK_EDIT = 0x0040;
-            const UInt32 ENABLE_MOUSE_INPUT = 0x0010;
             GetConsoleMode(processHandle, out UInt32 consoleMode);
-            consoleMode |= ENABLE_EXTENDED_FLAGS; // Set the ENABLE_EXTENDED_FLAGS bit.
-            consoleMode &= ~(ENABLE_QUICK_EDIT | ENABLE_MOUSE_INPUT); // Clear the ENABLE_QUICK_EDIT_MODE & ENABLE_MOUSE_INPUT flag bits respectively.
+            consoleMode &= ~ENABLE_QUICK_EDIT; // Clear the ENABLE_QUICK_EDIT_MODE flag bit.
             SetConsoleMode(processHandle, consoleMode);
         }
     }
