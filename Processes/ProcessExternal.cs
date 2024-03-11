@@ -57,8 +57,8 @@ namespace ABT.TestSpace.TestExec.Processes {
                     RedirectStandardOutput = false
                 };
                 process.StartInfo = psi;
-                DisableUserInput(process.Handle);
                 process.Start();
+                DisableUserInput(process.Handle);
                 process.WaitForExit();
                 exitCode = process.ExitCode;
             }
@@ -79,8 +79,8 @@ namespace ABT.TestSpace.TestExec.Processes {
                     RedirectStandardOutput = true
                 };
                 process.StartInfo = psi;
-                DisableUserInput(process.Handle);
                 process.Start();
+                DisableUserInput(process.Handle);
                 process.WaitForExit();
                 StreamReader se = process.StandardError;
                 standardError = se.ReadToEnd();
