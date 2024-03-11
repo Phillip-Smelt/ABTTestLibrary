@@ -1,6 +1,5 @@
 ﻿#undef VERBOSE
 using System;
-using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing;
 using System.IO;
@@ -105,7 +104,9 @@ namespace ABT.TestSpace.TestExec.Logging {
                 Log.Information(FormatMessage($"UUT Serial Number", $"{TestExecutive.ConfigUUT.SerialNumber}"));
                 Log.Information(FormatMessage($"UUT Number", $"{TestExecutive.ConfigUUT.Number}"));
                 Log.Information(FormatMessage($"UUT Revision", $"{TestExecutive.ConfigUUT.Revision}"));
+#if VERBOSE
                 Log.Information(FormatMessage($"TestGroup ID", $"{testExecutive.ConfigTest.TestElementID}"));
+#endif
                 Log.Information(FormatMessage($"Description", $"{testExecutive.ConfigTest.TestElementDescription}"));
                 Log.Information(FormatMessage($"START", $"{DateTime.Now}\n"));
                 return;
@@ -180,7 +181,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 if (testExecutive.ConfigLogger.TestEventsEnabled) LogTestEvents(TestExecutive.ConfigUUT);
             }
         }
-        #endregion Internal Methods
+#endregion Internal Methods
 
         #region Private Methods
         private static void FileStop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
