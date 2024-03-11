@@ -1,15 +1,19 @@
-﻿using ABT.TestSpace.TestExec.AppConfig;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ABT.TestSpace.TestExec.AppConfig;
 
 namespace ABT.TestSpace.TestExec.Processes {
     public enum PROCESS_METHOD { ExitCode, Redirect }
 
     public static class ProcessExternal {
+        [DllImport("kernel32.dll")] static extern Boolean GetConsoleMode(IntPtr hConsoleHandle, out UInt32 lpMode);
+        [DllImport("kernel32.dll")] static extern Boolean SetConsoleMode(IntPtr hConsoleHandle, UInt32 dwMode);
+
         public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect, Boolean AutoContinue = false) {
             PreConnect?.Invoke();
             String message = $"UUT unpowered.{Environment.NewLine}{Environment.NewLine}" +
@@ -53,6 +57,7 @@ namespace ABT.TestSpace.TestExec.Processes {
                     RedirectStandardOutput = false
                 };
                 process.StartInfo = psi;
+                DisableUserInput(process.Handle);
                 process.Start();
                 process.WaitForExit();
                 exitCode = process.ExitCode;
@@ -74,6 +79,7 @@ namespace ABT.TestSpace.TestExec.Processes {
                     RedirectStandardOutput = true
                 };
                 process.StartInfo = psi;
+                DisableUserInput(process.Handle);
                 process.Start();
                 process.WaitForExit();
                 StreamReader se = process.StandardError;
@@ -87,5 +93,11 @@ namespace ABT.TestSpace.TestExec.Processes {
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(MeasurementProcess MP) { return ProcessRedirect(MP.ProcessArguments, MP.ProcessExecutable, MP.ProcessFolder, MP.ProcessExpected); }
+
+        private static void DisableUserInput(IntPtr processHandle) {
+            GetConsoleMode(processHandle, out UInt32 consoleMode);
+            consoleMode &= ~(UInt32)(0x0040 | 0x0010); // Clear the ENABLE_QUICK_EDIT_MODE & ENABLE_MOUSE_INPUT bits.
+            SetConsoleMode(processHandle, consoleMode);
+        }
     }
 }
