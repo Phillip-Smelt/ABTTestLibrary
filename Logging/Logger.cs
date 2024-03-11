@@ -104,9 +104,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 Log.Information(FormatMessage($"UUT Serial Number", $"{TestExecutive.ConfigUUT.SerialNumber}"));
                 Log.Information(FormatMessage($"UUT Number", $"{TestExecutive.ConfigUUT.Number}"));
                 Log.Information(FormatMessage($"UUT Revision", $"{TestExecutive.ConfigUUT.Revision}"));
-#if VERBOSE
                 Log.Information(FormatMessage($"TestGroup ID", $"{testExecutive.ConfigTest.TestElementID}"));
-#endif
                 Log.Information(FormatMessage($"Description", $"{testExecutive.ConfigTest.TestElementDescription}"));
                 Log.Information(FormatMessage($"START", $"{DateTime.Now}\n"));
                 return;
@@ -152,7 +150,9 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"\tTestExecutor      : {Assembly.GetEntryAssembly().GetName().Name}, {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
             Log.Information($"\tSpecification     : {TestExecutive.ConfigUUT.TestSpecification}");
             Log.Information($"\tID                : {testExecutive.ConfigTest.TestElementID}");
+#if VERBOSE
             Log.Information($"\tRevision          : {testExecutive.ConfigTest.TestElementRevision}");
+#endif
             Log.Information($"\tDescription       : {testExecutive.ConfigTest.TestElementDescription}\n");
 
             StringBuilder sb = new StringBuilder();
