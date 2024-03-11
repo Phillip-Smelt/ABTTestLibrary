@@ -58,7 +58,7 @@ namespace ABT.TestSpace.TestExec.Processes {
                 };
                 process.StartInfo = psi;
                 process.Start();
-                DisableUserInput(process.Handle);
+                DisableQuickEdit(process.Handle);
                 process.WaitForExit();
                 exitCode = process.ExitCode;
             }
@@ -80,7 +80,7 @@ namespace ABT.TestSpace.TestExec.Processes {
                 };
                 process.StartInfo = psi;
                 process.Start();
-                DisableUserInput(process.Handle);
+                DisableQuickEdit(process.Handle);
                 process.WaitForExit();
                 StreamReader se = process.StandardError;
                 standardError = se.ReadToEnd();
@@ -94,10 +94,9 @@ namespace ABT.TestSpace.TestExec.Processes {
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(MeasurementProcess MP) { return ProcessRedirect(MP.ProcessArguments, MP.ProcessExecutable, MP.ProcessFolder, MP.ProcessExpected); }
 
-        private static void DisableUserInput(IntPtr processHandle) {
-            const UInt32 ENABLE_QUICK_EDIT = 0x0040;
+        private static void DisableQuickEdit(IntPtr processHandle) {
             GetConsoleMode(processHandle, out UInt32 consoleMode);
-            consoleMode &= ~ENABLE_QUICK_EDIT; // Clear the ENABLE_QUICK_EDIT_MODE flag bit.
+            consoleMode &= ~0x0040U; // Clear the ENABLE_QUICK_EDIT_MODE flag bit.
             SetConsoleMode(processHandle, consoleMode);
         }
     }
