@@ -12,10 +12,10 @@ using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 //
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class PS_E36234A {
-        // NOTE:  All _command_ operations must be preceded by check if an Emergency Stop event occurred.
-        //        - Thus 'if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;'
-        //        - Sole exception are Initialize() methods, which are required to implement Cancel & Emergency Stop events.
-        // NOTE:  All _query_ operations can proceed regardless of Cancel or Emergency Stop request.
+        // NOTE:  All _command_ operations must be preceded by check if a Stop event occurred.
+        //        - Thus 'if (TestExecutive.CTS_Stop.IsCancellationRequested) return;'
+        //        - Sole exception are Initialize() methods, which are required to implement Cancel & Stop events.
+        // NOTE:  All _query_ operations can proceed regardless of Cancel or Stop requests.
         public const String MODEL = "E36234A";
 
         public const Boolean LoadOrStimulus = true;
@@ -34,7 +34,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static Boolean CurrentAmplitudeIs(SCPI_VISA_Instrument SVI, Double AmpsDC, Double Delta, CHANNEL Channel) { return SCPI99.IsCloseEnough(CurrentAmplitudeGet(SVI, Channel), AmpsDC, Delta); }
 
         public static void CurrentAmplitudeSet(SCPI_VISA_Instrument SVI, Double AmpsDC, CHANNEL Channel) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC, Channels[Channel]);
         }
 
@@ -44,7 +44,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void CurrentProtectionAmplitudeSet(SCPI_VISA_Instrument SVI, Double Amperes, CHANNEL Channel) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.LEVel.AMPLitude.Command(Amperes, Channels[Channel]);
         }
 
@@ -54,7 +54,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void CurrentProtectionDelaySet(SCPI_VISA_Instrument SVI, Double DelaySeconds, CHANNEL Channel) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds, Channels[Channel]);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.STARt.Command(CCTRans, Channels[Channel]);
         }
@@ -65,12 +65,12 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
  
         public static void CurrentProtectionStateSet(SCPI_VISA_Instrument SVI, STATE State, CHANNEL Channel) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is STATE.ON), Channels[Channel]);
         }
       
         public static void CurrentProtectionTrippedClear(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.CLEar.Command(Channels[Channel]);
         }
 
@@ -99,7 +99,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Emergency Stop events.
+            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Stop events.
             SCPI99.Initialize(SVI);
             ((AgE36200)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command(Channels[CHANNEL.C1]);
             ((AgE36200)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command(Channels[CHANNEL.C2]);
@@ -109,17 +109,17 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static Boolean Is(SCPI_VISA_Instrument SVI, STATE State, CHANNEL Channel) { return (State == Get(SVI, Channel)); }
 
         public static void Local(SCPI_VISA_Instrument SVI) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SYSTem.LOCal.Command();
         }
 
         public static void Remote(SCPI_VISA_Instrument SVI) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SYSTem.REMote.Command();
         }
 
         public static void RemoteLock(SCPI_VISA_Instrument SVI) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SYSTem.RWLock.Command();
         }
 
@@ -132,13 +132,13 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void SlewRatesSet(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, CHANNEL Channel) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.RISing.IMMediate.Command(SlewRateRising, Channels[Channel]);
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.FALLing.IMMediate.Command(SlewRateFalling, Channels[Channel]);
         }
 
         public static void Set(SCPI_VISA_Instrument SVI, STATE State, Double VoltsDC, Double AmpsDC, Double VoltageProtectionAmplitude, CHANNEL Channel, SENSE_MODE KelvinSense, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             Set(SVI, PS_DC.Amps, AmpsDC, Channel, KelvinSense);
             Set(SVI, PS_DC.Volts, VoltsDC, Channel, KelvinSense);
             
@@ -153,7 +153,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void Set(SCPI_VISA_Instrument SVI, PS_DC DC, Double Amplitude, CHANNEL Channel, SENSE_MODE KelvinSense) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             VoltageSenseModeSet(SVI, KelvinSense, Channel);
             switch (DC) {
                 case PS_DC.Amps:
@@ -173,7 +173,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void Set(SCPI_VISA_Instrument SVI, STATE State, CHANNEL Channel) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             if(!Is(SVI, State, Channel)) ((AgE36200)SVI.Instrument).SCPI.OUTPut.STATe.Command((State is STATE.ON), Channels[Channel]);
         }
 
@@ -185,7 +185,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static Boolean VoltageAmplitudeIs(SCPI_VISA_Instrument SVI, Double VoltsDC, Double Delta, CHANNEL Channel) { return SCPI99.IsCloseEnough(VoltageAmplitudeGet(SVI, Channel), VoltsDC, Delta); }
 
         public static void VoltageAmplitudeSet(SCPI_VISA_Instrument SVI, Double VoltsDC, CHANNEL Channel) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC, Channels[Channel]);
         }
 
@@ -195,7 +195,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void VoltageProtectionAmplitudeSet(SCPI_VISA_Instrument SVI, Double VoltsDC, CHANNEL Channel) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.AMPLitude.Command(VoltsDC, Channels[Channel]);
         }
 
@@ -205,12 +205,12 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void VoltageProtectionStateSet(SCPI_VISA_Instrument SVI, STATE State, CHANNEL Channel) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command((State is STATE.ON), Channels[Channel]);
         }
 
         public static void VoltageProtectionTrippedClear(SCPI_VISA_Instrument SVI, CHANNEL Channel) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(Channels[Channel]);
         }
 
@@ -229,7 +229,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense, CHANNEL Channel) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((AgE36200)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense), Channels[Channel]);
         }
     }

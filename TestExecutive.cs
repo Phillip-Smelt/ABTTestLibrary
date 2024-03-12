@@ -104,8 +104,9 @@ namespace ABT.TestSpace.TestExec {
 ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
 ///      2)  Operator Reactive:
 ///          - TestExecutive's already implemented, always available &amp; default reactive "Cancel before next Test" technique,
-///            which simply sets _cancelled Boolean to true, checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
-///          - If _cancelled is true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation
+///            which simply invokes CTS_Cancel.Cancel().
+///          - CTS_Cancel.IsCancellationRequested is checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
+///            - If true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation.
 ///            prior to the next Measurement's execution.
 ///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
 /// B) PrePlanned Developer Programmed Cancellations:
@@ -135,8 +136,8 @@ namespace ABT.TestSpace.TestExec {
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
-        public static CancellationTokenSource CTS_EmergencyStop { get; private set; } = new CancellationTokenSource();
-        public CancellationTokenSource CTS_Cancelled { get; private set; } = new CancellationTokenSource();
+        public static CancellationTokenSource CTS_Stop { get; private set; } = new CancellationTokenSource();
+        public CancellationTokenSource CTS_Cancel { get; private set; } = new CancellationTokenSource();
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
         private readonly String _serialNumberRegEx = null;
@@ -144,7 +145,6 @@ namespace ABT.TestSpace.TestExec {
         private readonly RegistryKey _serialNumberRegistryKey = null;
         private const String _serialNumberMostRecent = "MostRecent";
         private const String NOT_APPLICABLE = "NotApplicable";
-        private Boolean _cancelled = false;
         private readonly System.Timers.Timer _statusTime = new System.Timers.Timer(10000);
 
         protected TestExecutive(Icon icon) {
@@ -204,10 +204,10 @@ namespace ABT.TestSpace.TestExec {
 
         private void FormModeRun() {
             ButtonCancelReset(enabled: true);
-            ButtonEmergencyStopReset();
+            ButtonStopReset(enabled: true);
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
-            ButtonEmergencyStop.Enabled = true;
+            ButtonStop.Enabled = true;
             TSMI_System_Diagnostics.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
             TSMI_UUT_ResetStatus.Enabled = false;
@@ -215,10 +215,10 @@ namespace ABT.TestSpace.TestExec {
 
         private void FormModeWait() {
             ButtonCancelReset(enabled: false);
-            ButtonEmergencyStopReset();
+            ButtonStopReset(enabled: false);
             ButtonSelectTests.Enabled = true;
             ButtonStartReset(enabled: ConfigTest != null);
-            ButtonEmergencyStop.Enabled = true;
+            ButtonStop.Enabled = true;
             TSMI_System_Diagnostics.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
             TSMI_UUT_ResetStatus.Enabled = true;
@@ -352,8 +352,7 @@ namespace ABT.TestSpace.TestExec {
         
         #region Form Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            CTS_Cancelled.Cancel();
-            _cancelled = true;
+            CTS_Cancel.Cancel();
             ButtonCancel.Text = "Cancelling...";
             ButtonCancel.Enabled = false;
             ButtonCancel.UseVisualStyleBackColor = false;
@@ -368,28 +367,26 @@ namespace ABT.TestSpace.TestExec {
                 ButtonCancel.BackColor = SystemColors.Control;
                 ButtonCancel.UseVisualStyleBackColor = true;
             }
-            if (CTS_EmergencyStop.IsCancellationRequested) {
-                CTS_EmergencyStop.Dispose();
-                CTS_EmergencyStop = new CancellationTokenSource();
+            if (CTS_Stop.IsCancellationRequested) {
+                CTS_Stop.Dispose();
+                CTS_Stop = new CancellationTokenSource();
             }
-            _cancelled = false;
             ButtonCancel.Text = "Cancel";
             ButtonCancel.Enabled = enabled;
         }
 
-        private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            CTS_EmergencyStop.Cancel();
-            ButtonEmergencyStop.Enabled = false;
+        private void ButtonStop_Clicked(Object sender, EventArgs e) {
+            CTS_Stop.Cancel();
+            ButtonStop.Enabled = false;
             Initialize();
-            if (ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
         }
 
-        private void ButtonEmergencyStopReset() {
-            if (CTS_Cancelled.IsCancellationRequested) {
-                CTS_Cancelled.Dispose();
-                CTS_Cancelled = new CancellationTokenSource();
+        private void ButtonStopReset(Boolean enabled) {
+            if (CTS_Stop.IsCancellationRequested) {
+                CTS_Stop.Dispose();
+                CTS_Stop = new CancellationTokenSource();
             }
-            ButtonEmergencyStop.Enabled = true;
+            ButtonStop.Enabled = enabled;
         }
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
@@ -612,7 +609,7 @@ namespace ABT.TestSpace.TestExec {
                     } finally {
                         Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
                     }
-                    if (_cancelled) {
+                    if (CTS_Cancel.IsCancellationRequested || CTS_Stop.IsCancellationRequested) {
                         ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
                         return;
                     }

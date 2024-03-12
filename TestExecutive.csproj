@@ -198,8 +198,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Resources\EmergencyStop.png" />
     <Content Include="Resources\Amphenol.ico" />
+    <Content Include="Resources\Stop.png" />
     <Content Include="TestExecutive.config.xml" />
   </ItemGroup>
   <ItemGroup>

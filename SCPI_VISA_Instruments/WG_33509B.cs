@@ -11,16 +11,16 @@ using System;
 //
 namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class WG_33509B {
-        // NOTE:  All _command_ operations must be preceded by check if an Emergency Stop event occurred.
-        //        - Thus 'if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;'
-        //        - Sole exception are Initialize() methods, which are required to implement Cancel & Emergency Stop events.
-        // NOTE:  All _query_ operations can proceed regardless of Cancel or Emergency Stop request.
+        // NOTE:  All _command_ operations must be preceded by check if a Stop event occurred.
+        //        - Thus 'if (TestExecutive.CTS_Stop.IsCancellationRequested) return;'
+        //        - Sole exception are Initialize() methods, which are required to implement Cancel & Stop events.
+        // NOTE:  All _query_ operations can proceed regardless of Cancel or Stop requests.
         public const String MODEL = "33509B";
 
         public const Boolean LoadOrStimulus = true;
 
         public static void FunctionSquare(SCPI_VISA_Instrument SVI, Double DutyCyclePercent, Double Hz) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FUNCtion.SQUare.DCYCle.Command(null, DutyCyclePercent, "PCT");
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FUNCtion.SQUare.PERiod.Command(null, 1 / Hz);
         }
@@ -28,7 +28,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static Boolean IsWG_33509(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(Ag33500B_33600A)); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Emergency Stop events.
+            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Stop events.
             SCPI99.Initialize(SVI);
             ((Ag33500B_33600A)SVI.Instrument).SCPI.DISPlay.TEXT.CLEar.Command();
         }
@@ -41,19 +41,19 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static Boolean Is(SCPI_VISA_Instrument SVI, STATE State) { return (State == Get(SVI)); }
 
         public static void Set(SCPI_VISA_Instrument SVI, STATE State) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.Command(null, (State is STATE.ON));
         }
 
         public static void SetVoltage(SCPI_VISA_Instrument SVI, Double V_Low, Double V_High, Double V_Offset) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.VOLTage.LOW.Command(null, V_Low);
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.VOLTage.HIGH.Command(null, V_High);
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.VOLTage.OFFSet.Command(null, V_Offset);
         }
 
         public static void ModulateFM_SquareWave(SCPI_VISA_Instrument SVI, Double HzDeviation, Double HzFM, STATE State) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FM.INTernal.FUNCtion.Command(null, "SQUare");
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FM.INTernal.FREQuency.Command(null, HzFM, "HZ");
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.FM.DEViation.Command(null, HzDeviation, "HZ");
@@ -67,7 +67,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void WaveformSquareApply(SCPI_VISA_Instrument SVI, Double Hz, Double V_High, Double V_Offset) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ((Ag33500B_33600A)SVI.Instrument).SCPI.OUTPut.LOAD.Command(null, "INFinity");
             ((Ag33500B_33600A)SVI.Instrument).SCPI.SOURce.APPLy.SQUare.Command(null, Hz, "HZ", V_High, "V", V_Offset, "V");
         }

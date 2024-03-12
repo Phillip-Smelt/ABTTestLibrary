@@ -23,10 +23,10 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         // NOTE:  R's items named C## because USB-ERB24's relays are all Form C.
 
     public sealed class UE24 {
-        // NOTE:  All _command_ operations must be preceded by check if an Emergency Stop event occurred.
-        //        - Thus 'if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;'
-        //        - Sole exception are Initialize() methods, which are required to implement Cancel & Emergency Stop events.
-        // NOTE:  All _query_ operations can proceed regardless of Cancel or Emergency Stop request.
+        // NOTE:  All _command_ operations must be preceded by check if a Stop event occurred.
+        //        - Thus 'if (TestExecutive.CTS_Stop.IsCancellationRequested) return;'
+        //        - Sole exception are Initialize() methods, which are required to implement Cancel & Stop events.
+        // NOTE:  All _query_ operations can proceed regardless of Cancel or Stop requests.
         // NOTE:  Most of this class is compatible with MCC's USB-ERB08 Relay Board, essentially a USB-ERB24 but with only 8 Form C relays instead of the USB-ERB24's 24.
         // - Some portions are specific to the USB-ERB24 however; examples are enum R containing 24 relays & enum PORT containing 24 bits.
         // NOTE:  This class assumes all USB-ERB24 relays are configured for Non-Inverting Logic & Pull-Down/de-energized at power-up.
@@ -52,7 +52,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         #region methods
 
         public static void Initialize() {
-            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Emergency Stop events.
+            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Stop events.
             foreach (UE ue in Enum.GetValues(typeof(UE))) {
                 foreach (R r in Enum.GetValues(typeof(R))) {
                     ErrorInfo errorInfo = _only.USB_ERB24s[ue].DBitOut(DigitalPortType.FirstPortA, (Int32)r, DigitalLogicState.Low);
@@ -193,25 +193,25 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         /// one of the four available MccBoard functions for the USB-ERB8 & USB-ERB24.
         /// </summary>
         public static void Set(UE ue, R r, C.S s) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ErrorInfo errorInfo = _only.USB_ERB24s[ue].DBitOut(DigitalPortType.FirstPortA, (Int32)r, s is C.S.NC ? DigitalLogicState.Low : DigitalLogicState.High);
             if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) ProcessErrorInfo(_only.USB_ERB24s[ue], errorInfo);
             Debug.Assert(Is(ue, r, s));
         }
 
         public static void Set(UE ue, HashSet<R> rs, C.S s) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             Set(ue, rs.ToDictionary(r => r, r => s));
             Debug.Assert(Are(ue, rs.ToDictionary(r => r, r => s)));
         }
 
         public static void Set(UE ue, Dictionary<R, C.S> RεS) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             foreach (KeyValuePair<R, C.S> kvp in RεS) Set(ue, kvp.Key, kvp.Value);
         }
 
         public static void Set(UE ue, C.S s) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
             foreach (R r in Enum.GetValues(typeof(R))) RεS.Add(r, s);
             Set(ue, RεS);
@@ -222,7 +222,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         /// Mainly useful for parallelism, when testing multiple UUTs concurrently, with each B wired identically to test 1 UUT.
         /// </summary>
         public static void Set(HashSet<UE> ues, C.S s) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             foreach (UE ue in ues) { Set(ue, s); }
         }
 
@@ -230,7 +230,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         /// Mainly useful for parallelism, when testing multiple UUTs concurrently, with each B wired identically to test 1 UUT.
         /// </summary>
         public static void Set(HashSet<UE> ues, HashSet<R> rs, C.S s) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             foreach (UE ue in ues) {
                 Set(ue, rs, s);
                 Debug.Assert(Are(ue, rs, s));
@@ -241,7 +241,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         /// Mainly useful for parallelism, when testing multiple UUTs concurrently, with each B wired identically to test 1 UUT.
         /// </summary>
         public static void Set(Dictionary<UE, Dictionary<R, C.S>> UEεRεS) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             foreach (KeyValuePair<UE, Dictionary<R, C.S>> kvp in UEεRεS) Set(kvp.Key, kvp.Value);
         }
 
@@ -249,7 +249,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         /// Mainly useful for parallelism, when testing multiple UUTs concurrently, with each B wired identically to test 1 UUT.
         /// </summary>
         public static void Set(C.S s) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             foreach (UE ue in Enum.GetValues(typeof(UE))) Set(ue, s);
             Debug.Assert(Are(s));
         }
@@ -282,13 +282,13 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         /// As yet they've no client methods.
         /// </summary>
         private static void PortWrite(MccBoard mccBoard, DigitalPortType digitalPortType, UInt16 dataValue) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             ErrorInfo errorInfo = mccBoard.DOut(digitalPortType, dataValue);
             if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) ProcessErrorInfo(mccBoard, errorInfo);
         }
 
         private static void PortsWrite(MccBoard mccBoard, UInt16[] ports) {
-            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             PortWrite(mccBoard, DigitalPortType.FirstPortA, ports[(Int32)PORT.A]);
             PortWrite(mccBoard, DigitalPortType.FirstPortB, ports[(Int32)PORT.B]);
             PortWrite(mccBoard, DigitalPortType.FirstPortCL, ports[(Int32)PORT.CL]);

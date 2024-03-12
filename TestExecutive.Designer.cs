@@ -31,7 +31,7 @@ namespace ABT.TestSpace.TestExec {
             this.LabelTestEvent = new System.Windows.Forms.Label();
             this.rtfResults = new System.Windows.Forms.RichTextBox();
             this.ButtonSelectTests = new System.Windows.Forms.Button();
-            this.ButtonEmergencyStop = new System.Windows.Forms.Button();
+            this.ButtonStop = new System.Windows.Forms.Button();
             this.MS = new System.Windows.Forms.MenuStrip();
             this.TSMI_File = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_File_Save = new System.Windows.Forms.ToolStripMenuItem();
@@ -168,18 +168,17 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonSelectTests.UseVisualStyleBackColor = true;
             this.ButtonSelectTests.Click += new System.EventHandler(this.ButtonSelectTests_Click);
             // 
-            // ButtonEmergencyStop
+            // ButtonStop
             // 
-            this.ButtonEmergencyStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonEmergencyStop.Image = global::ABT.TestSpace.Properties.Resources.EmergencyStop;
-            this.ButtonEmergencyStop.Location = new System.Drawing.Point(1259, 649);
-            this.ButtonEmergencyStop.Margin = new System.Windows.Forms.Padding(4);
-            this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";
-            this.ButtonEmergencyStop.Size = new System.Drawing.Size(107, 98);
-            this.ButtonEmergencyStop.TabIndex = 5;
-            this.ButtonEmergencyStop.Text = "&Emergency Stop";
-            this.ButtonEmergencyStop.UseVisualStyleBackColor = true;
-            this.ButtonEmergencyStop.Click += new System.EventHandler(this.ButtonEmergencyStop_Clicked);
+            this.ButtonStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonStop.Image = global::ABT.TestSpace.Properties.Resources.Stop;
+            this.ButtonStop.Location = new System.Drawing.Point(1282, 663);
+            this.ButtonStop.Margin = new System.Windows.Forms.Padding(4);
+            this.ButtonStop.Name = "ButtonStop";
+            this.ButtonStop.Size = new System.Drawing.Size(82, 82);
+            this.ButtonStop.TabIndex = 5;
+            this.ButtonStop.UseVisualStyleBackColor = true;
+            this.ButtonStop.Click += new System.EventHandler(this.ButtonStop_Clicked);
             // 
             // MS
             // 
@@ -193,7 +192,7 @@ namespace ABT.TestSpace.TestExec {
             this.MS.Location = new System.Drawing.Point(0, 0);
             this.MS.Name = "MS";
             this.MS.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.MS.Size = new System.Drawing.Size(1393, 30);
+            this.MS.Size = new System.Drawing.Size(1393, 28);
             this.MS.TabIndex = 6;
             this.MS.TabStop = true;
             // 
@@ -202,7 +201,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_File_Save});
             this.TSMI_File.Name = "TSMI_File";
-            this.TSMI_File.Size = new System.Drawing.Size(46, 26);
+            this.TSMI_File.Size = new System.Drawing.Size(46, 24);
             this.TSMI_File.Text = "&File";
             // 
             // TSMI_File_Save
@@ -225,7 +224,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_Microsoft,
             this.TSMI_Apps_TexasInstruments});
             this.TSMI_Apps.Name = "TSMI_Apps";
-            this.TSMI_Apps.Size = new System.Drawing.Size(61, 26);
+            this.TSMI_Apps.Size = new System.Drawing.Size(61, 24);
             this.TSMI_Apps.Text = " &Apps";
             // 
             // TSMI_Apps_Keysight
@@ -364,7 +363,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Feedback_Compliments,
             this.TSMI_Feedback_Critiques});
             this.TSMI_Feedback.Name = "TSMI_Feedback";
-            this.TSMI_Feedback.Size = new System.Drawing.Size(86, 26);
+            this.TSMI_Feedback.Size = new System.Drawing.Size(86, 24);
             this.TSMI_Feedback.Text = "&Feedback";
             // 
             // TSMI_Feedback_Compliments
@@ -427,7 +426,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_System_Separator1,
             this.TSMI_System_About});
             this.TSMI_System.Name = "TSMI_System";
-            this.TSMI_System.Size = new System.Drawing.Size(70, 26);
+            this.TSMI_System.Size = new System.Drawing.Size(70, 24);
             this.TSMI_System.Text = "S&ystem";
             // 
             // TSMI_System_BarcodeScannerDiscovery
@@ -529,7 +528,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_Separator1,
             this.TSMI_UUT_About});
             this.TSMI_UUT.Name = "TSMI_UUT";
-            this.TSMI_UUT.Size = new System.Drawing.Size(51, 26);
+            this.TSMI_UUT.Size = new System.Drawing.Size(51, 24);
             this.TSMI_UUT.Text = "&UUT";
             // 
             // TSMI_UUT_AppConfig
@@ -647,7 +646,7 @@ namespace ABT.TestSpace.TestExec {
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1393, 784);
             this.Controls.Add(this.StatusStrip);
-            this.Controls.Add(this.ButtonEmergencyStop);
+            this.Controls.Add(this.ButtonStop);
             this.Controls.Add(this.ButtonSelectTests);
             this.Controls.Add(this.rtfResults);
             this.Controls.Add(this.LabelTestEvent);
@@ -678,7 +677,7 @@ namespace ABT.TestSpace.TestExec {
         private System.Windows.Forms.Label LabelTestEvent;
         private System.Windows.Forms.RichTextBox rtfResults;
         private System.Windows.Forms.Button ButtonSelectTests;
-        private Button ButtonEmergencyStop;
+        private Button ButtonStop;
         private MenuStrip MS;
         private ToolStripMenuItem TSMI_File;
         private ToolStripMenuItem TSMI_File_Save;
