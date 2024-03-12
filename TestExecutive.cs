@@ -207,7 +207,6 @@ namespace ABT.TestSpace.TestExec {
             ButtonStopReset(enabled: true);
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
-            ButtonStop.Enabled = true;
             TSMI_System_Diagnostics.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
             TSMI_UUT_ResetStatus.Enabled = false;
@@ -218,7 +217,6 @@ namespace ABT.TestSpace.TestExec {
             ButtonStopReset(enabled: false);
             ButtonSelectTests.Enabled = true;
             ButtonStartReset(enabled: ConfigTest != null);
-            ButtonStop.Enabled = true;
             TSMI_System_Diagnostics.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
             TSMI_UUT_ResetStatus.Enabled = true;
@@ -377,6 +375,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void ButtonStop_Clicked(Object sender, EventArgs e) {
             CTS_Stop.Cancel();
+            ButtonStop.Text = "Stopping...";
             ButtonStop.Enabled = false;
             Initialize();
         }
@@ -386,6 +385,7 @@ namespace ABT.TestSpace.TestExec {
                 CTS_Stop.Dispose();
                 CTS_Stop = new CancellationTokenSource();
             }
+            ButtonStop.Text = String.Empty;
             ButtonStop.Enabled = enabled;
         }
 

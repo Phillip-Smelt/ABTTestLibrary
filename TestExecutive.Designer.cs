@@ -172,10 +172,10 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.ButtonStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonStop.Image = global::ABT.TestSpace.Properties.Resources.Stop;
-            this.ButtonStop.Location = new System.Drawing.Point(1282, 663);
+            this.ButtonStop.Location = new System.Drawing.Point(1262, 663);
             this.ButtonStop.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonStop.Name = "ButtonStop";
-            this.ButtonStop.Size = new System.Drawing.Size(82, 82);
+            this.ButtonStop.Size = new System.Drawing.Size(102, 82);
             this.ButtonStop.TabIndex = 5;
             this.ButtonStop.UseVisualStyleBackColor = true;
             this.ButtonStop.Click += new System.EventHandler(this.ButtonStop_Clicked);
