@@ -375,8 +375,8 @@ namespace ABT.TestSpace.TestExec {
 
         private void ButtonStop_Clicked(Object sender, EventArgs e) {
             CTS_Stop.Cancel();
-            ButtonStop.Text = "Stopping...";
             ButtonStop.Enabled = false;
+            if (ButtonCancel.Enabled) ButtonCancel_Clicked(null, null);
             Initialize();
         }
 
@@ -385,7 +385,6 @@ namespace ABT.TestSpace.TestExec {
                 CTS_Stop.Dispose();
                 CTS_Stop = new CancellationTokenSource();
             }
-            ButtonStop.Text = String.Empty;
             ButtonStop.Enabled = enabled;
         }
 
