@@ -41,6 +41,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                         Instrument = new Ag3446x(Address);
                         LoadOrStimulus = MM_34461A.LoadOrStimulus;
                         MM_34461A.Initialize(this);
+                        MM_34461A.TerminalsSetRear(this);
                         break;
                     case PS_E36103B.MODEL:
                     case PS_E36105B.MODEL:

@@ -16,22 +16,35 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 public enum PROPERTY { AmperageAC, AmperageDC, Capacitance, Continuity, Frequency, Fresistance, Period, Resistance, Temperature, VoltageAC, VoltageDC, VoltageDiodic }
 
     public static class MM_34461A {
+        // NOTE:  All _command_ operations must be preceded by check if an Emergency Stop event occurred.
+        //        - Thus 'if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;'
+        //        - Sole exception are Initialize() methods, which are required to implement Cancel & Emergency Stop events.
+        // NOTE:  All _query_ operations can proceed regardless of Cancel or Emergency Stop request.
         public const String MODEL = "34461A";
 
         public const Boolean LoadOrStimulus = false;
 
         public static Boolean IsMM_34461A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(Ag3446x)); }
 
-        public static void DelayAutoSet(SCPI_VISA_Instrument SVI, Boolean state) { ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Command(state); }
+        public static void DelayAutoSet(SCPI_VISA_Instrument SVI, Boolean state) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Command(state);
+        }
                 
         public static Boolean DelayAutoIs(SCPI_VISA_Instrument SVI) {
             ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Query(out Boolean state);
             return state;
         }
 
-        public static void DelaySet(SCPI_VISA_Instrument SVI, MMD mmd) { ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.Command(Enum.GetName(typeof(MMD), mmd)); }
+        public static void DelaySet(SCPI_VISA_Instrument SVI, MMD mmd) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.Command(Enum.GetName(typeof(MMD), mmd));
+        }
 
-        public static void DelaySet(SCPI_VISA_Instrument SVI, Double Seconds) { ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.Command(Seconds); }
+        public static void DelaySet(SCPI_VISA_Instrument SVI, Double Seconds) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.Command(Seconds);
+        }
 
         public static Double DelayGet(SCPI_VISA_Instrument SVI) {
             ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.Query(MINimum, out Double seconds);
@@ -83,10 +96,15 @@ public enum PROPERTY { AmperageAC, AmperageDC, Capacitance, Continuity, Frequenc
         }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            if (TerminalsGet(SVI) == TERMINAL.Front) _ = MessageBox.Show("Please depress Keysight 34461A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            DelaySet(SVI, MMD.DEFault);
-            DelayAutoSet(SVI, true);
+            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Emergency Stop events.
             SCPI99.Initialize(SVI);
+        }
+
+        public static void TerminalsSetRear(SCPI_VISA_Instrument SVI) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            if (TerminalsGet(SVI) == TERMINAL.Front) _ = MessageBox.Show("Please depress Keysight 34461A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.Command(Enum.GetName(typeof(MMD), MMD.DEFault));            
+            ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Command(true);
         }
 
         public static TERMINAL TerminalsGet(SCPI_VISA_Instrument SVI) {

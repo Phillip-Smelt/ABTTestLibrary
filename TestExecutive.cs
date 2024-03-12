@@ -135,7 +135,8 @@ namespace ABT.TestSpace.TestExec {
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
-        public CancellationTokenSource CancelTokenSource { get; private set; } = new CancellationTokenSource();
+        public static CancellationTokenSource CTS_EmergencyStop { get; private set; } = new CancellationTokenSource();
+        public CancellationTokenSource CTS_Cancelled { get; private set; } = new CancellationTokenSource();
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
         private readonly String _serialNumberRegEx = null;
@@ -203,9 +204,10 @@ namespace ABT.TestSpace.TestExec {
 
         private void FormModeRun() {
             ButtonCancelReset(enabled: true);
+            ButtonEmergencyStopReset();
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
-            ButtonEmergencyStop.Enabled = true; // Always enabled.
+            ButtonEmergencyStop.Enabled = true;
             TSMI_System_Diagnostics.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
             TSMI_UUT_ResetStatus.Enabled = false;
@@ -213,9 +215,10 @@ namespace ABT.TestSpace.TestExec {
 
         private void FormModeWait() {
             ButtonCancelReset(enabled: false);
+            ButtonEmergencyStopReset();
             ButtonSelectTests.Enabled = true;
             ButtonStartReset(enabled: ConfigTest != null);
-            ButtonEmergencyStop.Enabled = true; // Always enabled.
+            ButtonEmergencyStop.Enabled = true;
             TSMI_System_Diagnostics.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
             TSMI_UUT_ResetStatus.Enabled = true;
@@ -349,7 +352,7 @@ namespace ABT.TestSpace.TestExec {
         
         #region Form Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            CancelTokenSource.Cancel();
+            CTS_Cancelled.Cancel();
             _cancelled = true;
             ButtonCancel.Text = "Cancelling...";
             ButtonCancel.Enabled = false;
@@ -365,9 +368,9 @@ namespace ABT.TestSpace.TestExec {
                 ButtonCancel.BackColor = SystemColors.Control;
                 ButtonCancel.UseVisualStyleBackColor = true;
             }
-            if (CancelTokenSource.IsCancellationRequested) {
-                CancelTokenSource.Dispose();
-                CancelTokenSource = new CancellationTokenSource();
+            if (CTS_EmergencyStop.IsCancellationRequested) {
+                CTS_EmergencyStop.Dispose();
+                CTS_EmergencyStop = new CancellationTokenSource();
             }
             _cancelled = false;
             ButtonCancel.Text = "Cancel";
@@ -376,7 +379,17 @@ namespace ABT.TestSpace.TestExec {
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             Initialize();
+            CTS_EmergencyStop.Cancel();
+            ButtonEmergencyStop.Enabled = false;
             if (ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
+        }
+
+        private void ButtonEmergencyStopReset() {
+            if (CTS_Cancelled.IsCancellationRequested) {
+                CTS_Cancelled.Dispose();
+                CTS_Cancelled = new CancellationTokenSource();
+            }
+            ButtonEmergencyStop.Enabled = true;
         }
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {

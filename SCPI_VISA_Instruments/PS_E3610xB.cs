@@ -16,6 +16,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public static class PS_E36105B { public const String MODEL = "E36105B"; } // PS_E36105B needed only in class TestExecutive.AppConfig.SCPI_VISA_Instrument.
 
     public static class PS_E3610xB {
+        // NOTE:  All _command_ operations must be preceded by check if an Emergency Stop event occurred.
+        //        - Thus 'if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;'
+        //        - Sole exception are Initialize() methods, which are required to implement Cancel & Emergency Stop events.
+        // NOTE:  All _query_ operations can proceed regardless of Cancel or Emergency Stop request.
         public static Boolean IsPS_E3610xB(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgE3610XB)); }
 
         public const Boolean LoadOrStimulus = true;
@@ -28,6 +32,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void CurrentAmplitudeSet(SCPI_VISA_Instrument SVI, Double AmpsDC) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command(AmpsDC);
         }
 
@@ -37,6 +42,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void CurrentProtectionDelaySet(SCPI_VISA_Instrument SVI, Double DelaySeconds) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.DELay.TIME.Command(DelaySeconds);
             CurrentProtectionStateSet(SVI, STATE.ON);
         }
@@ -46,9 +52,15 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return state;
         }
 
-        public static void CurrentProtectionStateSet(SCPI_VISA_Instrument SVI, STATE State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is STATE.ON)); }
+        public static void CurrentProtectionStateSet(SCPI_VISA_Instrument SVI, STATE State) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.STATe.Command((State is STATE.ON));
+        }
      
-        public static void CurrentProtectionTrippedClear(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.CLEar.Command(); }
+        public static void CurrentProtectionTrippedClear(SCPI_VISA_Instrument SVI) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.CLEar.Command();
+        }
 
         public static Boolean CurrentProtectionTrippedGet(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.CURRent.PROTection.TRIPped.Query(out Boolean tripped);
@@ -69,18 +81,29 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
+            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Emergency Stop events.
             SCPI99.Initialize(SVI);
             ((AgE3610XB)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command();
             ((AgE3610XB)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
         }
 
-        public static void Local(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.LOCal.Command(); }
+        public static void Local(SCPI_VISA_Instrument SVI) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.LOCal.Command();
+        }
 
-        public static void Remote(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.REMote.Command(); }
+        public static void Remote(SCPI_VISA_Instrument SVI) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.REMote.Command();
+        }
 
-        public static void RemoteLock(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.RWLock.Command(); }
+        public static void RemoteLock(SCPI_VISA_Instrument SVI) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            ((AgE3610XB)SVI.Instrument).SCPI.SYSTem.RWLock.Command();
+        }
 
         public static void Set(SCPI_VISA_Instrument SVI, STATE State, Double VoltsDC, Double AmpsDC, SENSE_MODE KelvinSense = SENSE_MODE.INTernal, Double DelaySecondsCurrentProtection = 0, Double DelaySecondsSettling = 0) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
             VoltageProtectionStateSet(SVI, STATE.off);
             CurrentProtectionStateSet(SVI, STATE.off);
             VoltageProtectionTrippedClear(SVI);
@@ -108,6 +131,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void VoltageAmplitudeSet(SCPI_VISA_Instrument SVI, Double VoltsDC) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command(VoltsDC);
         }
 
@@ -117,11 +141,15 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void VoltageProtectionSet(SCPI_VISA_Instrument SVI, Double VoltsDC) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.LEVel.Command(VoltsDC);
             VoltageProtectionStateSet(SVI, STATE.ON);
         }
 
-        public static void VoltageProtectionTrippedClear(SCPI_VISA_Instrument SVI) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.CLEar.Command(); }
+        public static void VoltageProtectionTrippedClear(SCPI_VISA_Instrument SVI) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.CLEar.Command();
+        }
 
         public static Boolean VoltageProtectionTrippedGet(SCPI_VISA_Instrument SVI) {
             ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.TRIPped.Query(out Boolean tripped);
@@ -133,8 +161,14 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return state;
         }
 
-        public static void VoltageProtectionStateSet(SCPI_VISA_Instrument SVI, STATE State) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(State is STATE.ON); }
+        public static void VoltageProtectionStateSet(SCPI_VISA_Instrument SVI, STATE State) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.PROTection.STATe.Command(State is STATE.ON);
+        }
  
-        public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense) { ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense)); }
+        public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense) {
+            if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
+            ((AgE3610XB)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense));
+        }
     }
 }
