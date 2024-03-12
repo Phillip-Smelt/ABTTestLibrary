@@ -350,9 +350,9 @@ namespace ABT.TestSpace.TestExec {
         
         #region Form Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
+            ButtonCancel.Enabled = false;
             CTS_Cancel.Cancel();
             ButtonCancel.Text = "Cancelling...";
-            ButtonCancel.Enabled = false;
             ButtonCancel.UseVisualStyleBackColor = false;
             ButtonCancel.BackColor = Color.Red;
         }
@@ -374,8 +374,8 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonStop_Clicked(Object sender, EventArgs e) {
-            CTS_Stop.Cancel();
             ButtonStop.Enabled = false;
+            CTS_Stop.Cancel();
             if (ButtonCancel.Enabled) ButtonCancel_Clicked(null, null);
             Initialize();
         }
