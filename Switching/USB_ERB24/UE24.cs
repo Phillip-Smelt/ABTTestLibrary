@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
 
@@ -49,6 +50,18 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             };
         }
         #region methods
+
+        public static void Initialize() {
+            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Emergency Stop events.
+            foreach (UE ue in Enum.GetValues(typeof(UE))) {
+                foreach (R r in Enum.GetValues(typeof(R))) {
+                    ErrorInfo errorInfo = _only.USB_ERB24s[ue].DBitOut(DigitalPortType.FirstPortA, (Int32)r, DigitalLogicState.Low);
+                    if (errorInfo.Value != ErrorInfo.ErrorCode.NoErrors) ProcessErrorInfo(_only.USB_ERB24s[ue], errorInfo);
+                }
+            }
+        }
+
+        public static Boolean Initialized() { return Are(C.S.NC); }
 
         #region Is/Are
         public static Boolean Is(UE ue, R r, C.S s) { return Get(ue, r) == s; }

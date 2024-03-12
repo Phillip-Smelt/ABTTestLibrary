@@ -247,13 +247,13 @@ namespace ABT.TestSpace.TestExec {
 
         public virtual void Initialize() {
             if (!ConfigUUT.Simulate) {
-                SCPI99.Reset(SVIs);
-                UE24.Set(C.S.NC);
+                SCPI99.Initialize(SVIs);
+                UE24.Initialize();
             }
         }
 
         public virtual Boolean Initialized() {
-            if (!ConfigUUT.Simulate) { return SCPI99.Are(SVIs, STATE.off) && UE24.Are(C.S.NC); }
+            if (!ConfigUUT.Simulate) { return SCPI99.Initialized(SVIs) && UE24.Initialized(); }
             return false;
         }
 
@@ -378,9 +378,9 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            Initialize();
             CTS_EmergencyStop.Cancel();
             ButtonEmergencyStop.Enabled = false;
+            Initialize();
             if (ButtonCancel.Enabled) ButtonCancel_Clicked(this, null);
         }
 

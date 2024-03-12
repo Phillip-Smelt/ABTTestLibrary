@@ -46,6 +46,17 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value);
         }
 
+        public static Boolean Cleared(SCPI_VISA_Instrument SVI) {
+            new AgSCPI99(SVI.Address).SCPI.ESR.Query(out Int32 esr);
+            return esr == 0;
+        }
+
+        public static Boolean Cleared(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+            Boolean cleared = true;
+            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) cleared &= Cleared(kvp.Value);
+            return cleared;
+        }
+
         public static void Command(SCPI_VISA_Instrument SVI, String SCPI_Command) {
             if (TestExecutive.CTS_EmergencyStop.IsCancellationRequested) return;
             new AgSCPI99(SVI.Address).Transport.Command.Invoke(SCPI_Command);
@@ -82,9 +93,14 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             new AgSCPI99(SVI.Address).SCPI.CLS.Command(); // Clear all event registers & the Status Byte register.
         }
 
-        public static void Initialize(Dictionary<String, SCPI_VISA_Instrument> SVIs) {
+        public static void Initialize(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
             // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Emergency Stop events.
-            foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) Initialize(kvp.Value);
+            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Initialize(kvp.Value);
+        }
+
+        public static Boolean Initialized(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Emergency Stop events.
+            return Are(SVIs, STATE.off) && Cleared(SVIs);
         }
 
         internal static Boolean IsCloseEnough(Double D1, Double D2, Double Delta) { return Math.Abs(D1 - D2) <= Delta; }
