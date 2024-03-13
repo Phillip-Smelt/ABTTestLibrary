@@ -366,9 +366,9 @@ namespace ABT.TestSpace.TestExec {
                 ButtonCancel.BackColor = SystemColors.Control;
                 ButtonCancel.UseVisualStyleBackColor = true;
             }
-            if (CTS_Stop.IsCancellationRequested) {
-                CTS_Stop.Dispose();
-                CTS_Stop = new CancellationTokenSource();
+            if (CTS_Cancel.IsCancellationRequested) {
+                CTS_Cancel.Dispose();
+                CTS_Cancel = new CancellationTokenSource();
             }
             ButtonCancel.Text = "Cancel";
             ButtonCancel.Enabled = enabled;
