@@ -19,10 +19,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
 
     public static class SCPI99 {
-        // NOTE:  All _command_ operations must be preceded by check if a Stop event occurred.
-        //        - Thus 'if (TestExecutive.CTS_Stop.IsCancellationRequested) return;'
-        //        - Sole exception are Initialize() methods, which are required to implement Cancel & Stop events.
-        // NOTE:  All _query_ operations can proceed regardless of Cancel or Stop requests.
         // NOTE:  SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows common functionality.
         // NOTE:  Using this SCPI99 class is sub-optimal when a compatible .Net VISA instrument driver is available:
         //  - The SCPI99 standard is a *small* subset of any modern SCPI VISA instrument's functionality:
@@ -37,12 +33,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         private const Char IDENTITY_SEPARATOR = ',';
 
         public static void Clear(SCPI_VISA_Instrument SVI) {
-            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             new AgSCPI99(SVI.Address).SCPI.CLS.Command();
         }
 
         public static void Clear(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
-            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value);
         }
 
@@ -58,7 +52,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void Command(SCPI_VISA_Instrument SVI, String SCPI_Command) {
-            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             new AgSCPI99(SVI.Address).Transport.Command.Invoke(SCPI_Command);
         }
 
@@ -88,18 +81,15 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static String IdentityGet(String Address, SCPI_IDENTITY Property) { return IdentityGet(Address).Split(IDENTITY_SEPARATOR)[(Int32)Property]; }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Stop events.
-            new AgSCPI99(SVI.Address).SCPI.RST.Command(); // Reset SVI to default power-on states.
-            new AgSCPI99(SVI.Address).SCPI.CLS.Command(); // Clear all event registers & the Status Byte register.
+            Reset(SVI); // Reset SVI to default power-on states.
+            Clear(SVI); // Clear all event registers & the Status Byte register.
         }
 
         public static void Initialize(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
-            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Stop events.
             foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Initialize(kvp.Value);
         }
 
         public static Boolean Initialized(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
-            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Stop events.
             return Are(SVIs, STATE.off) && Cleared(SVIs);
         }
 
@@ -107,17 +97,14 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         // Close is good enough for horseshoes, hand grenades, nuclear weapons, and Doubles!  Shamelessly plagiarized from the Internet!
 
         public static void Reset(SCPI_VISA_Instrument SVI) {
-            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Stop events.
-            new AgSCPI99(SVI.Address).SCPI.RST.Command();
+             new AgSCPI99(SVI.Address).SCPI.RST.Command();
         }
 
         public static void Reset(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
-            // NOTE:  Initialize() method & its dependent methods must always be executable, to accomodate Cancel & Stop events.
             foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Reset(kvp.Value);
         }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
-            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             try {
                 Initialize(SVI);
                 new AgSCPI99(SVI.Address).SCPI.TST.Query(out Int32 selfTestResult);
@@ -131,12 +118,10 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void SelfTest(Dictionary<String, SCPI_VISA_Instrument> SVIs) {
-            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value);
         }
 
         public static void Set(SCPI_VISA_Instrument SVI, STATE State) {
-            if (TestExecutive.CTS_Stop.IsCancellationRequested) return;
             if(!Is(SVI, State)) Command(SVI, (State is STATE.off) ? ":OUTPUT 0" : ":OUTPUT 1");
         }
 
