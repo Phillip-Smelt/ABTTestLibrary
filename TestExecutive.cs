@@ -136,8 +136,8 @@ namespace ABT.TestSpace.TestExec {
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
-        public static CancellationTokenSource CTS_Stop { get; private set; } = new CancellationTokenSource();
-        public CancellationTokenSource CTS_Cancel { get; private set; } = new CancellationTokenSource();
+        public static CancellationTokenSource CTS_Stop { get; private set; }
+        public CancellationTokenSource CTS_Cancel { get; private set; }
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
         private readonly String _serialNumberRegEx = null;
@@ -150,7 +150,7 @@ namespace ABT.TestSpace.TestExec {
         protected TestExecutive(Icon icon) {
             InitializeComponent();
             Icon = icon;
-            // https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
+            // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
 
             if (String.Equals(ConfigUUT.SerialNumberRegExCustom, NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(GlobalConfigurationFile).Element("SerialNumberRegExDefault").Value;
             else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
@@ -165,6 +165,11 @@ namespace ABT.TestSpace.TestExec {
 
             _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
             ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
+            _statusTime.Elapsed += StatusTimeUpdate;
+            _statusTime.AutoReset = true;
+            CTS_Cancel = new CancellationTokenSource();
+            CTS_Stop = new CancellationTokenSource();
+            CTS_Stop.Token.Register(Initialize);
 
             if (!ConfigUUT.Simulate) {
                 SVIs = SCPI_VISA_Instrument.Get();
@@ -172,9 +177,6 @@ namespace ABT.TestSpace.TestExec {
                 UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
                 UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
             }
-
-            _statusTime.Elapsed += StatusTimeUpdate;
-            _statusTime.AutoReset = true;
         }
 
         #region Form Miscellaneous
@@ -244,15 +246,14 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public virtual void Initialize() {
-            if (!ConfigUUT.Simulate) {
-                SCPI99.Initialize(SVIs);
-                UE24.Initialize();
-            }
+            if (ConfigUUT.Simulate) return;
+            SCPI99.Initialize(SVIs);
+            UE24.Initialize();
         }
 
         public virtual Boolean Initialized() {
-            if (!ConfigUUT.Simulate) { return SCPI99.Initialized(SVIs) && UE24.Initialized(); }
-            return false;
+            if (ConfigUUT.Simulate) return true;
+            return SCPI99.Initialized(SVIs) && UE24.Initialized();
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -351,10 +352,10 @@ namespace ABT.TestSpace.TestExec {
         #region Form Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             ButtonCancel.Enabled = false;
-            CTS_Cancel.Cancel();
             ButtonCancel.Text = "Cancelling...";
             ButtonCancel.UseVisualStyleBackColor = false;
             ButtonCancel.BackColor = Color.Red;
+            CTS_Cancel.Cancel();
         }
 
         private void ButtonCancelReset(Boolean enabled) {
@@ -377,13 +378,13 @@ namespace ABT.TestSpace.TestExec {
             ButtonStop.Enabled = false;
             CTS_Stop.Cancel();
             if (ButtonCancel.Enabled) ButtonCancel_Clicked(null, null);
-            Initialize();
         }
 
         private void ButtonStopReset(Boolean enabled) {
             if (CTS_Stop.IsCancellationRequested) {
                 CTS_Stop.Dispose();
                 CTS_Stop = new CancellationTokenSource();
+                CTS_Stop.Token.Register(Initialize);
             }
             ButtonStop.Enabled = enabled;
         }
