@@ -353,6 +353,7 @@ namespace ABT.TestSpace.TestExec {
             ButtonCancel.Text = "Cancelling...";
             ButtonCancel.UseVisualStyleBackColor = false;
             ButtonCancel.BackColor = Color.Red;
+            ButtonCancel.Refresh();
             CTS_Cancel.Cancel();
         }
 
@@ -364,6 +365,7 @@ namespace ABT.TestSpace.TestExec {
                 ButtonCancel.BackColor = SystemColors.Control;
                 ButtonCancel.UseVisualStyleBackColor = true;
             }
+            ButtonCancel.Refresh();
             if (CTS_Cancel.IsCancellationRequested) {
                 CTS_Cancel.Dispose();
                 CTS_Cancel = new CancellationTokenSource();
@@ -513,10 +515,12 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_DiagnosticsSCPI_VISA_Instruments_Click(Object sender, EventArgs e) {
             try {
                 UseWaitCursor = true;
+                System.Windows.Forms.Application.DoEvents();
                 SCPI99.SelfTest(SVIs);
                 _ = MessageBox.Show("Self-Tests passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             } finally {
                 UseWaitCursor = false;
+                System.Windows.Forms.Application.DoEvents();
             }
         }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
