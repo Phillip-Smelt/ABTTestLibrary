@@ -511,8 +511,13 @@ namespace ABT.TestSpace.TestExec {
             if (saveFileDialog.ShowDialog() == DialogResult.OK)  rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
         private void TSMI_System_DiagnosticsSCPI_VISA_Instruments_Click(Object sender, EventArgs e) {
-            SCPI99.SelfTest(SVIs);
-            _ = MessageBox.Show("Self-Tests passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try {
+                UseWaitCursor = true;
+                SCPI99.SelfTest(SVIs);
+                _ = MessageBox.Show("Self-Tests passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            } finally {
+                UseWaitCursor = false;
+            }
         }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
