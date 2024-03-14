@@ -132,6 +132,7 @@ namespace ABT.TestSpace.TestExec {
         public const String GlobalTestExecutor = @"Global\TestExecutor";
         public static Mutex GlobalTestExecutorMutex = null;
         public const String NONE = "NONE";
+        public const String EMERGENCY_STOPPED = "Emergency Stopped!";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
@@ -377,7 +378,7 @@ namespace ABT.TestSpace.TestExec {
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             ButtonEmergencyStop.Enabled = false;
             CTS_EmergencyStop.Cancel();
-            throw new OperationCanceledException("Emergency Stopped!");
+            throw new OperationCanceledException(EMERGENCY_STOPPED);
         }
 
         private void ButtonEmergencyStopReset(Boolean enabled) {
