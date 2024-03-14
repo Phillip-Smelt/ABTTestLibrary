@@ -31,7 +31,7 @@ namespace ABT.TestSpace.TestExec {
             this.LabelTestEvent = new System.Windows.Forms.Label();
             this.rtfResults = new System.Windows.Forms.RichTextBox();
             this.ButtonSelectTests = new System.Windows.Forms.Button();
-            this.ButtonStop = new System.Windows.Forms.Button();
+            this.ButtonEmergencyStop = new System.Windows.Forms.Button();
             this.MS = new System.Windows.Forms.MenuStrip();
             this.TSMI_File = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_File_Save = new System.Windows.Forms.ToolStripMenuItem();
@@ -168,17 +168,18 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonSelectTests.UseVisualStyleBackColor = true;
             this.ButtonSelectTests.Click += new System.EventHandler(this.ButtonSelectTests_Click);
             // 
-            // ButtonStop
+            // ButtonEmergencyStop
             // 
-            this.ButtonStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonStop.Image = global::ABT.TestSpace.Properties.Resources.Stop;
-            this.ButtonStop.Location = new System.Drawing.Point(1254, 648);
-            this.ButtonStop.Margin = new System.Windows.Forms.Padding(4);
-            this.ButtonStop.Name = "ButtonStop";
-            this.ButtonStop.Size = new System.Drawing.Size(110, 102);
-            this.ButtonStop.TabIndex = 5;
-            this.ButtonStop.UseVisualStyleBackColor = true;
-            this.ButtonStop.Click += new System.EventHandler(this.ButtonStop_Clicked);
+            this.ButtonEmergencyStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonEmergencyStop.Image = global::ABT.TestSpace.Properties.Resources.EmergencyStop;
+            this.ButtonEmergencyStop.Location = new System.Drawing.Point(1254, 648);
+            this.ButtonEmergencyStop.Margin = new System.Windows.Forms.Padding(4);
+            this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";
+            this.ButtonEmergencyStop.Size = new System.Drawing.Size(110, 102);
+            this.ButtonEmergencyStop.TabIndex = 5;
+            this.ButtonEmergencyStop.Text = "&Emergency Stop";
+            this.ButtonEmergencyStop.UseVisualStyleBackColor = true;
+            this.ButtonEmergencyStop.Click += new System.EventHandler(this.ButtonEmergencyStop_Clicked);
             // 
             // MS
             // 
@@ -646,7 +647,7 @@ namespace ABT.TestSpace.TestExec {
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1393, 784);
             this.Controls.Add(this.StatusStrip);
-            this.Controls.Add(this.ButtonStop);
+            this.Controls.Add(this.ButtonEmergencyStop);
             this.Controls.Add(this.ButtonSelectTests);
             this.Controls.Add(this.rtfResults);
             this.Controls.Add(this.LabelTestEvent);
@@ -677,7 +678,7 @@ namespace ABT.TestSpace.TestExec {
         private System.Windows.Forms.Label LabelTestEvent;
         private System.Windows.Forms.RichTextBox rtfResults;
         private System.Windows.Forms.Button ButtonSelectTests;
-        private Button ButtonStop;
+        private Button ButtonEmergencyStop;
         private MenuStrip MS;
         private ToolStripMenuItem TSMI_File;
         private ToolStripMenuItem TSMI_File_Save;

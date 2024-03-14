@@ -199,7 +199,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <Content Include="Resources\Amphenol.ico" />
-    <Content Include="Resources\Stop.png" />
+    <Content Include="Resources\EmergencyStop.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestExecutive.config.xml" />
   </ItemGroup>
   <ItemGroup>

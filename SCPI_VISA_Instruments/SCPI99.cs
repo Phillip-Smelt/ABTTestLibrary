@@ -86,7 +86,8 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void Initialize(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
-            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Initialize(kvp.Value);
+            Reset(SVIs); // Invoking Reset(SVIs) first ensures all SCPI_VISA_Instruments are reset as quickly as possible, handy for Emergency Stopping.
+            Clear(SVIs); 
         }
 
         public static Boolean Initialized(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
@@ -105,20 +106,22 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         }
 
         public static void SelfTest(SCPI_VISA_Instrument SVI) {
+            Int32 selfTestResult = 0;
             try {
-                Initialize(SVI);
-                new AgSCPI99(SVI.Address).SCPI.TST.Query(out Int32 selfTestResult);
-                if (selfTestResult != 0) throw new InvalidOperationException($"Self Test returned result '{selfTestResult}'.");
+                Reset(SVI);
+                new AgSCPI99(SVI.Address).SCPI.TST.Query(out selfTestResult);
             } catch (Exception e) {
                 throw new InvalidOperationException(ErrorMessageGet(SVI, e.ToString()));
                 // If unpowered, throws a Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
-                // which requires a seemingly unavailable Keysight library to explicitly Assert for in MS Unit Test.
+                // which requires an apparently unavailable Keysight library to explicitly Assert for in MS Unit Test.
                 // Instead catch Exception and re-throw as InvalidOperationException, which MS Test can explicitly Assert for.
+            } finally {
+                if (selfTestResult != 0) throw new InvalidOperationException(ErrorMessageGet(SVI, $"SCPI VISA Instrument Address '{SVI.Address}' returned Self Test result '{selfTestResult}'{Environment.NewLine}."));
             }
         }
 
-        public static void SelfTest(Dictionary<String, SCPI_VISA_Instrument> SVIs) {
-            foreach (KeyValuePair<String, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value);
+        public static void SelfTest(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value);
         }
 
         public static void Set(SCPI_VISA_Instrument SVI, STATE State) {

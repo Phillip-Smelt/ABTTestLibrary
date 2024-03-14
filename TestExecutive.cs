@@ -136,7 +136,7 @@ namespace ABT.TestSpace.TestExec {
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
-        public static CancellationTokenSource CTS_Stop { get; private set; }
+        public CancellationTokenSource CTS_EmergencyStop { get; private set; }
         public CancellationTokenSource CTS_Cancel { get; private set; }
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
@@ -168,8 +168,8 @@ namespace ABT.TestSpace.TestExec {
             _statusTime.Elapsed += StatusTimeUpdate;
             _statusTime.AutoReset = true;
             CTS_Cancel = new CancellationTokenSource();
-            CTS_Stop = new CancellationTokenSource();
-            CTS_Stop.Token.Register(Initialize);
+            CTS_EmergencyStop = new CancellationTokenSource();
+            CTS_EmergencyStop.Token.Register(Initialize);
 
             if (!ConfigUUT.Simulate) {
                 SVIs = SCPI_VISA_Instrument.Get();
@@ -206,7 +206,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void FormModeRun() {
             ButtonCancelReset(enabled: true);
-            ButtonStopReset(enabled: true);
+            ButtonEmergencyStopReset(enabled: true);
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
             TSMI_System_Diagnostics.Enabled = false;
@@ -216,7 +216,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void FormModeWait() {
             ButtonCancelReset(enabled: false);
-            ButtonStopReset(enabled: false);
+            ButtonEmergencyStopReset(enabled: false);
             ButtonSelectTests.Enabled = true;
             ButtonStartReset(enabled: ConfigTest != null);
             TSMI_System_Diagnostics.Enabled = true;
@@ -374,19 +374,19 @@ namespace ABT.TestSpace.TestExec {
             ButtonCancel.Enabled = enabled;
         }
 
-        private void ButtonStop_Clicked(Object sender, EventArgs e) {
-            ButtonStop.Enabled = false;
-            CTS_Stop.Cancel();
-            if (ButtonCancel.Enabled) ButtonCancel_Clicked(null, null);
+        private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
+            ButtonEmergencyStop.Enabled = false;
+            CTS_EmergencyStop.Cancel();
+            throw new OperationCanceledException("Emergency Stopped!");
         }
 
-        private void ButtonStopReset(Boolean enabled) {
-            if (CTS_Stop.IsCancellationRequested) {
-                CTS_Stop.Dispose();
-                CTS_Stop = new CancellationTokenSource();
-                CTS_Stop.Token.Register(Initialize);
+        private void ButtonEmergencyStopReset(Boolean enabled) {
+            if (CTS_EmergencyStop.IsCancellationRequested) {
+                CTS_EmergencyStop.Dispose();
+                CTS_EmergencyStop = new CancellationTokenSource();
+                CTS_EmergencyStop.Token.Register(Initialize);
             }
-            ButtonStop.Enabled = enabled;
+            ButtonEmergencyStop.Enabled = enabled;
         }
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
@@ -521,8 +521,8 @@ namespace ABT.TestSpace.TestExec {
             if (saveFileDialog.ShowDialog() == DialogResult.OK)  rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
         private void TSMI_System_DiagnosticsSCPI_VISA_Instruments_Click(Object sender, EventArgs e) {
-            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) SCPI99.SelfTest(kvp.Value);
-            _ = MessageBox.Show("If you didn't receive an InvalidOperationException, SCPI VISA Instruments passed their self-tests.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SCPI99.SelfTest(SVIs);
+            _ = MessageBox.Show("Self-Tests passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
@@ -609,7 +609,7 @@ namespace ABT.TestSpace.TestExec {
                     } finally {
                         Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
                     }
-                    if (CTS_Cancel.IsCancellationRequested || CTS_Stop.IsCancellationRequested) {
+                    if (CTS_Cancel.IsCancellationRequested || CTS_EmergencyStop.IsCancellationRequested) {
                         ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
                         return;
                     }
