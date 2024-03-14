@@ -374,8 +374,8 @@ namespace ABT.TestSpace.TestExec {
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             ButtonEmergencyStop.Enabled = false;
-            SCPI99.Reset(SVIs);
             if (ButtonCancel.Enabled) ButtonCancel_Clicked(null, null);
+            SCPI99.Reset(SVIs);
             MeasurementsPostRun();
             FormModeWait();
         }
