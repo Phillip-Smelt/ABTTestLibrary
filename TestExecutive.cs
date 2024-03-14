@@ -137,7 +137,6 @@ namespace ABT.TestSpace.TestExec {
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
-        public CancellationTokenSource CTS_EmergencyStop { get; private set; }
         public CancellationTokenSource CTS_Cancel { get; private set; }
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
@@ -169,8 +168,6 @@ namespace ABT.TestSpace.TestExec {
             _statusTime.Elapsed += StatusTimeUpdate;
             _statusTime.AutoReset = true;
             CTS_Cancel = new CancellationTokenSource();
-            CTS_EmergencyStop = new CancellationTokenSource();
-            CTS_EmergencyStop.Token.Register(Initialize);
 
             if (!ConfigUUT.Simulate) {
                 SVIs = SCPI_VISA_Instrument.Get();
@@ -207,7 +204,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void FormModeRun() {
             ButtonCancelReset(enabled: true);
-            ButtonEmergencyStopReset(enabled: true);
+            ButtonEmergencyStop.Enabled = true;
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
             TSMI_System_Diagnostics.Enabled = false;
@@ -217,7 +214,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void FormModeWait() {
             ButtonCancelReset(enabled: false);
-            ButtonEmergencyStopReset(enabled: false);
+            ButtonEmergencyStop.Enabled = false;
             ButtonSelectTests.Enabled = true;
             ButtonStartReset(enabled: ConfigTest != null);
             TSMI_System_Diagnostics.Enabled = true;
@@ -377,17 +374,9 @@ namespace ABT.TestSpace.TestExec {
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             ButtonEmergencyStop.Enabled = false;
-            CTS_EmergencyStop.Cancel();
-            throw new OperationCanceledException(EMERGENCY_STOPPED);
-        }
-
-        private void ButtonEmergencyStopReset(Boolean enabled) {
-            if (CTS_EmergencyStop.IsCancellationRequested) {
-                CTS_EmergencyStop.Dispose();
-                CTS_EmergencyStop = new CancellationTokenSource();
-                CTS_EmergencyStop.Token.Register(Initialize);
-            }
-            ButtonEmergencyStop.Enabled = enabled;
+            SCPI99.Reset(SVIs);
+            MeasurementsPostRun();
+            FormModeWait();
         }
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
@@ -610,7 +599,7 @@ namespace ABT.TestSpace.TestExec {
                     } finally {
                         Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
                     }
-                    if (CTS_Cancel.IsCancellationRequested || CTS_EmergencyStop.IsCancellationRequested) {
+                    if (CTS_Cancel.IsCancellationRequested) {
                         ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
                         return;
                     }
