@@ -374,10 +374,8 @@ namespace ABT.TestSpace.TestExec {
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             ButtonEmergencyStop.Enabled = false;
-            if (ButtonCancel.Enabled) ButtonCancel_Clicked(null, null);
+            ButtonCancel_Clicked(null, null);
             SCPI99.Reset(SVIs);
-            MeasurementsPostRun();
-            FormModeWait();
         }
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
@@ -515,9 +513,11 @@ namespace ABT.TestSpace.TestExec {
             try {
                 UseWaitCursor = true;
                 SCPI99.SelfTest(SVIs);
-                _ = MessageBox.Show("Self-Tests passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _ = MessageBox.Show(ActiveForm, "Self-Tests passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             } catch (Exception ex) {
-
+                _ = MessageBox.Show(ActiveForm, $"Self-Tests failed:{Environment.NewLine}" +
+                    $"{ex.Message}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ErrorMessage(ex.Message);
             } finally {
                 UseWaitCursor = false;
             }
