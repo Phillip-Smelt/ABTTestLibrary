@@ -516,6 +516,8 @@ namespace ABT.TestSpace.TestExec {
                 UseWaitCursor = true;
                 SCPI99.SelfTest(SVIs);
                 _ = MessageBox.Show("Self-Tests passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            } catch (Exception ex) {
+
             } finally {
                 UseWaitCursor = false;
             }
