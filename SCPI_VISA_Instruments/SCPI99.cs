@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 // All Agilent.CommandExpert.ScpiNet drivers are procured by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
@@ -105,23 +106,40 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Reset(kvp.Value);
         }
 
-        public static void SelfTest(SCPI_VISA_Instrument SVI) {
-            Int32 selfTestResult = 0;
-            try {
-                Reset(SVI);
-                new AgSCPI99(SVI.Address).SCPI.TST.Query(out selfTestResult);
-            } catch (Exception e) {
-                throw new InvalidOperationException(ErrorMessageGet(SVI, e.ToString()));
-                // If unpowered, throws a Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
-                // which requires an apparently unavailable Keysight library to explicitly Assert for in MS Unit Test.
-                // Instead catch Exception and re-throw as InvalidOperationException, which MS Test can explicitly Assert for.
-            } finally {
-                if (selfTestResult != 0) throw new InvalidOperationException(ErrorMessageGet(SVI, $"SCPI VISA Instrument Address '{SVI.Address}' returned Self Test result '{selfTestResult}'{Environment.NewLine}."));
-            }
+        public static Int32 SelfTest(SCPI_VISA_Instrument SVI) {
+            new AgSCPI99(SVI.Address).SCPI.TST.Query(out Int32 selfTestResult);
+            return selfTestResult; // 0 == passed, 1 == failed.
         }
 
-        public static void SelfTest(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
-            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) SelfTest(kvp.Value);
+        public static Int32 SelfTestFailures(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+            Int32 selfTestFailures = 0;
+            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) selfTestFailures += SelfTest(kvp.Value);
+            return selfTestFailures;
+        }
+
+        public static Boolean SelfTestPassed(SCPI_VISA_Instrument SVI) {
+            Int32 selfTestResult;
+            try {
+                selfTestResult = SelfTest(SVI);
+            } catch {
+                _ = MessageBox.Show($"SCPI VISA Instrument likely unpowered or not communicating:{Environment.NewLine}" +
+                    $"{SCPI_VISA_Instrument.GetInfo(SVI)}{Environment.NewLine}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // If unpowered, SelfTest throws a Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
+                // which requires an apparently unavailable Keysight library to explicitly catch.
+                return false;
+            }
+            if (selfTestResult == 1) {
+                _ = MessageBox.Show($"SCPI VISA Instrument failed self-test:{Environment.NewLine}" +
+                    $"{SCPI_VISA_Instrument.GetInfo(SVI)}{Environment.NewLine}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true; // selfTestResult == 0.
+        }
+
+        public static Boolean SelfTestsPassed(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+            Boolean selfTestsPassed = true;
+            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) selfTestsPassed &= SelfTestPassed(kvp.Value);
+            return selfTestsPassed;
         }
 
         public static void Set(SCPI_VISA_Instrument SVI, STATE State) {

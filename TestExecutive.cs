@@ -129,8 +129,8 @@ namespace ABT.TestSpace.TestExec {
 /// </summary>
     public abstract partial class TestExecutive : Form {
         public const String GlobalConfigurationFile = @"C:\Program Files\ABT\TestExecutive\TestExecutive.config.xml"; // NOTE:  Update this path if installed into another folder.
-        public const String GlobalTestExecutor = @"Global\TestExecutor";
-        public static Mutex GlobalTestExecutorMutex = null;
+        public const String MutexTestExecutorName = "MutexTestExecutor";
+        public static Mutex MutexTestExecutor = null;
         public const String NONE = "NONE";
         public const String EMERGENCY_STOPPED = "Emergency Stopped!";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
@@ -291,8 +291,8 @@ namespace ABT.TestSpace.TestExec {
         private void PreApplicationExit() {
             Initialize();
             if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
-            GlobalTestExecutorMutex.ReleaseMutex();
-            GlobalTestExecutorMutex.Dispose();
+            MutexTestExecutor.ReleaseMutex();
+            MutexTestExecutor.Dispose();
         }
 
         public static Boolean RegexInvalid(String RegularExpression) {
@@ -510,17 +510,9 @@ namespace ABT.TestSpace.TestExec {
             if (saveFileDialog.ShowDialog() == DialogResult.OK)  rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
         private void TSMI_System_DiagnosticsSCPI_VISA_Instruments_Click(Object sender, EventArgs e) {
-            try {
-                UseWaitCursor = true;
-                SCPI99.SelfTest(SVIs);
-                _ = MessageBox.Show(ActiveForm, "Self-Tests passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            } catch (Exception ex) {
-                _ = MessageBox.Show(ActiveForm, $"Self-Tests failed:{Environment.NewLine}" +
-                    $"{ex.Message}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ErrorMessage(ex.Message);
-            } finally {
-                UseWaitCursor = false;
-            }
+            UseWaitCursor = true;
+            if(SCPI99.SelfTestsPassed(SVIs)) _ = MessageBox.Show(ActiveForm, "Self-Tests passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UseWaitCursor = false;
         }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
