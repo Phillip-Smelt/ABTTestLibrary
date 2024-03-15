@@ -122,13 +122,17 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             try {
                 selfTestResult = SelfTest(SVI);
             } catch {
-                _ = MessageBox.Show($"'{SVI.Description}' likely unpowered or not communicating:{Environment.NewLine}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _ = MessageBox.Show($"Likely unpowered or not communicating:{Environment.NewLine}" +
+                    $"   Instrument:'{SVI.Description}'.{Environment.NewLine}" +
+                    $"   Address   : '{SVI.Address}'.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 // If unpowered, SelfTest throws a Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
                 // which requires an apparently unavailable Keysight library to explicitly catch.
                 return false;
             }
             if (selfTestResult == 1) {
-                _ = MessageBox.Show($"'{SVI.Description}' failed self-test:{Environment.NewLine}{Environment.NewLine}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _ = MessageBox.Show($"Failed Self-Test:{Environment.NewLine}" +
+                    $"   Instrument:'{SVI.Description}'.{Environment.NewLine}" +
+                    $"   Address   : '{SVI.Address}'.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             return true; // selfTestResult == 0.
