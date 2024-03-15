@@ -245,13 +245,22 @@ namespace ABT.TestSpace.TestExec {
 
         public virtual void Initialize() {
             if (ConfigUUT.Simulate) return;
-            SCPI99.Initialize(SVIs);
-            UE24.Initialize();
+            try {
+                SCPI99.Initialize(SVIs);
+                UE24.Initialize();
+            } catch (Exception e) {
+                ErrorMessage(e);
+            }
         }
 
         public virtual Boolean Initialized() {
             if (ConfigUUT.Simulate) return true;
-            return SCPI99.Initialized(SVIs) && UE24.Initialized();
+            try {
+                return SCPI99.Initialized(SVIs) && UE24.Initialized();
+            } catch (Exception e) {
+                ErrorMessage(e);
+                return false;
+            }
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -511,7 +520,7 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_System_DiagnosticsSCPI_VISA_Instruments_Click(Object sender, EventArgs e) {
             UseWaitCursor = true;
-            if(SCPI99.SelfTestsPassed(SVIs)) _ = MessageBox.Show(ActiveForm, "Self-Tests passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if(SCPI99.SelfTestsPassed(ActiveForm, SVIs)) _ = MessageBox.Show(ActiveForm, "SCPI VISA Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             UseWaitCursor = false;
         }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }

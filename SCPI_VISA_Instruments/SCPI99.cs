@@ -117,26 +117,26 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
             return selfTestFailures;
         }
 
-        public static Boolean SelfTestPassed(SCPI_VISA_Instrument SVI) {
+        public static Boolean SelfTestPassed(Form CurrentForm, SCPI_VISA_Instrument SVI) {
             Int32 selfTestResult;
             try {
                 selfTestResult = SelfTest(SVI);
             } catch (Exception) {
-                _ = MessageBox.Show($"Instrument:'{SVI.Description}' Address: '{SVI.Address}' likely unpowered or not communicating.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _ = MessageBox.Show(CurrentForm, $"Instrument:'{SVI.Description}'{Environment.NewLine}Address: '{SVI.Address}'{Environment.NewLine}likely unpowered or not communicating.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 // If unpowered, SelfTest throws a Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
                 // which requires an apparently unavailable Keysight library to explicitly catch.
                 return false;
             }
             if (selfTestResult == 1) {
-                _ = MessageBox.Show($"Instrument:'{SVI.Description}' Address: '{SVI.Address}' Failed Self-Test.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _ = MessageBox.Show(CurrentForm, $"Instrument:'{SVI.Description}'{Environment.NewLine}Address: '{SVI.Address}'{Environment.NewLine}failed Self-Test.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             return true; // selfTestResult == 0.
         }
 
-        public static Boolean SelfTestsPassed(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+        public static Boolean SelfTestsPassed(Form CurrentForm, Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
             Boolean selfTestsPassed = true;
-            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) selfTestsPassed &= SelfTestPassed(kvp.Value);
+            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) selfTestsPassed &= SelfTestPassed(CurrentForm, kvp.Value);
             return selfTestsPassed;
         }
 
