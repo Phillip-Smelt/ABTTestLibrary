@@ -244,7 +244,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public static AppConfigTest Get() { return new AppConfigTest(); }
 
         public String StatusTests() {
-            const String separator = "       ";
+            const String separator = "     ";
             StringBuilder sb = new StringBuilder();
             sb.Append($"{separator}Tested: {Statistics.Tested()}");
             sb.Append($"{separator}Cancelled: {Statistics.Cancelled}");
@@ -255,7 +255,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             return sb.ToString();
         }
 
-        public String StatusTime() { return $"   Elapsed: {Statistics.Elapsed()}"; }
+        public String StatusTime() { return $"   Time: {Statistics.Time()}"; }
     }
 
     public class Statistics {
@@ -288,7 +288,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             }
         }
 
-        public String Elapsed() {
+        public String Time() {
             TimeSpan elapsedTime = DateTime.Now - TestSelected;
             return $"{(elapsedTime.Days != 0 ? elapsedTime.Days.ToString() + ":" : String.Empty)}{elapsedTime.Hours}:{elapsedTime.Minutes:00}";
         }

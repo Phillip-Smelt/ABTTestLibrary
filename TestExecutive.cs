@@ -69,64 +69,64 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 //        - FYI, synchronizing with TestExecutor's repository doesn't error out, as it doesn't utilize a Git server.
 
 namespace ABT.TestSpace.TestExec {
-/// <remarks>
-///  <b>References:</b>
-/// <item>
-///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestExecutive">TestExecutive</a></description>
-///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestExecutor">TestExecutor</a></description>
-///  </item>
-///  </remarks>
-/// <summary>
-/// NOTE:  Test Developer is responsible for ensuring Measurements can be both safely &amp; correctly called in sequence defined in App.config:
-/// <para>
-///        - That is, if Measurements execute sequentially as (M1, M2, M3, M4, M5), Test Developer is responsible for ensuring all equipment is
-///          configured safely &amp; correctly between each Measurement step.
-///          - If:
-///            - M1 is unpowered Shorts &amp; Opens measurements.
-///            - M2 is powered voltage measurements.
-///            - M3 begins with unpowered operator cable connections/disconnections for In-System Programming.
-///          - Then Test Developer must ensure necessary equipment state transitions are implemented so test operator isn't
-///            plugging/unplugging a powered UUT in T03.
-/// </para>
-/// </summary>
-/// 
-/// <summary>
-/// NOTE:  Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
-/// <para>
-/// A) Spontaneous Operator Initiated Cancellations:
-///      1)  Operator Proactive:
-///          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
-///            cancel currently executing Measurement.
-///          - Requires TestExecutor implementation by the Test Developer, but is initiated by Operator, so categorized as such.
-///          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
-///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
-///          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
-///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
-///      2)  Operator Reactive:
-///          - TestExecutive's already implemented, always available &amp; default reactive "Cancel before next Test" technique,
-///            which simply invokes CTS_Cancel.Cancel().
-///          - CTS_Cancel.IsCancellationRequested is checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
-///            - If true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation.
-///            prior to the next Measurement's execution.
-///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
-/// B) PrePlanned Developer Programmed Cancellations:
-///      3)  TestExecutor/Test Developer initiated Cancellations:
-///          - Any TestExecutor's Measurement can initiate a Cancellation programmatically by simply throwing a CancellationException:
-///          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
-///            or simply because futher execution is pointless.
-///          - Simply throw a CancellationException if the specific condition(s) occcur.
-///      4)  App.config's CancelNotPassed:
-///          - App.config's TestMeasurement element has a Boolean "CancelNotPassed" field:
-///          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return TestEvents.PASS,
-///            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
-///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
-///
-/// NOTE:  The Operator Proactive &amp; TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
-///        thrown CancellationExceptions.
-/// NOTE:  The Operator Reactive &amp; App.config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
-///        inside the TestExecutive.MeasurementsRun() loop.
-/// </para>
-/// </summary>
+    /// <remarks>
+    ///  <b>References:</b>
+    /// <item>
+    ///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestExecutive">TestExecutive</a></description>
+    ///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestExecutor">TestExecutor</a></description>
+    ///  </item>
+    ///  </remarks>
+    /// <summary>
+    /// NOTE:  Test Developer is responsible for ensuring Measurements can be both safely &amp; correctly called in sequence defined in App.config:
+    /// <para>
+    ///        - That is, if Measurements execute sequentially as (M1, M2, M3, M4, M5), Test Developer is responsible for ensuring all equipment is
+    ///          configured safely &amp; correctly between each Measurement step.
+    ///          - If:
+    ///            - M1 is unpowered Shorts &amp; Opens measurements.
+    ///            - M2 is powered voltage measurements.
+    ///            - M3 begins with unpowered operator cable connections/disconnections for In-System Programming.
+    ///          - Then Test Developer must ensure necessary equipment state transitions are implemented so test operator isn't
+    ///            plugging/unplugging a powered UUT in T03.
+    /// </para>
+    /// </summary>
+    /// 
+    /// <summary>
+    /// NOTE:  Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
+    /// <para>
+    /// A) Spontaneous Operator Initiated Cancellations:
+    ///      1)  Operator Proactive:
+    ///          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
+    ///            cancel currently executing Measurement.
+    ///          - Requires TestExecutor implementation by the Test Developer, but is initiated by Operator, so categorized as such.
+    ///          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
+    ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
+    ///          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
+    ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
+    ///      2)  Operator Reactive:
+    ///          - TestExecutive's already implemented, always available &amp; default reactive "Cancel before next Test" technique,
+    ///            which simply invokes CTS_Cancel.Cancel().
+    ///          - CTS_Cancel.IsCancellationRequested is checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
+    ///            - If true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation.
+    ///            prior to the next Measurement's execution.
+    ///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
+    /// B) PrePlanned Developer Programmed Cancellations:
+    ///      3)  TestExecutor/Test Developer initiated Cancellations:
+    ///          - Any TestExecutor's Measurement can initiate a Cancellation programmatically by simply throwing a CancellationException:
+    ///          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
+    ///            or simply because futher execution is pointless.
+    ///          - Simply throw a CancellationException if the specific condition(s) occcur.
+    ///      4)  App.config's CancelNotPassed:
+    ///          - App.config's TestMeasurement element has a Boolean "CancelNotPassed" field:
+    ///          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return TestEvents.PASS,
+    ///            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
+    ///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
+    ///
+    /// NOTE:  The Operator Proactive &amp; TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
+    ///        thrown CancellationExceptions.
+    /// NOTE:  The Operator Reactive &amp; App.config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
+    ///        inside the TestExecutive.MeasurementsRun() loop.
+    /// </para>
+    /// </summary>
     public abstract partial class TestExecutive : Form {
         public const String GlobalConfigurationFile = @"C:\Program Files\ABT\TestExecutive\TestExecutive.config.xml"; // NOTE:  Update this path if installed into another folder.
         public const String MutexTestExecutorName = "MutexTestExecutor";
@@ -137,7 +137,10 @@ namespace ABT.TestSpace.TestExec {
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
-        public CancellationTokenSource CTS_Cancel { get; private set; }
+        internal CancellationTokenSource CTS_Cancel { get; private set; }
+        public CancellationToken CT_Cancel;
+        internal CancellationTokenSource CTS_EmergencyStop { get; private set; }
+        public static CancellationToken CT_EmergencyStop;
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
         private readonly String _serialNumberRegEx = null;
@@ -168,12 +171,16 @@ namespace ABT.TestSpace.TestExec {
             _statusTime.Elapsed += StatusTimeUpdate;
             _statusTime.AutoReset = true;
             CTS_Cancel = new CancellationTokenSource();
+            CT_Cancel = CTS_Cancel.Token;
+            CTS_EmergencyStop = new CancellationTokenSource();
+            CT_EmergencyStop = CTS_EmergencyStop.Token;
 
             if (!ConfigUUT.Simulate) {
                 SVIs = SCPI_VISA_Instrument.Get();
                 if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
                 UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
                 UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
+                CT_EmergencyStop.Register(() => SCPI99.Reset(SVIs));
             }
         }
 
@@ -189,7 +196,7 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        private void Form_Closing(Object sender, FormClosingEventArgs e) { PreApplicationExit(); }    
+        private void Form_Closing(Object sender, FormClosingEventArgs e) { PreApplicationExit(); }
 
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
 
@@ -200,26 +207,29 @@ namespace ABT.TestSpace.TestExec {
             StatusTimeUpdate(null, null);
             StatusTestsUpdate(null, null);
             StatusCustomWrite(String.Empty);
+            StatusModeUpdate(MODES.Resetting);
         }
 
         private void FormModeRun() {
             ButtonCancelReset(enabled: true);
-            ButtonEmergencyStop.Enabled = true;
+            ButtonEmergencyStopReset(enabled: true);
             ButtonSelectTests.Enabled = false;
             ButtonStartReset(enabled: false);
             TSMI_System_Diagnostics.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
             TSMI_UUT_ResetStatus.Enabled = false;
+            StatusModeUpdate(MODES.Running);
         }
 
-        private void FormModeWait() {
+        private void FormModeSelect() {
             ButtonCancelReset(enabled: false);
-            ButtonEmergencyStop.Enabled = false;
+            ButtonEmergencyStopReset(enabled: false);
             ButtonSelectTests.Enabled = true;
             ButtonStartReset(enabled: ConfigTest != null);
             TSMI_System_Diagnostics.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
             TSMI_UUT_ResetStatus.Enabled = true;
+            StatusModeUpdate(MODES.Selecting);
         }
 
         private String GetFolder(String FolderID) { return XElement.Load(GlobalConfigurationFile).Element("Folders").Element(FolderID).Value; }
@@ -267,7 +277,7 @@ namespace ABT.TestSpace.TestExec {
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
 
-        private void OpenApp(String CompanyID, String AppID, String Arguments="") {
+        private void OpenApp(String CompanyID, String AppID, String Arguments = "") {
             String app = XElement.Load(GlobalConfigurationFile).Element("Apps").Element(CompanyID).Element(AppID).Value;
 
             if (File.Exists(app)) {
@@ -318,7 +328,7 @@ namespace ABT.TestSpace.TestExec {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"MachineName           : {Environment.MachineName}");
             sb.AppendLine($"UserPrincipal         : {UserPrincipal.Current.DisplayName}");
-            sb.AppendLine($"Exception.ToString()  : {Ex}"); 
+            sb.AppendLine($"Exception.ToString()  : {Ex}");
             SendAdministratorMailMessage(Subject, Body: sb.ToString());
         }
 
@@ -335,7 +345,7 @@ namespace ABT.TestSpace.TestExec {
                 Logger.LogError(Subject);
             }
         }
- 
+
         private void SendMailMessageWithAttachment(String subject) {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
@@ -355,14 +365,12 @@ namespace ABT.TestSpace.TestExec {
             }
         }
         #endregion Form Miscellaneous
-        
+
         #region Form Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            ButtonCancel.Enabled = false;
-            ButtonCancel.Text = "Cancelling...";
-            ButtonCancel.UseVisualStyleBackColor = false;
-            ButtonCancel.BackColor = Color.Red;
+            ButtonCancelReset(enabled: false);
             CTS_Cancel.Cancel();
+            StatusModeUpdate(MODES.Cancelling);
         }
 
         private void ButtonCancelReset(Boolean enabled) {
@@ -376,15 +384,24 @@ namespace ABT.TestSpace.TestExec {
             if (CTS_Cancel.IsCancellationRequested) {
                 CTS_Cancel.Dispose();
                 CTS_Cancel = new CancellationTokenSource();
+                CT_Cancel = CTS_Cancel.Token;
             }
-            ButtonCancel.Text = "Cancel";
             ButtonCancel.Enabled = enabled;
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             ButtonEmergencyStop.Enabled = false;
-            ButtonCancel_Clicked(null, null);
-            SCPI99.Reset(SVIs);
+            CTS_EmergencyStop.Cancel();
+            StatusModeUpdate(MODES.EmergencyStopping);
+        }
+
+        private void ButtonEmergencyStopReset(Boolean enabled) {
+            if (CT_EmergencyStop.IsCancellationRequested) {
+                CTS_EmergencyStop = new CancellationTokenSource();
+                CT_EmergencyStop = CTS_EmergencyStop.Token;
+                if (!ConfigUUT.Simulate) _ = CT_EmergencyStop.Register(() => SCPI99.Reset(SVIs));
+            }
+            ButtonEmergencyStop.Enabled = enabled;
         }
 
         private void ButtonSelectTests_Click(Object sender, EventArgs e) {
@@ -392,7 +409,7 @@ namespace ABT.TestSpace.TestExec {
             _statusTime.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
             FormModeReset();
-            FormModeWait();
+            FormModeSelect();
         }
 
         private async void ButtonStart_Clicked(Object sender, EventArgs e) {
@@ -414,7 +431,7 @@ namespace ABT.TestSpace.TestExec {
             MeasurementsPreRun();
             await MeasurementsRun();
             MeasurementsPostRun();
-            FormModeWait();
+            FormModeSelect();
         }
 
         private void ButtonStartReset(Boolean enabled) {
@@ -444,7 +461,7 @@ namespace ABT.TestSpace.TestExec {
         //          ofd.Filter = "TestExecutor Programs|*.exe";
         //          ofd.DereferenceLinks = true;
         //          ofd.RestoreDirectory = true;
-            
+
         //          if (ofd.ShowDialog() == DialogResult.OK) {
         //              PreApplicationExit();
         //              ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
@@ -516,11 +533,11 @@ namespace ABT.TestSpace.TestExec {
                 CreatePrompt = false,
                 OverwritePrompt = true
             };
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)  rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
+            if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
         private void TSMI_System_DiagnosticsSCPI_VISA_Instruments_Click(Object sender, EventArgs e) {
             UseWaitCursor = true;
-            if(SCPI99.SelfTestsPassed(ActiveForm, SVIs)) _ = MessageBox.Show(ActiveForm, "SCPI VISA Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (SCPI99.SelfTestsPassed(ActiveForm, SVIs)) _ = MessageBox.Show(ActiveForm, "SCPI VISA Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             UseWaitCursor = false;
         }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
@@ -589,7 +606,7 @@ namespace ABT.TestSpace.TestExec {
                 foreach (String measurementID in ConfigTest.GroupIDsToMeasurementIDs[groupID]) {
                     MeasurementIDPresent = measurementID;
                     MeasurementPresent = ConfigTest.Measurements[MeasurementIDPresent];
-                   try {
+                    try {
                         StatusTestsUpdate(null, null);
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].TestEvent = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
@@ -695,13 +712,13 @@ namespace ABT.TestSpace.TestExec {
         public Boolean AreMethodNamesPriorNext(String prior, String next) { return String.Equals(GetID_MeasurementPrior(), prior) && String.Equals(GetID_MeasurementNext(), next); }
 
         public Boolean IsGroup(String GroupID) { return String.Equals(ConfigTest.Measurements[MeasurementIDPresent].GroupID, GroupID); }
-                 
+
         public Boolean IsGroup(String GroupID, String Description, String MeasurementIDs, Boolean Selectable, Boolean CancelNotPassed) {
-            return 
-                String.Equals(ConfigTest.Measurements[MeasurementIDPresent].GroupID, GroupID) && 
-                String.Equals(ConfigTest.Groups[GetID_Group()].Description, Description) && 
-                String.Equals(ConfigTest.Groups[GetID_Group()].TestMeasurementIDs, MeasurementIDs) && 
-                ConfigTest.Groups[GetID_Group()].Selectable == Selectable && 
+            return
+                String.Equals(ConfigTest.Measurements[MeasurementIDPresent].GroupID, GroupID) &&
+                String.Equals(ConfigTest.Groups[GetID_Group()].Description, Description) &&
+                String.Equals(ConfigTest.Groups[GetID_Group()].TestMeasurementIDs, MeasurementIDs) &&
+                ConfigTest.Groups[GetID_Group()].Selectable == Selectable &&
                 ConfigTest.Groups[GetID_Group()].CancelNotPassed == CancelNotPassed;
         }
 
@@ -713,25 +730,25 @@ namespace ABT.TestSpace.TestExec {
         }
 
         public Boolean IsMeasurement(String Description, String ClassName, Boolean CancelNotPassed, String Arguments) {
-            return 
-                String.Equals(MeasurementPresent.Description, Description) && 
-                String.Equals(MeasurementPresent.ClassName, ClassName) && 
-                MeasurementPresent.CancelNotPassed == CancelNotPassed && 
-                String.Equals((String)MeasurementPresent.ClassObject.GetType().GetMethod("ArgumentsGet").Invoke(MeasurementPresent.ClassObject, null), Arguments); 
+            return
+                String.Equals(MeasurementPresent.Description, Description) &&
+                String.Equals(MeasurementPresent.ClassName, ClassName) &&
+                MeasurementPresent.CancelNotPassed == CancelNotPassed &&
+                String.Equals((String)MeasurementPresent.ClassObject.GetType().GetMethod("ArgumentsGet").Invoke(MeasurementPresent.ClassObject, null), Arguments);
         }
 
         public Boolean IsOperation(String OperationID) { return String.Equals(ConfigTest.TestElementID, OperationID); }
-        
+
         public Boolean IsOperation(String OperationID, String Description, String Revision, String GroupsIDs) {
-                return
-                String.Equals(ConfigTest.TestElementID, OperationID) &&
-                String.Equals(ConfigTest.TestElementDescription, Description) &&
-                String.Equals(ConfigTest.TestElementRevision, Revision) &&
-                String.Equals(String.Join(MeasurementAbstract.SA.ToString(), ConfigTest.GroupIDsSequence.ToArray()), GroupsIDs);
+            return
+            String.Equals(ConfigTest.TestElementID, OperationID) &&
+            String.Equals(ConfigTest.TestElementDescription, Description) &&
+            String.Equals(ConfigTest.TestElementRevision, Revision) &&
+            String.Equals(String.Join(MeasurementAbstract.SA.ToString(), ConfigTest.GroupIDsSequence.ToArray()), GroupsIDs);
         }
 
         private String GetID_Group() { return ConfigTest.Measurements[MeasurementIDPresent].GroupID; }
-        
+
         private String GetID_MeasurementNext() {
             if (GetIDs_MeasurementSequence() == ConfigTest.TestMeasurementIDsSequence.Count - 1) return NONE;
             return ConfigTest.TestMeasurementIDsSequence[GetIDs_MeasurementSequence() + 1];
@@ -746,7 +763,7 @@ namespace ABT.TestSpace.TestExec {
 
         public String GetMeasurementNumericArguments(String measurementID) {
             MeasurementNumeric mn = (MeasurementNumeric)Measurement.Get(measurementID).ClassObject;
-            return (String)mn.GetType().GetMethod("ArgumentsGet").Invoke(mn, null); 
+            return (String)mn.GetType().GetMethod("ArgumentsGet").Invoke(mn, null);
         }
         #endregion Introspective methods.
 
@@ -760,7 +777,7 @@ namespace ABT.TestSpace.TestExec {
         public void MessageAppend(String Message) { MeasurementPresent.Message.Append(Message); }
 
         public void MessageAppendLine(String Message) { MeasurementPresent.Message.AppendLine(Message); }
-        
+
         public void MessageAppendLine(String Label, String Message) { MeasurementPresent.Message.AppendLine($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
 
         public void MessagesAppendLines(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppendLine(Label, Message); }
@@ -772,6 +789,22 @@ namespace ABT.TestSpace.TestExec {
         private void StatusTestsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTestsLabel.Text = ConfigTest.StatusTests())); }
 
         public void StatusCustomWrite(String Message) { Invoke((Action)(() => StatusCustomLabel.Text = Message)); }
+
+        private enum MODES { Resetting, Selecting, Running, Cancelling, EmergencyStopping };
+
+        private void StatusModeUpdate(MODES mode) {
+            Dictionary<MODES, Color> ModeColors = new Dictionary<MODES, Color>() {
+                { MODES.Resetting, Color.White },
+                { MODES.Selecting, Color.Black },
+                { MODES.Running, Color.Green },
+                { MODES.Cancelling, Color.Yellow },
+                { MODES.EmergencyStopping, Color.Red }
+            };
+
+            Invoke((Action)(() => StatusCustomLabel.Text = Enum.GetName(typeof(MODES), mode)));
+            Invoke((Action)(() => StatusCustomLabel.ForeColor = ModeColors[mode]));
+        }
         #endregion Status Strip methods.
     }
 }
+
