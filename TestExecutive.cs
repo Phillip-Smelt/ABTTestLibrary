@@ -137,9 +137,9 @@ namespace ABT.TestSpace.TestExec {
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
-        internal CancellationTokenSource CTS_Cancel { get; private set; }
+        private CancellationTokenSource CTS_Cancel;
         public CancellationToken CT_Cancel;
-        internal CancellationTokenSource CTS_EmergencyStop { get; private set; }
+        private CancellationTokenSource CTS_EmergencyStop;
         public static CancellationToken CT_EmergencyStop;
         public String MeasurementIDPresent { get; private set; } = String.Empty;
         public Measurement MeasurementPresent { get; private set; } = null;
@@ -368,6 +368,7 @@ namespace ABT.TestSpace.TestExec {
 
         #region Form Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
+            Debug.Assert(!CTS_Cancel.IsCancellationRequested);
             ButtonCancelReset(enabled: false);
             CTS_Cancel.Cancel();
             StatusModeUpdate(MODES.Cancelling);
@@ -390,6 +391,7 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
+            Debug.Assert(!CTS_EmergencyStop.IsCancellationRequested);
             ButtonEmergencyStop.Enabled = false;
             CTS_EmergencyStop.Cancel();
             StatusModeUpdate(MODES.EmergencyStopping);

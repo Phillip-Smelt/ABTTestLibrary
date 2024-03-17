@@ -82,7 +82,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static String IdentityGet(String Address, SCPI_IDENTITY Property) { return IdentityGet(Address).Split(IDENTITY_SEPARATOR)[(Int32)Property]; }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            Reset(SVI); // Reset SVI to default power-on states.
+            Reset(SVI); // Reset SVI to default power-on states.  Powers off power supplies.
             Clear(SVI); // Clear all event registers & the Status Byte register.
         }
 
