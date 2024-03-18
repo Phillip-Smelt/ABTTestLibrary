@@ -180,7 +180,7 @@ namespace ABT.TestSpace.TestExec {
                 if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
                 UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
                 UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
-                CT_EmergencyStop.Register(() => SCPI99.Reset(SVIs));
+                CT_EmergencyStop.Register(() => Initialize());
             }
         }
 
@@ -401,7 +401,7 @@ namespace ABT.TestSpace.TestExec {
             if (CT_EmergencyStop.IsCancellationRequested) {
                 CTS_EmergencyStop = new CancellationTokenSource();
                 CT_EmergencyStop = CTS_EmergencyStop.Token;
-                if (!ConfigUUT.Simulate) _ = CT_EmergencyStop.Register(() => SCPI99.Reset(SVIs));
+                if (!ConfigUUT.Simulate) _ = CT_EmergencyStop.Register(() => Initialize());
             }
             ButtonEmergencyStop.Enabled = enabled;
         }
@@ -614,6 +614,7 @@ namespace ABT.TestSpace.TestExec {
                         ConfigTest.Measurements[measurementID].TestEvent = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
                         Initialize();
+                        if (CT_Cancel.IsCancellationRequested || CT_EmergencyStop.IsCancellationRequested) ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
                         if (e.ToString().Contains(CancellationException.ClassName)) {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
                             while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
@@ -626,10 +627,6 @@ namespace ABT.TestSpace.TestExec {
                         return;
                     } finally {
                         Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
-                    }
-                    if (CTS_Cancel.IsCancellationRequested) {
-                        ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
-                        return;
                     }
                     if (MeasurementCancelNotPassed(measurementID)) return;
                 }

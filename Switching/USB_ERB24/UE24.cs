@@ -57,7 +57,10 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         public static Boolean Initialized() { return Are(C.S.NC); }
 
         #region Is/Are
-        public static Boolean Is(UE ue, R r, C.S s) { return Get(ue, r) == s; }
+        public static Boolean Is(UE ue, R r, C.S s) {
+            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();            
+            return Get(ue, r) == s;
+        }
 
         public static Boolean Are(UE ue, HashSet<R> rs, C.S s) {
             Dictionary<R, C.S> RεS = rs.ToDictionary(r => r, r => s);
