@@ -642,9 +642,10 @@ namespace ABT.TestSpace.TestExec {
             // StatusModeLabel
             // 
             this.StatusModeLabel.Name = "StatusModeLabel";
-            this.StatusModeLabel.Size = new System.Drawing.Size(914, 17);
+            this.StatusModeLabel.Size = new System.Drawing.Size(883, 17);
             this.StatusModeLabel.Spring = true;
             this.StatusModeLabel.Text = "Mode";
+            this.StatusModeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // TestExecutive
             // 

@@ -371,8 +371,8 @@ namespace ABT.TestSpace.TestExec {
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             Debug.Assert(!CTS_Cancel.IsCancellationRequested);
             ButtonCancelReset(enabled: false);
-            CTS_Cancel.Cancel();
             StatusModeUpdate(MODES.Cancelling);
+            CTS_Cancel.Cancel();
         }
 
         private void ButtonCancelReset(Boolean enabled) {
@@ -394,8 +394,9 @@ namespace ABT.TestSpace.TestExec {
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
             Debug.Assert(!CTS_EmergencyStop.IsCancellationRequested);
             ButtonEmergencyStop.Enabled = false;
-            CTS_EmergencyStop.Cancel();
+            ButtonCancelReset(enabled: false);
             StatusModeUpdate(MODES.EmergencyStopping);
+            CTS_EmergencyStop.Cancel();
         }
 
         private void ButtonEmergencyStopReset(Boolean enabled) {
@@ -613,15 +614,14 @@ namespace ABT.TestSpace.TestExec {
                         StatusTestsUpdate(null, null);
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].TestEvent = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
+                        if (CT_Cancel.IsCancellationRequested) {
+                            ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
+                            return;
+                        }
                     } catch (Exception e) {
                         Initialize();
                         if (CT_EmergencyStop.IsCancellationRequested) {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.EMERGENCY_STOP;
-                            AppendOperationCanceledMessage(e, measurementID);
-                            return;
-                        }
-                        if (CT_Cancel.IsCancellationRequested) {
-                            ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
                             AppendOperationCanceledMessage(e, measurementID);
                             return;
                         }
@@ -820,8 +820,8 @@ namespace ABT.TestSpace.TestExec {
                 { MODES.EmergencyStopping, Color.Fuchsia }
             };
 
-            Invoke((Action)(() => StatusCustomLabel.Text = Enum.GetName(typeof(MODES), mode)));
-            Invoke((Action)(() => StatusCustomLabel.ForeColor = ModeColors[mode]));
+            Invoke((Action)(() => StatusModeLabel.Text = Enum.GetName(typeof(MODES), mode)));
+            Invoke((Action)(() => StatusModeLabel.ForeColor = ModeColors[mode]));
         }
         #endregion Status Strip methods.
     }
