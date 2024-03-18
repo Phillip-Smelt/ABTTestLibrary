@@ -38,6 +38,7 @@ namespace ABT.TestSpace.TestExec {
 
     public static class TestEvents {
         public const String CANCEL = "CANCEL";
+        public const String EMERGENCY_STOP = "EMERGENCY STOP";
         public const String ERROR = "ERROR";
         public const String FAIL = "FAIL";
         public const String PASS = "PASS";
@@ -46,6 +47,7 @@ namespace ABT.TestSpace.TestExec {
         public static Color GetColor(String Event) {
             Dictionary<String, Color> codesToColors = new Dictionary<String, Color>() {
                 { CANCEL, Color.Yellow },
+                { EMERGENCY_STOP, Color.Fuchsia },
                 { ERROR, Color.Aqua },
                 { FAIL, Color.Red },
                 { PASS, Color.Green },

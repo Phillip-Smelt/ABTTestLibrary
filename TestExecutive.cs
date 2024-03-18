@@ -26,6 +26,7 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
+using System.Diagnostics.Metrics;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestExecutor based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestExecutor.
@@ -138,7 +139,7 @@ namespace ABT.TestSpace.TestExec {
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
         private CancellationTokenSource CTS_Cancel;
-        public CancellationToken CT_Cancel;
+        public static CancellationToken CT_Cancel;
         private CancellationTokenSource CTS_EmergencyStop;
         public static CancellationToken CT_EmergencyStop;
         public String MeasurementIDPresent { get; private set; } = String.Empty;
@@ -614,7 +615,21 @@ namespace ABT.TestSpace.TestExec {
                         ConfigTest.Measurements[measurementID].TestEvent = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                     } catch (Exception e) {
                         Initialize();
-                        if (CT_Cancel.IsCancellationRequested || CT_EmergencyStop.IsCancellationRequested) ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
+                        if (CT_EmergencyStop.IsCancellationRequested) {
+                            ConfigTest.Measurements[measurementID].TestEvent = TestEvents.EMERGENCY_STOP;
+                            AppendOperationCanceledMessage(e, measurementID);
+                            return;
+                        }
+                        if (CT_Cancel.IsCancellationRequested) {
+                            ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
+                            AppendOperationCanceledMessage(e, measurementID);
+                            return;
+                        }
+                        if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
+                            ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
+                            AppendOperationCanceledMessage(e, measurementID);
+                            return;
+                        }
                         if (e.ToString().Contains(CancellationException.ClassName)) {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
                             while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
@@ -623,8 +638,8 @@ namespace ABT.TestSpace.TestExec {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.ERROR;
                             ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{e}");
                             ErrorMessage(e);
+                            return;
                         }
-                        return;
                     } finally {
                         Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
                     }
@@ -632,6 +647,11 @@ namespace ABT.TestSpace.TestExec {
                 }
                 if (MeasurementsCancelNotPassed(groupID)) return;
             }
+        }
+
+        private void AppendOperationCanceledMessage(Exception e, String measurementID) {
+            while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
+            ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
         }
 
         protected abstract Task<String> MeasurementRun(String measurementID);
@@ -797,7 +817,7 @@ namespace ABT.TestSpace.TestExec {
                 { MODES.Selecting, Color.Black },
                 { MODES.Running, Color.Green },
                 { MODES.Cancelling, Color.Yellow },
-                { MODES.EmergencyStopping, Color.Red }
+                { MODES.EmergencyStopping, Color.Fuchsia }
             };
 
             Invoke((Action)(() => StatusCustomLabel.Text = Enum.GetName(typeof(MODES), mode)));

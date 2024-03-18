@@ -118,10 +118,10 @@ namespace ABT.TestSpace.TestExec {
             // TextTest
             // 
             this.TextTest.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.TextTest.Location = new System.Drawing.Point(493, 567);
+            this.TextTest.Location = new System.Drawing.Point(456, 567);
             this.TextTest.Name = "TextTest";
             this.TextTest.ReadOnly = true;
-            this.TextTest.Size = new System.Drawing.Size(61, 20);
+            this.TextTest.Size = new System.Drawing.Size(128, 20);
             this.TextTest.TabIndex = 9;
             this.TextTest.TabStop = false;
             this.TextTest.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -236,7 +236,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_KeysightBenchVue
             // 
             this.TSMI_Apps_KeysightBenchVue.Name = "TSMI_Apps_KeysightBenchVue";
-            this.TSMI_Apps_KeysightBenchVue.Size = new System.Drawing.Size(172, 22);
+            this.TSMI_Apps_KeysightBenchVue.Size = new System.Drawing.Size(171, 22);
             this.TSMI_Apps_KeysightBenchVue.Text = "&BenchVue";
             this.TSMI_Apps_KeysightBenchVue.ToolTipText = "Control Keysight Instruments via soft/virtual panels.";
             this.TSMI_Apps_KeysightBenchVue.Click += new System.EventHandler(this.TSMI_Apps_KeysightBenchVue_Click);
@@ -244,7 +244,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_KeysightCommandExpert
             // 
             this.TSMI_Apps_KeysightCommandExpert.Name = "TSMI_Apps_KeysightCommandExpert";
-            this.TSMI_Apps_KeysightCommandExpert.Size = new System.Drawing.Size(172, 22);
+            this.TSMI_Apps_KeysightCommandExpert.Size = new System.Drawing.Size(171, 22);
             this.TSMI_Apps_KeysightCommandExpert.Text = "Co&mmand Expert";
             this.TSMI_Apps_KeysightCommandExpert.ToolTipText = "SCPI programming & debugging IDE.";
             this.TSMI_Apps_KeysightCommandExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightCommandExpert_Click);
@@ -252,7 +252,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_KeysightConnectionExpert
             // 
             this.TSMI_Apps_KeysightConnectionExpert.Name = "TSMI_Apps_KeysightConnectionExpert";
-            this.TSMI_Apps_KeysightConnectionExpert.Size = new System.Drawing.Size(172, 22);
+            this.TSMI_Apps_KeysightConnectionExpert.Size = new System.Drawing.Size(171, 22);
             this.TSMI_Apps_KeysightConnectionExpert.Text = "Co&nnection Expert";
             this.TSMI_Apps_KeysightConnectionExpert.ToolTipText = "Discover VISA Instruments.";
             this.TSMI_Apps_KeysightConnectionExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightConnectionExpert_Click);
@@ -349,7 +349,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool
             // 
             this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Name = "TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool";
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Size = new System.Drawing.Size(196, 22);
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Size = new System.Drawing.Size(197, 22);
             this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Text = "&SMBus / I2C / SAA Tool";
             this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Click += new System.EventHandler(this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool_Click);
             // 
@@ -524,7 +524,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_Separator1,
             this.TSMI_UUT_About});
             this.TSMI_UUT.Name = "TSMI_UUT";
-            this.TSMI_UUT.Size = new System.Drawing.Size(41, 20);
+            this.TSMI_UUT.Size = new System.Drawing.Size(42, 20);
             this.TSMI_UUT.Text = "&UUT";
             // 
             // TSMI_UUT_AppConfig
@@ -620,14 +620,14 @@ namespace ABT.TestSpace.TestExec {
             // StatusTimeLabel
             // 
             this.StatusTimeLabel.Name = "StatusTimeLabel";
-            this.StatusTimeLabel.Size = new System.Drawing.Size(33, 17);
+            this.StatusTimeLabel.Size = new System.Drawing.Size(34, 17);
             this.StatusTimeLabel.Text = "Time";
             this.StatusTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // StatusTestsLabel
             // 
             this.StatusTestsLabel.Name = "StatusTestsLabel";
-            this.StatusTestsLabel.Size = new System.Drawing.Size(32, 17);
+            this.StatusTestsLabel.Size = new System.Drawing.Size(33, 17);
             this.StatusTestsLabel.Text = "Tests";
             this.StatusTestsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -642,7 +642,7 @@ namespace ABT.TestSpace.TestExec {
             // StatusModeLabel
             // 
             this.StatusModeLabel.Name = "StatusModeLabel";
-            this.StatusModeLabel.Size = new System.Drawing.Size(885, 17);
+            this.StatusModeLabel.Size = new System.Drawing.Size(914, 17);
             this.StatusModeLabel.Spring = true;
             this.StatusModeLabel.Text = "Mode";
             // 
