@@ -25,7 +25,7 @@ namespace ABT.TestSpace.TestExec {
         /// </summary>
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestExecutive));
-            this.ButtonStart = new System.Windows.Forms.Button();
+            this.ButtonRun = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.TextTest = new System.Windows.Forms.TextBox();
             this.LabelTestEvent = new System.Windows.Forms.Label();
@@ -91,17 +91,17 @@ namespace ABT.TestSpace.TestExec {
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // ButtonStart
+            // ButtonRun
             // 
-            this.ButtonStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ButtonStart.BackColor = System.Drawing.Color.Green;
-            this.ButtonStart.Location = new System.Drawing.Point(152, 546);
-            this.ButtonStart.Name = "ButtonStart";
-            this.ButtonStart.Size = new System.Drawing.Size(88, 52);
-            this.ButtonStart.TabIndex = 1;
-            this.ButtonStart.Text = "&Start";
-            this.ButtonStart.UseVisualStyleBackColor = false;
-            this.ButtonStart.Click += new System.EventHandler(this.ButtonStart_Clicked);
+            this.ButtonRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ButtonRun.BackColor = System.Drawing.Color.Green;
+            this.ButtonRun.Location = new System.Drawing.Point(152, 546);
+            this.ButtonRun.Name = "ButtonRun";
+            this.ButtonRun.Size = new System.Drawing.Size(88, 52);
+            this.ButtonRun.TabIndex = 1;
+            this.ButtonRun.Text = "&Run";
+            this.ButtonRun.UseVisualStyleBackColor = false;
+            this.ButtonRun.Click += new System.EventHandler(this.ButtonRun_Clicked);
             // 
             // ButtonCancel
             // 
@@ -160,7 +160,7 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonSelectTests.Name = "ButtonSelectTests";
             this.ButtonSelectTests.Size = new System.Drawing.Size(88, 47);
             this.ButtonSelectTests.TabIndex = 0;
-            this.ButtonSelectTests.Text = "Select &Tests";
+            this.ButtonSelectTests.Text = "&Select Tests";
             this.ButtonSelectTests.UseVisualStyleBackColor = true;
             this.ButtonSelectTests.Click += new System.EventHandler(this.ButtonSelectTests_Click);
             // 
@@ -642,7 +642,7 @@ namespace ABT.TestSpace.TestExec {
             // StatusModeLabel
             // 
             this.StatusModeLabel.Name = "StatusModeLabel";
-            this.StatusModeLabel.Size = new System.Drawing.Size(883, 17);
+            this.StatusModeLabel.Size = new System.Drawing.Size(914, 17);
             this.StatusModeLabel.Spring = true;
             this.StatusModeLabel.Text = "Mode";
             this.StatusModeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -659,7 +659,7 @@ namespace ABT.TestSpace.TestExec {
             this.Controls.Add(this.LabelTestEvent);
             this.Controls.Add(this.TextTest);
             this.Controls.Add(this.ButtonCancel);
-            this.Controls.Add(this.ButtonStart);
+            this.Controls.Add(this.ButtonRun);
             this.Controls.Add(this.MS);
             this.MainMenuStrip = this.MS;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -678,7 +678,7 @@ namespace ABT.TestSpace.TestExec {
         }
         #endregion
 
-        private System.Windows.Forms.Button ButtonStart;
+        private System.Windows.Forms.Button ButtonRun;
         private System.Windows.Forms.Button ButtonCancel;
         private System.Windows.Forms.TextBox TextTest;
         private System.Windows.Forms.Label LabelTestEvent;

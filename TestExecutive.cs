@@ -175,13 +175,13 @@ namespace ABT.TestSpace.TestExec {
             CT_Cancel = CTS_Cancel.Token;
             CTS_EmergencyStop = new CancellationTokenSource();
             CT_EmergencyStop = CTS_EmergencyStop.Token;
+            CT_EmergencyStop.Register(() => Initialize());
 
             if (!ConfigUUT.Simulate) {
                 SVIs = SCPI_VISA_Instrument.Get();
                 if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
                 UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
                 UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
-                CT_EmergencyStop.Register(() => Initialize());
             }
         }
 
@@ -215,7 +215,7 @@ namespace ABT.TestSpace.TestExec {
             ButtonCancelReset(enabled: true);
             ButtonEmergencyStopReset(enabled: true);
             ButtonSelectTests.Enabled = false;
-            ButtonStartReset(enabled: false);
+            ButtonRunReset(enabled: false);
             TSMI_System_Diagnostics.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
             TSMI_UUT_ResetStatus.Enabled = false;
@@ -226,7 +226,7 @@ namespace ABT.TestSpace.TestExec {
             ButtonCancelReset(enabled: false);
             ButtonEmergencyStopReset(enabled: false);
             ButtonSelectTests.Enabled = true;
-            ButtonStartReset(enabled: ConfigTest != null);
+            ButtonRunReset(enabled: ConfigTest != null);
             TSMI_System_Diagnostics.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
             TSMI_UUT_ResetStatus.Enabled = true;
@@ -416,7 +416,7 @@ namespace ABT.TestSpace.TestExec {
             FormModeSelect();
         }
 
-        private async void ButtonStart_Clicked(Object sender, EventArgs e) {
+        private async void ButtonRun_Clicked(Object sender, EventArgs e) {
             String serialNumber;
             if (ConfigLogger.SerialNumberDialogEnabled) {
                 _serialNumberDialog.Set(ConfigUUT.SerialNumber);
@@ -438,15 +438,15 @@ namespace ABT.TestSpace.TestExec {
             FormModeSelect();
         }
 
-        private void ButtonStartReset(Boolean enabled) {
+        private void ButtonRunReset(Boolean enabled) {
             if (enabled) {
-                ButtonStart.UseVisualStyleBackColor = false;
-                ButtonStart.BackColor = Color.Green;
+                ButtonRun.UseVisualStyleBackColor = false;
+                ButtonRun.BackColor = Color.Green;
             } else {
-                ButtonStart.BackColor = SystemColors.Control;
-                ButtonStart.UseVisualStyleBackColor = true;
+                ButtonRun.BackColor = SystemColors.Control;
+                ButtonRun.UseVisualStyleBackColor = true;
             }
-            ButtonStart.Enabled = enabled;
+            ButtonRun.Enabled = enabled;
         }
         #endregion Form Command Buttons
 
@@ -622,7 +622,7 @@ namespace ABT.TestSpace.TestExec {
                         Initialize();
                         if (CT_EmergencyStop.IsCancellationRequested) {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.EMERGENCY_STOP;
-                            AppendOperationCanceledMessage(e, measurementID);
+                            if (e.ToString().Contains(typeof(OperationCanceledException).Name)) AppendOperationCanceledMessage(e, measurementID);
                             return;
                         }
                         if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
@@ -634,6 +634,7 @@ namespace ABT.TestSpace.TestExec {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
                             while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
                             ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{CancellationException.ClassName}:{Environment.NewLine}{e.Message}");
+                            return;
                         } else {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.ERROR;
                             ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{e}");
