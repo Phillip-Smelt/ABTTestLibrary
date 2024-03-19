@@ -1,5 +1,4 @@
 ﻿using System;
-using System.
 using System.Windows.Forms;
 
 namespace ABT.TestSpace {
@@ -7,8 +6,8 @@ namespace ABT.TestSpace {
         public About(String Title, String RTF, String Link) {
             InitializeComponent();
             this.Text = Title;
-            this.rtf = RTF;
-            this.link = Link;
+            this.rtf.Text = RTF;
+            this.link.Text = Link;
         }
     }
 }
