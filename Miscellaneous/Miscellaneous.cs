@@ -41,7 +41,7 @@ namespace ABT.TestSpace.TestExec {
         public static Color GetColor(String Event) {
             Dictionary<String, Color> codesToColors = new Dictionary<String, Color>() {
                 { CANCEL, Color.Yellow },
-                { EMERGENCY_STOP, Color.Fuchsia },
+                { EMERGENCY_STOP, Color.Firebrick },
                 { ERROR, Color.Aqua },
                 { FAIL, Color.Red },
                 { PASS, Color.Green },

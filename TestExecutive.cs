@@ -801,7 +801,7 @@ namespace ABT.TestSpace.TestExec {
                 { MODES.Selecting, Color.Black },
                 { MODES.Running, Color.Green },
                 { MODES.Cancelling, Color.Yellow },
-                { MODES.EmergencyStopping, Color.Fuchsia }
+                { MODES.EmergencyStopping, Color.Firebrick }
             };
 
             Invoke((Action)(() => StatusModeLabel.Text = Enum.GetName(typeof(MODES), mode)));
