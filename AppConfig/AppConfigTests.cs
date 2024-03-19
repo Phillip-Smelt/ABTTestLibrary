@@ -244,10 +244,11 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public static AppConfigTest Get() { return new AppConfigTest(); }
 
         public String StatusTests() {
-            const String separator = "     ";
+            const String separator = "   ";
             StringBuilder sb = new StringBuilder();
             sb.Append($"{separator}Tested: {Statistics.Tested()}");
             sb.Append($"{separator}Cancelled: {Statistics.Cancelled}");
+            sb.Append($"{separator}E-Stopped: {Statistics.EmergencyStopped}");
             sb.Append($"{separator}Errored: {Statistics.Errored}");
             sb.Append($"{separator}Failed: {Statistics.Failed}");
             sb.Append($"{separator}Passed: {Statistics.Passed}");
@@ -260,6 +261,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
     public class Statistics {
         public UInt32 Cancelled = 0;
+        public UInt32 EmergencyStopped = 0;
         public UInt32 Errored = 0;
         public UInt32 Failed = 0;
         public UInt32 Passed = 0;
@@ -271,6 +273,9 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             switch(TestEvent) {
                 case TestEvents.CANCEL:
                     Cancelled++;
+                    break;
+                case TestEvents.EMERGENCY_STOP:
+                    EmergencyStopped++;
                     break;
                 case TestEvents.ERROR:
                     Errored++;
@@ -293,9 +298,10 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             return $"{(elapsedTime.Days != 0 ? elapsedTime.Days.ToString() + ":" : String.Empty)}{elapsedTime.Hours}:{elapsedTime.Minutes:00}";
         }
         public Double PercentCancelled() { return Convert.ToDouble(Cancelled) / Convert.ToDouble(Tested()); }
+        public Double PercentEmergencyStopped() { return Convert.ToDouble(EmergencyStopped) / Convert.ToDouble(Tested()); }
         public Double PercentErrored() { return Convert.ToDouble(Errored) / Convert.ToDouble(Tested()); }
         public Double PercentFailed() { return Convert.ToDouble(Failed) / Convert.ToDouble(Tested()); }
         public Double PercentPassed() { return Convert.ToDouble(Passed) / Convert.ToDouble(Tested()); }
-        public UInt32 Tested() { return Cancelled + Errored + Failed + Passed; }
+        public UInt32 Tested() { return Cancelled + EmergencyStopped + Errored + Failed + Passed; }
     }
 }

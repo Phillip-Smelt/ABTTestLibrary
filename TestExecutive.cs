@@ -614,12 +614,12 @@ namespace ABT.TestSpace.TestExec {
                         Initialize();
                         if (CT_EmergencyStop.IsCancellationRequested) {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.EMERGENCY_STOP;
-                            if (e.ToString().Contains(typeof(OperationCanceledException).Name)) AppendOperationCanceledMessage(e, measurementID);
                             return;
                         }
                         if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
-                            AppendOperationCanceledMessage(e, measurementID);
+                            while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
+                            ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
                             return;
                         }
                         ConfigTest.Measurements[measurementID].TestEvent = TestEvents.ERROR;
@@ -633,11 +633,6 @@ namespace ABT.TestSpace.TestExec {
                 }
                 if (MeasurementsCancelNotPassed(groupID)) return;
             }
-        }
-
-        private void AppendOperationCanceledMessage(Exception e, String measurementID) {
-            while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
-            ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
         }
 
         protected abstract Task<String> MeasurementRun(String measurementID);
