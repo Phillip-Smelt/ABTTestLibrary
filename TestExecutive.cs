@@ -175,7 +175,7 @@ namespace ABT.TestSpace.TestExec {
             CT_Cancel = CTS_Cancel.Token;
             CTS_EmergencyStop = new CancellationTokenSource();
             CT_EmergencyStop = CTS_EmergencyStop.Token;
-            CT_EmergencyStop.Register(() => SCPI99.Reset(SVIs));
+            CT_EmergencyStop.Register(() => Initialize());
 
             if (!ConfigUUT.Simulate) {
                 SVIs = SCPI_VISA_Instrument.Get();
@@ -204,6 +204,7 @@ namespace ABT.TestSpace.TestExec {
         private void FormModeReset() {
             TextTest.Text = String.Empty;
             TextTest.BackColor = Color.White;
+            TextTest.Refresh();
             rtfResults.Text = String.Empty;
             StatusTimeUpdate(null, null);
             StatusTestsUpdate(null, null);
@@ -394,7 +395,7 @@ namespace ABT.TestSpace.TestExec {
             if (CT_EmergencyStop.IsCancellationRequested) {
                 CTS_EmergencyStop = new CancellationTokenSource();
                 CT_EmergencyStop = CTS_EmergencyStop.Token;
-                CT_EmergencyStop.Register(() => SCPI99.Reset(SVIs));
+                CT_EmergencyStop.Register(() => Initialize());
             }
             ButtonEmergencyStop.Enabled = enabled;
         }
@@ -687,19 +688,22 @@ namespace ABT.TestSpace.TestExec {
             if (MeasurementEventsCount(measurements, TestEvents.PASS) == measurements.Count) return TestEvents.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All measurement TestEvents are PASS, so overall TestEvent is PASS.
-            if (MeasurementEventsCount(measurements, TestEvents.ERROR) != 0) return TestEvents.ERROR;
+            if (MeasurementEventsCount(measurements, TestEvents.EMERGENCY_STOP) != 0) return TestEvents.EMERGENCY_STOP;
             // 2nd priority evaluation:
-            // - If any measurement TestEvent is ERROR, overall TestEvent is ERROR.
-            if (MeasurementEventsCount(measurements, TestEvents.CANCEL) != 0) return TestEvents.CANCEL;
+            // - If any measurement TestEvent is EMERGENCY_STOP, overall TestEvent is EMERGENCY_STOP.
+            if (MeasurementEventsCount(measurements, TestEvents.ERROR) != 0) return TestEvents.ERROR;
             // 3rd priority evaluation:
-            // - If any measurement TestEvent is CANCEL, and none were ERROR, overall TestEvent is CANCEL.
+            // - If any measurement TestEvent is ERROR, and none were EMERGENCY_STOP, overall TestEvent is ERROR.
+            if (MeasurementEventsCount(measurements, TestEvents.CANCEL) != 0) return TestEvents.CANCEL;
+            // rth priority evaluation:
+            // - If any measurement TestEvent is CANCEL, and none were EMERGENCY_STOP or ERROR, overall TestEvent is CANCEL.
             if (MeasurementEventsCount(measurements, TestEvents.UNSET) != 0) return TestEvents.CANCEL;
-            // 4th priority evaluation:
-            // - If any measurement TestEvent is UNSET, and none were ERROR or CANCEL, then Measurement(s) didn't complete.
+            // 5th priority evaluation:
+            // - If any measurement TestEvent is UNSET, and none were EMERGENCY_STOP, ERROR or CANCEL, then Measurement(s) didn't complete.
             // - Likely occurred because a Measurement failed that had its App.config TestMeasurement CancelOnFail flag set to true.
             if (MeasurementEventsCount(measurements, TestEvents.FAIL) != 0) return TestEvents.FAIL;
-            // 5th priority evaluation:
-            // - If any measurement TestEvent is FAIL, and none were ERROR, CANCEL or UNSET, TestEvent is FAIL.
+            // 6th priority evaluation:
+            // - If any measurement TestEvent is FAIL, and none were EMERGENCY_STOP, ERROR, CANCEL or UNSET, TestEvent is FAIL.
 
             String validEvents = String.Empty, invalidTests = String.Empty;
             foreach (FieldInfo fi in typeof(TestEvents).GetFields()) validEvents += ((String)fi.GetValue(null), String.Empty);
