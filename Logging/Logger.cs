@@ -246,6 +246,9 @@ namespace ABT.TestSpace.TestExec.Logging {
                 case TestEvents.CANCEL:
                     eventCode = "A";
                     break;
+                case TestEvents.EMERGENCY_STOP:
+                    eventCode = "S";
+                    break;
                 case TestEvents.ERROR:
                     eventCode = "E";
                     break;
