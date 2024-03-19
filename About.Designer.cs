@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
             this.Link = new System.Windows.Forms.LinkLabel();
             this.RTF = new System.Windows.Forms.RichTextBox();
             this.OK = new System.Windows.Forms.Button();
@@ -69,6 +70,7 @@
             this.Controls.Add(this.OK);
             this.Controls.Add(this.RTF);
             this.Controls.Add(this.Link);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "About";
