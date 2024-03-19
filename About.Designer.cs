@@ -74,6 +74,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "About";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About";
             this.ResumeLayout(false);
             this.PerformLayout();
