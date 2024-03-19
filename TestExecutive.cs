@@ -387,7 +387,7 @@ namespace ABT.TestSpace.TestExec {
             Debug.Assert(!CTS_EmergencyStop.IsCancellationRequested);
             ButtonEmergencyStop.Enabled = false;
             ButtonCancelReset(enabled: false);
-            StatusModeUpdate(MODES.EmergencyStopping);
+            StatusModeUpdate(MODES.Emergency_Stopping);
             CTS_EmergencyStop.Cancel();
         }
 
@@ -793,7 +793,7 @@ namespace ABT.TestSpace.TestExec {
 
         public void StatusCustomWrite(String Message) { Invoke((Action)(() => StatusCustomLabel.Text = Message)); }
 
-        private enum MODES { Resetting, Selecting, Running, Cancelling, EmergencyStopping };
+        private enum MODES { Resetting, Selecting, Running, Cancelling, Emergency_Stopping };
 
         private void StatusModeUpdate(MODES mode) {
             Dictionary<MODES, Color> ModeColors = new Dictionary<MODES, Color>() {
@@ -801,7 +801,7 @@ namespace ABT.TestSpace.TestExec {
                 { MODES.Selecting, Color.Black },
                 { MODES.Running, Color.Green },
                 { MODES.Cancelling, Color.Yellow },
-                { MODES.EmergencyStopping, Color.Firebrick }
+                { MODES.Emergency_Stopping, Color.Firebrick }
             };
 
             Invoke((Action)(() => StatusModeLabel.Text = Enum.GetName(typeof(MODES), mode)));

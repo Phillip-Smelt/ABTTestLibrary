@@ -248,7 +248,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             StringBuilder sb = new StringBuilder();
             sb.Append($"{separator}Tested: {Statistics.Tested()}");
             sb.Append($"{separator}Cancelled: {Statistics.Cancelled}");
-            sb.Append($"{separator}E-Stopped: {Statistics.EmergencyStopped}");
+            sb.Append($"{separator}Emergency Stopped: {Statistics.EmergencyStopped}");
             sb.Append($"{separator}Errored: {Statistics.Errored}");
             sb.Append($"{separator}Failed: {Statistics.Failed}");
             sb.Append($"{separator}Passed: {Statistics.Passed}");
