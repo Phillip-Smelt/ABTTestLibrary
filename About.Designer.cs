@@ -23,50 +23,52 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.link = new System.Windows.Forms.LinkLabel();
-            this.rtf = new System.Windows.Forms.RichTextBox();
-            this.ok = new System.Windows.Forms.Button();
+            this.Link = new System.Windows.Forms.LinkLabel();
+            this.RTF = new System.Windows.Forms.RichTextBox();
+            this.OK = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // link
+            // Link
             // 
-            this.link.AutoSize = true;
-            this.link.Location = new System.Drawing.Point(12, 185);
-            this.link.Name = "link";
-            this.link.Size = new System.Drawing.Size(62, 16);
-            this.link.TabIndex = 1;
-            this.link.TabStop = true;
-            this.link.Text = "linkAbout";
+            this.Link.AutoSize = true;
+            this.Link.Location = new System.Drawing.Point(12, 185);
+            this.Link.Name = "Link";
+            this.Link.Size = new System.Drawing.Size(62, 16);
+            this.Link.TabIndex = 1;
+            this.Link.TabStop = true;
+            this.Link.Text = "linkAbout";
+            this.Link.Click += new System.EventHandler(this.Link_Clicked);
             // 
-            // rtf
+            // RTF
             // 
-            this.rtf.Location = new System.Drawing.Point(12, 12);
-            this.rtf.Name = "rtf";
-            this.rtf.ReadOnly = true;
-            this.rtf.Size = new System.Drawing.Size(466, 156);
-            this.rtf.TabIndex = 0;
-            this.rtf.TabStop = false;
-            this.rtf.Text = "";
+            this.RTF.Location = new System.Drawing.Point(12, 12);
+            this.RTF.Name = "RTF";
+            this.RTF.ReadOnly = true;
+            this.RTF.Size = new System.Drawing.Size(678, 156);
+            this.RTF.TabIndex = 0;
+            this.RTF.TabStop = false;
+            this.RTF.Text = "";
             // 
-            // ok
+            // OK
             // 
-            this.ok.Location = new System.Drawing.Point(393, 178);
-            this.ok.Name = "ok";
-            this.ok.Size = new System.Drawing.Size(85, 23);
-            this.ok.TabIndex = 2;
-            this.ok.Text = "OK";
-            this.ok.UseVisualStyleBackColor = true;
+            this.OK.Location = new System.Drawing.Point(605, 178);
+            this.OK.Name = "OK";
+            this.OK.Size = new System.Drawing.Size(85, 23);
+            this.OK.TabIndex = 2;
+            this.OK.Text = "OK";
+            this.OK.UseVisualStyleBackColor = true;
+            this.OK.Click += new System.EventHandler(this.OK_Clicked);
             // 
             // About
             // 
-            this.AcceptButton = this.ok;
+            this.AcceptButton = this.OK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(493, 215);
+            this.ClientSize = new System.Drawing.Size(702, 215);
             this.ControlBox = false;
-            this.Controls.Add(this.ok);
-            this.Controls.Add(this.rtf);
-            this.Controls.Add(this.link);
+            this.Controls.Add(this.OK);
+            this.Controls.Add(this.RTF);
+            this.Controls.Add(this.Link);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "About";
@@ -78,8 +80,8 @@
 
         #endregion
 
-        private System.Windows.Forms.LinkLabel link;
-        private System.Windows.Forms.RichTextBox rtf;
-        private System.Windows.Forms.Button ok;
+        private System.Windows.Forms.LinkLabel Link;
+        private System.Windows.Forms.RichTextBox RTF;
+        private System.Windows.Forms.Button OK;
     }
 }
