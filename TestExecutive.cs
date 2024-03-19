@@ -400,7 +400,11 @@ namespace ABT.TestSpace.TestExec {
         }
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
-
+            ConfigTest = AppConfigTest.Get();
+            _statusTime.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
+            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
+            FormModeReset();
+            FormModeSelect();
         }
 
         private async void ButtonRun_Clicked(Object sender, EventArgs e) {
