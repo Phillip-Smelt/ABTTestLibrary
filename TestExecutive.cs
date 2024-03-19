@@ -92,7 +92,7 @@ namespace ABT.TestSpace.TestExec {
     /// </summary>
     /// 
     /// <summary>
-    /// NOTE:  Two types of TestExecutor Cancellations possible, each having two sub-types resulting in 4 altogether:
+    /// NOTE:  Two types of TestExecutor cancellations possible, each having two sub-types resulting in 4 altogether:
     /// <para>
     /// A) Spontaneous Operator Initiated Cancellations:
     ///      1)  Operator Proactive:
@@ -111,9 +111,9 @@ namespace ABT.TestSpace.TestExec {
     ///            prior to the next Measurement's execution.
     ///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
     /// B) PrePlanned Developer Programmed Cancellations:
-    ///      3)  TestExecutor/Test Developer initiated Cancellations:
-    ///          - Any TestExecutor's Measurement can initiate a Cancellation programmatically by simply throwing an OperationCanceledException:
-    ///          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
+    ///      3)  TestExecutor/Test Developer initiated cancellations:
+    ///          - Any TestExecutor's Measurement can initiate a cancellation programmatically by simply throwing an OperationCanceledException:
+    ///          - Permits immediate cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
     ///            or simply because futher execution is pointless.
     ///          - Simply throw an OperationCanceledException if the specific condition(s) occcur.
     ///      4)  App.config's CancelNotPassed:
@@ -122,9 +122,9 @@ namespace ABT.TestSpace.TestExec {
     ///            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
     ///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
     ///
-    /// NOTE:  The Operator Proactive &amp; TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
+    /// NOTE:  The Operator Proactive &amp; TestExecutor/Test Developer initiated cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
     ///        thrown OperationCanceledException.
-    /// NOTE:  The Operator Reactive &amp; App.config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
+    /// NOTE:  The Operator Reactive &amp; App.config's CancelNotPassed cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
     ///        inside the TestExecutive.MeasurementsRun() loop.
     /// </para>
     /// </summary>
