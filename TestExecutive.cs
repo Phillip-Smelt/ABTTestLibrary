@@ -26,7 +26,6 @@ using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
 using ABT.TestSpace.TestExec.Logging;
 using ABT.TestSpace.TestExec.Switching.USB_ERB24;
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
-using System.Diagnostics.Metrics;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestExecutor based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestExecutor.
@@ -199,7 +198,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void Form_Closing(Object sender, FormClosingEventArgs e) { PreApplicationExit(); }
 
-        private void Form_Shown(Object sender, EventArgs e) { ButtonSelectTests_Click(sender, e); }
+        private void Form_Shown(Object sender, EventArgs e) { ButtonSelect_Click(sender, e); }
 
         private void FormModeReset() {
             TextTest.Text = String.Empty;
@@ -215,7 +214,7 @@ namespace ABT.TestSpace.TestExec {
         private void FormModeRun() {
             ButtonCancelReset(enabled: true);
             ButtonEmergencyStopReset(enabled: true);
-            ButtonSelectTests.Enabled = false;
+            ButtonSelect.Enabled = false;
             ButtonRunReset(enabled: false);
             TSMI_System_Diagnostics.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
@@ -226,7 +225,7 @@ namespace ABT.TestSpace.TestExec {
         private void FormModeSelect() {
             ButtonCancelReset(enabled: false);
             ButtonEmergencyStopReset(enabled: false);
-            ButtonSelectTests.Enabled = true;
+            ButtonSelect.Enabled = true;
             ButtonRunReset(enabled: ConfigTest != null);
             TSMI_System_Diagnostics.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
@@ -400,12 +399,8 @@ namespace ABT.TestSpace.TestExec {
             ButtonEmergencyStop.Enabled = enabled;
         }
 
-        private void ButtonSelectTests_Click(Object sender, EventArgs e) {
-            ConfigTest = AppConfigTest.Get();
-            _statusTime.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
-            Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
-            FormModeReset();
-            FormModeSelect();
+        private void ButtonSelect_Click(Object sender, EventArgs e) {
+
         }
 
         private async void ButtonRun_Clicked(Object sender, EventArgs e) {

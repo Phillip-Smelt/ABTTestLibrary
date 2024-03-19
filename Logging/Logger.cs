@@ -23,7 +23,7 @@ namespace ABT.TestSpace.TestExec.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_21 = "                     ";
-        private const String MESSAGE_STOP = "STOP              : ";
+        private const String MESSAGE_STOP = "Stop              : ";
         private const String MESSAGE_TEST_EVENT = "Test Event";
         private const String MESSAGE_UUT_EVENT = MESSAGE_TEST_EVENT + "        : ";
 
@@ -106,7 +106,7 @@ namespace ABT.TestSpace.TestExec.Logging {
                 Log.Information(FormatMessage($"UUT Revision", $"{TestExecutive.ConfigUUT.Revision}"));
                 Log.Information(FormatMessage($"TestGroup ID", $"{testExecutive.ConfigTest.TestElementID}"));
                 Log.Information(FormatMessage($"Description", $"{testExecutive.ConfigTest.TestElementDescription}"));
-                Log.Information(FormatMessage($"START", $"{DateTime.Now}\n"));
+                Log.Information(FormatMessage($"Start", $"{DateTime.Now}\n"));
                 return;
                 // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurements are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
@@ -141,7 +141,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"\tCustomer          : {TestExecutive.ConfigUUT.Customer}\n");
 
             Log.Information($"TestOperation:");
-            Log.Information($"\tSTART             : {DateTime.Now}");
+            Log.Information($"\tStart             : {DateTime.Now}");
             Log.Information($"\t{MESSAGE_STOP}");
             Log.Information($"\tUserPrincipal     : {UserPrincipal.Current.DisplayName}");
             // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
