@@ -4,12 +4,6 @@ using System.Drawing;
 using System.Linq;
 
 namespace ABT.TestSpace.TestExec {
-    public class CancellationException : Exception {
-        // NOTE:  Only ever throw CancellationException from TestExecutor, never from TestExecutive.
-        public CancellationException(String message = "") : base(message) { }
-        public const String ClassName = nameof(CancellationException);
-    }
-
     public class TimerMilliSeconds {
         private readonly Int32 _milliSeconds;
         private readonly DateTime _start;

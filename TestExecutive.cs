@@ -112,10 +112,10 @@ namespace ABT.TestSpace.TestExec {
     ///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
     /// B) PrePlanned Developer Programmed Cancellations:
     ///      3)  TestExecutor/Test Developer initiated Cancellations:
-    ///          - Any TestExecutor's Measurement can initiate a Cancellation programmatically by simply throwing a CancellationException:
+    ///          - Any TestExecutor's Measurement can initiate a Cancellation programmatically by simply throwing an OperationCanceledException:
     ///          - Permits immediate Cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
     ///            or simply because futher execution is pointless.
-    ///          - Simply throw a CancellationException if the specific condition(s) occcur.
+    ///          - Simply throw an OperationCanceledException if the specific condition(s) occcur.
     ///      4)  App.config's CancelNotPassed:
     ///          - App.config's TestMeasurement element has a Boolean "CancelNotPassed" field:
     ///          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return TestEvents.PASS,
@@ -123,7 +123,7 @@ namespace ABT.TestSpace.TestExec {
     ///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
     ///
     /// NOTE:  The Operator Proactive &amp; TestExecutor/Test Developer initiated Cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
-    ///        thrown CancellationExceptions.
+    ///        thrown OperationCanceledException.
     /// NOTE:  The Operator Reactive &amp; App.config's CancelNotPassed Cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
     ///        inside the TestExecutive.MeasurementsRun() loop.
     /// </para>
@@ -256,22 +256,13 @@ namespace ABT.TestSpace.TestExec {
 
         public virtual void Initialize() {
             if (ConfigUUT.Simulate) return;
-            try {
-                SCPI99.Initialize(SVIs);
-                UE24.Initialize();
-            } catch (Exception e) {
-                ErrorMessage(e);
-            }
+            SCPI99.Initialize(SVIs);
+            UE24.Initialize();
         }
 
         public virtual Boolean Initialized() {
             if (ConfigUUT.Simulate) return true;
-            try {
-                return SCPI99.Initialized(SVIs) && UE24.Initialized();
-            } catch (Exception e) {
-                ErrorMessage(e);
-                return false;
-            }
+            return SCPI99.Initialized(SVIs) && UE24.Initialized();
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -630,17 +621,10 @@ namespace ABT.TestSpace.TestExec {
                             AppendOperationCanceledMessage(e, measurementID);
                             return;
                         }
-                        if (e.ToString().Contains(CancellationException.ClassName)) {
-                            ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
-                            while (!(e is CancellationException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
-                            ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{CancellationException.ClassName}:{Environment.NewLine}{e.Message}");
-                            return;
-                        } else {
-                            ConfigTest.Measurements[measurementID].TestEvent = TestEvents.ERROR;
-                            ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{e}");
-                            ErrorMessage(e);
-                            return;
-                        }
+                        ConfigTest.Measurements[measurementID].TestEvent = TestEvents.ERROR;
+                        ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{e}");
+                        ErrorMessage(e);
+                        return;
                     } finally {
                         Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
                     }
