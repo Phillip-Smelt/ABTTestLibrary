@@ -548,9 +548,12 @@ namespace ABT.TestSpace.TestExec {
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GlobalConfigurationFile);
         }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"{Assembly.GetExecutingAssembly().GetName().Name}, {Logger.BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}" +
-                $"© 2022, Amphenol Borisch Technologies.",
-                "About TestExecutive", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Form about = new About (
+                Title: "About TestExecutive",
+                RTF: $"{Assembly.GetExecutingAssembly().GetName().Name}, {Logger.BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
+                Link: "https://github.com/Amphenol-Borisch-Technologies/TestExecutive"
+            );
+            _ = about.ShowDialog();
         }
 
         private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) {
@@ -578,9 +581,12 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show($"{Assembly.GetEntryAssembly().GetName().Name}, {Logger.BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}" +
-                $"© 2022, Amphenol Borisch Technologies.",
-                "About TestExecutor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Form about = new About (
+                Title: "About TestExecutor",
+                RTF: $"{Assembly.GetEntryAssembly().GetName().Name}, {Logger.BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
+                Link: "https://github.com/Amphenol-Borisch-Technologies/TestExecutor"
+            );
+            _ = about.ShowDialog();
         }
         #endregion Form Tool Strip Menu Items
 

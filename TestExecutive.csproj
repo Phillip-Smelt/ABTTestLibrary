@@ -62,6 +62,12 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
     <Compile Include="AppConfig\AppConfigLogger.cs" />
     <Compile Include="AppConfig\AppConfigUUT.cs" />
     <Compile Include="Logging\SerialNumberDialog.cs">
@@ -107,6 +113,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Logging\SerialNumberDialog.resx">
       <DependentUpon>SerialNumberDialog.cs</DependentUpon>
     </EmbeddedResource>
