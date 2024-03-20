@@ -798,7 +798,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void StatusModeUpdate(MODES mode) {
             Dictionary<MODES, Color> ModeColors = new Dictionary<MODES, Color>() {
-                { MODES.Resetting, Color.White },
+                { MODES.Resetting, SystemColors.Control }, // Invisible ink!
                 { MODES.Selecting, Color.Black },
                 { MODES.Running, Color.Green },
                 { MODES.Cancelling, Color.Yellow },
