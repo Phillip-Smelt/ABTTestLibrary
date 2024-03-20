@@ -25,8 +25,8 @@
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
             this.Link = new System.Windows.Forms.LinkLabel();
-            this.RTF = new System.Windows.Forms.RichTextBox();
             this.OK = new System.Windows.Forms.Button();
+            this.Label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Link
@@ -40,16 +40,6 @@
             this.Link.Text = "linkAbout";
             this.Link.Click += new System.EventHandler(this.Link_Clicked);
             // 
-            // RTF
-            // 
-            this.RTF.Location = new System.Drawing.Point(12, 12);
-            this.RTF.Name = "RTF";
-            this.RTF.ReadOnly = true;
-            this.RTF.Size = new System.Drawing.Size(678, 156);
-            this.RTF.TabIndex = 0;
-            this.RTF.TabStop = false;
-            this.RTF.Text = "";
-            // 
             // OK
             // 
             this.OK.Location = new System.Drawing.Point(605, 178);
@@ -60,6 +50,15 @@
             this.OK.UseVisualStyleBackColor = true;
             this.OK.Click += new System.EventHandler(this.OK_Clicked);
             // 
+            // Label
+            // 
+            this.Label.AutoSize = true;
+            this.Label.Location = new System.Drawing.Point(12, 9);
+            this.Label.Name = "Label";
+            this.Label.Size = new System.Drawing.Size(72, 16);
+            this.Label.TabIndex = 4;
+            this.Label.Text = "labelAbout";
+            // 
             // About
             // 
             this.AcceptButton = this.OK;
@@ -67,8 +66,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(702, 215);
             this.ControlBox = false;
+            this.Controls.Add(this.Label);
             this.Controls.Add(this.OK);
-            this.Controls.Add(this.RTF);
             this.Controls.Add(this.Link);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -84,7 +83,7 @@
         #endregion
 
         private System.Windows.Forms.LinkLabel Link;
-        private System.Windows.Forms.RichTextBox RTF;
         private System.Windows.Forms.Button OK;
+        private System.Windows.Forms.Label Label;
     }
 }
