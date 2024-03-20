@@ -32,9 +32,11 @@
             // Link
             // 
             this.Link.AutoSize = true;
-            this.Link.Location = new System.Drawing.Point(12, 185);
+            this.Link.Font = new System.Drawing.Font("Consolas", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Link.Location = new System.Drawing.Point(16, 265);
+            this.Link.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.Link.Name = "Link";
-            this.Link.Size = new System.Drawing.Size(62, 16);
+            this.Link.Size = new System.Drawing.Size(90, 20);
             this.Link.TabIndex = 1;
             this.Link.TabStop = true;
             this.Link.Text = "linkAbout";
@@ -42,9 +44,10 @@
             // 
             // OK
             // 
-            this.OK.Location = new System.Drawing.Point(605, 178);
+            this.OK.Location = new System.Drawing.Point(831, 256);
+            this.OK.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.OK.Name = "OK";
-            this.OK.Size = new System.Drawing.Size(85, 23);
+            this.OK.Size = new System.Drawing.Size(116, 34);
             this.OK.TabIndex = 2;
             this.OK.Text = "OK";
             this.OK.UseVisualStyleBackColor = true;
@@ -53,23 +56,27 @@
             // Label
             // 
             this.Label.AutoSize = true;
-            this.Label.Location = new System.Drawing.Point(12, 9);
+            this.Label.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label.Location = new System.Drawing.Point(16, 12);
+            this.Label.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.Label.Name = "Label";
-            this.Label.Size = new System.Drawing.Size(72, 16);
+            this.Label.Size = new System.Drawing.Size(120, 23);
             this.Label.TabIndex = 4;
             this.Label.Text = "labelAbout";
             // 
             // About
             // 
             this.AcceptButton = this.OK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(702, 215);
+            this.ClientSize = new System.Drawing.Size(965, 310);
             this.ControlBox = false;
             this.Controls.Add(this.Label);
             this.Controls.Add(this.OK);
             this.Controls.Add(this.Link);
+            this.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "About";
