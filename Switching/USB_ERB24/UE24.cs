@@ -22,9 +22,6 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
         //  - Set(UE.B0, new Dictionary<RELAYS, C.S>() {{RELAYS.C01,C.S.NC}, {RELAYS.C02,C.S.NO}, ... {RELAYS.C24,C.S.NC} });
         // NOTE:  R's items named C## because USB-ERB24's relays are all Form C.
 
-    // TODO:  Soon; replace public UE24 Get/Set/Are methods with a single public method that invokes specific public UE24 delegates, that in turn
-    // invoke specific private UE24 methods.
-    // Reason; single point of entry to invoke TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
     // TODO:  Eventually; change UE24 from a singleton to a static class; consistent with ABT.TestSpace.TestExec.SCPI_VISA_Instruments namespace classes.
     public sealed class UE24 {
         // NOTE:  Most of this class is compatible with MCC's USB-ERB08 Relay Board, essentially a USB-ERB24 but with only 8 Form C relays instead of the USB-ERB24's 24.
