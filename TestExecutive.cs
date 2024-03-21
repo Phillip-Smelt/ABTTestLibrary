@@ -168,9 +168,8 @@ namespace ABT.TestSpace.TestExec {
 
             _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
             ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
-            // TODO:  Soon; store ConfigUUT.SerialNumber in Settings.Settings instead of Widnows Registry.
-            // https://stackoverflow.com/questions/268424/when-and-why-should-you-store-data-in-the-windows-registry
-            // https://stackoverflow.com/questions/6607/registry-vs-ini-file-for-storing-user-configurable-application-settings
+            // NOTE:  Using Application Settings is generally advisable over the Windows Registry, but doing so permits all app users to write the App.config file.
+            // - This means all users can also modify App.config's TestOperations, TestGroups & TestMeasurements, which is a no-no.
             _statusTime.Elapsed += StatusTimeUpdate;
             _statusTime.AutoReset = true;
             CTS_Cancel = new CancellationTokenSource();
