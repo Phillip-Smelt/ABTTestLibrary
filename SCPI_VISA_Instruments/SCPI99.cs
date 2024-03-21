@@ -19,10 +19,6 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
     public enum STATE { off, ON }
     // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
 
-
-    // TODO:  Soon; replace public SCPI VISA Instrument methods with a single public method that invokes specific public SVI delegates, that in turn
-    // invoke specific private SVI methods.
-    // Reason; single point of entry to invoke TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
     public static class SCPI99 {
         // NOTE:  SCPI-99 Commands/Queries are supposedly standard across all SCPI-99 compliant instruments, which allows common functionality.
         // NOTE:  Using this SCPI99 class is sub-optimal when a compatible .Net VISA instrument driver is available:
