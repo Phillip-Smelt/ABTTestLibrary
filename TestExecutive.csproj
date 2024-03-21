@@ -200,9 +200,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
     <Content Include="Resources\Amphenol.ico" />
