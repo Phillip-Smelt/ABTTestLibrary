@@ -611,27 +611,29 @@ namespace ABT.TestSpace.TestExec {
                         StatusTestsUpdate(null, null);
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].TestEvent = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
-                        if (CT_Cancel.IsCancellationRequested) {
-                            ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
+                        if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
+                            Initialize();
                             return;
                         }
                     } catch (Exception e) {
                         Initialize();
-                        if (CT_EmergencyStop.IsCancellationRequested) {
-                            ConfigTest.Measurements[measurementID].TestEvent = TestEvents.EMERGENCY_STOP;
-                            return;
-                        }
                         if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
-                            ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
+                            ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;  // NOTE:  May be altered to TestEvents.EMERGENCY_STOP in finally block.
                             while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
                             ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
-                            return;
                         }
-                        ConfigTest.Measurements[measurementID].TestEvent = TestEvents.ERROR;
-                        ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{e}");
-                        ErrorMessage(e);
+                        if (!CT_EmergencyStop.IsCancellationRequested && !CT_Cancel.IsCancellationRequested) {
+                            ConfigTest.Measurements[measurementID].TestEvent = TestEvents.ERROR;
+                            ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{e}");
+                            ErrorMessage(e);
+                        }
                         return;
-                    } finally { // Always executes, regardless if Exception occurs.
+                    } finally {
+                        // NOTE:  Normally executes, regardless if catchable Exception occurs or returned out of try/catch blocks.
+                        // Exceptional exceptions are exempted; https://stackoverflow.com/questions/345091/will-code-in-a-finally-statement-fire-if-i-return-a-value-in-a-try-block.
+                        if      (CT_EmergencyStop.IsCancellationRequested) ConfigTest.Measurements[measurementID].TestEvent = TestEvents.EMERGENCY_STOP;
+                        else if (CT_Cancel.IsCancellationRequested) ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
+                        // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
                         Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
                     }
                     if (MeasurementCancelNotPassed(measurementID)) return;
