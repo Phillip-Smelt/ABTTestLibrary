@@ -176,7 +176,6 @@ namespace ABT.TestSpace.TestExec {
             CT_Cancel = CTS_Cancel.Token;
             CTS_EmergencyStop = new CancellationTokenSource();
             CT_EmergencyStop = CTS_EmergencyStop.Token;
-            CT_EmergencyStop.Register(() => Initialize());
 
             if (!ConfigUUT.Simulate) {
                 SVIs = SCPI_VISA_Instrument.Get();
@@ -396,7 +395,6 @@ namespace ABT.TestSpace.TestExec {
             if (CT_EmergencyStop.IsCancellationRequested) {
                 CTS_EmergencyStop = new CancellationTokenSource();
                 CT_EmergencyStop = CTS_EmergencyStop.Token;
-                CT_EmergencyStop.Register(() => Initialize());
             }
             ButtonEmergencyStop.Enabled = enabled;
         }
@@ -633,7 +631,7 @@ namespace ABT.TestSpace.TestExec {
                         ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{e}");
                         ErrorMessage(e);
                         return;
-                    } finally {
+                    } finally { // Always executes, regardless if Exception occurs.
                         Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
                     }
                     if (MeasurementCancelNotPassed(measurementID)) return;
