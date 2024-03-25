@@ -206,7 +206,9 @@
     <Content Include="Resources\EmergencyStop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestExecutive.config.xml" />
+    <Content Include="TestExecutive.config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
