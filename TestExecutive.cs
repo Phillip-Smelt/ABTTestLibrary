@@ -128,7 +128,7 @@ namespace ABT.TestSpace.TestExec {
     /// </para>
     /// </summary>
     public abstract partial class TestExecutive : Form {
-        public const String GlobalConfigurationFile = @"C:\Program Files\ABT\TestExecutive\TestExecutive.config.xml"; // NOTE:  Update this path if installed into another folder.
+        public const String GlobalConfigurationFile = @"C:\Program Files\ABT\isoMicro\TestExecutive.config.xml"; // NOTE:  Update this path if installed into another folder.
         public const String MutexTestExecutorName = "MutexTestExecutor";
         public static Mutex MutexTestExecutor = null;
         public const String NONE = "NONE";
