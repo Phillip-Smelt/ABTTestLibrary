@@ -549,7 +549,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
             Form about = new About (
                 Title: "About TestExecutive",
-                Text: $"{Assembly.GetExecutingAssembly().GetName().Name}, {Logger.BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
+                Text: $"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {Logger.BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
                 Link: "https://github.com/Amphenol-Borisch-Technologies/TestExecutive"
             );
             _ = about.ShowDialog();
@@ -582,7 +582,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
             Form about = new About (
                 Title: "About TestExecutor",
-                Text: $"{Assembly.GetEntryAssembly().GetName().Name}, {Logger.BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
+                Text: $"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}, {Logger.BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
                 Link: "https://github.com/Amphenol-Borisch-Technologies/TestExecutor"
             );
             _ = about.ShowDialog();

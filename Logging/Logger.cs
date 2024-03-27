@@ -146,8 +146,8 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"\tUserPrincipal     : {UserPrincipal.Current.DisplayName}");
             // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             Log.Information($"\tMachineName       : {Environment.MachineName}");
-            Log.Information($"\tTestExecutive     : {Assembly.GetExecutingAssembly().GetName().Name}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
-            Log.Information($"\tTestExecutor      : {Assembly.GetEntryAssembly().GetName().Name}, {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
+            Log.Information($"\tTestExecutive     : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
+            Log.Information($"\tTestExecutor      : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
             Log.Information($"\tSpecification     : {TestExecutive.ConfigUUT.TestSpecification}");
             Log.Information($"\tID                : {testExecutive.ConfigTest.TestElementID}");
 #if VERBOSE
