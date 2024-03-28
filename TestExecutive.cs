@@ -132,7 +132,6 @@ namespace ABT.TestSpace.TestExec {
         public const String MutexTestExecutorName = "MutexTestExecutor";
         public static Mutex MutexTestExecutor = null;
         public const String NONE = "NONE";
-        public const String EMERGENCY_STOPPED = "Emergency Stopped!";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
