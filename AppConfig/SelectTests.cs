@@ -43,6 +43,8 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             }
         }
 
+        private void List_MouseDoubleClick(Object sender, MouseEventArgs e) { OK_Click(sender, e); }
+
         public static (String TestElementID, Boolean IsOperation) Get(Dictionary<String, Operation> testOperations, Dictionary<String, Group> testGroups) {
             SelectTests selectTests = new SelectTests(testOperations, testGroups);
             selectTests.ShowDialog(); // Waits until user clicks OK button.

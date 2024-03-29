@@ -254,13 +254,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             return sb.ToString();
         }
 
-        public String StatisticsStatus() {
-            const String separator = "   ";
-            StringBuilder sb = new StringBuilder();
-            sb.Append($"{separator}Failed: {Statistics.Failed}");
-            sb.Append($"{separator}Passed: {Statistics.Passed}");
-            return sb.ToString();
-        }
+        public String StatisticsStatus() { return $"  Failed: {Statistics.Failed}     Passed: {Statistics.Passed}"; }
 
         public String StatusTime() { return $"   Time: {Statistics.Time()}"; }
     }

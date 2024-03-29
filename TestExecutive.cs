@@ -434,19 +434,23 @@ namespace ABT.TestSpace.TestExec {
         #endregion Form Command Buttons
 
         #region Form Tool Strip Menu Items
-        // NOTE:  TSMI_File_Change_Click() simulates stand-alone application behavior 
-        // by TestExecutive, despite TestExecutive being a DLL library.
-        // - Suspect the optimal way to implement TestExecutive as an independent application capable of opening &
+        // NOTE:  TSMI_File_Change_Click() simulates stand-alone application behavior by TestExecutive, despite TestExecutive being a DLL library:
+        // - Suspect the standard way to implement TestExecutive as an independent application capable of opening &
         //   executing client UUT TestExecutor.exe/executables is to reverse their architecture:
         //   - TestExecutive compiled into an independent.exe/executable instead of a .dll/library.
         //   - TestExecutors compiled into.dll/libraries instead of independent .exe/executables.
-        //   - This architectural refactoring doesn't appear overly difficult, but would likely prove time-consuming.
+        //   - This architectural refactoring doesn't appear overly difficult, but might prove time-consuming.
         //     - However, upgrades/bug-fixes to TestExecutive would then forcibly applied to all TestExecutors; there's only one TestExecutive app.
-        // - TestExecutive currently being a DLL permits upgrades/bug-fixes being optionally applied as desired to selected TestExecutors.
-        //   - Desire the new TestExecutive upgrades/bug-fixes?  Copy the new TestExecutive.dll file into desired TestExecutor folders.
-        //   - Don't want the TestExecutive upgrades/bug-fixes?  Retain the original TestExecutive.dll file in desired TestExecutor folders.
-        //   - Permits UUT specific customization of TestExecutive; add System & UUT specific apps easily to menu, etc.
-        //   - Use with caution though; this can deeply fragment TestExecutive; there could be multitudes of different TestExecutives in use.
+        //     - Like current DLL based TestExecutive, an .exe based TestExecutive would also permit customization & fragmentation of TestExecutives
+        //       albeit on a PC to PC basis, rather than a TestExecutor to TestExecutor basis.
+        //       - Don't want upgrades/bug-fixes on a TestExecutive based functional test system?  Don't install new TestExecutive onto its PC.
+        // - TestExecutive currently being a DLL permits ultimate customization & fragmentation; each TestExecutor app can have its TestExecutive
+        //   specifically customized to its UUT's TestExecutor .exe.
+        //   - Add System & UUT specific apps easily to menu, etc.
+        //   - Needn't apply upgrades/bug-fixes to TestExecutors if concerned about breaking functionality.
+        //     - Simply don't copy the new TestExecutive.dll file into TestExecutor folders of concern.
+        //   - Use with caution though; this can deeply fragment TestExecutive.
+        //     - Literally every TestExecutor having a unique TestExecutive would be chaotic & unmanageable.
           private void TSMI_File_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
                 ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestExecutors").Value;
