@@ -46,7 +46,7 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 // NOTE:  For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
 //        - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
 //        - Invoking public methods with named arguments is a superb, self-documenting coding technique, improved by PascalCasing.
-// TODO:  Eventually; add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
+// TODO:  Soon; add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
 // TODO:  Eventually; update to .Net 8.0 & C# 12.0 instead of .Net FrameWork 4.8 & C# 7.3 when possible.
 // NOTE:  Used .Net FrameWork 4.8 instead of .Net 8.0 because required Texas instruments' TIDP.SAA Fusion API targets
 //        .Net FrameWork 4.5, incompatible with .Net 8.0, C# 12.0 & WinUI 3.
@@ -446,7 +446,7 @@ namespace ABT.TestSpace.TestExec {
         // - TestExecutive currently being a DLL accentuates fragmentation; each TestExecutor app can potentially have a unique TestExecutive version.
         //   - Advantageously though, needn't apply upgrades/bug-fixes to TestExecutors if concerned about breaking functionality.
         //     - Simply don't copy the new TestExecutive.dll file into TestExecutor folders of concern.
-          private void TSMI_File_Change_Click(Object sender, EventArgs e) {
+        private void TSMI_File_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
                 ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestExecutors").Value;
                 ofd.Filter = "TestExecutor Programs|*.exe";
@@ -557,15 +557,8 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) {
             StringBuilder sb = new StringBuilder();
             String EA = Assembly.GetEntryAssembly().GetName().Name;
-            sb.AppendLine($"Adapting Doug Gwyn's philosophy here: 'Unix was not designed to stop you from doing stupid things, because that would also stop you from doing clever things.'{Environment.NewLine}");
-            sb.AppendLine($"Visual Studio's MS Build copies {EA}'s 'App.config' file into the {EA}'s executable folder as file '{EA}.exe.config'.{Environment.NewLine}");
-            sb.AppendLine($"Under normal circumstances, directly editing '{EA}.exe.config' is highly inadvisable, but for narrow/niche circumstances may prove useful, hence is assisted.{Environment.NewLine}");
-            sb.AppendLine($"- Directly editing '{EA}.exe.config' allows temporary runtime execution changes, but they're overwritten when MS Build is subsequently executed.{Environment.NewLine}");
-            sb.AppendLine($"- Changes to '{EA}.exe.config' aren't incorporated into the source 'App.config' file, therefore permanently lost the next time MS Build is executed.{Environment.NewLine}");
-            sb.AppendLine($"- For the niche case when it's useful to temporarily experiment with {EA}.exe.config's behavior, and a C# compiler and/or");
-            sb.AppendLine($" {EA} source code are unavailable on the {EA} tester's PC, directly editing '{EA}.exe.config' may prove useful.{Environment.NewLine}");
-            sb.AppendLine($"- Be sure to backport any permanently desired '{EA}.exe.config' changes to 'App.config'.{Environment.NewLine}");
-            sb.AppendLine($"- Also be sure to undo any temporary undesired '{EA}.exe.config' changes after experimention is completed.");
+            sb.AppendLine($"Please backport any permanently desired '{EA}.exe.config' changes to source repository's 'App.config'.{Environment.NewLine}");
+            sb.AppendLine($"Also please undo any temporary undesired '{EA}.exe.config' changes.");
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", $"{EA}.exe.config");
         }
