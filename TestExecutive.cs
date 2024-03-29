@@ -434,13 +434,19 @@ namespace ABT.TestSpace.TestExec {
         #endregion Form Command Buttons
 
         #region Form Tool Strip Menu Items
-        //NOTE:  TSMI_File_Change_Click() & TSMI_File_Exit_Click() are attempts to make
-        //TestExecutive behave like a stand-alone application, despite TestExecutive being a DLL library:
+        // NOTE:  TSMI_File_Change_Click() simulates stand-alone application behavior 
+        // by TestExecutive, despite TestExecutive being a DLL library.
         // - Suspect the optimal way to implement TestExecutive as an independent application capable of opening &
         //   executing client UUT TestExecutor.exe/executables is to reverse their architecture:
         //   - TestExecutive compiled into an independent.exe/executable instead of a .dll/library.
         //   - TestExecutors compiled into.dll/libraries instead of independent .exe/executables.
-        // - This architecture refactoring doesn't appear overly difficult, but will likely prove time-consuming.
+        //   - This architectural refactoring doesn't appear overly difficult, but would likely prove time-consuming.
+        //     - However, upgrades/bug-fixes to TestExecutive would then forcibly applied to all TestExecutors; there's only one TestExecutive app.
+        // - TestExecutive currently being a DLL permits upgrades/bug-fixes being optionally applied as desired to selected TestExecutors.
+        //   - Desire the new TestExecutive upgrades/bug-fixes?  Copy the new TestExecutive.dll file into desired TestExecutor folders.
+        //   - Don't want the TestExecutive upgrades/bug-fixes?  Retain the original TestExecutive.dll file in desired TestExecutor folders.
+        //   - Permits UUT specific customization of TestExecutive; add System & UUT specific apps easily to menu, etc.
+        //   - Use with caution though; this can deeply fragment TestExecutive; there could be multitudes of different TestExecutives in use.
           private void TSMI_File_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
                 ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestExecutors").Value;
