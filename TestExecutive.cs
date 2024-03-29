@@ -196,7 +196,7 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        private void Form_Closing(Object sender, FormClosingEventArgs e) { PreApplicationExit(); }
+        private void Form_Closing(Object sender, FormClosingEventArgs e) { if (e.CloseReason == CloseReason.UserClosing) Initialize(); }
 
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelect_Click(sender, e); }
 
@@ -297,13 +297,6 @@ namespace ABT.TestSpace.TestExec {
                 };
                 Process.Start(psi);
             } else InvalidPathError(FolderPath);
-        }
-
-        private void PreApplicationExit() {
-            Initialize();
-            if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
-            MutexTestExecutor.ReleaseMutex();
-            MutexTestExecutor.Dispose();
         }
 
         public static Boolean RegexInvalid(String RegularExpression) {
@@ -456,14 +449,18 @@ namespace ABT.TestSpace.TestExec {
                 ofd.RestoreDirectory = true;
 
                 if (ofd.ShowDialog() == DialogResult.OK) {
+                    Initialize();
+                    if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
+                    MutexTestExecutor.ReleaseMutex();
+                    MutexTestExecutor.Dispose();
                     ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
                     Process.Start(psi);
-                    TSMI_File_Exit_Click(sender, e);
+                    System.Windows.Forms.Application.Exit();
                 }
             }
         }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
-            this.Close();
+            Initialize();
             System.Windows.Forms.Application.Exit();
         }
         private void TSMI_File_Save_Click(Object sender, EventArgs e) {
