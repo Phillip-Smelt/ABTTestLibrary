@@ -254,7 +254,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             return sb.ToString();
         }
 
-        public String StatisticsStatus() { return $"  Failed: {Statistics.Failed}     Passed: {Statistics.Passed}"; }
+        public String StatisticsStatus() { return $"   Failed: {Statistics.Failed}     Passed: {Statistics.Passed}   "; }
 
         public String StatusTime() { return $"   Time: {Statistics.Time()}"; }
     }
