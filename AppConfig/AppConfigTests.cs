@@ -242,14 +242,15 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public static AppConfigTest Get() { return new AppConfigTest(); }
 
         public String StatisticsDisplay() {
-            const Int32 R = 16, L = 6;
+            const Int32 L = 6;
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Cancelled: {Statistics.Cancelled}".PadRight(R) + $"{Statistics.PercentCancelled():P1}".PadLeft(L));
-            sb.AppendLine($"E-Stopped: {Statistics.EmergencyStopped}".PadRight(R) + $"{Statistics.PercentEmergencyStopped():P1}".PadLeft(L));
-            sb.AppendLine($"Errored: {Statistics.Errored}".PadRight(R) + $"{Statistics.PercentErrored():P1}".PadLeft(L));
-            sb.AppendLine($"Failed: {Statistics.Failed}".PadRight(R) + $"{Statistics.PercentFailed():P1}".PadLeft(L));
-            sb.AppendLine($"Passed: {Statistics.Passed}".PadRight(R) + $"{Statistics.PercentPassed():P1}".PadLeft(L));
-            sb.AppendLine($"Total: {Statistics.Tested()}".PadRight(R));
+            sb.AppendLine($"Cancelled: {Statistics.Cancelled,-L}, {Statistics.PercentCancelled():P1}");
+            sb.AppendLine($"E-Stopped: {Statistics.EmergencyStopped,-L}, {Statistics.PercentEmergencyStopped():P1}");
+            sb.AppendLine($"Errored:   {Statistics.Errored,-L}, {Statistics.PercentErrored():P1}");
+            sb.AppendLine($"Failed:    {Statistics.Failed,-L}, {Statistics.PercentFailed():P1}");
+            sb.AppendLine($"Passed:    {Statistics.Passed,-L}, {Statistics.PercentPassed():P1}");
+            sb.AppendLine($"------");
+            sb.AppendLine($"Total:     {Statistics.Tested(),-L}");
             return sb.ToString();
         }
 
