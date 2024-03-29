@@ -90,8 +90,8 @@ namespace ABT.TestSpace.TestExec {
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.StatusTimeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusStatisticsLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.StatusCustomLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusModeLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.StatusCustomLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MS.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -204,7 +204,7 @@ namespace ABT.TestSpace.TestExec {
             this.MS.Location = new System.Drawing.Point(0, 0);
             this.MS.Name = "MS";
             this.MS.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.MS.Size = new System.Drawing.Size(1393, 30);
+            this.MS.Size = new System.Drawing.Size(1393, 28);
             this.MS.TabIndex = 6;
             this.MS.TabStop = true;
             // 
@@ -216,7 +216,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File_Separator1,
             this.TSMI_File_Exit});
             this.TSMI_File.Name = "TSMI_File";
-            this.TSMI_File.Size = new System.Drawing.Size(46, 26);
+            this.TSMI_File.Size = new System.Drawing.Size(46, 24);
             this.TSMI_File.Text = "&File";
             // 
             // TSMI_File_Change
@@ -231,7 +231,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File_Save.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_File_Save.Image")));
             this.TSMI_File_Save.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.TSMI_File_Save.Name = "TSMI_File_Save";
-            this.TSMI_File_Save.Size = new System.Drawing.Size(228, 30);
+            this.TSMI_File_Save.Size = new System.Drawing.Size(142, 26);
             this.TSMI_File_Save.Text = "&Save";
             this.TSMI_File_Save.ToolTipText = "Save UUT results.";
             this.TSMI_File_Save.Click += new System.EventHandler(this.TSMI_File_Save_Click);
@@ -257,7 +257,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_Microsoft,
             this.TSMI_Apps_TexasInstruments});
             this.TSMI_Apps.Name = "TSMI_Apps";
-            this.TSMI_Apps.Size = new System.Drawing.Size(61, 26);
+            this.TSMI_Apps.Size = new System.Drawing.Size(61, 24);
             this.TSMI_Apps.Text = " &Apps";
             // 
             // TSMI_Apps_Keysight
@@ -459,7 +459,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_System_Separator1,
             this.TSMI_System_About});
             this.TSMI_System.Name = "TSMI_System";
-            this.TSMI_System.Size = new System.Drawing.Size(70, 26);
+            this.TSMI_System.Size = new System.Drawing.Size(70, 24);
             this.TSMI_System.Text = "S&ystem";
             // 
             // TSMI_System_BarcodeScannerDiscovery
@@ -561,7 +561,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_Separator1,
             this.TSMI_UUT_About});
             this.TSMI_UUT.Name = "TSMI_UUT";
-            this.TSMI_UUT.Size = new System.Drawing.Size(51, 26);
+            this.TSMI_UUT.Size = new System.Drawing.Size(51, 24);
             this.TSMI_UUT.Text = "&UUT";
             // 
             // TSMI_UUT_AppConfig
@@ -659,6 +659,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             // StatusStrip
             // 
+            this.StatusStrip.BackColor = System.Drawing.SystemColors.ControlDark;
             this.StatusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.StatusTimeLabel,
@@ -673,6 +674,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             // StatusTimeLabel
             // 
+            this.StatusTimeLabel.BackColor = System.Drawing.SystemColors.ControlDark;
             this.StatusTimeLabel.Name = "StatusTimeLabel";
             this.StatusTimeLabel.Size = new System.Drawing.Size(42, 20);
             this.StatusTimeLabel.Text = "Time";
@@ -680,26 +682,29 @@ namespace ABT.TestSpace.TestExec {
             // 
             // StatusStatisticsLabel
             // 
+            this.StatusStatisticsLabel.BackColor = System.Drawing.SystemColors.ControlDark;
             this.StatusStatisticsLabel.Name = "StatusStatisticsLabel";
             this.StatusStatisticsLabel.Size = new System.Drawing.Size(67, 20);
             this.StatusStatisticsLabel.Text = "Statistics";
             this.StatusStatisticsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // StatusModeLabel
+            // 
+            this.StatusModeLabel.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.StatusModeLabel.Name = "StatusModeLabel";
+            this.StatusModeLabel.Size = new System.Drawing.Size(48, 20);
+            this.StatusModeLabel.Text = "Mode";
+            this.StatusModeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // StatusCustomLabel
             // 
+            this.StatusCustomLabel.BackColor = System.Drawing.SystemColors.ControlDark;
             this.StatusCustomLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.StatusCustomLabel.Name = "StatusCustomLabel";
             this.StatusCustomLabel.Size = new System.Drawing.Size(1177, 20);
             this.StatusCustomLabel.Spring = true;
             this.StatusCustomLabel.Text = "Custom";
             this.StatusCustomLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // StatusModeLabel
-            // 
-            this.StatusModeLabel.Name = "StatusModeLabel";
-            this.StatusModeLabel.Size = new System.Drawing.Size(48, 20);
-            this.StatusModeLabel.Text = "Mode";
-            this.StatusModeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // TestExecutive
             // 

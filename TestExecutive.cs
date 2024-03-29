@@ -800,8 +800,6 @@ namespace ABT.TestSpace.TestExec {
 
         private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = ConfigTest.StatisticsStatus())); }
 
-        public void StatusCustomWrite(String Message) { Invoke((Action)(() => StatusCustomLabel.Text = Message)); }
-
         private enum MODES { Resetting, Selecting, Running, Cancelling, Emergency_Stopping };
 
         private void StatusModeUpdate(MODES mode) {
@@ -816,6 +814,8 @@ namespace ABT.TestSpace.TestExec {
             Invoke((Action)(() => StatusModeLabel.Text = Enum.GetName(typeof(MODES), mode)));
             Invoke((Action)(() => StatusModeLabel.ForeColor = ModeColors[mode]));
         }
+
+        public void StatusCustomWrite(String Message) { Invoke((Action)(() => StatusCustomLabel.Text = Message)); }
         #endregion Status Strip methods.
     }
 }
