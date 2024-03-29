@@ -244,13 +244,13 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public String StatisticsDisplay() {
             const Int32 L = 6;
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Cancelled: {Statistics.Cancelled,L}, {Statistics.PercentCancelled():P1}");
-            sb.AppendLine($"E-Stopped: {Statistics.EmergencyStopped,L}, {Statistics.PercentEmergencyStopped():P1}");
-            sb.AppendLine($"Errored:   {Statistics.Errored,L}, {Statistics.PercentErrored():P1}");
-            sb.AppendLine($"Failed:    {Statistics.Failed,L}, {Statistics.PercentFailed():P1}");
-            sb.AppendLine($"Passed:    {Statistics.Passed,L}, {Statistics.PercentPassed():P1}");
+            sb.AppendLine($"Cancelled : {Statistics.Cancelled,L}, {Statistics.PercentCancelled(),L:P1}");
+            sb.AppendLine($"E-Stopped : {Statistics.EmergencyStopped,L}, {Statistics.PercentEmergencyStopped(),L:P1}");
+            sb.AppendLine($"Errored   : {Statistics.Errored,L}, {Statistics.PercentErrored(),L:P1}");
+            sb.AppendLine($"Failed    : {Statistics.Failed,L}, {Statistics.PercentFailed(),L:P1}");
+            sb.AppendLine($"Passed    : {Statistics.Passed,L}, {Statistics.PercentPassed(),L:P1}");
             sb.AppendLine($"------");
-            sb.AppendLine($"Total:     {Statistics.Tested(),L}");
+            sb.AppendLine($"Total     : {Statistics.Tested(),L}");
             return sb.ToString();
         }
 

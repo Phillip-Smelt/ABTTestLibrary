@@ -663,8 +663,8 @@ namespace ABT.TestSpace.TestExec {
             this.StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.StatusTimeLabel,
             this.StatusStatisticsLabel,
-            this.StatusCustomLabel,
-            this.StatusModeLabel});
+            this.StatusModeLabel,
+            this.StatusCustomLabel});
             this.StatusStrip.Location = new System.Drawing.Point(0, 758);
             this.StatusStrip.Name = "StatusStrip";
             this.StatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
@@ -689,16 +689,17 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.StatusCustomLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.StatusCustomLabel.Name = "StatusCustomLabel";
-            this.StatusCustomLabel.Size = new System.Drawing.Size(59, 20);
+            this.StatusCustomLabel.Size = new System.Drawing.Size(1177, 20);
+            this.StatusCustomLabel.Spring = true;
             this.StatusCustomLabel.Text = "Custom";
             this.StatusCustomLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // StatusModeLabel
             // 
             this.StatusModeLabel.Name = "StatusModeLabel";
-            this.StatusModeLabel.Size = new System.Drawing.Size(1166, 20);
-            this.StatusModeLabel.Spring = true;
+            this.StatusModeLabel.Size = new System.Drawing.Size(48, 20);
             this.StatusModeLabel.Text = "Mode";
+            this.StatusModeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // TestExecutive
             // 
