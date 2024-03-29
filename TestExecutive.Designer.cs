@@ -659,7 +659,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             // StatusStrip
             // 
-            this.StatusStrip.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.StatusStrip.BackColor = System.Drawing.SystemColors.ControlLight;
             this.StatusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.StatusTimeLabel,
@@ -674,7 +674,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             // StatusTimeLabel
             // 
-            this.StatusTimeLabel.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.StatusTimeLabel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.StatusTimeLabel.Name = "StatusTimeLabel";
             this.StatusTimeLabel.Size = new System.Drawing.Size(42, 20);
             this.StatusTimeLabel.Text = "Time";
@@ -682,7 +682,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             // StatusStatisticsLabel
             // 
-            this.StatusStatisticsLabel.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.StatusStatisticsLabel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.StatusStatisticsLabel.Name = "StatusStatisticsLabel";
             this.StatusStatisticsLabel.Size = new System.Drawing.Size(67, 20);
             this.StatusStatisticsLabel.Text = "Statistics";
@@ -690,7 +690,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             // StatusModeLabel
             // 
-            this.StatusModeLabel.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.StatusModeLabel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.StatusModeLabel.Name = "StatusModeLabel";
             this.StatusModeLabel.Size = new System.Drawing.Size(48, 20);
             this.StatusModeLabel.Text = "Mode";
@@ -698,7 +698,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             // StatusCustomLabel
             // 
-            this.StatusCustomLabel.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.StatusCustomLabel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.StatusCustomLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.StatusCustomLabel.Name = "StatusCustomLabel";
             this.StatusCustomLabel.Size = new System.Drawing.Size(1177, 20);
