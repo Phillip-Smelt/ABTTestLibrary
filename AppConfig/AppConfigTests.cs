@@ -241,16 +241,23 @@ namespace ABT.TestSpace.TestExec.AppConfig {
 
         public static AppConfigTest Get() { return new AppConfigTest(); }
 
-        public String StatusTests() {
+        public String StatisticsDisplay() {
+            const Int32 R = 16, L = 6;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Cancelled: {Statistics.Cancelled}".PadRight(R) + $"{Statistics.PercentCancelled():P1}".PadLeft(L));
+            sb.AppendLine($"E-Stopped: {Statistics.EmergencyStopped}".PadRight(R) + $"{Statistics.PercentEmergencyStopped():P1}".PadLeft(L));
+            sb.AppendLine($"Errored: {Statistics.Errored}".PadRight(R) + $"{Statistics.PercentErrored():P1}".PadLeft(L));
+            sb.AppendLine($"Failed: {Statistics.Failed}".PadRight(R) + $"{Statistics.PercentFailed():P1}".PadLeft(L));
+            sb.AppendLine($"Passed: {Statistics.Passed}".PadRight(R) + $"{Statistics.PercentPassed():P1}".PadLeft(L));
+            sb.AppendLine($"Total: {Statistics.Tested()}".PadRight(R));
+            return sb.ToString();
+        }
+
+        public String StatisticsStatus() {
             const String separator = "   ";
             StringBuilder sb = new StringBuilder();
-            sb.Append($"{separator}Tested: {Statistics.Tested()}");
-            sb.Append($"{separator}Cancelled: {Statistics.Cancelled}");
-            sb.Append($"{separator}Emergency Stopped: {Statistics.EmergencyStopped}");
-            sb.Append($"{separator}Errored: {Statistics.Errored}");
             sb.Append($"{separator}Failed: {Statistics.Failed}");
             sb.Append($"{separator}Passed: {Statistics.Passed}");
-            sb.Append($"{separator}Passed: {Statistics.PercentPassed():P1}");
             return sb.ToString();
         }
 

@@ -206,7 +206,7 @@ namespace ABT.TestSpace.TestExec {
             TextTest.Refresh();
             rtfResults.Text = String.Empty;
             StatusTimeUpdate(null, null);
-            StatusTestsUpdate(null, null);
+            StatusStatisticsUpdate(null, null);
             StatusCustomWrite(String.Empty);
             StatusModeUpdate(MODES.Resetting);
         }
@@ -218,7 +218,7 @@ namespace ABT.TestSpace.TestExec {
             ButtonRunReset(enabled: false);
             TSMI_System_Diagnostics.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
-            TSMI_UUT_ResetStatus.Enabled = false;
+            TSMI_UUT_Statistics.Enabled = false;
             StatusModeUpdate(MODES.Running);
         }
 
@@ -229,7 +229,7 @@ namespace ABT.TestSpace.TestExec {
             ButtonRunReset(enabled: ConfigTest != null);
             TSMI_System_Diagnostics.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
-            TSMI_UUT_ResetStatus.Enabled = true;
+            TSMI_UUT_Statistics.Enabled = true;
             StatusModeUpdate(MODES.Selecting);
         }
 
@@ -441,33 +441,32 @@ namespace ABT.TestSpace.TestExec {
         #endregion Form Command Buttons
 
         #region Form Tool Strip Menu Items
-        // TODO:  Eventually; TSMI_File_Change_Click() & TSMI_File_Save_Click() were misdirected attempts to make
-        // TestExecutive behave like a stand-alone application, despite TestExecutive being a DLL library:
-        // - Unfortunately, the correct way to implement TestExecutive as an independent application capable of opening &
-        //   executing client UUT TestExecutor .exe/executables is to reverse their architecture:
-        //   - TestExecutive must be compiled into an independent .exe/executable instead of a .dll/library.
-        //   - TestExecutors must be compiled into .dll/libraries instead of independent .exe/executables.
+        //NOTE:  TSMI_File_Change_Click() & TSMI_File_Exit_Click() are attempts to make
+        //TestExecutive behave like a stand-alone application, despite TestExecutive being a DLL library:
+        // - Suspect the optimal way to implement TestExecutive as an independent application capable of opening &
+        //   executing client UUT TestExecutor.exe/executables is to reverse their architecture:
+        //   - TestExecutive compiled into an independent.exe/executable instead of a .dll/library.
+        //   - TestExecutors compiled into.dll/libraries instead of independent .exe/executables.
         // - This architecture refactoring doesn't appear overly difficult, but will likely prove time-consuming.
-        //   - Punting until time permits or need drives.
-        //  private void TSMI_File_Change_Click(Object sender, EventArgs e) {
-        //      using (OpenFileDialog ofd = new OpenFileDialog()) {
-        //          ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestExecutors").Value;
-        //          ofd.Filter = "TestExecutor Programs|*.exe";
-        //          ofd.DereferenceLinks = true;
-        //          ofd.RestoreDirectory = true;
+          private void TSMI_File_Change_Click(Object sender, EventArgs e) {
+            using (OpenFileDialog ofd = new OpenFileDialog()) {
+                ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestExecutors").Value;
+                ofd.Filter = "TestExecutor Programs|*.exe";
+                ofd.DereferenceLinks = true;
+                ofd.RestoreDirectory = true;
 
-        //          if (ofd.ShowDialog() == DialogResult.OK) {
-        //              PreApplicationExit();
-        //              ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
-        //              Process.Start(psi);
-        //              System.Windows.Forms.Application.Exit();
-        //          }
-        //      }
-        //  }
-        //  private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
-        //      PreApplicationExit();
-        //      System.Windows.Forms.Application.Exit();
-        //  }
+                if (ofd.ShowDialog() == DialogResult.OK) {
+                    PreApplicationExit();
+                    ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
+                    Process.Start(psi);
+                    TSMI_File_Exit_Click(sender, e);
+                }
+            }
+        }
+        private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
+            this.Close();
+            System.Windows.Forms.Application.Exit();
+        }
         private void TSMI_File_Save_Click(Object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog {
                 Title = "Save Test Results",
@@ -571,10 +570,14 @@ namespace ABT.TestSpace.TestExec {
         }
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.DocumentationFolder); }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
-        private void TSMI_UUT_ResetStatus_Click(Object sender, EventArgs e) {
+        private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
+            _ = MessageBox.Show(ConfigTest.StatisticsDisplay(), "Statistics", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+        private void TSMI_UUT_StatisticsReset_Click(Object sender, EventArgs e) {
             ConfigTest.Statistics = new Statistics();
             StatusTimeUpdate(null, null);
-            StatusTestsUpdate(null, null);
+            StatusStatisticsUpdate(null, null);
         }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
@@ -607,7 +610,7 @@ namespace ABT.TestSpace.TestExec {
                     MeasurementIDPresent = measurementID;
                     MeasurementPresent = ConfigTest.Measurements[MeasurementIDPresent];
                     try {
-                        StatusTestsUpdate(null, null);
+                        StatusStatisticsUpdate(null, null);
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].TestEvent = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                         if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
@@ -649,7 +652,7 @@ namespace ABT.TestSpace.TestExec {
             TextTest.Text = ConfigUUT.TestEvent;
             TextTest.BackColor = TestEvents.GetColor(ConfigUUT.TestEvent);
             ConfigTest.Statistics.Update(ConfigUUT.TestEvent);
-            StatusTestsUpdate(null, null);
+            StatusStatisticsUpdate(null, null);
             Logger.Stop(this, ref rtfResults);
         }
 
@@ -795,7 +798,7 @@ namespace ABT.TestSpace.TestExec {
         #region Status Strip methods.
         private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = ConfigTest.StatusTime())); }
 
-        private void StatusTestsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTestsLabel.Text = ConfigTest.StatusTests())); }
+        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = ConfigTest.StatisticsStatus())); }
 
         public void StatusCustomWrite(String Message) { Invoke((Action)(() => StatusCustomLabel.Text = Message)); }
 
