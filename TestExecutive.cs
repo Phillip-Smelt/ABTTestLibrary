@@ -456,7 +456,6 @@ namespace ABT.TestSpace.TestExec {
                 ofd.RestoreDirectory = true;
 
                 if (ofd.ShowDialog() == DialogResult.OK) {
-                    PreApplicationExit();
                     ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
                     Process.Start(psi);
                     TSMI_File_Exit_Click(sender, e);
@@ -545,7 +544,7 @@ namespace ABT.TestSpace.TestExec {
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GlobalConfigurationFile);
         }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
-            Form about = new About (
+            Form about = new MessageBoxMonoSpaced (
                 Title: "About TestExecutive",
                 Text: $"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {Logger.BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
                 Link: "https://github.com/Amphenol-Borisch-Technologies/TestExecutive"
@@ -571,7 +570,13 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.DocumentationFolder); }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show(ConfigTest.StatisticsDisplay(), "Statistics", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Form statistics = new MessageBoxMonoSpaced (
+                Title: "Statistics",
+                Text: ConfigTest.StatisticsDisplay(),
+                Link: String.Empty
+            );
+            _ = statistics.ShowDialog();
+
 
         }
         private void TSMI_UUT_StatisticsReset_Click(Object sender, EventArgs e) {
@@ -582,7 +587,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
-            Form about = new About (
+            Form about = new MessageBoxMonoSpaced (
                 Title: "About TestExecutor",
                 Text: $"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}, {Logger.BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
                 Link: "https://github.com/Amphenol-Borisch-Technologies/TestExecutor"

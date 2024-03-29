@@ -2,12 +2,16 @@
 using System.Windows.Forms;
 
 namespace ABT.TestSpace {
-    public partial class About : Form {
-        public About(String Title, String Text, String Link) {
+    public partial class MessageBoxMonoSpaced : Form {
+        public MessageBoxMonoSpaced(String Title, String Text, String Link) {
             InitializeComponent();
             this.Text = Title;
             this.Label.Text = Text;
             this.Link.Text = Link;
+            if (String.Equals(Link, String.Empty)) {
+                this.Link.Enabled = false;
+                this.Link.Visible = false;
+            }
         }
 
         private void OK_Clicked(Object sender, EventArgs e) {

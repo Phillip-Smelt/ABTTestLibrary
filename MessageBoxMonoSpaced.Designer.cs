@@ -1,5 +1,5 @@
 ﻿namespace ABT.TestSpace {
-    partial class About {
+    partial class MessageBoxMonoSpaced {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -23,7 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessageBoxMonoSpaced));
             this.Link = new System.Windows.Forms.LinkLabel();
             this.OK = new System.Windows.Forms.Button();
             this.Label = new System.Windows.Forms.Label();
@@ -37,10 +37,10 @@
             this.Link.Location = new System.Drawing.Point(10, 75);
             this.Link.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Link.Name = "Link";
-            this.Link.Size = new System.Drawing.Size(70, 15);
+            this.Link.Size = new System.Drawing.Size(105, 15);
             this.Link.TabIndex = 1;
             this.Link.TabStop = true;
-            this.Link.Text = "linkAbout";
+            this.Link.Text = "linkMonoSpaced";
             this.Link.Click += new System.EventHandler(this.Link_Clicked);
             // 
             // OK
@@ -48,7 +48,7 @@
             this.OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OK.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OK.Location = new System.Drawing.Point(396, 113);
-            this.OK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.OK.Margin = new System.Windows.Forms.Padding(4);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(52, 29);
             this.OK.TabIndex = 2;
@@ -63,11 +63,11 @@
             this.Label.Location = new System.Drawing.Point(10, 7);
             this.Label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Label.Name = "Label";
-            this.Label.Size = new System.Drawing.Size(88, 18);
+            this.Label.Size = new System.Drawing.Size(128, 18);
             this.Label.TabIndex = 4;
-            this.Label.Text = "labelAbout";
+            this.Label.Text = "labelMonoSpaced";
             // 
-            // About
+            // MessageBoxMonoSpaced
             // 
             this.AcceptButton = this.OK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -79,12 +79,12 @@
             this.Controls.Add(this.Link);
             this.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "About";
+            this.Name = "MessageBoxMonoSpaced";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "About";
+            this.Text = "MessageBoxMonoSpaced";
             this.ResumeLayout(false);
             this.PerformLayout();
 

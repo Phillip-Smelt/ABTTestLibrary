@@ -62,11 +62,11 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="About.cs">
+    <Compile Include="MessageBoxMonoSpaced.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="About.Designer.cs">
-      <DependentUpon>About.cs</DependentUpon>
+    <Compile Include="MessageBoxMonoSpaced.Designer.cs">
+      <DependentUpon>MessageBoxMonoSpaced.cs</DependentUpon>
     </Compile>
     <Compile Include="AppConfig\AppConfigLogger.cs" />
     <Compile Include="AppConfig\AppConfigUUT.cs" />
@@ -113,8 +113,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="About.resx">
-      <DependentUpon>About.cs</DependentUpon>
+    <EmbeddedResource Include="MessageBoxMonoSpaced.resx">
+      <DependentUpon>MessageBoxMonoSpaced.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Logging\SerialNumberDialog.resx">
       <DependentUpon>SerialNumberDialog.cs</DependentUpon>
