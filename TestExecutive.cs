@@ -196,7 +196,9 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        private void Form_Closing(Object sender, FormClosingEventArgs e) { if (e.CloseReason == CloseReason.UserClosing) Initialize(); }
+        private void Form_Closing(Object sender, FormClosingEventArgs e) {
+            if (e.CloseReason == CloseReason.UserClosing) PreApplicationExit();
+        }
 
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelect_Click(sender, e); }
 
@@ -216,6 +218,9 @@ namespace ABT.TestSpace.TestExec {
             ButtonEmergencyStopReset(enabled: true);
             ButtonSelect.Enabled = false;
             ButtonRunReset(enabled: false);
+            TSMI_File_Change.Enabled = false;
+            TSMI_File_Exit.Enabled = false;
+            ControlBox = false;
             TSMI_System_Diagnostics.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
             TSMI_UUT_Statistics.Enabled = false;
@@ -225,6 +230,9 @@ namespace ABT.TestSpace.TestExec {
         private void FormModeSelect() {
             ButtonCancelReset(enabled: false);
             ButtonEmergencyStopReset(enabled: false);
+            TSMI_File_Change.Enabled = true;
+            TSMI_File_Exit.Enabled = true;
+            ControlBox = true;
             ButtonSelect.Enabled = true;
             ButtonRunReset(enabled: ConfigTest != null);
             TSMI_System_Diagnostics.Enabled = true;
@@ -297,6 +305,13 @@ namespace ABT.TestSpace.TestExec {
                 };
                 Process.Start(psi);
             } else InvalidPathError(FolderPath);
+        }
+
+        private void PreApplicationExit() {
+            Initialize();
+            if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
+            MutexTestExecutor.ReleaseMutex();
+            MutexTestExecutor.Dispose();
         }
 
         public static Boolean RegexInvalid(String RegularExpression) {
@@ -454,10 +469,7 @@ namespace ABT.TestSpace.TestExec {
                 ofd.RestoreDirectory = true;
 
                 if (ofd.ShowDialog() == DialogResult.OK) {
-                    Initialize();
-                    if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
-                    MutexTestExecutor.ReleaseMutex();
-                    MutexTestExecutor.Dispose();
+                    PreApplicationExit();
                     ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
                     Process.Start(psi);
                     System.Windows.Forms.Application.Exit();
@@ -465,7 +477,7 @@ namespace ABT.TestSpace.TestExec {
             }
         }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
-            Initialize();
+            PreApplicationExit();
             System.Windows.Forms.Application.Exit();
         }
         private void TSMI_File_Save_Click(Object sender, EventArgs e) {
@@ -565,8 +577,8 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.DocumentationFolder); }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
-            Form statistics = new MessageBoxMonoSpaced (
-                Title: "Statistics",
+            Form statistics = new MessageBoxMonoSpaced(
+                Title: $"{ConfigUUT.Number}, {ConfigTest.TestElementID}, {ConfigTest.StatusTime()}",
                 Text: ConfigTest.StatisticsDisplay(),
                 Link: String.Empty
             );
@@ -804,7 +816,7 @@ namespace ABT.TestSpace.TestExec {
 
         private void StatusModeUpdate(MODES mode) {
             Dictionary<MODES, Color> ModeColors = new Dictionary<MODES, Color>() {
-                { MODES.Resetting, SystemColors.Control }, // Invisible ink!
+                { MODES.Resetting, SystemColors.ControlLight }, // Invisible ink!
                 { MODES.Selecting, Color.Black },
                 { MODES.Running, Color.Green },
                 { MODES.Cancelling, Color.Yellow },
