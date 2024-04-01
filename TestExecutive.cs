@@ -196,9 +196,7 @@ namespace ABT.TestSpace.TestExec {
             }
         }
 
-        private void Form_Closing(Object sender, FormClosingEventArgs e) {
-            if (e.CloseReason == CloseReason.UserClosing) PreApplicationExit();
-        }
+        private void Form_Closing(Object sender, FormClosingEventArgs e) { if (e.CloseReason == CloseReason.UserClosing) PreApplicationExit(); }
 
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelect_Click(sender, e); }
 
@@ -220,7 +218,6 @@ namespace ABT.TestSpace.TestExec {
             ButtonRunReset(enabled: false);
             TSMI_File_Change.Enabled = false;
             TSMI_File_Exit.Enabled = false;
-            ControlBox = false;
             TSMI_System_Diagnostics.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
             TSMI_UUT_Statistics.Enabled = false;
@@ -232,7 +229,6 @@ namespace ABT.TestSpace.TestExec {
             ButtonEmergencyStopReset(enabled: false);
             TSMI_File_Change.Enabled = true;
             TSMI_File_Exit.Enabled = true;
-            ControlBox = true;
             ButtonSelect.Enabled = true;
             ButtonRunReset(enabled: ConfigTest != null);
             TSMI_System_Diagnostics.Enabled = true;
