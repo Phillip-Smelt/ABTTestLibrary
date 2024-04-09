@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using MccDaq; // MCC DAQ Universal Library 6.73 from https://www.mccdaq.com/Software-Downloads.
 using static ABT.TestSpace.TestExec.Switching.RelayForms;
@@ -38,8 +37,6 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
 
         public Dictionary<UE, MccBoard> USB_ERB24s;
         private readonly static UE24 _only = new UE24();
-
-
         public static UE24 Only { get { return _only; } }
         static UE24() { }
         // Singleton pattern requires explicit static constructor to tell C# compiler not to mark type as beforefieldinit.
@@ -51,14 +48,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             };
         }
         internal enum PORTS { A, B, CL, CH }
-        private static readonly Dictionary<PORTS, BitVector32.Section> PortSections = new Dictionary<PORTS, BitVector32.Section>() {
-            { PORTS.A, BitVector32.CreateSection(0b1111_1111) },
-            { PORTS.B, BitVector32.CreateSection(0b1111_1111, PortSections[PORTS.A]) },
-            { PORTS.CL, BitVector32.CreateSection(0b1111_1111, PortSections[PORTS.B]) },
-            { PORTS.CH, BitVector32.CreateSection(0b1111, PortSections[PORTS.CL]) }
-        };
         internal static Int32[] _ue24bitVector32Masks = GetUE24BitVector32Masks();
-
         #region methods
 
         public static void Initialize() {
@@ -165,46 +155,46 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             return RεS;
         }
 
-        // TODO:  Soon; make this method work, replacing Get(UE ue) method.
-        public static Dictionary<R, C.S> Get_InProgress(UE ue) {
-            // Obviously, can utilize MccBoard.DBitIn to read individual bits, instead of MccBoard.DIn to read multiple bits:
-            // - But, the USB-ERB24's reads it's relay states by reading its internal 82C55's ports.
-            // - These ports appear to operate similarly to MccBoard's DIn function, that is, they read the 82C55's 
-            //   port bits simultaneously.
-            // - If correct, then utilizing MccBoard's DBitIn function could be very inefficient compared to
-            //   the DIn function, since DBitIn would have to perform similar bit-shifting/bit-setting functions as this method does,
-            //   once for each of the USB-ERB24's 24 relays, as opposed to 4 times for this method.
-            // - Regardless, if preferred, below /*,*/commented code can replace the entirety of this method.
-            /*
-            ErrorInfo errorInfo;  DigitalLogicState digitalLogicState;
-            R r;  C.S s;  Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
-            for (Int32 i = 0; i < Enum.GetValues(typeof(R)).Length; i++) {
-                errorInfo = Only.USB_ERB24s[ue].DBitIn(DigitalPortType.FirstPortA, i, out digitalLogicState);
-                ProcessErrorInfo (Only.USB_ERB24s[ue], errorInfo);
-                r = (R)Enum.ToObject(typeof(R), i);
-                s = digitalLogicState == DigitalLogicState.Low ? C.S.NC : C.S.NO;
-                RεS.Add(r, s);
-            }
-            return RεS;
-            */
+        // TODO:  Eventually; make this method work, replacing duplicate signature method.
+        //public static Dictionary<R, C.S> Get(UE ue) {
+        //    // Obviously, can utilize MccBoard.DBitIn to read individual bits, instead of MccBoard.DIn to read multiple bits:
+        //    // - But, the USB-ERB24's reads it's relay states by reading its internal 82C55's ports.
+        //    // - These ports appear to operate similarly to MccBoard's DIn function, that is, they read the 82C55's 
+        //    //   port bits simultaneously.
+        //    // - If correct, then utilizing MccBoard's DBitIn function could be very inefficient compared to
+        //    //   the DIn function, since DBitIn would have to perform similar bit-shifting/bit-setting functions as this method does,
+        //    //   once for each of the USB-ERB24's 24 relays, as opposed to 4 times for this method.
+        //    // - Regardless, if preferred, below /*,*/commented code can replace the entirety of this method.
+        //    /*
+        //    ErrorInfo errorInfo;  DigitalLogicState digitalLogicState;
+        //    R r;  C.S s;  Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
+        //    for (Int32 i = 0; i < Enum.GetValues(typeof(R)).Length; i++) {
+        //        errorInfo = Only.USB_ERB24s[ue].DBitIn(DigitalPortType.FirstPortA, i, out digitalLogicState);
+        //        ProcessErrorInfo (Only.USB_ERB24s[ue], errorInfo);
+        //        r = (R)Enum.ToObject(typeof(R), i);
+        //        s = digitalLogicState == DigitalLogicState.Low ? C.S.NC : C.S.NO;
+        //        RεS.Add(r, s);
+        //    }
+        //    return RεS;
+        //    */
 
-            UInt16[] portBits = PortsRead(Only.USB_ERB24s[ue]);
-            UInt32[] biggerPortBits = Array.ConvertAll(portBits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
-            UInt32 relayBits = 0x0000;
-            relayBits |= biggerPortBits[(UInt32)PORTS.CH] << 00;
-            relayBits |= biggerPortBits[(UInt32)PORTS.CL] << 04;
-            relayBits |= biggerPortBits[(UInt32)PORTS.B] << 08;
-            relayBits |= biggerPortBits[(UInt32)PORTS.A] << 16;
-            BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
+        //    UInt16[] portBits = PortsRead(Only.USB_ERB24s[ue]);
+        //    UInt32[] biggerPortBits = Array.ConvertAll(portBits, delegate (UInt16 uInt16) { return (UInt32)uInt16; });
+        //    UInt32 relayBits = 0x0000;
+        //    relayBits |= biggerPortBits[(UInt32)PORTS.CH] << 00;
+        //    relayBits |= biggerPortBits[(UInt32)PORTS.CL] << 04;
+        //    relayBits |= biggerPortBits[(UInt32)PORTS.B] << 08;
+        //    relayBits |= biggerPortBits[(UInt32)PORTS.A] << 16;
+        //    BitVector32 bitVector32 = new BitVector32((Int32)relayBits);
 
-            R r; C.S s; Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
-            for (Int32 i = 0; i < _ue24bitVector32Masks.Length; i++) {
-                r = (R)Enum.ToObject(typeof(R), i);
-                s = bitVector32[_ue24bitVector32Masks[i]] ? C.S.NO : C.S.NC;
-                RεS.Add(r, s);
-            }
-            return RεS;
-        }
+        //    R r; C.S s; Dictionary<R, C.S> RεS = new Dictionary<R, C.S>();
+        //    for (Int32 i = 0; i < _ue24bitVector32Masks.Length; i++) {
+        //        r = (R)Enum.ToObject(typeof(R), i);
+        //        s = bitVector32[_ue24bitVector32Masks[i]] ? C.S.NO : C.S.NC;
+        //        RεS.Add(r, s);
+        //    }
+        //    return RεS;
+        //}
 
         public static Dictionary<R, C.S> Get(UE ue) {
             TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
@@ -276,59 +266,63 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             Debug.Assert(Are(ue, rs.ToDictionary(r => r, r => s)));
         }
 
-        // TODO:  Soon; make this method work, replacing Set(UE ue, Dictionary<R, C.S> RεS) method.
-        public static void Set_InProgress(UE ue, Dictionary<R, C.S> RεS) {
-            // This method only sets relay states for relays explicitly declared in RεS.
-            //  - That is, if RεS = {{R.C01, C.S.NO}, {R.C02, C.S.NC}}, then only relays R.C01 & R.C02 will have their states actively set, respectively to NO & NC.
-            //  - Relay states R.C03, R.C04...R.C24 remain as they were:
-            //      - Relays that were NC remain NC.
-            //      - Relays that were NO remain NO.
-            //
-            // Obviously, can utilize MccBoard.DBitOut to write individual bits, instead of MccBoard.DOut to write multiple bits:
-            // - But, the USB-ERB24's energizes/de-energizes it's relay by writing its internal 82C55's ports.
-            // - These ports appear to operate similarly to MccBoard's DOut function, that is, they write the 
-            //   entire port's bits simultaneously.
-            // - If correct, then utilizing MccBoard's DBitOut function could be very inefficient compared to
-            //   the DOut function, since it'd have to perform similar And/Or functions as this method does,
-            //   once for every call to DBitOut.
-            //  - Thought is that DOut will write the bits as simultaneously as possible, at least more so than DBitOut.
-            // - Regardless, if preferred, below /*,*/commented code can replace the entirety of this method.
-            /*
-            ErrorInfo errorInfo;
-            foreach (KeyValuePair<R, C.S> kvp in RεS) {
-                errorInfo = Only.USB_ERB24s[ue].DBitOut(DigitalPortType.FirstPortA, (Int32)kvp.Key, kvp.Value == C.S.NC ? DigitalLogicState.Low: DigitalLogicState.High);
-                ProcessErrorInfo(Only.USB_ERB24s[ue], errorInfo);
-            }
-            */
+        // TODO:  Eventually; make this method work, replacing duplicate signature method.
+        //public static void Set(UE ue, Dictionary<R, C.S> RεS) {
+        //    // This method only sets relay states for relays explicitly declared in RεS.
+        //    //  - That is, if RεS = {{R.C01, C.S.NO}, {R.C02, C.S.NC}}, then only relays R.C01 & R.C02 will have their states actively set, respectively to NO & NC.
+        //    //  - Relay states R.C03, R.C04...R.C24 remain as they were:
+        //    //      - Relays that were NC remain NC.
+        //    //      - Relays that were NO remain NO.
+        //    //
+        //    // Obviously, can utilize MccBoard.DBitOut to write individual bits, instead of MccBoard.DOut to write multiple bits:
+        //    // - But, the USB-ERB24's energizes/de-energizes it's relay by writing its internal 82C55's ports.
+        //    // - These ports appear to operate similarly to MccBoard's DOut function, that is, they write the 
+        //    //   entire port's bits simultaneously.
+        //    // - If correct, then utilizing MccBoard's DBitOut function could be very inefficient compared to
+        //    //   the DOut function, since it'd have to perform similar And/Or functions as this method does,
+        //    //   once for every call to DBitOut.
+        //    //  - Thought is that DOut will write the bits as simultaneously as possible, at least more so than DBitOut.
+        //    // - Regardless, if preferred, below /*,*/commented code can replace the entirety of this method.
+        //    /*
+        //    ErrorInfo errorInfo;
+        //    foreach (KeyValuePair<R, C.S> kvp in RεS) {
+        //        errorInfo = Only.USB_ERB24s[ue].DBitOut(DigitalPortType.FirstPortA, (Int32)kvp.Key, kvp.Value == C.S.NC ? DigitalLogicState.Low: DigitalLogicState.High);
+        //        ProcessErrorInfo(Only.USB_ERB24s[ue], errorInfo);
+        //    }
+        //    */
 
-            UInt32 relayBit;
-            UInt32 bits_NC = 0xFFFF_FFFF; // bits_NC utilize Boolean And logic.
-            UInt32 bits_NO = 0x0000_0000; // bits_NO utilize Boolean Or logic.
+        //    UInt32 relayBit;
+        //    UInt32 bits_NC = 0xFFFF_FFFF; // bits_NC utilize Boolean And logic.
+        //    UInt32 bits_NO = 0x0000_0000; // bits_NO utilize Boolean Or logic.
 
-            foreach (KeyValuePair<R, C.S> kvp in RεS) {
-                relayBit = (UInt32)1 << (Byte)kvp.Key;
-                if (kvp.Value == C.S.NC) bits_NC ^= relayBit;  // Sets a 0 in bits_NC for each explicitly assigned NC state in RεS.
-                else bits_NO |= relayBit;                      // Sets a 1 in bits_NO for each explicitly assigned NO state in RεS.
-            }
+        //    foreach (KeyValuePair<R, C.S> kvp in RεS) {
+        //        relayBit = (UInt32)1 << (Byte)kvp.Key;
+        //        if (kvp.Value == C.S.NC) bits_NC ^= relayBit; // Sets a 0 in bits_NC for each explicitly assigned NC state in RεS.
+        //        else bits_NO |= relayBit;                      // Sets a 1 in bits_NO for each explicitly assigned NO state in RεS.
+        //    }
 
-            BitVector32 bv32_NC = new BitVector32((Int32)bits_NC);
-            BitVector32 bv32_NO = new BitVector32((Int32)bits_NO);
+        //    BitVector32 bv32_NC = new BitVector32((Int32)bits_NC);
+        //    BitVector32 bv32_NO = new BitVector32((Int32)bits_NO);
+        //    BitVector32.Section sectionPortA = BitVector32.CreateSection(0b1111_1111);
+        //    BitVector32.Section sectionPortB = BitVector32.CreateSection(0b1111_1111, sectionPortA);
+        //    BitVector32.Section sectionPortCL = BitVector32.CreateSection(0b1111, sectionPortB);
+        //    BitVector32.Section sectionPortCH = BitVector32.CreateSection(0b1111, sectionPortCL);
 
-            UInt16[] portStates = PortsRead(Only.USB_ERB24s[ue]);
+        //    UInt16[] portStates = PortsRead(Only.USB_ERB24s[ue]);
 
-            portStates[(Int32)PORTS.A] &= (UInt16)bv32_NC[PortSections[PORTS.A]]; // &= sets portStates bits low for each explicitly assigned NC state in RεS.
-            portStates[(Int32)PORTS.B] &= (UInt16)bv32_NC[PortSections[PORTS.B]];
-            portStates[(Int32)PORTS.CL] &= (UInt16)bv32_NC[PortSections[PORTS.CL]];
-            portStates[(Int32)PORTS.CH] &= (UInt16)bv32_NC[PortSections[PORTS.CH]];
+        //    portStates[(Int32)PORTS.A] &= (UInt16)bv32_NC[sectionPortA]; // &= sets portStates bits low for each explicitly assigned NC state in RεS.
+        //    portStates[(Int32)PORTS.B] &= (UInt16)bv32_NC[sectionPortB];
+        //    portStates[(Int32)PORTS.CL] &= (UInt16)bv32_NC[sectionPortCL];
+        //    portStates[(Int32)PORTS.CH] &= (UInt16)bv32_NC[sectionPortCH];
 
-            portStates[(Int32)PORTS.A] |= (UInt16)bv32_NO[PortSections[PORTS.A]]; // |= sets portStates bits high for each explicitly assigned NO state in RεS.
-            portStates[(Int32)PORTS.B] |= (UInt16)bv32_NO[PortSections[PORTS.B]];
-            portStates[(Int32)PORTS.CL] |= (UInt16)bv32_NO[PortSections[PORTS.CL]];
-            portStates[(Int32)PORTS.CH] |= (UInt16)bv32_NO[PortSections[PORTS.CH]];
+        //    portStates[(Int32)PORTS.A] |= (UInt16)bv32_NO[sectionPortA]; // |= sets portStates bits high for each explicitly assigned NO state in RεS.
+        //    portStates[(Int32)PORTS.B] |= (UInt16)bv32_NO[sectionPortB];
+        //    portStates[(Int32)PORTS.CL] |= (UInt16)bv32_NO[sectionPortCL];
+        //    portStates[(Int32)PORTS.CH] |= (UInt16)bv32_NO[sectionPortCH];
 
-            PortsWrite(Only.USB_ERB24s[ue], portStates);
-            Debug.Assert(PortsRead(Only.USB_ERB24s[ue]).SequenceEqual(portStates));
-        }
+        //    PortsWrite(Only.USB_ERB24s[ue], portStates);
+        //    Debug.Assert(PortsRead(Only.USB_ERB24s[ue]).SequenceEqual(portStates));
+        //}
 
         public static void Set(UE ue, Dictionary<R, C.S> RεS) {
             TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
