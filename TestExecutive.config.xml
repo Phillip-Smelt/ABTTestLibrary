@@ -152,7 +152,7 @@
 		<SVI>
 			<ID>PS4ε5</ID>
 			<Description>Keysight E36234A Dual-output Power Supply</Description>
-			<Address>USB0::0x2A8D::0x3402::MY61002598::0::INSTR</Address>		
+			<Address>USB0::0x2A8D::0x3402::MY61002671::0::INSTR</Address>		
 		</SVI>
 		<SVI>
 			<ID>EL1</ID>
