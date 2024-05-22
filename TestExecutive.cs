@@ -207,7 +207,7 @@ namespace ABT.TestSpace.TestExec {
             rtfResults.Text = String.Empty;
             StatusTimeUpdate(null, null);
             StatusStatisticsUpdate(null, null);
-            StatusCustomWrite(String.Empty);
+            StatusCustomWrite(String.Empty, SystemColors.ControlLight);
             StatusModeUpdate(MODES.Resetting);
         }
 
@@ -823,7 +823,10 @@ namespace ABT.TestSpace.TestExec {
             Invoke((Action)(() => StatusModeLabel.ForeColor = ModeColors[mode]));
         }
 
-        public void StatusCustomWrite(String Message) { Invoke((Action)(() => StatusCustomLabel.Text = Message)); }
+        public void StatusCustomWrite(String Message, Color ForeColor) {
+            Invoke((Action)(() => StatusCustomLabel.Text = Message));
+            Invoke((Action)(() => StatusCustomLabel.ForeColor = ForeColor));
+        }
         #endregion Status Strip methods.
     }
 }
