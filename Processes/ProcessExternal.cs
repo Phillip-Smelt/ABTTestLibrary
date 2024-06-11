@@ -97,6 +97,7 @@ namespace ABT.TestSpace.TestExec.Processes {
         private static void DisableQuickEdit(IntPtr processHandle) {
             GetConsoleMode(processHandle, out UInt32 consoleMode);
             consoleMode &= ~0x0040U; // Clear the ENABLE_QUICK_EDIT_MODE flag bit.
+            consoleMode |= 0x0080U;  // Set the ENABLE_EXTENDED_FLAGS flag bit.
             SetConsoleMode(processHandle, consoleMode);
         }
     }
