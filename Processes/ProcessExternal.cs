@@ -11,9 +11,6 @@ namespace ABT.TestSpace.TestExec.Processes {
     public enum PROCESS_METHOD { ExitCode, Redirect }
 
     public static class ProcessExternal {
-        [DllImport("kernel32.dll")] static extern Boolean GetConsoleMode(IntPtr hConsoleHandle, out UInt32 lpMode);
-        [DllImport("kernel32.dll")] static extern Boolean SetConsoleMode(IntPtr hConsoleHandle, UInt32 dwMode);
-        [DllImport("kernel32.dll")] static extern IntPtr GetStdHandle(Int32 nStdHandle);
 
         public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect, Boolean AutoContinue = false) {
             PreConnect?.Invoke();
@@ -59,10 +56,6 @@ namespace ABT.TestSpace.TestExec.Processes {
                 };
                 process.StartInfo = psi;
                 process.Start();
-                // TODO:  Soon; DisableQuickEdit(process.Handle);
-                DisableQuickEdit(GetStdHandle(-10));
-                // https://learn.microsoft.com/en-us/windows/console/getstdhandle
-                // https://stackoverflow.com/questions/13656846/how-to-programmatic-disable-c-sharp-console-applications-quick-edit-mode
                 process.WaitForExit();
                 exitCode = process.ExitCode;
             }
@@ -84,8 +77,6 @@ namespace ABT.TestSpace.TestExec.Processes {
                 };
                 process.StartInfo = psi;
                 process.Start();
-                // TODO:  Soon; DisableQuickEdit(process.Handle);
-                DisableQuickEdit(GetStdHandle(-10));
                 process.WaitForExit();
                 StreamReader se = process.StandardError;
                 standardError = se.ReadToEnd();
@@ -98,14 +89,5 @@ namespace ABT.TestSpace.TestExec.Processes {
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(MeasurementProcess MP) { return ProcessRedirect(MP.ProcessArguments, MP.ProcessExecutable, MP.ProcessFolder, MP.ProcessExpected); }
-
-        private static void DisableQuickEdit(IntPtr processHandle) {
-            // https://learn.microsoft.com/en-us/archive/msdn-technet-forums/bf9f97a1-ebbb-4f35-bbb6-6af740a71c76
-            // https://stackoverflow.com/questions/37578529/disable-quickedit-in-windows-10-cmd-exe
-            GetConsoleMode(processHandle, out UInt32 consoleMode);
-            consoleMode &= ~0x0040U; // Clear the ENABLE_QUICK_EDIT_MODE flag bit.
-            consoleMode |= 0x0080U;  // Set the ENABLE_EXTENDED_FLAGS flag bit.
-            SetConsoleMode(processHandle, consoleMode);
-        }
     }
 }
