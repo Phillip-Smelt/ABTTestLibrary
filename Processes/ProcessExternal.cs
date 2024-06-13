@@ -97,6 +97,7 @@ namespace ABT.TestSpace.TestExec.Processes {
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(MeasurementProcess MP) { return ProcessRedirect(MP.ProcessArguments, MP.ProcessExecutable, MP.ProcessFolder, MP.ProcessExpected); }
 
         private static void DisableQuickEdit(IntPtr processHandle) {
+            // https://stackoverflow.com/questions/13656846/how-to-programmatic-disable-c-sharp-console-applications-quick-edit-mode
             GetConsoleMode(processHandle, out UInt32 consoleMode);
             consoleMode &= ~0x0040U; // Clear the ENABLE_QUICK_EDIT_MODE bit.
             consoleMode |= 0x0080U;  // Set the ENABLE_EXTENDED_FLAGS bit.
