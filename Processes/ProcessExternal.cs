@@ -11,6 +11,10 @@ namespace ABT.TestSpace.TestExec.Processes {
     public enum PROCESS_METHOD { ExitCode, Redirect }
 
     public static class ProcessExternal {
+        [DllImport("kernel32.dll")] private static extern Boolean GetConsoleMode(IntPtr hConsoleHandle, out UInt32 lpMode);
+        [DllImport("kernel32.dll")] private static extern Boolean SetConsoleMode(IntPtr hConsoleHandle, UInt32 dwMode);
+        [DllImport("kernel32.dll")] private static extern IntPtr GetStdHandle(Int32 nStdHandle);
+        private const Int32 STD_INPUT_HANDLE = -10;
 
         public static void Connect(String Description, String Connector, Action PreConnect, Action PostConnect, Boolean AutoContinue = false) {
             PreConnect?.Invoke();
@@ -56,6 +60,7 @@ namespace ABT.TestSpace.TestExec.Processes {
                 };
                 process.StartInfo = psi;
                 process.Start();
+                DisableQuickEdit(GetStdHandle(STD_INPUT_HANDLE));
                 process.WaitForExit();
                 exitCode = process.ExitCode;
             }
@@ -77,6 +82,7 @@ namespace ABT.TestSpace.TestExec.Processes {
                 };
                 process.StartInfo = psi;
                 process.Start();
+                DisableQuickEdit(GetStdHandle(STD_INPUT_HANDLE));
                 process.WaitForExit();
                 StreamReader se = process.StandardError;
                 standardError = se.ReadToEnd();
@@ -89,5 +95,12 @@ namespace ABT.TestSpace.TestExec.Processes {
         }
 
         public static (String StandardError, String StandardOutput, Int32 ExitCode) Redirect(MeasurementProcess MP) { return ProcessRedirect(MP.ProcessArguments, MP.ProcessExecutable, MP.ProcessFolder, MP.ProcessExpected); }
+
+        private static void DisableQuickEdit(IntPtr processHandle) {
+            GetConsoleMode(processHandle, out UInt32 consoleMode);
+            consoleMode &= ~0x0040U; // Clear the ENABLE_QUICK_EDIT_MODE bit.
+            consoleMode |= 0x0080U;  // Set the ENABLE_EXTENDED_FLAGS bit.
+            SetConsoleMode(processHandle, consoleMode);
+        }
     }
 }
