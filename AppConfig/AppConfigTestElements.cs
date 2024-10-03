@@ -162,7 +162,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
             foreach (TestMeasurement tm in testMeasurements) try {
                     dictionary.Add(tm.ID, new Measurement(tm.ID, tm.Revision, tm.Description, tm.ClassName, tm.CancelNotPassed, tm.Arguments));
                 } catch (Exception e) {
-                    StringBuilder sb = new StringBuilder().AppendLine();
+                    StringBuilder sb = new StringBuilder(Environment.NewLine);
                     sb.AppendLine($"App.config issue with TestMeasurement:");
                     sb.AppendLine($"   ID              : {tm.ID}");
                     sb.AppendLine($"   Revision        : {tm.Revision}");
