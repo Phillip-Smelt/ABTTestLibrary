@@ -33,7 +33,7 @@ namespace ABT.TestSpace.TestExec.Logging {
         public static String FormatNumeric(MeasurementNumeric MN, Double Value) {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(FormatMessage("High Limit", $"{MN.High:G}"));
-            sb.AppendLine(FormatMessage("Measured", $"{Value:G}"));
+            sb.AppendLine(FormatMessage("Measured", $"{Math.Round(Value, MN.FD, MidpointRounding.ToEven):G}"));
             sb.AppendLine(FormatMessage("Low Limit", $"{MN.Low:G}"));
             String si_units = $"{Enum.GetName(typeof(SI_UNITS), MN.SI_Units)}";
             if (MN.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) si_units += $" {Enum.GetName(typeof(SI_UNITS_MODIFIER), MN.SI_Units_Modifier)}";
