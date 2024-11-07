@@ -163,7 +163,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             Log.Information($"TestMeasurements:\n{sb}");
         }
 
-        internal static String BuildDate(Version version) { 
+        internal static String BuildDate(Version version) {
             DateTime Y2K = new DateTime(year: 2000, month: 1, day: 1, hour: 0, minute: 0, second: 0, kind: DateTimeKind.Local);
             return $"{Y2K + new TimeSpan(days: version.Build, hours: 0, minutes: 0, seconds: 2 * version.Revision):g}";
         }
@@ -174,14 +174,13 @@ namespace ABT.TestSpace.TestExec.Logging {
             else {
                 ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + TestExecutive.ConfigUUT.TestEvent);
                 SetBackColor(ref rtfResults, 0, TestExecutive.ConfigUUT.TestEvent, TestEvents.GetColor(TestExecutive.ConfigUUT.TestEvent));
-                ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);               
+                ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);
                 Log.CloseAndFlush();
                 if (testExecutive.ConfigLogger.FileEnabled) FileStop(testExecutive, ref rtfResults);
                 if (testExecutive.ConfigLogger.SQLEnabled) SQLStop(testExecutive);
-                if (testExecutive.ConfigLogger.TestEventsEnabled) LogTestEvents(TestExecutive.ConfigUUT);
             }
         }
-#endregion Internal Methods
+        #endregion Internal Methods
 
         #region Private Methods
         private static void FileStop(TestExecutive testExecutive, ref RichTextBox rtfResults) {
@@ -209,7 +208,7 @@ namespace ABT.TestSpace.TestExec.Logging {
             fileName += $"_{++maxNumber}_{TestExecutive.ConfigUUT.TestEvent}.rtf";
             rtfResults.SaveFile($"{GetFilePath(testExecutive)}{fileName}");
         }
-        
+
         private static String GetFilePath(TestExecutive testExecutive) { return $"{testExecutive.ConfigLogger.FilePath}{testExecutive.ConfigTest.TestElementID}\\"; }
 
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
@@ -238,33 +237,6 @@ namespace ABT.TestSpace.TestExec.Logging {
 
         private static void SQLStop(TestExecutive testExecutive) {
             // TODO:  Eventually; SQL Server Express: SQLStop.
-        }
-
-        private static void LogTestEvents(AppConfigUUT uut) {
-            String eventCode;
-            switch (uut.TestEvent) {
-                case TestEvents.CANCEL:
-                    eventCode = "A";
-                    break;
-                case TestEvents.EMERGENCY_STOP:
-                    eventCode = "S";
-                    break;
-                case TestEvents.ERROR:
-                    eventCode = "E";
-                    break;
-                case TestEvents.FAIL:
-                    eventCode = "F";
-                    break;
-                case TestEvents.PASS:
-                    eventCode = "P";
-                    break;
-                case TestEvents.UNSET:
-                    eventCode = "U";
-                    break;
-                default:
-                    throw new NotImplementedException($"Unrecognized TestEvent '{uut.TestEvent}'.");
-            }
-            // TODO:  Eventually; invoke TestEvents with $"{uut.Number} {uut.SerialNumber} {uut.eventCode}";
         }
         #endregion Private
     }
