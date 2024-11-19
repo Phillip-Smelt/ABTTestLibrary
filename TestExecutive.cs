@@ -405,8 +405,10 @@ namespace ABT.TestSpace.TestExec {
         private void ButtonSelect_Click(Object sender, EventArgs e) {
             ConfigTest = AppConfigTest.Get();
 
-            if (ConfigTest.IsOperation) (ConfigUUT.Number, ConfigUUT.Revision) = String.Equals(ConfigTest.TestElementID, "T-30") ? ("D4522137-2", "A") : ("D4522138-1", "-");
-            else (ConfigUUT.Number, ConfigUUT.Revision) = ("isoMicro", "NA");
+            if (ConfigTest.IsOperation) {
+                if (String.Equals(ConfigTest.TestElementID, "T-30")) { ConfigUUT.Number = "D4522137-2"; ConfigUUT.Revision = "A"; }
+                else { ConfigUUT.Number = "D4522138-1"; ConfigUUT.Revision = "-"; }
+            } else { ConfigUUT.Number = "isoMicro"; ConfigUUT.Revision = "NA"; }
 
             _statusTime.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
@@ -558,7 +560,7 @@ namespace ABT.TestSpace.TestExec {
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GlobalConfigurationFile);
         }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
-            Form about = new MessageBoxMonoSpaced (
+            Form about = new MessageBoxMonoSpaced(
                 Title: "About TestExecutive",
                 Text: $"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {Logger.BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
                 Link: "https://github.com/Amphenol-Borisch-Technologies/TestExecutive"
@@ -594,7 +596,7 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder($"{ConfigLogger.FilePath}{ConfigUUT.Number}"); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
-            Form about = new MessageBoxMonoSpaced (
+            Form about = new MessageBoxMonoSpaced(
                 Title: "About TestExecutor",
                 Text: $"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}, {Logger.BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
                 Link: "https://github.com/Amphenol-Borisch-Technologies/TestExecutor"
@@ -645,7 +647,7 @@ namespace ABT.TestSpace.TestExec {
                     } finally {
                         // NOTE:  Normally executes, regardless if catchable Exception occurs or returned out of try/catch blocks.
                         // Exceptional exceptions are exempted; https://stackoverflow.com/questions/345091/will-code-in-a-finally-statement-fire-if-i-return-a-value-in-a-try-block.
-                        if      (CT_EmergencyStop.IsCancellationRequested) ConfigTest.Measurements[measurementID].TestEvent = TestEvents.EMERGENCY_STOP;
+                        if (CT_EmergencyStop.IsCancellationRequested) ConfigTest.Measurements[measurementID].TestEvent = TestEvents.EMERGENCY_STOP;
                         else if (CT_Cancel.IsCancellationRequested) ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;
                         // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
                         Logger.LogTest(ConfigTest.IsOperation, ConfigTest.Measurements[measurementID], ref rtfResults);
