@@ -165,7 +165,7 @@ namespace ABT.TestSpace.TestExec {
                 throw new ArgumentException(sb.ToString());
             }
 
-            _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
+            _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\isoMicro\\SerialNumber");
             ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
             // NOTE:  Using Application Settings is generally advisable over the Windows Registry, but doing so permits all app users to write the App.config file.
             // - This means all users can also modify App.config's TestOperations, TestGroups & TestMeasurements, which is a no-no.
@@ -404,6 +404,11 @@ namespace ABT.TestSpace.TestExec {
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
             ConfigTest = AppConfigTest.Get();
+            if (ConfigTest.IsOperation) {
+                String UUT_Number = String.Equals(ConfigTest.TestElementID, "T-30") ? "D4522137-2" : "D4522138-1";
+                ConfigUUT.Number = UUT_Number;
+            } else ConfigUUT.Number = "isoMicro";
+
             _statusTime.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";
             FormModeReset();
@@ -587,7 +592,7 @@ namespace ABT.TestSpace.TestExec {
             StatusTimeUpdate(null, null);
             StatusStatisticsUpdate(null, null);
         }
-        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
+        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder($"{ConfigLogger.FilePath}\\{ConfigUUT.Number}"); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
             Form about = new MessageBoxMonoSpaced (
