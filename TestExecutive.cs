@@ -592,7 +592,7 @@ namespace ABT.TestSpace.TestExec {
             StatusTimeUpdate(null, null);
             StatusStatisticsUpdate(null, null);
         }
-        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder($"{ConfigLogger.FilePath}\\{ConfigUUT.Number}"); }
+        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder($"{ConfigLogger.FilePath}{ConfigUUT.Number}"); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
             Form about = new MessageBoxMonoSpaced (
