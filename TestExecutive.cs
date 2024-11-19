@@ -404,10 +404,9 @@ namespace ABT.TestSpace.TestExec {
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
             ConfigTest = AppConfigTest.Get();
-            if (ConfigTest.IsOperation) {
-                String UUT_Number = String.Equals(ConfigTest.TestElementID, "T-30") ? "D4522137-2" : "D4522138-1";
-                ConfigUUT.Number = UUT_Number;
-            } else ConfigUUT.Number = "isoMicro";
+
+            if (ConfigTest.IsOperation) (ConfigUUT.Number, ConfigUUT.Revision) = String.Equals(ConfigTest.TestElementID, "T-30") ? ("D4522137-2", "A") : ("D4522138-1", "-");
+            else (ConfigUUT.Number, ConfigUUT.Revision) = ("isoMicro", "NA");
 
             _statusTime.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
             Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {ConfigTest.TestElementID}";

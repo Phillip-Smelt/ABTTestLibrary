@@ -6,7 +6,7 @@ namespace ABT.TestSpace.TestExec.AppConfig {
         public readonly String Customer = ConfigurationManager.AppSettings["UUT_Customer"].Trim();
         public readonly String Type = ConfigurationManager.AppSettings["UUT_Type"].Trim();
         public String Number = ConfigurationManager.AppSettings["UUT_Number"].Trim();
-        public readonly String Revision = ConfigurationManager.AppSettings["UUT_Revision"].Trim();
+        public String Revision = ConfigurationManager.AppSettings["UUT_Revision"].Trim();
         public readonly String Description = ConfigurationManager.AppSettings["UUT_Description"].Trim();
         public readonly String TestSpecification = ConfigurationManager.AppSettings["UUT_TestSpecification"].Trim();
         public readonly String DocumentationFolder = ConfigurationManager.AppSettings["UUT_DocumentationFolder"].Trim();
